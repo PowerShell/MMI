@@ -19,6 +19,7 @@ using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -33,9 +34,9 @@ namespace Microsoft.Management.Infrastructure
     /// </summary>
     public class CimSession : IDisposable
     {
-        private readonly Native.SessionHandle _handle;
+        private readonly MI_Session _handle;
 
-        private CimSession(Native.SessionHandle handle, string computerName)
+        private CimSession(MI_Session handle, string computerName)
         {
             Debug.Assert(handle != null, "Caller should verify that handle is valid (1)");
             handle.AssertValidInternalState();
@@ -129,18 +130,18 @@ namespace Microsoft.Management.Infrastructure
 #endif
             }
 
-            Native.InstanceHandle extendedErrorHandle;
-            Native.SessionHandle sessionHandle;
+            MI_Instance extendedErrorHandle;
+            MI_Session sessionHandle;
 
-            Native.MiResult result = Native.ApplicationMethods.NewSession(
-                CimApplication.Handle,
+            MI_Result result = CimApplication.Handle.NewSession(
                 sessionOptions == null ? null : sessionOptions.Protocol,
                 normalizedComputerName,
                 sessionOptions == null ? null : sessionOptions.DestinationOptionsHandle,
+		null,
                 out extendedErrorHandle,
                 out sessionHandle);
 
-            if (result == Native.MiResult.NOT_FOUND)
+            if (result == MI_Result.MI_RESULT_NOT_FOUND)
             {
                 throw new CimException(result, null, extendedErrorHandle, Strings.UnrecognizedProtocolName);
             }
@@ -230,8 +231,10 @@ namespace Microsoft.Management.Infrastructure
                 }
                 this._disposed = true;
             }
-            Native.MiResult result = this._handle.ReleaseHandleSynchronously();
-            CimException.ThrowIfMiResultFailure(result);
+            
+	    // TODO: Implement next function
+	    //MI_Result result = this._handle.ReleaseHandleSynchronously();
+            //CimException.ThrowIfMiResultFailure(result);
         }
 
         /// <summary>
@@ -262,15 +265,16 @@ namespace Microsoft.Management.Infrastructure
                         }
                         else
                         {
-                            CloseAsyncImpersonationWorker worker = new CloseAsyncImpersonationWorker(observer);
-
-                            Native.MiResult result = this._handle.ReleaseHandleAsynchronously(worker.OnCompleted); // native API only reports completion (i.e. no equivalent to IObserver.OnError)
-                            CimException exception = CimException.GetExceptionIfMiResultFailure(result, null, null);
-                            if (exception != null)
-                            {
-                                observer.OnError(exception);
-                                worker.Dispose();
-                            }
+			    // TODO: Implement
+                            //CloseAsyncImpersonationWorker worker = new CloseAsyncImpersonationWorker(observer);
+			    //
+                            //MI_Result result = this._handle.ReleaseHandleAsynchronously(worker.OnCompleted); // native API only reports completion (i.e. no equivalent to IObserver.OnError)
+                            //CimException exception = CimException.GetExceptionIfMiResultFailure(result, null, null);
+                            //if (exception != null)
+                            //{
+			    //    observer.OnError(exception);
+			    //    worker.Dispose();
+                            //}
                         }
                     });
 
@@ -359,7 +363,8 @@ namespace Microsoft.Management.Infrastructure
 
             if (disposing)
             {
-                this._handle.Dispose();
+		// TODO: Implement and Call ReleaseHandleAsynchronously
+                //this._handle.Dispose();
             }
         }
 
@@ -430,7 +435,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncResult<CimInstance>(observable);
         }
 
-        private Native.OperationHandle GetInstanceCore(
+        private MI_Operation GetInstanceCore(
             string namespaceName, 
             CimInstance instanceId, 
             CimOperationOptions options, 
@@ -438,9 +443,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(instanceId != null, "Caller should verify instanceId != null");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.GetInstance(
-                this._handle,
+            MI_Operation operationHandle;
+	    this._handle.GetInstance(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -527,7 +531,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncResult<CimInstance>(observable);
         }
 
-        private Native.OperationHandle ModifyInstanceCore(
+        private MI_Operation ModifyInstanceCore(
             string namespaceName, 
             CimInstance instance, 
             CimOperationOptions options, 
@@ -535,9 +539,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(instance!= null, "Caller should verify instance != null");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.ModifyInstance(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.ModifyInstance(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -596,7 +599,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncResult<CimInstance>(observable);
         }
 
-        private Native.OperationHandle CreateInstanceCore(
+        private MI_Operation CreateInstanceCore(
             string namespaceName, 
             CimInstance instance, 
             CimOperationOptions options, 
@@ -604,9 +607,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(instance!= null, "Caller should verify instanceId != null");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.CreateInstance(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.CreateInstance(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -693,7 +695,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncStatus(observable);
         }
 
-        private Native.OperationHandle DeleteInstanceCore(
+        private MI_Operation DeleteInstanceCore(
             string namespaceName, 
             CimInstance instance, 
             CimOperationOptions options, 
@@ -701,9 +703,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(instance!= null, "Caller should verify instance != null");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.DeleteInstance(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.DeleteInstance(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -782,7 +783,7 @@ namespace Microsoft.Management.Infrastructure
             
         }
 
-            private Native.OperationHandle SubscribeCore(
+            private MI_Operation SubscribeCore(
             string namespaceName, 
             string queryDialect, 
             string queryExpression,
@@ -793,9 +794,8 @@ namespace Microsoft.Management.Infrastructure
             Debug.Assert(!string.IsNullOrWhiteSpace(queryDialect), "Caller should verify !string.IsNullOrWhiteSpace(queryDialect)");
             Debug.Assert(!string.IsNullOrWhiteSpace(queryExpression), "Caller should verify !string.IsNullOrWhiteSpace(queryExpression)");            
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.Subscribe(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.Subscribe(
                 operationOptions.GetOperationFlags(),
                 operationOptions.GetOperationOptionsHandle(),
                 namespaceName,
@@ -845,16 +845,15 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimInstance>(observable);
         }
 
-        private Native.OperationHandle EnumerateInstancesCore(
+        private MI_Operation EnumerateInstancesCore(
             string namespaceName, 
             string className, 
             CimOperationOptions options, 
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.EnumerateInstances(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.EnumerateInstances(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -920,7 +919,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimInstance>(observable);
         }
 
-        private Native.OperationHandle QueryInstancesCore(
+        private MI_Operation QueryInstancesCore(
             string namespaceName, 
             string queryDialect, 
             string queryExpression, 
@@ -930,15 +929,14 @@ namespace Microsoft.Management.Infrastructure
             Debug.Assert(!string.IsNullOrWhiteSpace(queryDialect), "Caller should verify !string.IsNullOrWhiteSpace(queryDialect)");
             Debug.Assert(!string.IsNullOrWhiteSpace(queryExpression), "Caller should verify !string.IsNullOrWhiteSpace(queryExpression)");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.QueryInstances(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.QueryInstances(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
                 queryDialect,
                 queryExpression,
-                options.GetKeysOnly(),
+                // options.GetKeysOnly(),
                 options.GetOperationCallbacks(asyncCallbacksReceiver),
                 out operationHandle);
 
@@ -1022,7 +1020,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimInstance>(observable);
         }
 
-        private Native.OperationHandle EnumerateAssociatedInstancesCore(
+        private MI_Operation EnumerateAssociatedInstancesCore(
             string namespaceName, 
             CimInstance sourceInstance,
             string associationClassName,
@@ -1034,9 +1032,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(sourceInstance != null, "Caller should verify sourceInstance != null");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.AssociatorInstances(
-                this._handle,
+            MI_Operation operationHandle;
+	    this._handle.AssociatorInstances(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -1122,7 +1119,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimInstance>(observable);
         }
 
-        private Native.OperationHandle EnumerateReferencingInstancesCore(
+        private MI_Operation EnumerateReferencingInstancesCore(
             string namespaceName, 
             CimInstance sourceInstance,
             string associationClassName,
@@ -1132,9 +1129,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(sourceInstance != null, "Caller should verify sourceInstance != null");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.ReferenceInstances(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.ReferenceInstances(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -1408,7 +1404,7 @@ namespace Microsoft.Management.Infrastructure
 
         #endregion
 
-        private Native.OperationHandle InvokeMethodCore(
+        private MI_Operation InvokeMethodCore(
             string namespaceName,
             string className,
             CimInstance instance,
@@ -1420,9 +1416,8 @@ namespace Microsoft.Management.Infrastructure
             Debug.Assert(!string.IsNullOrWhiteSpace(namespaceName), "Caller should verify !string.IsNullOrWhiteSpace(namespaceName)");
             Debug.Assert(!string.IsNullOrWhiteSpace(methodName), "Caller should verify !string.IsNullOrWhiteSpace(methodName)");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.Invoke(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.Invoke(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -1477,7 +1472,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncResult<CimClass>(observable);
         }
 
-        private Native.OperationHandle GetClassCore(
+        private MI_Operation GetClassCore(
             string namespaceName,
             string className,
             CimOperationOptions options,
@@ -1485,9 +1480,8 @@ namespace Microsoft.Management.Infrastructure
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(className), "Caller should verify !string.IsNullOrWhiteSpace(className)");
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.GetClass(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.GetClass(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -1541,16 +1535,15 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimClass>(observable);
         }
 
-        private Native.OperationHandle EnumerateClassesCore(
+        private MI_Operation EnumerateClassesCore(
             string namespaceName,
             string className,
             CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
 
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.EnumerateClasses(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.EnumerateClasses(
                 options.GetOperationFlags(),
                 options.GetOperationOptionsHandle(),
                 namespaceName,
@@ -1626,14 +1619,13 @@ namespace Microsoft.Management.Infrastructure
 
         }    
 
-        private Native.OperationHandle TestConnectionCore(
+        private MI_Operation TestConnectionCore(
             CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
             
-            Native.OperationHandle operationHandle;
-            Native.SessionMethods.TestConnection(
-                this._handle,
+            MI_Operation operationHandle;
+            this._handle.TestConnection(
                 options.GetOperationFlags(),
                 options.GetOperationCallbacks(asyncCallbacksReceiver),
                 out operationHandle);

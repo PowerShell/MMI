@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Microsoft.Management.Infrastructure.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -24,12 +25,12 @@ namespace Microsoft.Management.Infrastructure
 
         #region Internal constructors - THESE ARE THE ONES TO USE
 
-        internal CimException(Native.MiResult errorCode, string errorMessage, Native.InstanceHandle errorDetailsHandle)
+        internal CimException(MI_Result errorCode, string errorMessage, MI_Instance errorDetailsHandle)
             : this(errorCode, errorMessage, errorDetailsHandle, null)
         {
         }
 
-        internal CimException(Native.MiResult errorCode, string errorMessage, Native.InstanceHandle errorDetailsHandle, string exceptionMessage)
+        internal CimException(MI_Result errorCode, string errorMessage, MI_Instance errorDetailsHandle, string exceptionMessage)
             : base(exceptionMessage ?? CimException.GetExceptionMessage(errorCode, errorMessage, errorDetailsHandle))
         {
             this.NativeErrorCode = errorCode.ToNativeErrorCode();
@@ -47,10 +48,10 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentNullException("cimError");
             }
 
-            return GetExceptionMessage(Native.MiResult.FAILED, null, cimError.InstanceHandle);
+            return GetExceptionMessage(MI_Result.MI_RESULT_FAILED, null, cimError.InstanceHandle);
         }
         
-        static private string GetExceptionMessage(Native.InstanceHandle errorDetailsHandle)
+        static private string GetExceptionMessage(MI_Instance errorDetailsHandle)
         {
             if (errorDetailsHandle != null)
             {
@@ -65,7 +66,7 @@ namespace Microsoft.Management.Infrastructure
             return null;
         }
         
-        static private string GetExceptionMessage(Native.MiResult errorCode, string errorMessage, Native.InstanceHandle errorDetailsHandle)
+        static private string GetExceptionMessage(MI_Result errorCode, string errorMessage, MI_Instance errorDetailsHandle)
         {
             string result;
 
@@ -77,7 +78,9 @@ namespace Microsoft.Management.Infrastructure
             }
 
             // if the above failed, then use MI_Utilities_CimErrorFromErrorCode to get a good CIM_Error
-            Native.ApplicationMethods.GetCimErrorFromMiResult(errorCode, errorMessage, out errorDetailsHandle);
+
+	    // TODO: Add GetCimErrorFromMiResult to MI API
+            //Native.ApplicationMethods.GetCimErrorFromMiResult(errorCode, errorMessage, out errorDetailsHandle);
             try
             {
                 result = GetExceptionMessage(errorDetailsHandle);
@@ -90,7 +93,7 @@ namespace Microsoft.Management.Infrastructure
             {
                 if (errorDetailsHandle != null)
                 {
-                    errorDetailsHandle.Dispose();
+                    errorDetailsHandle.Delete();
                 }
             }
 
@@ -311,17 +314,17 @@ namespace Microsoft.Management.Infrastructure
 
         #region Static helper methods for translating an MiResult into an exception
 
-        internal static void ThrowIfMiResultFailure(Native.MiResult result)
+        internal static void ThrowIfMiResultFailure(MI_Result result)
         {
             ThrowIfMiResultFailure(result, null, null);
         }
 
-        internal static void ThrowIfMiResultFailure(Native.MiResult result, Native.InstanceHandle errorData)
+        internal static void ThrowIfMiResultFailure(MI_Result result, MI_Instance errorData)
         {
             ThrowIfMiResultFailure(result, null, errorData);
         }
 
-        internal static void ThrowIfMiResultFailure(Native.MiResult result, string errorMessage, Native.InstanceHandle errorData)
+        internal static void ThrowIfMiResultFailure(MI_Result result, string errorMessage, MI_Instance errorData)
         {
             CimException exception = GetExceptionIfMiResultFailure(result, errorMessage, errorData);
             if (exception != null)
@@ -330,9 +333,9 @@ namespace Microsoft.Management.Infrastructure
             }
         }
 
-        internal static CimException GetExceptionIfMiResultFailure(Native.MiResult result, string errorMessage, Native.InstanceHandle errorData)
+        internal static CimException GetExceptionIfMiResultFailure(MI_Result result, string errorMessage, MI_Instance errorData)
         {
-            return result == Native.MiResult.OK ? null : new CimException(result, errorMessage, errorData);
+            return result == MI_Result.MI_RESULT_OK ? null : new CimException(result, errorMessage, errorData);
         }
 
         #endregion

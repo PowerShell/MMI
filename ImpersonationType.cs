@@ -2,16 +2,17 @@
  * Copyright (C) Microsoft Corporation, All rights reserved. 
  *============================================================================
  */
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
     public enum ImpersonationType
     {
-        None = Native.DestinationOptionsMethods.MiImpersonationType.None,
-        Default = Native.DestinationOptionsMethods.MiImpersonationType.Default,
-        Delegate = Native.DestinationOptionsMethods.MiImpersonationType.Delegate,
-        Identify = Native.DestinationOptionsMethods.MiImpersonationType.Identify,
-        Impersonate = Native.DestinationOptionsMethods.MiImpersonationType.Impersonate,
+        None = MI_ImpersonationType.None,
+        Default = MI_ImpersonationType.Default,
+        Delegate = MI_ImpersonationType.Delegate,
+        Identify = MI_ImpersonationType.Identify,
+        Impersonate = MI_ImpersonationType.Impersonate,
     };
 }
 
@@ -19,9 +20,9 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 {
     internal static class ImpersonationTypeExtensionMethods
     {
-        public static Native.DestinationOptionsMethods.MiImpersonationType ToNativeType(this ImpersonationType impersonationType)
+        public static MI_ImpersonationType ToNativeType(this ImpersonationType impersonationType)
         {
-            return (Native.DestinationOptionsMethods.MiImpersonationType) impersonationType;
+            return (MI_ImpersonationType) impersonationType;
         }
     }
 }

@@ -8,16 +8,17 @@ using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimMethodParameterQualifierCollection : CimReadOnlyKeyedCollection<CimQualifier>
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
         private readonly int methodIndex;
         private readonly int parameterName;
 
-        internal CimMethodParameterQualifierCollection(Native.ClassHandle classHandle, int methodIndex, int parameterName)
+        internal CimMethodParameterQualifierCollection(MI_Class classHandle, int methodIndex, int parameterName)
         {
             this.classHandle = classHandle;
             this.methodIndex = methodIndex;
@@ -28,14 +29,31 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.ClassMethods.GetMethodParametersGetQualifiersCount(
-                    this.classHandle,
-                    this.methodIndex,
-                    this.parameterName, 
-                    out count);
+                UInt32 count;
+		
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+								out name,
+								out qualifierSet,
+								out parameterSet);
+		CimException.ThrowIfMiResultFailure(result);
+		
+		MI_Type parameterType;
+		string referenceClass;
+		MI_QualifierSet methodQualifierSet;
+		result = parameterSet.GetParameterAt((uint)parameterName,
+						     out name,
+						     out parameterType,
+						     out referenceClass,
+						     out methodQualifierSet);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+
+		result = methodQualifierSet.GetQualifierCount(out count);
+                CimException.ThrowIfMiResultFailure(result);
+						     
+                return (int)count;
             }
         }
 
@@ -48,17 +66,45 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("qualifierName");
                 }
 
-                int index;
-                Native.MiResult result = Native.ClassMethods.GetMethodGetQualifierElement_GetIndex(this.classHandle, methodIndex, parameterName, qualifierName , out index);
+		
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+								out name,
+								out qualifierSet,
+								out parameterSet);
+		CimException.ThrowIfMiResultFailure(result);
+		
+		MI_Type parameterType;
+		string referenceClass;
+		MI_QualifierSet methodQualifierSet;
+		result = parameterSet.GetParameterAt((uint)parameterName,
+						     out name,
+						     out parameterType,
+						     out referenceClass,
+						     out methodQualifierSet);
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		UInt32 index;
+		result = methodQualifierSet.GetQualifier(qualifierName,
+							 out qualifierType,
+							 out qualifierFlags,
+							 out qualifierValue,
+							 out index);
+
                 switch (result)
                 {
-                    case Native.MiResult.NO_SUCH_PROPERTY:
-                    case Native.MiResult.NOT_FOUND:
+                    case MI_Result.MI_RESULT_NO_SUCH_PROPERTY:
+                    case MI_Result.MI_RESULT_NOT_FOUND:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimQualifierOfMethodParameter(this.classHandle, methodIndex, parameterName, index);
+                        return new CimQualifierOfMethodParameter(this.classHandle, methodIndex, parameterName, (int)index);
                 }
             }
         }

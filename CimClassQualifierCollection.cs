@@ -7,14 +7,15 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimClassQualifierCollection: CimReadOnlyKeyedCollection<CimQualifier>
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
 
-        internal CimClassQualifierCollection(Native.ClassHandle classHandle)
+        internal CimClassQualifierCollection(MI_Class classHandle)
         {
             this.classHandle = classHandle;
         }
@@ -23,12 +24,16 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.ClassMethods.GetQualifier_Count(
-                    this.classHandle,
-                    out count);
+
+		MI_QualifierSet qualifierSet;
+		MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+		
+		UInt32 count;
+		result = qualifierSet.GetQualifierCount(out count);
+                CimException.ThrowIfMiResultFailure(result);
+
+                return (int)count;
             }
         }
 
@@ -41,16 +46,30 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("qualifierName");
                 }
 
-                int index;
-                Native.MiResult result = Native.ClassMethods.GetClassQualifier_Index(this.classHandle, qualifierName, out index);
+		MI_QualifierSet qualifierSet;
+		MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
+                CimException.ThrowIfMiResultFailure(result);
+		// TODO: there aren't many comments for the above pattern throughout the MMI sources, but if the above fails we shouldn't throw exception, just return MI_RESULT_NOT_FOUND like below. Make sure all of these cases are accounted for in MMI
+		
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		UInt32 index;
+
+		result = qualifierSet.GetQualifier(qualifierName,
+							out qualifierType,
+							out qualifierFlags,
+							out qualifierValue,
+							out index);
+							
                 switch (result)
                 {
-                    case Native.MiResult.NOT_FOUND:
+                    case MI_Result.MI_RESULT_NOT_FOUND:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimQualifierOfClass(this.classHandle, index);
+                        return new CimQualifierOfClass(this.classHandle, (int)index);
                 }
             }
         }

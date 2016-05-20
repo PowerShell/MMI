@@ -7,15 +7,16 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimMethodParameterDeclarationCollection : CimReadOnlyKeyedCollection<CimMethodParameterDeclaration>
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
         private readonly int methodIndex;
 
-        internal CimMethodParameterDeclarationCollection(Native.ClassHandle classHandle, int index)
+        internal CimMethodParameterDeclarationCollection(MI_Class classHandle, int index)
         {
             this.classHandle = classHandle;
             this.methodIndex = index;
@@ -25,13 +26,20 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.ClassMethods.GetMethodParametersCount(
-                    this.classHandle,
-                    this.methodIndex,
-                    out count);
+		UInt32 count;
+                string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+								out name,
+								out qualifierSet,
+								out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+
+		result = parameterSet.GetParameterCount(out count);
+                CimException.ThrowIfMiResultFailure(result);
+
+                return (int)count;
             }
         }
 
@@ -44,16 +52,33 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("parameterName");
                 }
 
-                int index;
-                Native.MiResult result = Native.ClassMethods.GetMethodElement_GetIndex(this.classHandle, methodIndex, parameterName, out index);
+		UInt32 index;
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+								out name,
+								out qualifierSet,
+								out parameterSet);
+
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type parameterType;
+		string referenceClass;
+		result = parameterSet.GetParameter(parameterName,
+						   out parameterType,
+						   out referenceClass,
+						   out qualifierSet,
+						   out index);
+
                 switch (result)
                 {
-                    case Native.MiResult.NOT_FOUND:
+                    case MI_Result.MI_RESULT_NOT_FOUND:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimMethodParameterDeclarationOfMethod(this.classHandle, methodIndex, index);
+                        return new CimMethodParameterDeclarationOfMethod(this.classHandle, methodIndex, (int)index);
                 }
             }
         }

@@ -6,16 +6,17 @@
 using System;
 using System.Collections;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal sealed class CimQualifierOfProperty : CimQualifier
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
         private readonly int index;
         private readonly string propertyName;
 
-        internal CimQualifierOfProperty(Native.ClassHandle classHandle, string propertyName, int index)
+        internal CimQualifierOfProperty(MI_Class classHandle, string propertyName, int index)
         {
             this.classHandle = classHandle;
             this.index = index;
@@ -27,13 +28,33 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             get
             {
                 string name;
-                Native.MiResult result = Native.ClassMethods.GetPropertyQualifierElementAt_GetName(
-                    this.classHandle,
-                    this.index,
-                    this.propertyName,
-                    out name);
-                CimException.ThrowIfMiResultFailure(result);
-                return name;
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		UInt32 index;
+		MI_Result result = this.classHandle.GetElement(this.propertyName,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
+		CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt(index,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+		CimException.ThrowIfMiResultFailure(result);
+		return name;
             }
         }
 
@@ -41,14 +62,34 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                object value;
-                Native.MiResult result = Native.ClassMethods.GetPropertyQualifierElementAt_GetValue(
-                    this.classHandle,
-                    this.index,
-                    this.propertyName,
-                    out value);
-                CimException.ThrowIfMiResultFailure(result);
-                return CimInstance.ConvertFromNativeLayer(value);
+                string name;
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		UInt32 index;
+		MI_Result result = this.classHandle.GetElement(this.propertyName,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
+		CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt(index,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+		CimException.ThrowIfMiResultFailure(result);
+                return (object)qualifierValue;
             }
         }
 
@@ -56,14 +97,34 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                Native.MiType type;
-                Native.MiResult result = Native.ClassMethods.GetPropertyQualifierElementAt_GetType(
-                    this.classHandle,
-                    this.index,
-                    this.propertyName,
-                    out type);
-                CimException.ThrowIfMiResultFailure(result);
-                return type.ToCimType();
+                string name;
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		UInt32 index;
+		MI_Result result = this.classHandle.GetElement(this.propertyName,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
+		CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt(index,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+		CimException.ThrowIfMiResultFailure(result);
+                return qualifierType.ToCimType();
             }
         }
 
@@ -71,14 +132,34 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                Native.MiFlags flags;
-                Native.MiResult result = Native.ClassMethods.GetPropertyQualifierElementAt_GetFlags(
-                    this.classHandle,
-                    this.index,
-                    this.propertyName,
-                    out flags);
-                CimException.ThrowIfMiResultFailure(result);
-                return flags.ToCimFlags();
+                string name;
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		UInt32 index;
+		MI_Result result = this.classHandle.GetElement(this.propertyName,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
+		CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt(index,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+		CimException.ThrowIfMiResultFailure(result);
+                return qualifierFlags.ToCimFlags();
             }
         }
     }

@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Microsoft.Management.Infrastructure.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -23,8 +24,8 @@ namespace Microsoft.Management.Infrastructure.Options
     {
         #region Constructors
 
-        private Native.SubscriptionDeliveryOptionsHandle _subscriptionDeliveryOptionsHandle;
-        internal Native.SubscriptionDeliveryOptionsHandle SubscriptionDeliveryOptionsHandle 
+        private MI_SubscriptionDeliveryOptions _subscriptionDeliveryOptionsHandle;
+        internal MI_SubscriptionDeliveryOptions SubscriptionDeliveryOptionsHandle 
         { 
             get
             {
@@ -52,8 +53,8 @@ namespace Microsoft.Management.Infrastructure.Options
         private void Initialize(CimSubscriptionDeliveryType types)
         {
 
-            Native.SubscriptionDeliveryOptionsHandle tmp;
-            Native.MiResult result = Native.ApplicationMethods.NewSubscriptionDeliveryOptions(CimApplication.Handle, (Native.MiSubscriptionDeliveryType)types, out tmp);
+            MI_SubscriptionDeliveryOptions tmp;
+            MI_Result result = CimApplication.Handle.NewSubscriptionDeliveryOptions((MI_SubscriptionDeliveryType)types, out tmp);
             CimException.ThrowIfMiResultFailure(result);
             this._subscriptionDeliveryOptionsHandle = tmp;
         }
@@ -69,8 +70,8 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 throw new ArgumentNullException("optionsToClone");
             }
-            Native.SubscriptionDeliveryOptionsHandle tmp;
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.Clone(optionsToClone.SubscriptionDeliveryOptionsHandle, out tmp);
+            MI_SubscriptionDeliveryOptions tmp;
+            MI_Result result = optionsToClone.SubscriptionDeliveryOptionsHandle.Clone(out tmp);
             CimException.ThrowIfMiResultFailure(result);
             this._subscriptionDeliveryOptionsHandle = tmp;
         }
@@ -93,7 +94,7 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.SetString(this._subscriptionDeliveryOptionsHandle, optionName, optionValue, flags);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetString(optionName, optionValue, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -112,7 +113,7 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.SetNumber(this._subscriptionDeliveryOptionsHandle, optionName, optionValue, flags);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetNumber(optionName, optionValue, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -131,7 +132,8 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.SetDateTime(this._subscriptionDeliveryOptionsHandle, optionName, optionValue, flags);
+	    MI_Datetime dt = new MI_Datetime(optionValue);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetDateTime(optionName, dt, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -150,7 +152,8 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.SetDateTime(this._subscriptionDeliveryOptionsHandle, optionName, optionValue, flags);
+	    MI_Datetime dt = new MI_Datetime(optionValue);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetDateTime(optionName, dt, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -169,7 +172,10 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.SetInterval(this._subscriptionDeliveryOptionsHandle, optionName, optionValue, flags);
+	    // TODO: convert optionValue to MI_Interval
+	    MI_Interval interval;
+	    interval.days = interval.hours = interval.minutes = interval.seconds = interval.microseconds = interval.__padding1 = interval.__padding2 = interval.__padding3 = 0;
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetInterval(optionName, interval, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
         /// <summary>
@@ -191,8 +197,9 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.SubscriptionDeliveryOptionsMethods.AddCredentials(this._subscriptionDeliveryOptionsHandle, optionName, optionValue.GetCredential(), flags);
-            CimException.ThrowIfMiResultFailure(result);
+	    // TODO: Uncomment when MI API supports AddCredentials
+            //MI_Result result = this._subscriptionDeliveryOptionsHandle.SubscriptionDeliveryOptionsMethods.AddCredentials(optionName, optionValue.GetCredential(), flags);
+            //CimException.ThrowIfMiResultFailure(result);
         }        
 
 
@@ -221,7 +228,7 @@ namespace Microsoft.Management.Infrastructure.Options
 
             if (disposing)
             {
-                this._subscriptionDeliveryOptionsHandle.Dispose();
+                this._subscriptionDeliveryOptionsHandle.Delete();
                 this._subscriptionDeliveryOptionsHandle = null;
             }
 
@@ -257,7 +264,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 {
     internal static class CimSubscriptionDeliveryOptionssExtensionMethods
     {
-        static internal Native.SubscriptionDeliveryOptionsHandle GetSubscriptionDeliveryOptionsHandle(this CimSubscriptionDeliveryOptions deliveryOptions)
+        static internal MI_SubscriptionDeliveryOptions GetSubscriptionDeliveryOptionsHandle(this CimSubscriptionDeliveryOptions deliveryOptions)
         {
             return deliveryOptions != null ? deliveryOptions.SubscriptionDeliveryOptionsHandle : null;
         }

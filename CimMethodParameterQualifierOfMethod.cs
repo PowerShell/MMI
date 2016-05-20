@@ -7,17 +7,18 @@ using System;
 using System.Collections;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal sealed class CimQualifierOfMethodParameter : CimQualifier
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
         private readonly int qualifierIndex;
         private readonly int parameterName;
         private readonly int methodIndex;
 
-        internal CimQualifierOfMethodParameter(Native.ClassHandle classHandle, int methodIndex, int parameterName, int index)
+        internal CimQualifierOfMethodParameter(MI_Class classHandle, int methodIndex, int parameterName, int index)
         {
             this.classHandle = classHandle;
             this.qualifierIndex = index;
@@ -29,14 +30,34 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                string name;
-                Native.MiResult result = Native.ClassMethods.GetMethodParameterGetQualifierElementAt_GetName(
-                    this.classHandle,
-                    this.methodIndex,
-                    this.parameterName,
-                    this.qualifierIndex, 
-                    out name);
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+					     out name,
+					     out qualifierSet,
+					     out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type parameterType;
+		string referenceClass;
+		result = parameterSet.GetParameterAt((uint)parameterName,
+						     out name,
+						     out parameterType,
+						     out referenceClass,
+						     out qualifierSet);
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt((uint)qualifierIndex,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+                CimException.ThrowIfMiResultFailure(result);
+
                 return name;
             }
         }
@@ -45,15 +66,35 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                object value;
-                Native.MiResult result = Native.ClassMethods.GetMethodParameterGetQualifierElementAt_GetValue(
-                    this.classHandle,
-                    this.methodIndex,
-                    this.parameterName,
-                    this.qualifierIndex,
-                    out value);
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+					     out name,
+					     out qualifierSet,
+					     out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
-                return CimInstance.ConvertFromNativeLayer(value);
+
+		MI_Type parameterType;
+		string referenceClass;
+		result = parameterSet.GetParameterAt((uint)parameterName,
+						     out name,
+						     out parameterType,
+						     out referenceClass,
+						     out qualifierSet);
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt((uint)qualifierIndex,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+                CimException.ThrowIfMiResultFailure(result);
+
+                return (object)qualifierValue;
             }
         }
 
@@ -61,15 +102,35 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                Native.MiType type;
-                Native.MiResult result = Native.ClassMethods.GetMethodParameterGetQualifierElementAt_GetType(
-                    this.classHandle,
-                    this.methodIndex,
-                    this.parameterName,
-                    this.qualifierIndex,
-                    out type);
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+					     out name,
+					     out qualifierSet,
+					     out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
-                return type.ToCimType();
+
+		MI_Type parameterType;
+		string referenceClass;
+		result = parameterSet.GetParameterAt((uint)parameterName,
+						     out name,
+						     out parameterType,
+						     out referenceClass,
+						     out qualifierSet);
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt((uint)qualifierIndex,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+                CimException.ThrowIfMiResultFailure(result);
+
+                return qualifierType.ToCimType();
             }
         }
 
@@ -77,15 +138,35 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                Native.MiFlags flags;
-                Native.MiResult result = Native.ClassMethods.GetMethodParameterGetQualifierElementAt_GetFlags(
-                    this.classHandle,
-                    this.methodIndex,
-                    this.parameterName,
-                    this.qualifierIndex,
-                    out flags);
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
+					     out name,
+					     out qualifierSet,
+					     out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
-                return flags.ToCimFlags();
+
+		MI_Type parameterType;
+		string referenceClass;
+		result = parameterSet.GetParameterAt((uint)parameterName,
+						     out name,
+						     out parameterType,
+						     out referenceClass,
+						     out qualifierSet);
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifierAt((uint)qualifierIndex,
+						     out name,
+						     out qualifierType,
+						     out qualifierFlags,
+						     out qualifierValue);
+                CimException.ThrowIfMiResultFailure(result);
+
+                return qualifierFlags.ToCimFlags();
             }
         }
     }

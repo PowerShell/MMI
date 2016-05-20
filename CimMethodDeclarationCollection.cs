@@ -7,14 +7,15 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimMethodDeclarationCollection : CimReadOnlyKeyedCollection<CimMethodDeclaration>
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
 
-        internal CimMethodDeclarationCollection(Native.ClassHandle classHandle)
+        internal CimMethodDeclarationCollection(MI_Class classHandle)
         {
             this.classHandle = classHandle;
         }
@@ -23,12 +24,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.ClassMethods.GetMethodCount(
-                    this.classHandle,
-                    out count);
+                uint count;
+                MI_Result result = this.classHandle.GetMethodCount(out count);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+                return (int)count;
             }
         }
 
@@ -41,16 +40,22 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("methodName");
                 }
 
-                int index;
-                Native.MiResult result = Native.ClassMethods.GetMethod_GetIndex(this.classHandle, methodName, out index);
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+		UInt32 index;
+		MI_Result result = this.classHandle.GetMethod(methodName,
+							      out qualifierSet,
+							      out parameterSet,
+							      out index);
+
                 switch (result)
                 {
-                    case Native.MiResult.METHOD_NOT_FOUND:
+                    case MI_Result.MI_RESULT_METHOD_NOT_FOUND:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimMethodDeclarationOfClass(this.classHandle, index);
+                        return new CimMethodDeclarationOfClass(this.classHandle, (int)index);
                 }
             }
         }

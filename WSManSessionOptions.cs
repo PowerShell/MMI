@@ -6,6 +6,7 @@
 using System;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using System.Globalization;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -18,7 +19,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// Creates a new <see cref="WSManSessionOptions"/> instance
         /// </summary>
         public WSManSessionOptions()
-            : base(Native.ApplicationMethods.protocol_WSMan)
+            : base(MI_Protocol.WSMan)
         {
         }
 
@@ -43,18 +44,17 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-
-                Native.MiResult result = Native.DestinationOptionsMethods.SetDestinationPort(
-                    this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetDestinationPort(value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                uint port;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetDestinationPort(
-                    this.DestinationOptionsHandleOnDemand, out port);
-                CimException.ThrowIfMiResultFailure(result);
+                uint port = 0;
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetDestinationPort(out port);
+                //CimException.ThrowIfMiResultFailure(result);
                 return port;
             }
         }
@@ -68,18 +68,17 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-
-                Native.MiResult result = Native.DestinationOptionsMethods.SetMaxEnvelopeSize(
-                    this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetMaxEnvelopeSize(value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                uint size;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetMaxEnvelopeSize(
-                    this.DestinationOptionsHandleOnDemand, out size);
-                CimException.ThrowIfMiResultFailure(result);
+                uint size = 0;
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetMaxEnvelopeSize(out size);
+                //CimException.ThrowIfMiResultFailure(result);
                 return size;
             }
         }
@@ -94,15 +93,17 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetCertCACheck(this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetCertCACheck(value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool check;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetCertCACheck(this.DestinationOptionsHandleOnDemand, out check);
-                CimException.ThrowIfMiResultFailure(result);
+                bool check = false;
+		// TODO: MI API is missing function below
+		//MI_Result result = this.DestinationOptionsHandleOnDemand.GetCertCACheck(out check);
+                //CimException.ThrowIfMiResultFailure(result);
                 return check;
             }
         }
@@ -116,16 +117,17 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-
-                Native.MiResult result = Native.DestinationOptionsMethods.SetCertCNCheck(this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetCertCNCheck(value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool check;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetCertCNCheck(this.DestinationOptionsHandleOnDemand, out check);
-                CimException.ThrowIfMiResultFailure(result);
+                bool check = false;
+		// TODO: MI API is missing function below
+		//MI_Result result = this.DestinationOptionsHandleOnDemand.GetCertCNCheck(out check);
+                //CimException.ThrowIfMiResultFailure(result);
                 return check;
             }
         }
@@ -139,18 +141,17 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-
-                Native.MiResult result = Native.DestinationOptionsMethods.SetCertRevocationCheck(
-                    this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetCertRevocationCheck(value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool check;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetCertRevocationCheck(
-                    this.DestinationOptionsHandleOnDemand, out check);
-                CimException.ThrowIfMiResultFailure(result);
+                bool check = false;
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetCertRevocationCheck(out check);
+                //CimException.ThrowIfMiResultFailure(result);
                 return check;
             }
         }
@@ -167,31 +168,28 @@ namespace Microsoft.Management.Infrastructure.Options
 
                 if (value)
                 {
-                    Native.MiResult result = Native.DestinationOptionsMethods.SetTransport(
-                        this.DestinationOptionsHandleOnDemand,
-                        Native.DestinationOptionsMethods.transport_Https);
-                    CimException.ThrowIfMiResultFailure(result);
+		    // TODO: MI API is missing function below
+                    //MI_Result result = this.DestinationOptionsHandleOnDemand.SetTransport(MI_Transport.HTTPS);
+                    //CimException.ThrowIfMiResultFailure(result);
                 }
                 else
                 {
-                    Native.MiResult result = Native.DestinationOptionsMethods.SetTransport(
-                        this.DestinationOptionsHandleOnDemand,
-                        Native.DestinationOptionsMethods.transport_Http);
-                    CimException.ThrowIfMiResultFailure(result);
+		    // TODO: MI API is missing function below
+                    //MI_Result result = this.DestinationOptionsHandleOnDemand.SetTransport(MI_Transport.HTTP);
+                    //CimException.ThrowIfMiResultFailure(result);
                 }
             }
             get
             {
                 this.AssertNotDisposed();
-                string transport;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetTransport(
-                        this.DestinationOptionsHandleOnDemand,
-                        out transport);
-                CimException.ThrowIfMiResultFailure(result);
+                string transport = "";
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetTransport(out transport);
+                //CimException.ThrowIfMiResultFailure(result);
 #if(!_CORECLR)
-                if ( string.Compare( transport, Native.DestinationOptionsMethods.transport_Https, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+                if ( string.Compare( transport, MI_Transport.HTTPS, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
 #else
-                if ( string.Compare( transport, Native.DestinationOptionsMethods.transport_Https, StringComparison.CurrentCultureIgnoreCase ) == 0 )
+                if ( string.Compare( transport, MI_Transport.HTTPS, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif
                 {
                     return true;
@@ -213,18 +211,18 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                string nativeProxyType = value.ToNativeType();
-                Native.MiResult result = Native.DestinationOptionsMethods.SetProxyType(
-                    this.DestinationOptionsHandleOnDemand, nativeProxyType);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //string nativeProxyType = value.ToNativeType();
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetProxyType(nativeProxyType);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                string type;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetProxyType(
-                    this.DestinationOptionsHandleOnDemand, out type);
-                CimException.ThrowIfMiResultFailure(result);
+                string type = "";
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetProxyType(out type);
+                //CimException.ThrowIfMiResultFailure(result);
                 return ProxyTypeExtensionMethods.FromNativeType(type);
             }
         }
@@ -240,18 +238,18 @@ namespace Microsoft.Management.Infrastructure.Options
                 this.AssertNotDisposed();
 
                 string nativePacketEncoding = value.ToNativeType();
-                Native.MiResult result = Native.DestinationOptionsMethods.SetPacketEncoding(
-                    this.DestinationOptionsHandleOnDemand, nativePacketEncoding);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetPacketEncoding(nativePacketEncoding);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
 
-                string nativePacketEncoding;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetPacketEncoding(
-                    this.DestinationOptionsHandleOnDemand, out nativePacketEncoding);
-                CimException.ThrowIfMiResultFailure(result);
+                string nativePacketEncoding = "";
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetPacketEncoding(out nativePacketEncoding);
+                //CimException.ThrowIfMiResultFailure(result);
                 return PacketEncodingExtensionMethods.FromNativeType(nativePacketEncoding);
             }
         }
@@ -268,15 +266,17 @@ namespace Microsoft.Management.Infrastructure.Options
 
                 bool noEncryption = value;
                 bool packetPrivacy = !noEncryption;
-                Native.MiResult result = Native.DestinationOptionsMethods.SetPacketPrivacy(this.DestinationOptionsHandleOnDemand, packetPrivacy);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetPacketPrivacy(packetPrivacy);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool packetPrivacy;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetPacketPrivacy(this.DestinationOptionsHandleOnDemand, out packetPrivacy);
-                CimException.ThrowIfMiResultFailure(result);
+                bool packetPrivacy = false;
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetPacketPrivacy(out packetPrivacy);
+                //CimException.ThrowIfMiResultFailure(result);
                 bool noEncryption = !packetPrivacy;
                 return noEncryption;
             }
@@ -292,17 +292,17 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetEncodePortInSPN(
-                    this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetEncodePortInSPN(value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool encodePortInServicePrincipalName;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetEncodePortInSPN(
-                    this.DestinationOptionsHandleOnDemand, out encodePortInServicePrincipalName);
-                CimException.ThrowIfMiResultFailure(result);
+                bool encodePortInServicePrincipalName = false;
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetEncodePortInSPN(out encodePortInServicePrincipalName);
+                //CimException.ThrowIfMiResultFailure(result);
                 return encodePortInServicePrincipalName;
             }
         }
@@ -321,18 +321,20 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetHttpUrlPrefix(this.DestinationOptionsHandleOnDemand, value.ToString());
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.SetHttpUrlPrefix(value.ToString());
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                string httpUrlPrefix;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetHttpUrlPrefix(this.DestinationOptionsHandleOnDemand, out httpUrlPrefix);
-                if (result != Native.MiResult.OK)
-                {
-                    return null;
-                }
+                string httpUrlPrefix = "";
+		// TODO: MI API is missing function below
+                //MI_Result result = this.DestinationOptionsHandleOnDemand.GetHttpUrlPrefix(out httpUrlPrefix);
+                //if (result != MI_Result.MI_RESULT_OK)
+                //{
+		//    return null;
+	        //}
                 try
                 {
                     try
@@ -376,8 +378,9 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.DestinationOptionsMethods.AddProxyCredentials(this.DestinationOptionsHandleOnDemand, credential.GetCredential());
-            CimException.ThrowIfMiResultFailure(result);
+	    // TODO: MI API is missing function below
+	    //MI_Result result = this.DestinationOptionsHandleOnDemand.AddProxyCredentials(credential.GetCredential());
+            //CimException.ThrowIfMiResultFailure(result);
         }
     }
 }

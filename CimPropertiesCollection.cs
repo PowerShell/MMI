@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -28,8 +29,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 throw new ArgumentNullException("newProperty");
             }
 
-            Native.MiResult result = Native.InstanceMethods.AddElement(
-                this._instanceHandle.Handle,
+            MI_Result result =  this._instanceHandle.Handle.AddElement(
                 newProperty.Name,
                 CimInstance.ConvertToNativeLayer(newProperty.Value),
                 newProperty.CimType.ToMiType(),
@@ -41,12 +41,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.InstanceMethods.GetElementCount(
-                    this._instanceHandle.Handle,
-                    out count);
+                uint count;
+                MI_Result result = this._instanceHandle.Handle.GetElementCount(out count);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+                return (int)count;
             }
         }
 
@@ -59,16 +57,23 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("propertyName");
                 }
 
-                int index;
-                Native.MiResult result = Native.InstanceMethods.GetElement_GetIndex(this._instanceHandle.Handle, propertyName, out index);
+		MI_Value value;
+		MI_Type type;
+		MI_Flags flags;
+		UInt32 index;
+                MI_Result result = this._instanceHandle.Handle.GetElement(propertyName,
+									  out value,
+									  out type,
+									  out flags,
+									  out index);
                 switch (result)
                 {
-                    case Native.MiResult.NO_SUCH_PROPERTY:
+                    case MI_Result.MI_RESULT_NO_SUCH_PROPERTY:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimPropertyOfInstance(this._instanceHandle, this._instance, index);
+                        return new CimPropertyOfInstance(this._instanceHandle, this._instance, (int)index);
                 }
             }
         }

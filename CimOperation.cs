@@ -7,7 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Diagnostics.CodeAnalysis;
-
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -20,12 +20,12 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
     //      2b) Native.OperationMethods.GetInstance/GetClassName/...
     internal class CimOperation : IDisposable
     {
-        private Native.OperationHandle _handle;
+        private MI_Operation _handle;
         private IDisposable _cancellationTokenRegistration;
 
         private readonly object _cancellationModeLock = new object();
 
-        internal CimOperation(Native.OperationHandle handle, CancellationToken? cancellationToken)
+        internal CimOperation(MI_Operation handle, CancellationToken? cancellationToken)
         {
             Debug.Assert(handle != null, "Caller should verify that handle != null");
             handle.AssertValidInternalState();
@@ -63,7 +63,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 this._cancellationMode = cancellationMode;
             }
 
-            Native.MiResult result = Native.OperationMethods.Cancel(this._handle, Native.MiCancellationReason.None);
+            MI_Result result = this._handle.Cancel(MI_CancellationReason.MI_REASON_NONE);
             CimException.ThrowIfMiResultFailure(result);
 
             this.Cancelled.SafeInvoke(this, EventArgs.Empty);
@@ -82,7 +82,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        internal Native.OperationHandle Handle
+        internal MI_Operation Handle
         {
             get
             {
@@ -115,7 +115,8 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
             if (disposing)
             {
-                this._handle.Dispose();
+		// TODO: do we need to call Delete/Dispose here? Looks like it is freed on destruction in MI_Operation
+                //this._handle.Delete();
 
                 if (this._cancellationTokenRegistration != null)
                 {

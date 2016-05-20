@@ -7,6 +7,9 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Management.Infrastructure.Internal;
+using NativeObject;
+
+// TODO: Entire file needs Serializer support
 
 namespace Microsoft.Management.Infrastructure.Serialization
 {
@@ -37,7 +40,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
     /// </summary>
     public sealed class CimSerializer : IDisposable
     {
-        private readonly Native.SerializerHandle _myHandle;
+        private readonly MI_Serializer _myHandle;
 
         #region Constructors
 
@@ -45,21 +48,23 @@ namespace Microsoft.Management.Infrastructure.Serialization
         {
             Debug.Assert(!string.IsNullOrEmpty(format), "Caller should verify that format != null");
 
-            Native.SerializerHandle tmpHandle;
-            Native.MiResult result = Native.ApplicationMethods.NewSerializer(CimApplication.Handle, format, flags, out tmpHandle);
-            if (result == Native.MiResult.INVALID_PARAMETER)
+            /*
+	      MI_Serializer tmpHandle;
+            MI_Result result = Native.ApplicationMethods.NewSerializer(CimApplication.Handle, format, flags, out tmpHandle);
+            if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
                 throw new ArgumentOutOfRangeException("format");
             }
             CimException.ThrowIfMiResultFailure(result);
             this._myHandle = tmpHandle;
+	    */
         }
 
         /// <summary>
         /// Construcutor that creates CimSerializer object with handle
         /// </summary>
         /// <param name="handle"></param>
-        internal CimSerializer(Native.SerializerHandle handle)
+        internal CimSerializer(MI_Serializer handle)
         {
             Debug.Assert(handle != null, "Caller should verify that handle != null");
             this._myHandle = handle;
@@ -111,6 +116,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="3#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public bool Serialize(CimInstance cimInstance, InstanceSerializationOptions options, byte[] buffer, ref uint offset)
         {
+	    /*
             if (cimInstance == null)
             {
                 throw new ArgumentNullException("cimInstance");
@@ -137,7 +143,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             bool doesDataFitIntoTheBuffer = true;
             uint numberOfBytesUsed;
-            Native.MiResult result = Native.SerializerMethods.SerializeInstance(
+            MI_Result result = Native.SerializerMethods.SerializeInstance(
                 this._myHandle,
                 (UInt32)options,
                 cimInstance.InstanceHandle, 
@@ -146,16 +152,16 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 out numberOfBytesUsed);
             switch (result)
             {
-                case Native.MiResult.FAILED:
+                case MI_Result.MI_RESULT_FAILED:
                     if ((buffer == null) || ((offset + numberOfBytesUsed) > buffer.Length))
                     {
-                        result = Native.MiResult.OK;
+                        result = MI_Result.MI_RESULT_OK;
                         offset += numberOfBytesUsed;
                     }
                     doesDataFitIntoTheBuffer = false;
                     return doesDataFitIntoTheBuffer;
 
-                case Native.MiResult.OK:
+                case MI_Result.MI_RESULT_OK:
                     offset += numberOfBytesUsed;
                     doesDataFitIntoTheBuffer = true;
                     return doesDataFitIntoTheBuffer;
@@ -165,6 +171,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
                     Debug.Assert(false, "Should throw in the previous statement");
                     return doesDataFitIntoTheBuffer;
             }
+	    */
+	    return false;
         }
 
         /// <summary>
@@ -187,6 +195,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="3#", Justification = "Have to return 2 values.  Wrapping the values in a class makes things more, not less complex")]
         public bool Serialize(CimClass cimClass, ClassSerializationOptions options, byte[] buffer, ref uint offset)
         {
+	    /*
             if (cimClass == null)
             {
                 throw new ArgumentNullException("cimClass");
@@ -214,7 +223,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             bool doesDataFitIntoTheBuffer = true;
 
             uint numberOfBytesUsed;
-            Native.MiResult result = Native.SerializerMethods.SerializeClass(
+            MI_Result result = Native.SerializerMethods.SerializeClass(
                 this._myHandle,
                 (UInt32)options,
                 cimClass.ClassHandle, 
@@ -223,16 +232,16 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 out numberOfBytesUsed);
             switch (result)
             {
-                case Native.MiResult.FAILED:
+                case MI_Result.MI_RESULT_FAILED:
                     if ((buffer == null) || ((offset + numberOfBytesUsed) > buffer.Length))
                     {
-                        result = Native.MiResult.OK;
+                        result = MI_Result.MI_RESULT_OK;
                         offset += numberOfBytesUsed;
                     }
                     doesDataFitIntoTheBuffer = false;
                     return doesDataFitIntoTheBuffer;
 
-                case Native.MiResult.OK:
+                case MI_Result.MI_RESULT_OK:
                     offset += numberOfBytesUsed;
                     doesDataFitIntoTheBuffer = true;
                     return doesDataFitIntoTheBuffer;
@@ -242,6 +251,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
                     Debug.Assert(false, "Should throw in the previous statement");
                     return doesDataFitIntoTheBuffer;
             }
+	    */
+	    return false;
         }
 
         /// <summary>
@@ -252,6 +263,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// <returns>Serialized representation of <paramref name="cimInstance"/></returns>
         public byte[] Serialize(CimInstance cimInstance, InstanceSerializationOptions options)
         {
+	    // TODO: Add Serializer support
+	    /*
             if (cimInstance == null)
             {
                 throw new ArgumentNullException("cimInstance");
@@ -270,6 +283,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
             Debug.Assert(buffer.Length == offset, "Newly allocated buffer should fit exactly (2)");
 
             return buffer;
+	    */
+	    return new byte[1];
         }
 
         /// <summary>
@@ -280,6 +295,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// <returns>Serialized representation of <paramref name="cimClass"/></returns>
         public byte[] Serialize(CimClass cimClass, ClassSerializationOptions options)
         {
+	    /*
             if (cimClass == null)
             {
                 throw new ArgumentNullException("cimClass");
@@ -298,6 +314,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
             Debug.Assert(buffer.Length == offset, "Newly allocated buffer should fit exactly (2)");
 
             return buffer;
+	    */
+	    return new byte[1];
         }
 
         #endregion
@@ -325,7 +343,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             if (disposing)
             {
-                this._myHandle.Dispose();
+		// TODO: Uncomment once this function is implemented
+                //this._myHandle.Delete();
             }
 
             _disposed = true;

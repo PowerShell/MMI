@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -28,12 +29,12 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void ProcessNativeCallback(
-            Native.OperationCallbackProcessingContext callbackProcessingContext, 
+            OperationCallbackProcessingContext callbackProcessingContext, 
             T currentItem, 
             bool moreResults, 
-            Native.MiResult operationResult, 
+            MI_Result operationResult, 
             string errorMessage, 
-            Native.InstanceHandle errorDetailsHandle)
+            MI_Instance errorDetailsHandle)
         {
             Debug.Assert(callbackProcessingContext != null, "We should never get called with a null callbackProcessingContext");
 
@@ -42,7 +43,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 this.DisposeOperationWhenPossible();
             }
 
-            if ((currentItem == null) && (operationResult == Native.MiResult.OK))
+            if ((currentItem == null) && (operationResult == MI_Result.MI_RESULT_OK))
             {
                 // process the ACK message if and only if operationResult == OK
                 if (this._reportOperationStarted)
@@ -52,14 +53,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
             else if (currentItem != null)
             {
-                Debug.Assert(operationResult == Native.MiResult.OK, "Assumming that instances are reported back only on success");
+                Debug.Assert(operationResult == MI_Result.MI_RESULT_OK, "Assumming that instances are reported back only on success");
                 this.OnNextInternal(callbackProcessingContext, currentItem);
             }
 
             CimException exception = CimException.GetExceptionIfMiResultFailure(operationResult, errorMessage, errorDetailsHandle);
             if (exception != null)
             {
-                Debug.Assert(operationResult != Native.MiResult.OK, "Assumming that exceptions are reported back only on failure");
+                Debug.Assert(operationResult != MI_Result.MI_RESULT_OK, "Assumming that exceptions are reported back only on failure");
                 Debug.Assert(!moreResults, "Assumming that an error means end of results");
 
                 // this throw-catch is needed to fill-out 1) WER data and 2) exception's stack trace
@@ -81,7 +82,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         private void ProcessEndOfResultsWorker(
-            Native.OperationCallbackProcessingContext callbackProcessingContext, 
+            OperationCallbackProcessingContext callbackProcessingContext, 
             CimOperation cimOperation,
             Exception exception)
         {
@@ -113,7 +114,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        private void OnErrorInternal(Native.OperationCallbackProcessingContext callbackProcessingContext, Exception exception)
+        private void OnErrorInternal(OperationCallbackProcessingContext callbackProcessingContext, Exception exception)
         {
             this.CallIntoUserCallback(
                 callbackProcessingContext,
@@ -121,7 +122,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 suppressFurtherUserCallbacks: true);
         }
 
-        private void OnCompletedInternal(Native.OperationCallbackProcessingContext callbackProcessingContext)
+        private void OnCompletedInternal(OperationCallbackProcessingContext callbackProcessingContext)
         {
             this.CallIntoUserCallback(
                 callbackProcessingContext,
@@ -129,14 +130,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 suppressFurtherUserCallbacks: true);
         }
 
-        private void OnNextInternal(Native.OperationCallbackProcessingContext callbackProcessingContext, T item)
+        private void OnNextInternal(OperationCallbackProcessingContext callbackProcessingContext, T item)
         {
             this.CallIntoUserCallback(
                 callbackProcessingContext,
                 () => this._observer.OnNext(item));
         }
 
-        internal override void ReportInternalError(Native.OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        internal override void ReportInternalError(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
         {
             this.OnErrorInternal(callbackProcessingContext, internalError);
         }

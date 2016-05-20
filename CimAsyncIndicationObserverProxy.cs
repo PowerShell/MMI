@@ -4,8 +4,8 @@
  */
 
 using System;
-using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -20,15 +20,15 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void IndicationResultCallback(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
-            Native.InstanceHandle instanceHandle,
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
+            MI_Instance instanceHandle,
             String bookMark,
             String machineID,
             bool moreResults,
-            Native.MiResult operationResult,
+            MI_Result operationResult,
             String errorMessage,
-            Native.InstanceHandle errorDetailsHandle)
+            MI_Instance errorDetailsHandle)
         {
             CimSubscriptionResult currentItem = null;
             if ((instanceHandle != null) && (!instanceHandle.IsInvalid))
@@ -56,10 +56,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        public override void RegisterAcceptedAsyncCallbacks(OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
+        public override void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
             base.RegisterAcceptedAsyncCallbacks(operationCallbacks, operationOptions);
-            operationCallbacks.IndicationResultCallback = this.IndicationResultCallback;
+	    // TODO: Uncomment and fix below
+            //operationCallbacks.indicationResult = this.IndicationResultCallback;
         }
     }
 }

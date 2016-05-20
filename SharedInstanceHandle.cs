@@ -5,24 +5,25 @@
 
 using System;
 using System.Diagnostics;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal
 {
     internal class SharedInstanceHandle
     {
-        private readonly Native.InstanceHandle _handle;
+        private readonly MI_Instance _handle;
         private readonly SharedInstanceHandle _parent;
         private readonly object _numberOfReferencesLock = new object();
         private int _numberOfReferences = 1;
 
-        internal SharedInstanceHandle(Native.InstanceHandle handle)
+        internal SharedInstanceHandle(MI_Instance handle)
         {
             Debug.Assert(handle != null, "Caller should verify that handle != null");
             handle.AssertValidInternalState();
             this._handle = handle;
         }
 
-        internal SharedInstanceHandle(Native.InstanceHandle handle, SharedInstanceHandle parent)
+        internal SharedInstanceHandle(MI_Instance handle, SharedInstanceHandle parent)
             : this(handle)
         {
             this._parent = parent;
@@ -32,7 +33,7 @@ namespace Microsoft.Management.Infrastructure.Internal
             }
         }
 
-        internal Native.InstanceHandle Handle
+        internal MI_Instance Handle
         {
             get
             {
@@ -67,7 +68,7 @@ namespace Microsoft.Management.Infrastructure.Internal
                 Debug.Assert(this._numberOfReferences >= 0, "SharedInstanceHandle should preserve the invariant that _numberOfReferences>=0");
                 if (this._numberOfReferences == 0)
                 {
-                    this._handle.Dispose();
+                    this._handle.Delete();
                     if (this._parent != null)
                     {
                         this._parent.Release();

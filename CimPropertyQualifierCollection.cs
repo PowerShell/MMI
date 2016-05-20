@@ -7,15 +7,16 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimPropertyQualifierCollection : CimReadOnlyKeyedCollection<CimQualifier>
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
         private readonly string name;
 
-        internal CimPropertyQualifierCollection(Native.ClassHandle classHandle, string name)
+        internal CimPropertyQualifierCollection(MI_Class classHandle, string name)
         {
             this.classHandle = classHandle;
             this.name = name;
@@ -25,13 +26,27 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.ClassMethods.GetPropertyQualifier_Count(
-                    this.classHandle,
-                    name,
-                    out count);
+                UInt32 count;
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		UInt32 index;
+		MI_Result result = this.classHandle.GetElement(name,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+
+		result = qualifierSet.GetQualifierCount(out count);
+                CimException.ThrowIfMiResultFailure(result);
+                return (int)count;
             }
         }
 
@@ -44,17 +59,41 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("qualifierName");
                 }
 
-                int index;
-                Native.MiResult result = Native.ClassMethods.GetPropertyQualifier_Index(this.classHandle, name, qualifierName, out index);
+                UInt32 index;
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		MI_Result result = this.classHandle.GetElement(name,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
+                CimException.ThrowIfMiResultFailure(result);
+
+		MI_Type qualifierType;
+		MI_Flags qualifierFlags;
+		MI_Value qualifierValue;
+		result = qualifierSet.GetQualifier(qualifierName,
+						   out qualifierType,
+						   out qualifierFlags,
+						   out qualifierValue,
+						   out index);
+
                 switch (result)
                 {
-                    case Native.MiResult.NO_SUCH_PROPERTY:
-                    case Native.MiResult.NOT_FOUND:
+                    case MI_Result.MI_RESULT_NO_SUCH_PROPERTY:
+                    case MI_Result.MI_RESULT_NOT_FOUND:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimQualifierOfProperty(this.classHandle, name, index);
+                        return new CimQualifierOfProperty(this.classHandle, name, (int)index);
                 }
             }
         }

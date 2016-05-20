@@ -4,6 +4,7 @@
  */
 
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -13,33 +14,33 @@ namespace Microsoft.Management.Infrastructure
     [SuppressMessage("Microsoft.Design", "CA1027:MarkEnumsWithFlags", Justification = "NativeErrorCode is a regular enum, not a flags enum.  No idea why FxCop complained about this enum.")]
     public enum NativeErrorCode
     {
-        Ok = Native.MiResult.OK,
-        Failed = Native.MiResult.FAILED,
-        AccessDenied = Native.MiResult.ACCESS_DENIED,
-        InvalidNamespace = Native.MiResult.INVALID_NAMESPACE,
-        InvalidParameter = Native.MiResult.INVALID_PARAMETER,
-        InvalidClass = Native.MiResult.INVALID_CLASS,
-        NotFound = Native.MiResult.NOT_FOUND,
-        NotSupported = Native.MiResult.NOT_SUPPORTED,
-        ClassHasChildren = Native.MiResult.CLASS_HAS_CHILDREN,
-        ClassHasInstances = Native.MiResult.CLASS_HAS_INSTANCES,
-        InvalidSuperClass = Native.MiResult.INVALID_SUPERCLASS,
-        AlreadyExists = Native.MiResult.ALREADY_EXISTS,
-        NoSuchProperty = Native.MiResult.NO_SUCH_PROPERTY,
-        TypeMismatch = Native.MiResult.TYPE_MISMATCH,
-        QueryLanguageNotSupported = Native.MiResult.QUERY_LANGUAGE_NOT_SUPPORTED,
-        InvalidQuery = Native.MiResult.INVALID_QUERY,
-        MethodNotAvailable = Native.MiResult.METHOD_NOT_AVAILABLE,
-        MethodNotFound = Native.MiResult.METHOD_NOT_FOUND,
-        NamespaceNotEmpty = Native.MiResult.NAMESPACE_NOT_EMPTY,
-        InvalidEnumerationContext = Native.MiResult.INVALID_ENUMERATION_CONTEXT,
-        InvalidOperationTimeout = Native.MiResult.INVALID_OPERATION_TIMEOUT,
-        PullHasBeenAbandoned = Native.MiResult.PULL_HAS_BEEN_ABANDONED,
-        PullCannotBeAbandoned = Native.MiResult.PULL_CANNOT_BE_ABANDONED,
-        FilteredEnumerationNotSupported = Native.MiResult.FILTERED_ENUMERATION_NOT_SUPPORTED,
-        ContinuationOnErrorNotSupported = Native.MiResult.CONTINUATION_ON_ERROR_NOT_SUPPORTED,
-        ServerLimitsExceeded = Native.MiResult.SERVER_LIMITS_EXCEEDED,
-        ServerIsShuttingDown = Native.MiResult.SERVER_IS_SHUTTING_DOWN,
+        Ok = (int)MI_Result.MI_RESULT_OK,
+        Failed = (int)MI_Result.MI_RESULT_FAILED,
+        AccessDenied = (int)MI_Result.MI_RESULT_ACCESS_DENIED,
+        InvalidNamespace = (int)MI_Result.MI_RESULT_INVALID_NAMESPACE,
+        InvalidParameter = (int)MI_Result.MI_RESULT_INVALID_PARAMETER,
+        InvalidClass = (int)MI_Result.MI_RESULT_INVALID_CLASS,
+        NotFound = (int)MI_Result.MI_RESULT_NOT_FOUND,
+        NotSupported = (int)MI_Result.MI_RESULT_NOT_SUPPORTED,
+        ClassHasChildren = (int)MI_Result.MI_RESULT_CLASS_HAS_CHILDREN,
+        ClassHasInstances = (int)MI_Result.MI_RESULT_CLASS_HAS_INSTANCES,
+        InvalidSuperClass = (int)MI_Result.MI_RESULT_INVALID_SUPERCLASS,
+        AlreadyExists = (int)MI_Result.MI_RESULT_ALREADY_EXISTS,
+        NoSuchProperty = (int)MI_Result.MI_RESULT_NO_SUCH_PROPERTY,
+        TypeMismatch = (int)MI_Result.MI_RESULT_TYPE_MISMATCH,
+        QueryLanguageNotSupported = (int)MI_Result.MI_RESULT_QUERY_LANGUAGE_NOT_SUPPORTED,
+        InvalidQuery = (int)MI_Result.MI_RESULT_INVALID_QUERY,
+        MethodNotAvailable = (int)MI_Result.MI_RESULT_METHOD_NOT_AVAILABLE,
+        MethodNotFound = (int)MI_Result.MI_RESULT_METHOD_NOT_FOUND,
+        NamespaceNotEmpty = (int)MI_Result.MI_RESULT_NAMESPACE_NOT_EMPTY,
+        InvalidEnumerationContext = (int)MI_Result.MI_RESULT_INVALID_ENUMERATION_CONTEXT,
+        InvalidOperationTimeout = (int)MI_Result.MI_RESULT_INVALID_OPERATION_TIMEOUT,
+        PullHasBeenAbandoned = (int)MI_Result.MI_RESULT_PULL_HAS_BEEN_ABANDONED,
+        PullCannotBeAbandoned = (int)MI_Result.MI_RESULT_PULL_CANNOT_BE_ABANDONED,
+        FilteredEnumerationNotSupported = (int)MI_Result.MI_RESULT_FILTERED_ENUMERATION_NOT_SUPPORTED,
+        ContinuationOnErrorNotSupported = (int)MI_Result.MI_RESULT_CONTINUATION_ON_ERROR_NOT_SUPPORTED,
+        ServerLimitsExceeded = (int)MI_Result.MI_RESULT_SERVER_LIMITS_EXCEEDED,
+        ServerIsShuttingDown = (int)MI_Result.MI_RESULT_SERVER_IS_SHUTTING_DOWN,
     }
 }
 
@@ -47,7 +48,7 @@ namespace Microsoft.Management.Infrastructure.Internal
 {
     internal static class NativeErrorCodeExtensionMethods
     {
-        public static NativeErrorCode ToNativeErrorCode(this Native.MiResult miResult)
+        public static NativeErrorCode ToNativeErrorCode(this MI_Result miResult)
         {
             return (NativeErrorCode)miResult;
         }

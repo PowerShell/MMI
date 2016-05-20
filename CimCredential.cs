@@ -10,6 +10,7 @@ using System.Threading;
 using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {

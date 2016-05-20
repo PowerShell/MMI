@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -137,7 +137,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void CallIntoUserCallback(
-            Native.OperationCallbackProcessingContext callbackProcessingContext, 
+            OperationCallbackProcessingContext callbackProcessingContext, 
             Action userCallback, 
             bool serializeCallbacks = false,
             bool suppressFurtherUserCallbacks = false)
@@ -169,9 +169,9 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        internal abstract void ReportInternalError(Native.OperationCallbackProcessingContext callbackProcessingContext, Exception internalError);
+        internal abstract void ReportInternalError(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError);
 
-        private void ReportInternalErrorCore(Native.OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        private void ReportInternalErrorCore(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
         {
             Debug.Assert(internalError != null, "Caller should make sure internalError != null");
 
@@ -198,10 +198,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 });
         }
 
-        public virtual void RegisterAcceptedAsyncCallbacks(OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
+        public virtual void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
-            operationCallbacks.InternalErrorCallback = this.ReportInternalErrorCore;
-            operationCallbacks.ManagedOperationContext = this;
+	    // TODO: Uncomment and fix two lines below
+            //operationCallbacks.InternalErrorCallback = this.ReportInternalErrorCore;
+            //operationCallbacks.ManagedOperationContext = this;
         }
 
         #endregion Dealing with async callbacks

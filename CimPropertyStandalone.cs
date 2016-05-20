@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -45,7 +46,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     try
                     {
                         Helpers.ValidateNoNullElements(value as IList);
-                        Native.InstanceMethods.ThrowIfMismatchedType(this.CimType.ToMiType(), CimInstance.ConvertToNativeLayer(value, this.CimType));
+                        InstanceMethods.ThrowIfMismatchedType(this.CimType.ToMiType(), CimInstance.ConvertToNativeLayer(value, this.CimType));
                     }
                     catch (InvalidCastException e)
                     {

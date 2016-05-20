@@ -4,26 +4,28 @@
  */
 
 using System;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal
 {
     internal static class CimApplication
     {
         #region Initializing CimApplication singleton
+	static internal string ApplicationID = "CoreCLRSingletonAppDomain";
 
-        static private Native.ApplicationHandle GetApplicationHandle()
+        static private MI_Application GetApplicationHandle()
         {
-            Native.ApplicationHandle applicationHandle;
-            Native.InstanceHandle errorDetailsHandle;
-            Native.MiResult result = Native.ApplicationMethods.Initialize(
-                out errorDetailsHandle,
-                out applicationHandle);
+            MI_Application applicationHandle;
+            MI_Instance errorDetailsHandle;
+            MI_Result result = MI_Application.Initialize(ApplicationID,
+							 out errorDetailsHandle,
+							 out applicationHandle);
             CimException.ThrowIfMiResultFailure(result, errorDetailsHandle);
 
             return applicationHandle;
         }
 
-        static public Native.ApplicationHandle Handle
+        static public MI_Application Handle
         {
             get
             {
@@ -31,7 +33,7 @@ namespace Microsoft.Management.Infrastructure.Internal
             }
         }
 
-        private static readonly Lazy<Native.ApplicationHandle> LazyHandle = new Lazy<Native.ApplicationHandle>(CimApplication.GetApplicationHandle);
+        private static readonly Lazy<MI_Application> LazyHandle = new Lazy<MI_Application>(CimApplication.GetApplicationHandle);
 
         #endregion
     }

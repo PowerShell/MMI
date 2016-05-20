@@ -4,6 +4,7 @@
  */
 
 using System.Diagnostics;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -14,17 +15,16 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         {
         }
 
-        internal override Native.MiResult NativeMoveNext(Native.OperationHandle operationHandle, out CimClass currentItem,
-                    out bool moreResults, out Native.MiResult operationResult,
-            out string errorMessage, out Native.InstanceHandle errorDetailsHandle)
+        internal override MI_Result NativeMoveNext(MI_Operation operationHandle, out CimClass currentItem,
+                    out bool moreResults, out MI_Result operationResult,
+            out string errorMessage, out MI_Instance errorDetailsHandle)
         {
             Debug.Assert(operationHandle != null, "Caller should verify operationHandle != null");
 
             currentItem = null;
 
-            Native.ClassHandle classHandle;
-            Native.MiResult functionResult = Native.OperationMethods.GetClass(
-                operationHandle,
+            MI_Class classHandle;
+            MI_Result functionResult = operationHandle.GetClass(
                 out classHandle,
                 out moreResults,
                 out operationResult,

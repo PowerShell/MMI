@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -20,19 +21,19 @@ namespace Microsoft.Management.Infrastructure.Options
 
         // Nothing for Native.MiOperationFlags.ManualAckResults - this is covered by the infrastructure
 
-        NoTypeInformation = Native.MiOperationFlags.NoRtti,
-        BasicTypeInformation = Native.MiOperationFlags.BasicRtti,
-        StandardTypeInformation = Native.MiOperationFlags.StandardRtti,
-        FullTypeInformation = Native.MiOperationFlags.FullRtti,
+        NoTypeInformation = MI_OperationFlags.MI_OPERATIONFLAGS_NO_RTTI,
+        BasicTypeInformation = MI_OperationFlags.MI_OPERATIONFLAGS_BASIC_RTTI,
+        StandardTypeInformation = MI_OperationFlags.MI_OPERATIONFLAGS_STANDARD_RTTI,
+        FullTypeInformation = MI_OperationFlags.MI_OPERATIONFLAGS_FULL_RTTI,
         
-        LocalizedQualifiers = Native.MiOperationFlags.LocalizedQualifiers,
+        LocalizedQualifiers = MI_OperationFlags.MI_OPERATIONFLAGS_LOCALIZED_QUALIFIERS,
         
-        ExpensiveProperties = Native.MiOperationFlags.ExpensiveProperties,
+        ExpensiveProperties = MI_OperationFlags.MI_OPERATIONFLAGS_EXPENSIVE_PROPERTIES,
         
-        PolymorphismShallow = Native.MiOperationFlags.PolymorphismShallow,
-        PolymorphismDeepBasePropsOnly = Native.MiOperationFlags.PolymorphismDeepBasePropsOnly,
+        PolymorphismShallow = MI_OperationFlags.MI_OPERATIONFLAGS_POLYMORPHISM_SHALLOW,
+        PolymorphismDeepBasePropsOnly = MI_OperationFlags.MI_OPERATIONFLAGS_POLYMORPHISM_DEEP_BASE_PROPS_ONLY,
 
-        ReportOperationStarted = Native.MiOperationFlags.ReportOperationStarted,
+        ReportOperationStarted = MI_OperationFlags.MI_OPERATIONFLAGS_REPORT_OPERATION_STARTED,
     };
 
     /// <summary>
@@ -79,9 +80,9 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 {
     internal static class OperationFlagsExtensionMethods
     {
-        public static Native.MiOperationFlags ToNative(this CimOperationFlags operationFlags)
+        public static MI_OperationFlags ToNative(this CimOperationFlags operationFlags)
         {
-            return (Native.MiOperationFlags)operationFlags;
+            return (MI_OperationFlags)operationFlags;
         }
     }
 }

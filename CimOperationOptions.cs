@@ -10,6 +10,7 @@ using System.Threading;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -24,8 +25,8 @@ namespace Microsoft.Management.Infrastructure.Options
         , ICloneable
 #endif
     {
-        private readonly Lazy<Native.OperationOptionsHandle> _operationOptionsHandle;
-        private Native.OperationOptionsHandle OperationOptionsHandleOnDemand
+        private readonly Lazy<MI_OperationOptions> _operationOptionsHandle;
+        private MI_OperationOptions OperationOptionsHandleOnDemand
         {
             get
             {
@@ -33,7 +34,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 return this._operationOptionsHandle.Value;
             }
         }
-        internal Native.OperationOptionsHandle OperationOptionsHandle
+        internal MI_OperationOptions OperationOptionsHandle
         {
             get
             {
@@ -45,8 +46,8 @@ namespace Microsoft.Management.Infrastructure.Options
             }
         }
 
-        private readonly Native.OperationCallbacks _operationCallback;
-        internal Native.OperationCallbacks OperationCallback
+        private readonly MI_OperationCallbacks _operationCallback;
+        internal MI_OperationCallbacks OperationCallback
         {
             get
             {
@@ -70,18 +71,18 @@ namespace Microsoft.Management.Infrastructure.Options
         /// <param name="mustUnderstand">Indicates whether the server has to understand all the options.</param>
         public CimOperationOptions(bool mustUnderstand)
         {
-            var operationCallbacks = new Native.OperationCallbacks();
+            var operationCallbacks = new MI_OperationCallbacks();
             this._operationCallback = operationCallbacks;
             _writeMessageCallback = null;
             _writeProgressCallback = null;
             _writeErrorCallback = null;
             _promptUserCallback = null;
-            this._operationOptionsHandle = new Lazy<Native.OperationOptionsHandle>(
+            this._operationOptionsHandle = new Lazy<MI_OperationOptions>(
                     delegate
                     {
-                        Native.OperationOptionsHandle operationOptionsHandle;
-                        Native.MiResult result = Native.ApplicationMethods.NewOperationOptions(
-                            CimApplication.Handle, mustUnderstand, out operationOptionsHandle);
+                        MI_OperationOptions operationOptionsHandle;
+                        MI_Result result = CimApplication.Handle.NewOperationOptions(
+                            mustUnderstand, out operationOptionsHandle);
                         CimException.ThrowIfMiResultFailure(result);
                         return operationOptionsHandle;
                     });
@@ -104,11 +105,11 @@ namespace Microsoft.Management.Infrastructure.Options
             _writeProgressCallback = optionsToClone._writeProgressCallback;
             _writeErrorCallback = optionsToClone._writeErrorCallback;
             _promptUserCallback = optionsToClone._promptUserCallback;
-            this._operationOptionsHandle = new Lazy<Native.OperationOptionsHandle>(
+            this._operationOptionsHandle = new Lazy<MI_OperationOptions>(
                     delegate
                     {
-                        Native.OperationOptionsHandle tmp;
-                        Native.MiResult result = Native.OperationOptionsMethods.Clone(optionsToClone.OperationOptionsHandle, out tmp);
+                        MI_OperationOptions tmp;
+                        MI_Result result = optionsToClone.OperationOptionsHandle.Clone(out tmp);
                         CimException.ThrowIfMiResultFailure(result);
                         return tmp;
                     });
@@ -122,15 +123,25 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-                Native.MiResult result = Native.OperationOptionsMethods.SetTimeout(this.OperationOptionsHandleOnDemand, value);
+		MI_Interval interval = value;
+
+                MI_Result result = this.OperationOptionsHandleOnDemand.SetInterval("__MI_OPERATIONOPTIONS_TIMEOUT",
+										   interval,
+										   MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                TimeSpan tempTimeout;
-                Native.MiResult result = Native.OperationOptionsMethods.GetTimeout(this.OperationOptionsHandleOnDemand, out tempTimeout);
+		MI_Interval value;
+		UInt32 index;
+		MI_OperationOptionsFlags flags;
+                MI_Result result = this.OperationOptionsHandleOnDemand.GetInterval("__MI_OPERATIONOPTIONS_TIMEOUT",
+										   out value,
+										   out index,
+										   out flags);
                 CimException.ThrowIfMiResultFailure(result);
+                TimeSpan tempTimeout = value;
                 return tempTimeout;
             }
         }
@@ -149,17 +160,24 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.OperationOptionsMethods.SetResourceUriPrefix(this.OperationOptionsHandleOnDemand, value.ToString());
+                MI_Result result = this.OperationOptionsHandleOnDemand.SetString("__MI_OPERATIONOPTIONS_RESOURCE_URI_PREFIX",
+										 value.ToString(),
+										 MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
             get
             {
                 this.AssertNotDisposed();
-                string tmp;
-                Native.MiResult result = Native.OperationOptionsMethods.GetResourceUriPrefix(this.OperationOptionsHandleOnDemand, out tmp);
+		string value;
+		UInt32 index;
+		MI_OperationOptionsFlags flags;
+                MI_Result result = this.OperationOptionsHandleOnDemand.GetString("__MI_OPERATIONOPTIONS_RESOURCE_URI_PREFIX",
+										 out value,
+										 out index,
+										 out flags);
                 CimException.ThrowIfMiResultFailure(result);
-                return new Uri(tmp);
+                return new Uri(value);
             }
         }
 
@@ -177,17 +195,26 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.OperationOptionsMethods.SetResourceUri(this.OperationOptionsHandleOnDemand, value.ToString());
+                MI_Result result = this.OperationOptionsHandleOnDemand.SetString("__MI_OPERATIONOPTIONS_RESOURCE_URI",
+										 value.ToString(),
+										 MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
+
             }
 
             get
             {
                 this.AssertNotDisposed();
-                string tmp;
-                Native.MiResult result = Native.OperationOptionsMethods.GetResourceUri(this.OperationOptionsHandleOnDemand, out tmp);
+
+		string value;
+		UInt32 index;
+		MI_OperationOptionsFlags flags;
+                MI_Result result = this.OperationOptionsHandleOnDemand.GetString("__MI_OPERATIONOPTIONS_RESOURCE_URI",
+										 out value,
+										 out index,
+										 out flags);
                 CimException.ThrowIfMiResultFailure(result);
-                return new Uri(tmp);
+                return new Uri(value);
             }
         }        
 
@@ -202,7 +229,10 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-                Native.MiResult result = Native.OperationOptionsMethods.SetUseMachineID(this.OperationOptionsHandleOnDemand, value);
+		UInt32 number = value ? (uint)1 : (uint)0;
+                MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber("__MI_OPERATIONOPTIONS_USE_MACHINE_ID",
+										 number,
+										 MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
@@ -210,8 +240,15 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
                 bool tmp;
-                Native.MiResult result = Native.OperationOptionsMethods.GetUseMachineID(this.OperationOptionsHandleOnDemand, out tmp);
+		UInt32 value;
+		UInt32 index;
+		MI_OperationOptionsFlags flags;
+                MI_Result result = this.OperationOptionsHandleOnDemand.GetNumber("__MI_OPERATIONOPTIONS_USE_MACHINE_ID",
+										 out value,
+										 out index,
+										 out flags);
                 CimException.ThrowIfMiResultFailure(result);
+		tmp = value == 1 ? true : false;
                 return tmp;
             }
         }
@@ -230,7 +267,9 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.OperationOptionsMethods.SetOption(this.OperationOptionsHandleOnDemand, optionName, optionValue);
+            MI_Result result = this.OperationOptionsHandleOnDemand.SetString(optionName,
+									     optionValue,
+									     MI_OperationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -243,8 +282,9 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.OperationOptionsMethods.SetPromptUserRegularMode(this.OperationOptionsHandleOnDemand,
-                (Native.MiCallbackMode)callbackMode, automaticConfirmation);
+	    MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
+									     (UInt32)callbackMode,
+									     MI_OperationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }        
 
@@ -262,14 +302,16 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.OperationOptionsMethods.SetOption(this.OperationOptionsHandleOnDemand, optionName, optionValue);
+            MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber(optionName,
+									     optionValue,
+									     MI_OperationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }
 
         #region PSSEMANTICS
         internal void WriteMessageCallbackInternal(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
             UInt32 channel,
             string message)
         {
@@ -285,8 +327,8 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteMessageCallback _writeMessageCallback;
 
         private void WriteProgressCallbackInternal(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
             string activity,
             string currentOperation,
             string statusDescription,
@@ -305,12 +347,12 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteProgressCallback _writeProgressCallback;
 
         internal void WriteErrorCallbackInternal(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
-            Native.InstanceHandle instanceHandle,
-            out Native.MIResponseType response)
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
+            MI_Instance instanceHandle,
+            out MI_OperationCallback_ResponseType response)
         {
-            response = Native.MIResponseType.MIResponseTypeYes;
+            response = MI_OperationCallback_ResponseType.Yes;
             if (_writeErrorCallback != null)
             {
                 Debug.Assert(instanceHandle != null, "Caller should verify instance != null");
@@ -325,7 +367,7 @@ namespace Microsoft.Management.Infrastructure.Options
                         callbacksReceiverBase.CallIntoUserCallback(
                             callbackProcessingContext,
                             delegate { userResponse = _writeErrorCallback(cimInstance); });
-                        response = (Native.MIResponseType) userResponse;
+                        response = (MI_OperationCallback_ResponseType) userResponse;
                     }
                 }
                 finally
@@ -341,13 +383,13 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteErrorCallback _writeErrorCallback;
 
         internal void PromptUserCallbackInternal(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
             string message,
-            Native.MiPromptType promptType,
-            out Native.MIResponseType response)
+            MI_PromptType promptType,
+            out MI_OperationCallback_ResponseType response)
         {
-            response = Native.MIResponseType.MIResponseTypeYes;
+            response = MI_OperationCallback_ResponseType.Yes;
             if (_promptUserCallback != null)
             {
                 var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase) callbackProcessingContext.ManagedOperationContext;
@@ -355,7 +397,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 callbacksReceiverBase.CallIntoUserCallback(
                     callbackProcessingContext,
                     delegate { userResponse = _promptUserCallback(message, (CimPromptType) promptType); });
-                response = (Native.MIResponseType) userResponse;
+                response = (MI_OperationCallback_ResponseType) userResponse;
             }
         }
 
@@ -370,19 +412,20 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-
-                Native.MiResult result = Native.OperationOptionsMethods.SetWriteErrorModeOption(
-                    this._operationOptionsHandle.Value, (Native.MiCallbackMode)value);
-                CimException.ThrowIfMiResultFailure(result);
+		
+		// TODO: Add function to MI API
+                //MI_Result result = this._operationOptionsHandle.Value.SetWriteErrorModeOption((MI_CallbackMode)value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                Native.MiCallbackMode mode;
-                Native.MiResult result = Native.OperationOptionsMethods.GetWriteErrorModeOption(
-                    this._operationOptionsHandle.Value, out mode);
-                CimException.ThrowIfMiResultFailure(result);
-                return (CimCallbackMode)mode;
+		// TODO: Add function to MI API
+                //MI_CallbackMode mode;
+                //MI_Result result = this._operationOptionsHandle.Value.GetWriteErrorModeOption(out mode);
+                //CimException.ThrowIfMiResultFailure(result);
+		//return mode;
+		return CimCallbackMode.None;
             }
         }
 
@@ -396,18 +439,19 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.OperationOptionsMethods.SetPromptUserModeOption(
-                    this._operationOptionsHandle.Value, (Native.MiCallbackMode)value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: Add function to MI API
+                //MI_Result result = this._operationOptionsHandle.Value.SetPromptUserModeOption((MI_CallbackMode)value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                Native.MiCallbackMode mode;
-                Native.MiResult result = Native.OperationOptionsMethods.GetPromptUserModeOption(
-                    this._operationOptionsHandle.Value, out mode);
-                CimException.ThrowIfMiResultFailure(result);
-                return (CimCallbackMode)mode;
+		// TODO: Add function to MI API
+                //MI_CallbackMode mode;
+                //MI_Result result = this._operationOptionsHandle.Value.GetPromptUserModeOption(out mode);
+                //CimException.ThrowIfMiResultFailure(result);
+		//return mode;
+		return CimCallbackMode.None;
             }
         }
 
@@ -426,7 +470,8 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeMessageCallback = value;
-                OperationCallback.WriteMessageCallback = this.WriteMessageCallbackInternal;
+		// TODO: Get callbacks working
+                //OperationCallback.writeMessage = this.WriteMessageCallbackInternal;
             }
         }
 
@@ -445,7 +490,8 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeProgressCallback = value;
-                OperationCallback.WriteProgressCallback = this.WriteProgressCallbackInternal;
+		// TODO: Get callbacks working
+                //OperationCallback.WriteProgressCallback = this.WriteProgressCallbackInternal;
             }
         }
 
@@ -464,7 +510,8 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeErrorCallback = value;
-                OperationCallback.WriteErrorCallback = this.WriteErrorCallbackInternal;
+		// TODO: Get callbacks working
+                //OperationCallback.WriteErrorCallback = this.WriteErrorCallbackInternal;
             }
         }
 
@@ -483,7 +530,8 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _promptUserCallback = value;
-                OperationCallback.PromptUserCallback = this.PromptUserCallbackInternal;
+		// TODO: Get callbacks working
+                //OperationCallback.PromptUserCallback = this.PromptUserCallbackInternal;
             }
         }
 
@@ -495,7 +543,9 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.OperationOptionsMethods.SetEnableChannelOption(this._operationOptionsHandle.Value, channelNumber);
+            MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_CHANNEL",
+									    channelNumber,
+									    (MI_OperationOptionsFlags)0);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -507,7 +557,9 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.OperationOptionsMethods.SetDisableChannelOption(this._operationOptionsHandle.Value, channelNumber);
+            MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_CHANNEL",
+									    channelNumber,
+									    (MI_OperationOptionsFlags)1);
             CimException.ThrowIfMiResultFailure(result);
         }
 #endregion
@@ -646,10 +698,10 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            object nativeLayerValue = CimInstance.ConvertToNativeLayer(optionValue);
+            MI_Value nativeLayerValue = CimInstance.ConvertToNativeLayer(optionValue);
             try
             {
-                Native.InstanceMethods.ThrowIfMismatchedType(cimType.ToMiType(), nativeLayerValue);
+                InstanceMethods.ThrowIfMismatchedType(cimType.ToMiType(), nativeLayerValue);
             }
             catch (InvalidCastException e)
             {
@@ -664,12 +716,13 @@ namespace Microsoft.Management.Infrastructure.Options
                 throw new ArgumentException(e.Message, "optionValue", e);
             }
 
-            Native.MiResult result = Native.OperationOptionsMethods.SetCustomOption(
-                this.OperationOptionsHandleOnDemand, 
+	    MI_OperationOptionsFlags flags = MI_OperationOptionsFlags.Unused;
+            MI_Result result = this.OperationOptionsHandleOnDemand.SetCustomOption(
                 optionName, 
-                nativeLayerValue,
                 cimType.ToMiType(), 
-                mustComply);
+                nativeLayerValue,
+                mustComply,
+		flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -744,10 +797,10 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 if (disposing)
                 {
-                    Native.OperationOptionsHandle tmpHandle = this.OperationOptionsHandle;
+                    MI_OperationOptions tmpHandle = this.OperationOptionsHandle;
                     if (tmpHandle != null)
                     {
-                        tmpHandle.Dispose();
+                        tmpHandle.Delete();
                     }
                 }
             }
@@ -791,24 +844,25 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 {
     internal static class OperationOptionsExtensionMethods
     {
-        static internal Native.OperationCallbacks GetOperationCallbacks(this CimOperationOptions operationOptions)
+        static internal MI_OperationCallbacks GetOperationCallbacks(this CimOperationOptions operationOptions)
         {
-            var operationCallbacks = new Native.OperationCallbacks();
+            var operationCallbacks = new MI_OperationCallbacks();
             if (operationOptions!= null)
             {
-                    operationCallbacks.WriteErrorCallback = operationOptions.OperationCallback.WriteErrorCallback;
-                    operationCallbacks.WriteMessageCallback = operationOptions.OperationCallback.WriteMessageCallback;
-                    operationCallbacks.WriteProgressCallback = operationOptions.OperationCallback.WriteProgressCallback;
-                    operationCallbacks.PromptUserCallback = operationOptions.OperationCallback.PromptUserCallback;
+		// TODO: Uncomment these
+		//operationCallbacks.writeError = operationOptions.OperationCallback.WriteErrorCallback;
+		//operationCallbacks.writeMessage = operationOptions.OperationCallback.WriteMessageCallback;
+		//operationCallbacks.writeProgress = operationOptions.OperationCallback.WriteProgressCallback;
+		//operationCallbacks.promptUser = operationOptions.OperationCallback.PromptUserCallback;
             }
             return operationCallbacks;
         }
 
-        static internal Native.OperationCallbacks GetOperationCallbacks(
+        static internal MI_OperationCallbacks GetOperationCallbacks(
             this CimOperationOptions operationOptions, 
             CimAsyncCallbacksReceiverBase acceptCallbacksReceiver)
         {
-            Native.OperationCallbacks operationCallbacks = operationOptions.GetOperationCallbacks();
+            MI_OperationCallbacks operationCallbacks = operationOptions.GetOperationCallbacks();
             
             if (acceptCallbacksReceiver != null)
             {
@@ -818,14 +872,14 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
             return operationCallbacks;
         }
 
-        static internal Native.MiOperationFlags GetOperationFlags(this CimOperationOptions operationOptions)
+        static internal MI_OperationFlags GetOperationFlags(this CimOperationOptions operationOptions)
         {
             return operationOptions != null 
                        ? operationOptions.Flags.ToNative() 
                        : CimOperationFlags.None.ToNative();
         }
 
-        static internal Native.OperationOptionsHandle GetOperationOptionsHandle(this CimOperationOptions operationOptions)
+        static internal MI_OperationOptions GetOperationOptionsHandle(this CimOperationOptions operationOptions)
         {
             return operationOptions != null 
                        ? operationOptions.OperationOptionsHandle

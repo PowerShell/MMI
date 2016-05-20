@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -15,13 +16,13 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         where TObserverProxy : CimAsyncObserverProxyBase<TResult>
         where TResult : class
     {
-        private readonly Func<CimAsyncCallbacksReceiverBase, Native.OperationHandle> _operationStarter;
+        private readonly Func<CimAsyncCallbacksReceiverBase, MI_Operation> _operationStarter;
         private readonly CancellationToken? _cancellationToken;
         private readonly bool _reportOperationStarted;
 
         internal CimAsyncObservableBase(
             CimOperationOptions operationOptions,
-            Func<CimAsyncCallbacksReceiverBase, Native.OperationHandle> operationStarter)
+            Func<CimAsyncCallbacksReceiverBase, MI_Operation> operationStarter)
         {
             Debug.Assert(operationStarter != null, "Caller should verify operationStarter != null");
             this._operationStarter = operationStarter;
@@ -44,7 +45,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             TObserverProxy observerProxy = this.CreateObserverProxy(observer);
             observerProxy.SetReportOperationStarted(this._reportOperationStarted);
 
-            Native.OperationHandle operationHandle = this._operationStarter(observerProxy);
+            MI_Operation operationHandle = this._operationStarter(observerProxy);
             CimOperation operation = new CimOperation(operationHandle, this._cancellationToken);
 
             observerProxy.SetOperation(operation);

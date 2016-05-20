@@ -14,6 +14,7 @@ using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -24,9 +25,9 @@ namespace Microsoft.Management.Infrastructure
     public sealed class CimClass : IDisposable
     {
         private CimSystemProperties _systemProperties = null;
-        private Native.ClassHandle _classHandle;
+        private MI_Class _classHandle;
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] 
-        internal Native.ClassHandle ClassHandle
+        internal MI_Class ClassHandle
         {
             get
             {
@@ -37,10 +38,9 @@ namespace Microsoft.Management.Infrastructure
 
         #region Constructors
 
-        internal CimClass(Native.ClassHandle handle)
+        internal CimClass(MI_Class handle)
         {
             Debug.Assert(handle != null, "Caller should verify that instanceHandle != null");
-            handle.AssertValidInternalState();
 
             this._classHandle = handle;
         }
@@ -59,10 +59,10 @@ namespace Microsoft.Management.Infrastructure
                 this.AssertNotDisposed();
 
                 string tmp;
-                Native.MiResult result = Native.ClassMethods.GetParentClassName(this._classHandle, out tmp);
+                MI_Result result = this._classHandle.GetParentClassName(out tmp);
                 switch (result)
                 {
-                    case Native.MiResult.INVALID_SUPERCLASS:
+                    case MI_Result.MI_RESULT_INVALID_SUPERCLASS:
                         return null;
 
                     default:
@@ -81,11 +81,11 @@ namespace Microsoft.Management.Infrastructure
             {
                 this.AssertNotDisposed();
 
-                Native.ClassHandle tmp;
-                Native.MiResult result = Native.ClassMethods.GetParentClass(this._classHandle, out tmp);
+                MI_Class tmp;
+                MI_Result result = this._classHandle.GetParentClass(out tmp);
                 switch (result)
                 {
-                    case Native.MiResult.INVALID_SUPERCLASS:
+                    case MI_Result.MI_RESULT_INVALID_SUPERCLASS:
                         return null;
 
                     default:
@@ -145,17 +145,17 @@ namespace Microsoft.Management.Infrastructure
 
                     // ComputerName
                     string tmpComputerName;
-                    Native.MiResult result = Native.ClassMethods.GetServerName(this._classHandle, out tmpComputerName);
+                    MI_Result result = this._classHandle.GetServerName(out tmpComputerName);
                     CimException.ThrowIfMiResultFailure(result);
 
                     //ClassName
                     string tmpClassName;
-                    result = Native.ClassMethods.GetClassName(this._classHandle, out tmpClassName);
+                    result = this._classHandle.GetClassName(out tmpClassName);
                     CimException.ThrowIfMiResultFailure(result);
 
                     //Namespace 
                     string tmpNamespace;
-                    result = Native.ClassMethods.GetNamespace(this._classHandle, out tmpNamespace);
+                    result = this._classHandle.GetNameSpace(out tmpNamespace);
                     CimException.ThrowIfMiResultFailure(result);
                     tmpSystemProperties.UpdateCimSystemProperties(tmpNamespace, tmpComputerName, tmpClassName);
 
@@ -192,7 +192,7 @@ namespace Microsoft.Management.Infrastructure
 
             if (disposing)
             {
-                this._classHandle.Dispose();
+                this._classHandle.Delete();
                 this._classHandle = null;
             }
 
@@ -213,7 +213,9 @@ namespace Microsoft.Management.Infrastructure
 
         public override int GetHashCode()
         {
-            return Native.ClassMethods.GetClassHashCode(this.ClassHandle);
+	    // TODO: implement this function?
+            //return this.ClassHandle.GetClassHashCode();
+	    return 0;
         }
 
         public override bool Equals(object obj)
@@ -236,16 +238,16 @@ namespace Microsoft.Management.Infrastructure.Internal
 {
     internal static class ClassHandleExtensionMethods
     {
-        public static Native.ClassHandle Clone(this Native.ClassHandle handleToClone)
+        public static MI_Class Clone(this MI_Class handleToClone)
         {
             if (handleToClone == null)
             {
                 return null;
             }
-            handleToClone.AssertValidInternalState();
+            // TODO: handleToClone.AssertValidInternalState();
 
-            Native.ClassHandle clonedHandle;
-            Native.MiResult result = Native.ClassMethods.Clone(handleToClone, out clonedHandle);
+            MI_Class clonedHandle;
+            MI_Result result = handleToClone.Clone(out clonedHandle);
             CimException.ThrowIfMiResultFailure(result);
             return clonedHandle;
         }

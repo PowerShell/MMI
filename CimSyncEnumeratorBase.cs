@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -21,13 +22,13 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             this.ShortenLifetimeOfResults = shortenLifetimeOfResults;
         }
 
-        internal abstract Native.MiResult NativeMoveNext(
-            Native.OperationHandle operationHandle,
+        internal abstract MI_Result NativeMoveNext(
+            MI_Operation operationHandle,
             out T currentItem,
             out bool moreResults,
-            out Native.MiResult operationResult,
+            out MI_Result operationResult,
             out string errorMessage,
-            out Native.InstanceHandle errorDetailsHandle);
+            out MI_Instance errorDetailsHandle);
 
         #region IEnumerator<CimInstance> Members
 
@@ -121,10 +122,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 this.AssertNotDisposed();
 
                 T currentItem;
-                Native.MiResult result;
+                MI_Result result;
                 string errorMessage;
-                Native.InstanceHandle errorDetailsHandle;
-                Native.MiResult functionResult = NativeMoveNext(
+                MI_Instance errorDetailsHandle;
+                MI_Result functionResult = NativeMoveNext(
                     this.Operation.Handle,
                     out currentItem,
                     out this._moreResultsAreExpected,
@@ -163,7 +164,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                     }
                 }
 
-                Debug.Assert(result == Native.MiResult.OK, "Exception should be thrown above in case of error");
+                Debug.Assert(result == MI_Result.MI_RESULT_OK, "Exception should be thrown above in case of error");
                 this.DisposeCurrentItemIfNeeded();
                 this.Current = currentItem;
 
@@ -194,7 +195,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private Exception _internalErrorWhileProcessingAsyncCallback;
         private readonly object _internalErrorWhileProcessingAsyncCallbackLock = new object();
 
-        internal override void ReportInternalError(Native.OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        internal override void ReportInternalError(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
         {
             lock (_internalErrorWhileProcessingAsyncCallbackLock)
             {

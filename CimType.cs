@@ -6,6 +6,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -82,43 +83,43 @@ namespace Microsoft.Management.Infrastructure.Internal
 {
     internal static class CimTypeExtensionMethods
     {
-        public static Native.MiType ToMiType(this CimType cimType)
+        public static MI_Type ToMiType(this CimType cimType)
         {
             switch (cimType)
             {
-                case CimType.Boolean: return Native.MiType.Boolean;
-                case CimType.UInt8: return Native.MiType.UInt8;
-                case CimType.SInt8: return Native.MiType.SInt8;
-                case CimType.UInt16: return Native.MiType.UInt16;
-                case CimType.SInt16: return Native.MiType.SInt16;
-                case CimType.UInt32: return Native.MiType.UInt32;
-                case CimType.SInt32: return Native.MiType.SInt32;
-                case CimType.UInt64: return Native.MiType.UInt64;
-                case CimType.SInt64: return Native.MiType.SInt64;
-                case CimType.Real32: return Native.MiType.Real32;
-                case CimType.Real64: return Native.MiType.Real64;
-                case CimType.Char16: return Native.MiType.Char16;
-                case CimType.DateTime: return Native.MiType.DateTime;
-                case CimType.String: return Native.MiType.String;
-                case CimType.Reference: return Native.MiType.Reference;
-                case CimType.Instance: return Native.MiType.Instance;
+                case CimType.Boolean: return MI_Type.MI_BOOLEAN;
+                case CimType.UInt8: return MI_Type.MI_UINT8;
+                case CimType.SInt8: return MI_Type.MI_SINT8;
+                case CimType.UInt16: return MI_Type.MI_UINT16;
+                case CimType.SInt16: return MI_Type.MI_SINT16;
+                case CimType.UInt32: return MI_Type.MI_UINT32;
+                case CimType.SInt32: return MI_Type.MI_SINT32;
+                case CimType.UInt64: return MI_Type.MI_UINT64;
+                case CimType.SInt64: return MI_Type.MI_SINT64;
+                case CimType.Real32: return MI_Type.MI_REAL32;
+                case CimType.Real64: return MI_Type.MI_REAL64;
+                case CimType.Char16: return MI_Type.MI_CHAR16;
+                case CimType.DateTime: return MI_Type.MI_DATETIME;
+                case CimType.String: return MI_Type.MI_STRING;
+                case CimType.Reference: return MI_Type.MI_REFERENCE;
+                case CimType.Instance: return MI_Type.MI_INSTANCE;
 
-                case CimType.BooleanArray: return Native.MiType.BooleanArray;
-                case CimType.UInt8Array: return Native.MiType.UInt8Array;
-                case CimType.SInt8Array: return Native.MiType.SInt8Array;
-                case CimType.UInt16Array: return Native.MiType.UInt16Array;
-                case CimType.SInt16Array: return Native.MiType.SInt16Array;
-                case CimType.UInt32Array: return Native.MiType.UInt32Array;
-                case CimType.SInt32Array: return Native.MiType.SInt32Array;
-                case CimType.UInt64Array: return Native.MiType.UInt64Array;
-                case CimType.SInt64Array: return Native.MiType.SInt64Array;
-                case CimType.Real32Array: return Native.MiType.Real32Array;
-                case CimType.Real64Array: return Native.MiType.Real64Array;
-                case CimType.Char16Array: return Native.MiType.Char16Array;
-                case CimType.DateTimeArray: return Native.MiType.DateTimeArray;
-                case CimType.StringArray: return Native.MiType.StringArray;
-                case CimType.ReferenceArray: return Native.MiType.ReferenceArray;
-                case CimType.InstanceArray: return Native.MiType.InstanceArray;
+                case CimType.BooleanArray: return MI_Type.MI_BOOLEANA;
+                case CimType.UInt8Array: return MI_Type.MI_UINT8A;
+                case CimType.SInt8Array: return MI_Type.MI_SINT8A;
+                case CimType.UInt16Array: return MI_Type.MI_UINT16A;
+                case CimType.SInt16Array: return MI_Type.MI_SINT16A;
+                case CimType.UInt32Array: return MI_Type.MI_UINT32A;
+                case CimType.SInt32Array: return MI_Type.MI_SINT32A;
+                case CimType.UInt64Array: return MI_Type.MI_UINT64A;
+                case CimType.SInt64Array: return MI_Type.MI_SINT64A;
+                case CimType.Real32Array: return MI_Type.MI_REAL32A;
+                case CimType.Real64Array: return MI_Type.MI_REAL64A;
+                case CimType.Char16Array: return MI_Type.MI_CHAR16A;
+                case CimType.DateTimeArray: return MI_Type.MI_DATETIMEA;
+                case CimType.StringArray: return MI_Type.MI_STRINGA;
+                case CimType.ReferenceArray: return MI_Type.MI_REFERENCEA;
+                case CimType.InstanceArray: return MI_Type.MI_INSTANCEA;
 
                 case CimType.Unknown:
                 default:
@@ -206,46 +207,46 @@ namespace Microsoft.Management.Infrastructure.Internal
 
     internal static class MiTypeExtensionMethods
     {
-        public static CimType ToCimType(this Native.MiType miType)
+        public static CimType ToCimType(this MI_Type miType)
         {
             switch (miType)
             {
-                case Native.MiType.Boolean: return CimType.Boolean;
-                case Native.MiType.UInt8: return CimType.UInt8;
-                case Native.MiType.SInt8: return CimType.SInt8;
-                case Native.MiType.UInt16: return CimType.UInt16;
-                case Native.MiType.SInt16: return CimType.SInt16;
-                case Native.MiType.UInt32: return CimType.UInt32;
-                case Native.MiType.SInt32: return CimType.SInt32;
-                case Native.MiType.UInt64: return CimType.UInt64;
-                case Native.MiType.SInt64: return CimType.SInt64;
-                case Native.MiType.Real32: return CimType.Real32;
-                case Native.MiType.Real64: return CimType.Real64;
-                case Native.MiType.Char16: return CimType.Char16;
-                case Native.MiType.DateTime: return CimType.DateTime;
-                case Native.MiType.String: return CimType.String;
-                case Native.MiType.Reference: return CimType.Reference;
-                case Native.MiType.Instance: return CimType.Instance;
+                case MI_Type.MI_BOOLEAN: return CimType.Boolean;
+                case MI_Type.MI_UINT8: return CimType.UInt8;
+                case MI_Type.MI_SINT8: return CimType.SInt8;
+                case MI_Type.MI_UINT16: return CimType.UInt16;
+                case MI_Type.MI_SINT16: return CimType.SInt16;
+                case MI_Type.MI_UINT32: return CimType.UInt32;
+                case MI_Type.MI_SINT32: return CimType.SInt32;
+                case MI_Type.MI_UINT64: return CimType.UInt64;
+                case MI_Type.MI_SINT64: return CimType.SInt64;
+                case MI_Type.MI_REAL32: return CimType.Real32;
+                case MI_Type.MI_REAL64: return CimType.Real64;
+                case MI_Type.MI_CHAR16: return CimType.Char16;
+                case MI_Type.MI_DATETIME: return CimType.DateTime;
+                case MI_Type.MI_STRING: return CimType.String;
+                case MI_Type.MI_REFERENCE: return CimType.Reference;
+                case MI_Type.MI_INSTANCE: return CimType.Instance;
 
-                case Native.MiType.BooleanArray: return CimType.BooleanArray;
-                case Native.MiType.UInt8Array: return CimType.UInt8Array;
-                case Native.MiType.SInt8Array: return CimType.SInt8Array;
-                case Native.MiType.UInt16Array: return CimType.UInt16Array;
-                case Native.MiType.SInt16Array: return CimType.SInt16Array;
-                case Native.MiType.UInt32Array: return CimType.UInt32Array;
-                case Native.MiType.SInt32Array: return CimType.SInt32Array;
-                case Native.MiType.UInt64Array: return CimType.UInt64Array;
-                case Native.MiType.SInt64Array: return CimType.SInt64Array;
-                case Native.MiType.Real32Array: return CimType.Real32Array;
-                case Native.MiType.Real64Array: return CimType.Real64Array;
-                case Native.MiType.Char16Array: return CimType.Char16Array;
-                case Native.MiType.DateTimeArray: return CimType.DateTimeArray;
-                case Native.MiType.StringArray: return CimType.StringArray;
-                case Native.MiType.ReferenceArray: return CimType.ReferenceArray;
-                case Native.MiType.InstanceArray: return CimType.InstanceArray;
+                case MI_Type.MI_BOOLEANA: return CimType.BooleanArray;
+                case MI_Type.MI_UINT8A: return CimType.UInt8Array;
+                case MI_Type.MI_SINT8A: return CimType.SInt8Array;
+                case MI_Type.MI_UINT16A: return CimType.UInt16Array;
+                case MI_Type.MI_SINT16A: return CimType.SInt16Array;
+                case MI_Type.MI_UINT32A: return CimType.UInt32Array;
+                case MI_Type.MI_SINT32A: return CimType.SInt32Array;
+                case MI_Type.MI_UINT64A: return CimType.UInt64Array;
+                case MI_Type.MI_SINT64A: return CimType.SInt64Array;
+                case MI_Type.MI_REAL32A: return CimType.Real32Array;
+                case MI_Type.MI_REAL64A: return CimType.Real64Array;
+                case MI_Type.MI_CHAR16A: return CimType.Char16Array;
+                case MI_Type.MI_DATETIMEA: return CimType.DateTimeArray;
+                case MI_Type.MI_STRINGA: return CimType.StringArray;
+                case MI_Type.MI_REFERENCEA: return CimType.ReferenceArray;
+                case MI_Type.MI_INSTANCEA: return CimType.InstanceArray;
 
                 default:
-                    Debug.Assert(false, "Unrecognized or unsupported value of Native.MiType");
+                    Debug.Assert(false, "Unrecognized or unsupported value of MI_Type");
                     throw new ArgumentOutOfRangeException("miType");
             }
         }

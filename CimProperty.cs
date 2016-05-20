@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {

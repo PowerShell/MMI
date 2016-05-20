@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -23,15 +24,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             this._CimSessionComputerName = cimSessionComputerName;
         }
 
-        internal override Native.MiResult NativeMoveNext(Native.OperationHandle operationHandle, out CimInstance currentItem, out bool moreResults, out Native.MiResult operationResult, out string errorMessage, out Native.InstanceHandle errorDetailsHandle)
+        internal override MI_Result NativeMoveNext(MI_Operation operationHandle, out CimInstance currentItem, out bool moreResults, out MI_Result operationResult, out string errorMessage, out MI_Instance errorDetailsHandle)
         {
             Debug.Assert(operationHandle != null, "Caller should verify operationHandle != null");
 
             currentItem = null;
 
-            Native.InstanceHandle instanceHandle;
-            Native.MiResult functionResult = Native.OperationMethods.GetInstance(
-                operationHandle,
+            MI_Instance instanceHandle;
+            MI_Result functionResult = operationHandle.GetInstance(
                 out instanceHandle,
                 out moreResults,
                 out operationResult,

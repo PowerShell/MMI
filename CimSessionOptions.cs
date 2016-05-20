@@ -4,9 +4,11 @@
  */
 
 using System;
+using System.Security;
 using System.Globalization;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Management.Infrastructure.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -21,8 +23,8 @@ namespace Microsoft.Management.Infrastructure.Options
         , ICloneable
 #endif
     {
-        private readonly Lazy<Native.DestinationOptionsHandle> _destinationOptionsHandle;
-        internal Native.DestinationOptionsHandle DestinationOptionsHandleOnDemand 
+        private readonly Lazy<MI_DestinationOptions> _destinationOptionsHandle;
+        internal MI_DestinationOptions DestinationOptionsHandleOnDemand 
         { 
             get
             {
@@ -30,7 +32,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 return this._destinationOptionsHandle.Value;
             }
         }
-        internal Native.DestinationOptionsHandle DestinationOptionsHandle
+        internal MI_DestinationOptions DestinationOptionsHandle
         { 
             get
             {
@@ -76,11 +78,11 @@ namespace Microsoft.Management.Infrastructure.Options
 
             this.Protocol = protocol;
 
-            this._destinationOptionsHandle = new Lazy<Native.DestinationOptionsHandle>(
+            this._destinationOptionsHandle = new Lazy<MI_DestinationOptions>(
                     delegate
                     {
-                        Native.DestinationOptionsHandle tmp;
-                        Native.MiResult result = Native.ApplicationMethods.NewDestinationOptions(CimApplication.Handle, out tmp);
+                        MI_DestinationOptions tmp;
+                        MI_Result result = CimApplication.Handle.NewDestinationOptions(out tmp);
                         CimException.ThrowIfMiResultFailure(result);
                         return tmp;
                     });
@@ -103,26 +105,26 @@ namespace Microsoft.Management.Infrastructure.Options
             if (optionsToClone.DestinationOptionsHandle == null)
             {
                 // underline DestinationOptions is not created yet, then create a new one
-                this._destinationOptionsHandle = new Lazy<Native.DestinationOptionsHandle>(
+                this._destinationOptionsHandle = new Lazy<MI_DestinationOptions>(
                     delegate
                     {
-                        Native.DestinationOptionsHandle tmp;
-                        Native.MiResult result = Native.ApplicationMethods.NewDestinationOptions(CimApplication.Handle, out tmp);
+                        MI_DestinationOptions tmp;
+                        MI_Result result = CimApplication.Handle.NewDestinationOptions(out tmp);
                         CimException.ThrowIfMiResultFailure(result);
                         return tmp;
                     });
             }
             else
             {
-                Native.DestinationOptionsHandle tmp;
-                Native.MiResult result = Native.DestinationOptionsMethods.Clone(optionsToClone.DestinationOptionsHandle, out tmp);
+                MI_DestinationOptions tmp;
+                MI_Result result = optionsToClone.DestinationOptionsHandle.Clone(out tmp);
                 CimException.ThrowIfMiResultFailure(result);
-                this._destinationOptionsHandle = new Lazy<Native.DestinationOptionsHandle>(() => tmp);
+                this._destinationOptionsHandle = new Lazy<MI_DestinationOptions>(() => tmp);
             }
             // Ensure the destinationOptions is created
             if (this.DestinationOptionsHandleOnDemand == null)
             {
-                CimException.ThrowIfMiResultFailure(Native.MiResult.FAILED);
+                CimException.ThrowIfMiResultFailure(MI_Result.MI_RESULT_FAILED);
             }
         }
         #endregion Constructors
@@ -143,7 +145,9 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.DestinationOptionsMethods.SetCustomOption(this.DestinationOptionsHandleOnDemand, optionName, optionValue);
+	    MI_Result result = this.DestinationOptionsHandleOnDemand.SetString(optionName,
+									       optionValue,
+									       MI_DestinationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -161,7 +165,9 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.DestinationOptionsMethods.SetCustomOption(this.DestinationOptionsHandleOnDemand, optionName, optionValue);
+	    MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber(optionName,
+									       optionValue,
+									       MI_DestinationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -172,14 +178,45 @@ namespace Microsoft.Management.Infrastructure.Options
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="credential"/> is <c>null</c></exception>
         public void AddDestinationCredentials(CimCredential credential)
         {
+	    // TODO: Once credentials are working, uncomment and fix
+	    /*
             if (credential == null)
             {
                 throw new ArgumentNullException("credential");
             }
             this.AssertNotDisposed();
 
-            Native.MiResult result = Native.DestinationOptionsMethods.AddDestinationCredentials(this.DestinationOptionsHandleOnDemand, credential.GetCredential());
+	    MI_UserCredentials nativeCredential;
+	    SecureString securePassword = credential.GetSecureString();
+	    IntPtr passwordPtr = IntPtr.Zero;
+	    if( securePassword != null && securePassword.Length > 0)
+	    {
+#if(!_CORECLR)
+		passwordPtr = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+#else
+		passwordPtr = SecureStringMarshal.SecureStringToCoTaskMemUnicode(securePassword);
+#endif
+		nativeCredential.usernamePassword.password = passwordPtr;
+	    }
+	    else
+	    {
+		nativeCredential.usernamePassword.password = null;
+	    }
+	    
+	    MI_Result result = this.DestinationOptionsHandleOnDemand.AddCredentials("__MI_DESTINATIONOPTIONS_DESTINATION_CREDENTIALS",
+		    nativeCredential,
+		    MI_DestinationOptionFlags.Unused);
+	    
+	    if ( passwordPtr != IntPtr.Zero )
+	    {
+#if(!_CORECLR)
+		Marshal.FreeHGlobal(passwordPtr);
+#else
+		SecureStringMarshal.ZeroFreeCoTaskMemUnicode(passwordPtr);
+#endif
+	    }
             CimException.ThrowIfMiResultFailure(result);
+	    */
         }        
 
         /// <summary>
@@ -191,8 +228,10 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-
-                Native.MiResult result = Native.DestinationOptionsMethods.SetTimeout(this.DestinationOptionsHandleOnDemand, value);
+		MI_Interval interval = value;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.SetInterval("__MI_DESTINATIONOPTIONS_TIMEOUT",
+										     interval,
+										     MI_DestinationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
@@ -201,8 +240,17 @@ namespace Microsoft.Management.Infrastructure.Options
                 this.AssertNotDisposed();
 
                 TimeSpan timeout;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetTimeout(this.DestinationOptionsHandleOnDemand, out timeout);
-                return (result == Native.MiResult.OK) ? timeout : TimeSpan.Zero;
+		MI_Interval value;
+		UInt32 index;
+		MI_DestinationOptionsFlags flags;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.GetInterval("__MI_DESTINATIONOPTIONS_TIMEOUT",
+										     out value,
+										     out index,
+										     out flags);
+
+		timeout = value;
+
+                return (result == MI_Result.MI_RESULT_OK) ? timeout : TimeSpan.Zero;
             }
         }
 
@@ -220,8 +268,9 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetDataLocale(
-                    this.DestinationOptionsHandleOnDemand, value.Name);
+                MI_Result result = this.DestinationOptionsHandleOnDemand.SetString("__MI_DESTINATIONOPTIONS_DATA_LOCALE",
+										   value.Name,
+										   MI_DestinationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
@@ -229,10 +278,15 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                string locale;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetDataLocale(
-                    this.DestinationOptionsHandleOnDemand, out locale);
-                return (result == Native.MiResult.OK) ? new CultureInfo(locale) : null;
+		string locale;
+		UInt32 index;
+		MI_DestinationOptionsFlags flags;
+		MI_Result result = this.DestinationOptionsHandleOnDemand.GetString("__MI_DESTINATIONOPTIONS_DATA_LOCALE",
+										   out locale,
+										   out index,
+										   out flags);
+
+                return (result == MI_Result.MI_RESULT_OK) ? new CultureInfo(locale) : null;
             }
         }
 
@@ -250,18 +304,25 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetUILocale(
-                    this.DestinationOptionsHandleOnDemand, value.Name);
+                MI_Result result = this.DestinationOptionsHandleOnDemand.SetString("__MI_DESTINATIONOPTIONS_UI_LOCALE",
+										   value.Name,
+										   MI_DestinationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
             get
             {
                 this.AssertNotDisposed();
-                string locale;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetUILocale(
-                    this.DestinationOptionsHandleOnDemand, out locale);
-                return (result == Native.MiResult.OK) ? new CultureInfo(locale) : null;
+
+		string locale;
+		UInt32 index;
+		MI_DestinationOptionsFlags flags;
+		MI_Result result = this.DestinationOptionsHandleOnDemand.GetString("__MI_DESTINATIONOPTIONS_UI_LOCALE",
+										   out locale,
+										   out index,
+										   out flags);
+
+                return (result == MI_Result.MI_RESULT_OK) ? new CultureInfo(locale) : null;
             }
         }
 
@@ -290,10 +351,10 @@ namespace Microsoft.Management.Infrastructure.Options
 
             if (disposing)
             {
-                Native.DestinationOptionsHandle tmpHandle = this.DestinationOptionsHandle;
+                MI_DestinationOptions tmpHandle = this.DestinationOptionsHandle;
                 if (tmpHandle != null)
                 {
-                    tmpHandle.Dispose();
+                    tmpHandle.Delete();
                 }
             }
 

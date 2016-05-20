@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -17,7 +18,7 @@ namespace Microsoft.Management.Infrastructure
         private readonly string _bookmark;
         private readonly string _machineId;
 
-        internal CimSubscriptionResult(Native.InstanceHandle handle, string bookmark, string machineId)
+        internal CimSubscriptionResult(MI_Instance handle, string bookmark, string machineId)
         {
             Debug.Assert(handle != null, "Caller should verify backingInstance != null");
             this._resultInstance = new CimInstance(handle, null);

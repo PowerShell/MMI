@@ -6,6 +6,7 @@
 using System;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -15,7 +16,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
         internal CimSyncClassEnumerable(
             CimOperationOptions operationOptions,
-            Func<CimAsyncCallbacksReceiverBase, Native.OperationHandle> operationStarter)
+            Func<CimAsyncCallbacksReceiverBase, MI_Operation> operationStarter)
             : base(operationOptions, operationStarter)
         {
             this._shortenLifetimeOfResults = operationOptions.GetShortenLifetimeOfResults();

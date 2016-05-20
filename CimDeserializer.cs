@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Management.Infrastructure.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Serialization
 {
@@ -18,7 +19,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Deserializer", Justification = "Deserializer is a valid word?")]
     public sealed class CimDeserializer : IDisposable
     {
-        private readonly Native.DeserializerHandle _myHandle;
+        private readonly MI_Deserializer _myHandle;
 
         #region Constructors
 
@@ -26,9 +27,10 @@ namespace Microsoft.Management.Infrastructure.Serialization
         {
             Debug.Assert(!string.IsNullOrEmpty(format), "Caller should verify that format != null");
 
-            Native.DeserializerHandle tmpHandle;
-            Native.MiResult result = Native.ApplicationMethods.NewDeserializer(CimApplication.Handle, format, flags, out tmpHandle);
-            if (result == Native.MiResult.INVALID_PARAMETER)
+            MI_Deserializer tmpHandle;
+	    // TODO: Fix MI_SerializerFlags in next line to come from "flags"
+            MI_Result result = CimApplication.Handle.NewDeserializer(MI_SerializerFlags.None, format, out tmpHandle);
+            if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
                 throw new ArgumentOutOfRangeException("format");
             }
@@ -77,7 +79,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             return this.DeserializeInstance(serializedData, ref offset, null);
         }
 
-        internal Native.InstanceHandle DeserializeInstanceHandle(byte[] serializedData, ref uint offset, IEnumerable<CimClass> cimClasses)
+        internal MI_Instance DeserializeInstanceHandle(byte[] serializedData, ref uint offset, IEnumerable<CimClass> cimClasses)
         {
             if (serializedData == null)
             {
@@ -89,18 +91,19 @@ namespace Microsoft.Management.Infrastructure.Serialization
             }
             this.AssertNotDisposed();
 
-            Native.ClassHandle[] nativeClassHandles = null;
+            MI_Class[] nativeClassHandles = null;
             if (cimClasses != null)
             {
                 nativeClassHandles = cimClasses.Select(cimClass => cimClass.ClassHandle).ToArray();
             }
 
+	    // TODO: Implement this next function
+	    /*
             UInt32 inputBufferUsed;
-            Native.InstanceHandle deserializedInstance;
-            Native.InstanceHandle cimError;
-            Native.MiResult result = Native.DeserializerMethods.DeserializeInstance(
-                this._myHandle,
-                0, /* flags */
+            MI_Instance deserializedInstance;
+            MI_Instance cimError;
+            MI_Result result = this._myHandle.DeserializeInstance(
+                0,
                 serializedData,
                 offset,
                 nativeClassHandles,
@@ -111,6 +114,10 @@ namespace Microsoft.Management.Infrastructure.Serialization
             offset += inputBufferUsed;
 
             return deserializedInstance;
+	    */
+
+	    // TODO: remove this next line once above is fixed
+	    return MI_Instance.NewIndirectPtr();
         }
 
         /// <summary>
@@ -126,7 +133,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public CimInstance DeserializeInstance(byte[] serializedData, ref uint offset, IEnumerable<CimClass> cimClasses)
         {
-            Native.InstanceHandle instanceHandle = DeserializeInstanceHandle(serializedData, ref offset, cimClasses);
+            MI_Instance instanceHandle = DeserializeInstanceHandle(serializedData, ref offset, cimClasses);
             return new CimInstance(instanceHandle, parentHandle: null);
         }
 
@@ -145,7 +152,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             return this.DeserializeClass(serializedData, ref offset, null);
         }
 
-        internal Native.ClassHandle DeserializeClassHandle(byte[] serializedData, ref uint offset, CimClass parentClass, string computerName, string namespaceName)
+        internal MI_Class DeserializeClassHandle(byte[] serializedData, ref uint offset, CimClass parentClass, string computerName, string namespaceName)
         {
             if (serializedData == null)
             {
@@ -157,14 +164,15 @@ namespace Microsoft.Management.Infrastructure.Serialization
             }
             this.AssertNotDisposed();
 
-            Native.ClassHandle nativeClassHandle = parentClass != null ? parentClass.ClassHandle : null;
+	    // TODO: Implement the following function
+	    /*
+            MI_Class nativeClassHandle = parentClass != null ? parentClass.ClassHandle : null;
 
             UInt32 inputBufferUsed;
-            Native.ClassHandle deserializedClass;
-            Native.InstanceHandle cimError;
-            Native.MiResult result = Native.DeserializerMethods.DeserializeClass(
-                this._myHandle,
-                0, /* flags */
+            MI_Class deserializedClass;
+            MI_Instance cimError;
+            MI_Result result = this._myHandle.DeserializeClass(
+                0,
                 serializedData,
                 offset,
                 nativeClassHandle,
@@ -177,6 +185,10 @@ namespace Microsoft.Management.Infrastructure.Serialization
             offset += inputBufferUsed;
 
             return deserializedClass;
+	    */
+
+	    // TODO: remove next line once above is fixed
+	    return MI_Class.NewIndirectPtr();
         }
 
         /// <summary>
@@ -208,7 +220,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public CimClass DeserializeClass(byte[] serializedData, ref uint offset, CimClass parentClass, string computerName, string namespaceName)
         {
-            Native.ClassHandle classHandle = DeserializeClassHandle(serializedData, ref offset, parentClass, computerName, namespaceName);
+            MI_Class classHandle = DeserializeClassHandle(serializedData, ref offset, parentClass, computerName, namespaceName);
             return new CimClass(classHandle);
         }
 
@@ -234,7 +246,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             string className;
             Native.InstanceHandle cimError;
-            Native.MiResult result = Native.DeserializerMethods.DeserializeInstance_GetClassName(
+            MI_Result result = Native.DeserializerMethods.DeserializeInstance_GetClassName(
                 this._myHandle,
                 serializedData,
                 offset,
@@ -264,7 +276,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             string className;
             Native.InstanceHandle cimError;
-            Native.MiResult result = Native.DeserializerMethods.DeserializeClass_GetClassName(
+            MI_Result result = Native.DeserializerMethods.DeserializeClass_GetClassName(
                 this._myHandle,
                 serializedData,
                 offset,
@@ -294,7 +306,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             string parentClassName;
             Native.InstanceHandle cimError;
-            Native.MiResult result = Native.DeserializerMethods.DeserializeClass_GetParentClassName(
+            MI_Result result = Native.DeserializerMethods.DeserializeClass_GetParentClassName(
                 this._myHandle,
                 serializedData,
                 offset,
@@ -331,7 +343,8 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             if (disposing)
             {
-                this._myHandle.Dispose();
+		// TODO: Add Delete/Dispose function then uncomment
+                //this._myHandle.Dispose();
             }
 
             _disposed = true;

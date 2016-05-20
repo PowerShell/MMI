@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -14,41 +15,41 @@ namespace Microsoft.Management.Infrastructure
     [Flags]
     public enum CimFlags : long
     {
-        None = 0,
+        None = (long)0,
 
-        Class = Native.MiFlags.CLASS,
-        Method = Native.MiFlags.METHOD,
-        Property = Native.MiFlags.PROPERTY,
-        Parameter = Native.MiFlags.PARAMETER,
-        Association = Native.MiFlags.ASSOCIATION,
-        Indication = Native.MiFlags.INDICATION,
-        Reference = Native.MiFlags.REFERENCE,
-        Any = Native.MiFlags.ANY,
+        Class = (long)MI_Flags.MI_FLAG_CLASS,
+        Method = (long)MI_Flags.MI_FLAG_METHOD,
+        Property = (long)MI_Flags.MI_FLAG_PROPERTY,
+        Parameter = (long)MI_Flags.MI_FLAG_PARAMETER,
+        Association = (long)MI_Flags.MI_FLAG_ASSOCIATION,
+        Indication = (long)MI_Flags.MI_FLAG_INDICATION,
+        Reference = (long)MI_Flags.MI_FLAG_REFERENCE,
+        Any = (long)MI_Flags.MI_FLAG_ANY,
 
         /* Qualifier flavors */
-        EnableOverride = Native.MiFlags.ENABLEOVERRIDE,
-        DisableOverride = Native.MiFlags.DISABLEOVERRIDE,
-        Restricted = Native.MiFlags.RESTRICTED,
-        ToSubclass = Native.MiFlags.TOSUBCLASS,
-        Translatable = Native.MiFlags.TRANSLATABLE,
+        EnableOverride = (long)MI_Flags.MI_FLAG_ENABLEOVERRIDE,
+        DisableOverride = (long)MI_Flags.MI_FLAG_DISABLEOVERRIDE,
+        Restricted = (long)MI_Flags.MI_FLAG_RESTRICTED,
+        ToSubclass = (long)MI_Flags.MI_FLAG_TOSUBCLASS,
+        Translatable = (long)MI_Flags.MI_FLAG_TRANSLATABLE,
 
         /* Select boolean qualifier */
-        Key = Native.MiFlags.KEY,
-        In = Native.MiFlags.IN,
-        Out = Native.MiFlags.OUT,
-        Required = Native.MiFlags.REQUIRED,
-        Static = Native.MiFlags.STATIC,
-        Abstract = Native.MiFlags.ABSTRACT,
-        Terminal = Native.MiFlags.TERMINAL,
-        Expensive = Native.MiFlags.EXPENSIVE,
-        Stream = Native.MiFlags.STREAM,
-        ReadOnly = Native.MiFlags.READONLY,
+        Key = (long)MI_Flags.MI_FLAG_KEY,
+        In = (long)MI_Flags.MI_FLAG_IN,
+        Out = (long)MI_Flags.MI_FLAG_OUT,
+        Required = (long)MI_Flags.MI_FLAG_REQUIRED,
+        Static = (long)MI_Flags.MI_FLAG_STATIC,
+        Abstract = (long)MI_Flags.MI_FLAG_ABSTRACT,
+        Terminal = (long)MI_Flags.MI_FLAG_TERMINAL,
+        Expensive = (long)MI_Flags.MI_FLAG_EXPENSIVE,
+        Stream = (long)MI_Flags.MI_FLAG_STREAM,
+        ReadOnly = (long)MI_Flags.MI_FLAG_READONLY,
 
         /* Special flags */
-        NotModified = Native.MiFlags.NOTMODIFIED,
-        NullValue = Native.MiFlags.NULLFLAG,
-        Borrow = Native.MiFlags.BORROW,
-        Adopt = Native.MiFlags.ADOPT,
+        NotModified = (long)MI_Flags.MI_FLAG_NOT_MODIFIED,
+        NullValue = (long)MI_Flags.MI_FLAG_NULL,
+        Borrow = (long)MI_Flags.MI_FLAG_BORROW,
+        Adopt = (long)MI_Flags.MI_FLAG_ADOPT,
     };
 
     /// <summary>
@@ -57,9 +58,9 @@ namespace Microsoft.Management.Infrastructure
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct copy of the native flags enum")]
     public enum CimSubscriptionDeliveryType : int
     {
-        None = Native.MiSubscriptionDeliveryType.SubscriptionDeliveryType_Push,
-        Push = Native.MiSubscriptionDeliveryType.SubscriptionDeliveryType_Push,
-        Pull = Native.MiSubscriptionDeliveryType.SubscriptionDeliveryType_Pull,
+        None = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Push,
+        Push = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Push,
+        Pull = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Pull,
     }
 }
 
@@ -67,15 +68,15 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 {
     internal static class CimFlagsExtensionMethods
     {
-        public static Native.MiFlags ToMiFlags(this CimFlags cimFlags)
+        public static MI_Flags ToMiFlags(this CimFlags cimFlags)
         {
-            return (Native.MiFlags)cimFlags;
+            return (MI_Flags)cimFlags;
         }
     }
 
     internal static class MiFlagsExtensionMethods
     {
-        public static CimFlags ToCimFlags(this Native.MiFlags miFlags)
+        public static CimFlags ToCimFlags(this MI_Flags miFlags)
         {
             return (CimFlags) miFlags;
         }

@@ -7,14 +7,15 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimClassPropertiesCollection : CimReadOnlyKeyedCollection<CimPropertyDeclaration>
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
 
-        internal CimClassPropertiesCollection(Native.ClassHandle classHandle)
+        internal CimClassPropertiesCollection(MI_Class classHandle)
         {
             this.classHandle = classHandle;
         }
@@ -23,12 +24,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                int count;
-                Native.MiResult result = Native.ClassMethods.GetElementCount(
-                    this.classHandle,
-                    out count);
+                uint count;
+                MI_Result result = this.classHandle.GetElementCount(out count);
                 CimException.ThrowIfMiResultFailure(result);
-                return count;
+                return (int)count;
             }
         }
 
@@ -41,16 +40,31 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("propertyName");
                 }
 
-                int index;
-                Native.MiResult result = Native.ClassMethods.GetElement_GetIndex(this.classHandle, propertyName, out index);
+		MI_Value value;
+		bool valueExists;
+		MI_Type type;
+		string referenceClass;
+		MI_QualifierSet qualifierSet;
+		MI_Flags flags;
+		UInt32 index;
+		
+		MI_Result result = this.classHandle.GetElement(propertyName,
+							       out value,
+							       out valueExists,
+							       out type,
+							       out referenceClass,
+							       out qualifierSet,
+							       out flags,
+							       out index);
+
                 switch (result)
                 {
-                    case Native.MiResult.NO_SUCH_PROPERTY:
+                    case MI_Result.MI_RESULT_NO_SUCH_PROPERTY:
                         return null;
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimClassPropertyOfClass(this.classHandle, index);
+                        return new CimClassPropertyOfClass(this.classHandle, (int)index);
                 }
             }
         }

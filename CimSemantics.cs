@@ -5,6 +5,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -14,9 +15,9 @@ namespace Microsoft.Management.Infrastructure.Options
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct copy of the native flags enum (which has zero as one of the members.")]
     public enum CimPromptType : int
     {
-        None = Native.MiPromptType.PROMPTTYPE_NORMAL,
-        Normal = Native.MiPromptType.PROMPTTYPE_NORMAL,
-        Critical = Native.MiPromptType.PROMPTTYPE_CRITICAL,
+        None = (int)MI_PromptType.Normal,
+        Normal = (int)MI_PromptType.Normal,
+        Critical = (int)MI_PromptType.Critical,
     };
 
     /// <summary>
@@ -25,10 +26,10 @@ namespace Microsoft.Management.Infrastructure.Options
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct copy of the native flags enum (which has zero as one of the members.")]
     public enum CimCallbackMode : int
     {
-        None = 0,
-        Report = Native.MiCallbackMode.CALLBACK_REPORT,
-        Inquire = Native.MiCallbackMode.CALLBACK_INQUIRE,
-        Ignore = Native.MiCallbackMode.CALLBACK_IGNORE,
+        None = (int)0,
+        Report = (int)MI_CallbackMode.Report,
+        Inquire = (int)MI_CallbackMode.Inquire,
+        Ignore = (int)MI_CallbackMode.Ignore,
     };
 
     /// <summary>
@@ -37,11 +38,11 @@ namespace Microsoft.Management.Infrastructure.Options
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct copy of the native flags enum (which has zero as one of the members.")]
     public enum CimResponseType : int
     {
-        None = 0,
-        No = Native.MIResponseType.MIResponseTypeNo,
-        Yes = Native.MIResponseType.MIResponseTypeYes,
-        NoToAll = Native.MIResponseType.MIResponseTypeNoToAll,
-        YesToAll = Native.MIResponseType.MIResponseTypeYesToAll,
+        None = (int)0,
+        No = (int)MI_OperationCallback_ResponseType.No,
+        Yes = (int)MI_OperationCallback_ResponseType.Yes,
+        NoToAll = (int)MI_OperationCallback_ResponseType.NoToAll,
+        YesToAll = (int)MI_OperationCallback_ResponseType.YesToAll,
     };
 
     /// <summary>
@@ -52,9 +53,9 @@ namespace Microsoft.Management.Infrastructure.Options
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct copy of the native flags enum (which has zero as one of the members.")]
     public enum CimWriteMessageChannel : int
     {
-        Warning =   Native.MIWriteMessageChannel.MIWriteMessageChannelWarning,
-        Verbose =   Native.MIWriteMessageChannel.MIWriteMessageChannelVerbose,
-        Debug =     Native.MIWriteMessageChannel.MIWriteMessageChannelDebug,
+        Warning = (int)  MI_WriteMessageChannel.Warning,
+        Verbose = (int)  MI_WriteMessageChannel.Verbose,
+        Debug = (int)    MI_WriteMessageChannel.Debug,
     };
 
     /// <summary>

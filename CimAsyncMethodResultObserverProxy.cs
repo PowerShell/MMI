@@ -4,8 +4,8 @@
  */
 
 using System;
-using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -27,13 +27,13 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void InstanceResultCallback(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
-            Native.InstanceHandle instanceHandle,
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
+            MI_Instance instanceHandle,
             bool moreResults,
-            Native.MiResult operationResult,
+            MI_Result operationResult,
             String errorMessage,
-            Native.InstanceHandle errorDetailsHandle)
+            MI_Instance errorDetailsHandle)
         {
             CimMethodResult currentItem = null;
             if ((instanceHandle != null) && (!instanceHandle.IsInvalid))
@@ -65,11 +65,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void StreamedParameterCallback(
-            Native.OperationCallbackProcessingContext callbackProcessingContext,
-            Native.OperationHandle operationHandle,
+            OperationCallbackProcessingContext callbackProcessingContext,
+            MI_Operation operationHandle,
             string parameterName,
             object parameterValue,
-            Native.MiType parameterType)
+            MI_Type parameterType)
         {
             parameterValue = CimInstance.ConvertFromNativeLayer(
                 value: parameterValue,
@@ -101,7 +101,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             try
             {
                 CimMethodResultBase currentItem = new CimMethodStreamedResult(parameterName, parameterValue, parameterType.ToCimType());
-                this.ProcessNativeCallback(callbackProcessingContext, currentItem, true, Native.MiResult.OK, null, null);
+                this.ProcessNativeCallback(callbackProcessingContext, currentItem, true, MI_Result.MI_RESULT_OK, null, null);
             }
             finally
             {
@@ -128,13 +128,15 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        public override void RegisterAcceptedAsyncCallbacks(OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
+        public override void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
             base.RegisterAcceptedAsyncCallbacks(operationCallbacks, operationOptions);
-            operationCallbacks.InstanceResultCallback = this.InstanceResultCallback;
+	    // TODO: Uncomment and fix below
+            //operationCallbacks.instanceResult = this.InstanceResultCallback;
             if ((operationOptions != null) && (operationOptions.EnableMethodResultStreaming))
             {
-                operationCallbacks.StreamedParameterCallback = this.StreamedParameterCallback;
+		// TODO: Uncomment and fix below
+                //operationCallbacks.streamedParameterResult = this.StreamedParameterCallback;
             }
         }
     }

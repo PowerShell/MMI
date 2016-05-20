@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal.Data;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -20,7 +21,7 @@ namespace Microsoft.Management.Infrastructure
     {
         private CimInstance _backingInstance;
 
-        internal Native.InstanceHandle InstanceHandleForMethodInvocation
+        internal MI_Instance InstanceHandleForMethodInvocation
         {
             get
             {

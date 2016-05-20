@@ -7,15 +7,16 @@ using System;
 using System.Collections;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using Microsoft.Management.Infrastructure.Generic;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal sealed class CimMethodDeclarationOfClass : CimMethodDeclaration
     {
-        private readonly Native.ClassHandle classHandle;
+        private readonly MI_Class classHandle;
         private readonly int index;
 
-        internal CimMethodDeclarationOfClass(Native.ClassHandle classHandle, int index)
+        internal CimMethodDeclarationOfClass(MI_Class classHandle, int index)
         {
             this.classHandle = classHandle;
             this.index = index;
@@ -26,10 +27,13 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             get
             {
                 string name;
-                Native.MiResult result = Native.ClassMethods.GetMethodElementAt_GetName(
-                    this.classHandle,
-                    this.index,
-                    out name);
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+                MI_Result result = this.classHandle.GetMethodAt(
+                    (uint)this.index,
+                    out name,
+		    out qualifierSet,
+		    out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
                 return name;
             }
@@ -40,11 +44,18 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-                Native.MiType type;
-                Native.MiResult result = Native.ClassMethods.GetMethodElementAt_GetType(
-                    this.classHandle,
-                    this.index,
-                    out type);
+                MI_Type type;
+
+		string name;
+		MI_QualifierSet qualifierSet;
+		MI_ParameterSet parameterSet;
+                MI_Result result = this.classHandle.GetMethodAt(
+                    (uint)this.index,
+                    out name,
+		    out qualifierSet,
+		    out parameterSet);
+                CimException.ThrowIfMiResultFailure(result);
+		result = parameterSet.GetMethodReturnType(out type, qualifierSet);
                 CimException.ThrowIfMiResultFailure(result);
                 return type.ToCimType();
             }

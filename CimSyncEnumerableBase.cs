@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Threading;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -17,9 +18,9 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         where TItem : class
     {
         private readonly CancellationToken? _cancellationToken;
-        private readonly Func<CimAsyncCallbacksReceiverBase, Native.OperationHandle> _operationStarter;
+        private readonly Func<CimAsyncCallbacksReceiverBase, MI_Operation> _operationStarter;
 
-        internal CimSyncEnumerableBase(CimOperationOptions operationOptions, Func<CimAsyncCallbacksReceiverBase, Native.OperationHandle> operationStarter)
+        internal CimSyncEnumerableBase(CimOperationOptions operationOptions, Func<CimAsyncCallbacksReceiverBase, MI_Operation> operationStarter)
         {
             Debug.Assert(operationStarter != null, "Caller should verify that operationStarter != null");
             
@@ -36,7 +37,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             TEnumerator enumerator = this.CreateEnumerator();
             CimOperation operation;
 
-            Native.OperationHandle operationHandle = this._operationStarter(enumerator);
+            MI_Operation operationHandle = this._operationStarter(enumerator);
             operation = new CimOperation(operationHandle, this._cancellationToken);
 
             enumerator.SetOperation(operation);

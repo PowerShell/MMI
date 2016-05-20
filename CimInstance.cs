@@ -19,6 +19,7 @@ using System.IO;
 #if(!_CORECLR)
 using Microsoft.Win32;
 #endif
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -39,7 +40,7 @@ namespace Microsoft.Management.Infrastructure
         private readonly SharedInstanceHandle _myHandle;
         private CimSystemProperties _systemProperties = null;
 
-        internal Native.InstanceHandle InstanceHandle
+        internal MI_Instance InstanceHandle
         {
             get
             {
@@ -50,7 +51,7 @@ namespace Microsoft.Management.Infrastructure
 
         #region Constructors
 
-        internal CimInstance(Native.InstanceHandle handle, SharedInstanceHandle parentHandle)
+        internal CimInstance(MI_Instance handle, SharedInstanceHandle parentHandle)
         {
             Debug.Assert(handle != null, "Caller should verify that instanceHandle != null");
             handle.AssertValidInternalState();
@@ -69,7 +70,7 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentNullException("cimInstanceToClone");
             }
 
-            Native.InstanceHandle clonedHandle = cimInstanceToClone.InstanceHandle.Clone();
+            MI_Instance clonedHandle = cimInstanceToClone.InstanceHandle.Clone();
             this._myHandle = new SharedInstanceHandle(clonedHandle);
         }
 
@@ -109,11 +110,11 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentNullException("className");
             }
 
-            Native.InstanceHandle tmpHandle;
-            Native.MiResult result = Native.ApplicationMethods.NewInstance(CimApplication.Handle, className, null, out tmpHandle);
+            MI_Instance tmpHandle;
+            MI_Result result = CimApplication.Handle.NewInstance(className, null, out tmpHandle);
             switch (result)
             {
-                case Native.MiResult.INVALID_PARAMETER:
+                case MI_Result.MI_RESULT_INVALID_PARAMETER:
                     throw new ArgumentOutOfRangeException("className");
 
                 default:
@@ -123,7 +124,7 @@ namespace Microsoft.Management.Infrastructure
             }
             if( namespaceName != null)
             {
-                result = Native.InstanceMethods.SetNamespace(this._myHandle.Handle, namespaceName);
+                result = this._myHandle.Handle.SetNameSpace(namespaceName);
                 CimException.ThrowIfMiResultFailure(result);
             }
         }        
@@ -140,19 +141,22 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentNullException("cimClass");
             }
 
-            Native.InstanceHandle tmpHandle;
-            Native.MiResult result = Native.ApplicationMethods.NewInstance(CimApplication.Handle, cimClass.CimSystemProperties.ClassName, cimClass.ClassHandle, out tmpHandle);
-            if (result == Native.MiResult.INVALID_PARAMETER)
+	    // TODO: Need a way to get classDecl from class
+	    /*
+            MI_Instance tmpHandle;
+            MI_Result result = CimApplication.Handle.NewInstance(cimClass.CimSystemProperties.ClassName, cimClass.ClassHandle, out tmpHandle);
+            if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
                 throw new ArgumentOutOfRangeException("cimClass");
             }
             CimException.ThrowIfMiResultFailure(result);
             this._myHandle = new SharedInstanceHandle(tmpHandle);
 
-            result = Native.InstanceMethods.SetNamespace(this._myHandle.Handle, cimClass.CimSystemProperties.Namespace);
+            result = this._myHandle.Handle.SetNameSpace(cimClass.CimSystemProperties.Namespace);
             CimException.ThrowIfMiResultFailure(result);
-            result = Native.InstanceMethods.SetServerName(this._myHandle.Handle, cimClass.CimSystemProperties.ServerName);
+            result = this._myHandle.Handle.SetServerName(cimClass.CimSystemProperties.ServerName);
             CimException.ThrowIfMiResultFailure(result);
+	    */
         }        
 
         #endregion Constructors
@@ -165,9 +169,9 @@ namespace Microsoft.Management.Infrastructure
             {
                 this.AssertNotDisposed();
 
-                Native.ClassHandle classHandle;
-                Native.MiResult result = Native.InstanceMethods.GetClass(this.InstanceHandle, out classHandle);
-                return ((classHandle == null) || (result != Native.MiResult.OK))
+                MI_Class classHandle;
+                MI_Result result = this.InstanceHandle.GetClass(out classHandle);
+                return ((classHandle == null) || (result != MI_Result.MI_RESULT_OK))
                            ? null
                            : new CimClass(classHandle);
             }
@@ -199,17 +203,17 @@ namespace Microsoft.Management.Infrastructure
                     
                     // ComputerName
                     string tmpComputerName;
-                    Native.MiResult result = Native.InstanceMethods.GetServerName(this.InstanceHandle, out tmpComputerName);
+                    MI_Result result = this.InstanceHandle.GetServerName(out tmpComputerName);
                     CimException.ThrowIfMiResultFailure(result);
 
                     //ClassName
                     string tmpClassName;
-                    result = Native.InstanceMethods.GetClassName(this.InstanceHandle, out tmpClassName);
+                    result = this.InstanceHandle.GetClassName(out tmpClassName);
                     CimException.ThrowIfMiResultFailure(result);
 
                     //Namespace 
                     string tmpNamespace;
-                    result = Native.InstanceMethods.GetNamespace(this.InstanceHandle, out tmpNamespace);
+                    result = this.InstanceHandle.GetNameSpace(out tmpNamespace);
                     CimException.ThrowIfMiResultFailure(result);
                     tmpSystemProperties.UpdateCimSystemProperties(tmpNamespace, tmpComputerName, tmpClassName);
 
@@ -383,8 +387,10 @@ namespace Microsoft.Management.Infrastructure
             }
         }
 #endif
-        internal static object ConvertToNativeLayer(object value, CimType cimType)
+        internal static MI_Value ConvertToNativeLayer(object value, CimType cimType)
         {
+	    // TODO: Implement this for MI_Value
+	    /*
             var cimInstance = value as CimInstance;
             if (cimInstance != null)
             {
@@ -394,7 +400,7 @@ namespace Microsoft.Management.Infrastructure
             var arrayOfCimInstances = value as CimInstance[];
             if (arrayOfCimInstances != null)
             {
-                Native.InstanceHandle[] arrayOfInstanceHandles = new Native.InstanceHandle[arrayOfCimInstances.Length];
+                MI_Instance[] arrayOfInstanceHandles = new MI_Instance[arrayOfCimInstances.Length];
                 for (int i = 0; i < arrayOfCimInstances.Length; i++)
                 {
                     CimInstance inst = arrayOfCimInstances[i];
@@ -411,9 +417,13 @@ namespace Microsoft.Management.Infrastructure
             }
 
             return (cimType != CimType.Unknown) ? CimProperty.ConvertToNativeLayer(value, cimType) : value;
+	    */
+	    MI_Value v = new MI_Value();
+	    v.String = "temp";
+	    return v;
         }
 
-        internal static object ConvertToNativeLayer(object value)
+        internal static MI_Value ConvertToNativeLayer(object value)
         {
             return ConvertToNativeLayer(value, CimType.Unknown);
         }
@@ -424,7 +434,7 @@ namespace Microsoft.Management.Infrastructure
             CimInstance parent = null,
             bool clone = false)
         {
-            var instanceHandle = value as Native.InstanceHandle;
+            var instanceHandle = value as MI_Instance;
             if (instanceHandle != null)
             {
                 CimInstance instance = new CimInstance(
@@ -438,13 +448,13 @@ namespace Microsoft.Management.Infrastructure
                 return instance;
             }
 
-            var arrayOfInstanceHandles = value as Native.InstanceHandle[];
+            var arrayOfInstanceHandles = value as MI_Instance[];
             if (arrayOfInstanceHandles != null)
             {
                 CimInstance[] arrayOfInstances = new CimInstance[arrayOfInstanceHandles.Length];
                 for (int i = 0; i < arrayOfInstanceHandles.Length; i++)
                 {
-                    Native.InstanceHandle h = arrayOfInstanceHandles[i];
+                    MI_Instance h = arrayOfInstanceHandles[i];
                     if (h == null)
                     {
                         arrayOfInstances[i] = null;
@@ -542,7 +552,7 @@ namespace Microsoft.Management.Infrastructure
             using (CimDeserializer cimDeserializer = CimDeserializer.Create())
             {
                 uint offset = 0;
-                Native.InstanceHandle deserializedInstanceHandle = cimDeserializer.DeserializeInstanceHandle(
+                MI_Instance deserializedInstanceHandle = cimDeserializer.DeserializeInstanceHandle(
                     serializedBytes,
                     ref offset,
                     cimClasses: null);
@@ -661,7 +671,7 @@ namespace Microsoft.Management.Infrastructure.Internal
 {
     internal static class InstanceHandleExtensionMethods
     {
-        public static Native.InstanceHandle Clone(this Native.InstanceHandle handleToClone)
+        public static MI_Instance Clone(this MI_Instance handleToClone)
         {
             if (handleToClone == null)
             {
@@ -669,8 +679,8 @@ namespace Microsoft.Management.Infrastructure.Internal
             }
             handleToClone.AssertValidInternalState();
 
-            Native.InstanceHandle clonedHandle;
-            Native.MiResult result = Native.InstanceMethods.Clone(handleToClone, out clonedHandle);
+            MI_Instance clonedHandle;
+            MI_Result result = handleToClone.Clone(out clonedHandle);
             CimException.ThrowIfMiResultFailure(result);
             return clonedHandle;
         }

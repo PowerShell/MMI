@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.Management.Infrastructure.Options.Internal;
+using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -17,7 +18,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// Creates a new <see cref="DComSessionOptions"/> instance
         /// </summary>
         public DComSessionOptions()
-            : base(Native.ApplicationMethods.protocol_DCOM)
+            : base("WMIDCOM")
         {
         }
 
@@ -41,16 +42,19 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetPacketPrivacy(this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+                // TODO: Add SetPacketPrivacy to MI wrapper 
+		//MI_Result result = Native.DestinationOptionsMethods.SetPacketPrivacy(this.DestinationOptionsHandleOnDemand, value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool privacy;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetPacketPrivacy(this.DestinationOptionsHandleOnDemand, out privacy);
-                CimException.ThrowIfMiResultFailure(result);
-                return privacy;
+		// TODO: Add GetPacketPrivacy to MI wrapper
+                //bool privacy;
+                //MI_Result result = Native.DestinationOptionsMethods.GetPacketPrivacy(this.DestinationOptionsHandleOnDemand, out privacy);
+                //CimException.ThrowIfMiResultFailure(result);
+                //return privacy;
+		return true;
             }
         }
 
@@ -64,18 +68,22 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetPacketIntegrity(
-                    this.DestinationOptionsHandleOnDemand, value);
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: Add SetPacketIntegrity to MI wrapper
+                //MI_Result result = Native.DestinationOptionsMethods.SetPacketIntegrity(
+		//		this.DestinationOptionsHandleOnDemand, value);
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                bool integrity;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetPacketIntegrity(
-                    this.DestinationOptionsHandleOnDemand, out integrity);
-                CimException.ThrowIfMiResultFailure(result);
-                return integrity;
+		
+		// TODO: Add GetPacketIntegrity to MI wrapper
+                //bool integrity;
+                //MI_Result result = Native.DestinationOptionsMethods.GetPacketIntegrity(
+		//                     this.DestinationOptionsHandleOnDemand, out integrity);
+                //CimException.ThrowIfMiResultFailure(result);
+                //return integrity;
+		return true;
             }
         }
 
@@ -89,18 +97,22 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-                Native.MiResult result = Native.DestinationOptionsMethods.SetImpersonationType(
-                    this.DestinationOptionsHandleOnDemand, value.ToNativeType());
-                CimException.ThrowIfMiResultFailure(result);
+		// TODO: Add SetImpersonationType to MI wrapper
+                //MI_Result result = Native.DestinationOptionsMethods.SetImpersonationType(
+		//   this.DestinationOptionsHandleOnDemand, value.ToNativeType());
+                //CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-                Native.DestinationOptionsMethods.MiImpersonationType type;
-                Native.MiResult result = Native.DestinationOptionsMethods.GetImpersonationType(
-                    this.DestinationOptionsHandleOnDemand, out type);
-                CimException.ThrowIfMiResultFailure(result);
-                return (ImpersonationType)type;
+
+		// TODO: Add GetImpersonationType to MI wrapper
+                //Native.DestinationOptionsMethods.MiImpersonationType type;
+                //MI_Result result = Native.DestinationOptionsMethods.GetImpersonationType(
+		//this.DestinationOptionsHandleOnDemand, out type);
+                //CimException.ThrowIfMiResultFailure(result);
+                //return (ImpersonationType)type;
+		return ImpersonationType.None;
             }
         }
     }
