@@ -196,8 +196,8 @@ namespace Microsoft.Management.Infrastructure.Options
                 throw new ArgumentNullException("optionValue");
             }
             this.AssertNotDisposed();
-
-	    // TODO: Uncomment when MI API supports AddCredentials
+	    
+	    // TODO: Implement this
             //MI_Result result = this._subscriptionDeliveryOptionsHandle.SubscriptionDeliveryOptionsMethods.AddCredentials(optionName, optionValue.GetCredential(), flags);
             //CimException.ThrowIfMiResultFailure(result);
         }        

@@ -100,47 +100,63 @@ namespace Microsoft.Management.Infrastructure
             return Helpers.ToStringFromNameAndValue(this.Name, this.Value);
         }
 
-        internal static object ConvertToNativeLayer(object value, CimType cimType)
+        internal static MI_Value ConvertToNativeLayer(object value, CimType cimType)
         {
             if (value == null) return null;
 
+	    MI_Value miv = new MI_Value();
             var arrayOfObjects = value as object[];
             switch (cimType)
             {
-                case CimType.Boolean:
-                    return Convert.ToBoolean(value, CultureInfo.InvariantCulture);
+	        case CimType.Boolean:
+                    miv.Boolean = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.Char16:
-                    return Convert.ToChar(value, CultureInfo.InvariantCulture);
+                    miv.Char16 = Convert.ToChar(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.Real32:
-                    return Convert.ToSingle(value, CultureInfo.InvariantCulture);
+                    miv.Real32 = Convert.ToSingle(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.Real64:
-                    return Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                    miv.Real64 = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.SInt16:
-                    return Convert.ToInt16(value, CultureInfo.InvariantCulture);
+                    miv.Sint16 = Convert.ToInt16(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.SInt32:
-                    return Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                    miv.Sint32 = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.SInt64:
-                    return Convert.ToInt64(value, CultureInfo.InvariantCulture);
+                    miv.Sint64 = Convert.ToInt64(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.SInt8:
-                    return Convert.ToSByte(value, CultureInfo.InvariantCulture);
+                    miv.Sint8 = Convert.ToSByte(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.String:
                     if (value is Boolean)
                     {
 #if(!_CORECLR)
-                        return Convert.ToString(value, CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture);
+                        miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture);
+			return miv;
 #else
-                        return Convert.ToString(value, CultureInfo.InvariantCulture).ToLower();
+                        miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower();
+			return miv;
 #endif
                     }
-                    return Convert.ToString(value, CultureInfo.InvariantCulture);
+                    miv.String = Convert.ToString(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.UInt16:
-                    return Convert.ToUInt16(value, CultureInfo.InvariantCulture);
+                    miv.Uint16 = Convert.ToUInt16(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.UInt32:
-                    return Convert.ToUInt32(value, CultureInfo.InvariantCulture);
+                    miv.Uint32 = Convert.ToUInt32(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.UInt64:
-                    return Convert.ToUInt64(value, CultureInfo.InvariantCulture);
+                    miv.Uint64 = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.UInt8:
-                    return Convert.ToByte(value, CultureInfo.InvariantCulture);
+                    miv.Uint8 = Convert.ToByte(value, CultureInfo.InvariantCulture);
+		    return miv;
                 case CimType.BooleanArray:
                     if (arrayOfObjects != null)
                     {
@@ -149,7 +165,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToBoolean(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.BooleanA = array;
+                        return miv;
                     }
                     break;
                 case CimType.Char16Array:
@@ -160,7 +177,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToChar(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Char16A = array;
+                        return miv;
                     }
                     break;
                 case CimType.Real32Array:
@@ -171,7 +189,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToSingle(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Real32A = array;
+                        return miv;
                     }
                     break;
                 case CimType.Real64Array:
@@ -182,7 +201,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToDouble(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Real64A = array;
+                        return miv;
                     }
                     break;
                 case CimType.SInt16Array:
@@ -193,7 +213,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToInt16(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Sint16A = array;
+                        return miv;
                     }
                     break;
                 case CimType.SInt32Array:
@@ -204,7 +225,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToInt32(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Sint32A = array;
+                        return miv;
                     }
                     break;
                 case CimType.SInt64Array:
@@ -215,7 +237,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToInt64(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Sint64A = array;
+                        return miv;
                     }
                     break;
                 case CimType.SInt8Array:
@@ -226,7 +249,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToSByte(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Sint8A = array;
+                        return miv;
                     }
                     break;
                 case CimType.StringArray:
@@ -248,7 +272,8 @@ namespace Microsoft.Management.Infrastructure
                                 array[i] = Convert.ToString(arrayOfObjects[i], CultureInfo.InvariantCulture);
                             }
                         }
-                        return array;
+			miv.StringA = array;
+                        return miv;
                     }
                     break;
                 case CimType.UInt16Array:
@@ -259,7 +284,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToUInt16(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Uint16A = array;
+                        return miv;
                     }
                     break;
                 case CimType.UInt32Array:
@@ -270,7 +296,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToUInt32(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Uint32A = array;
+                        return miv;
                     }
                     break;
                 case CimType.UInt64Array:
@@ -281,7 +308,8 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToUInt64(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Uint64A = array;
+                        return miv;
                     }
                     break;
                 case CimType.UInt8Array:
@@ -292,34 +320,61 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToByte(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-                        return array;
+			miv.Uint8A = array;
+                        return miv;
                     }
                     break;
                 case CimType.DateTime:
-                    if ((value is TimeSpan) || (value is DateTime))
+                    if (value is TimeSpan)
+		    {
+			TimeSpan ts = (TimeSpan)value;
+			MI_Datetime dt = new MI_Datetime(ts);
+			miv.Datetime = dt;
+			return miv;
+		    }
+		    else if (value is DateTime)
                     {
-                        return value;
+			DateTime sdt = (DateTime)value;
+			MI_Datetime dt = new MI_Datetime(sdt);
+			miv.Datetime = dt;
+			return miv;
                     }
                     else
                     {
-                        return Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+			MI_Datetime dt = new MI_Datetime();
+			miv.Datetime = dt;
+			return miv;
+			// TODO: What case is this? What time object would this be?
+                        //return Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     }
                 case CimType.DateTimeArray:
                     if (arrayOfObjects != null)
                     {
-                        object[] array = new object[arrayOfObjects.Length];
+                        MI_Datetime[] array = new MI_Datetime[arrayOfObjects.Length];
                         for (int i = 0; i < arrayOfObjects.Length; i++)
                         {
-                            if ((arrayOfObjects[i] is TimeSpan) || (arrayOfObjects[i] is DateTime))
-                            {
-                                array[i] = arrayOfObjects[i];
-                            }
+			    if (arrayOfObjects[i] is TimeSpan)
+			    {
+				TimeSpan ts = (TimeSpan)arrayOfObjects[i];
+				MI_Datetime dt = new MI_Datetime(ts);
+				array[i] = dt;
+			    }
+			    else if (arrayOfObjects[i] is DateTime)
+			    {
+				DateTime sdt = (DateTime)arrayOfObjects[i];
+				MI_Datetime dt = new MI_Datetime(sdt);
+				array[i] = dt;
+			    }
                             else
                             {
-                                array[i] = Convert.ToDateTime(arrayOfObjects[i], CultureInfo.InvariantCulture);
+				MI_Datetime dt = new MI_Datetime();
+				array[i] = dt;
+				// TODO: What case is this? What time object would this be?
+                                //array[i] = Convert.ToDateTime(arrayOfObjects[i], CultureInfo.InvariantCulture);
                             }
                         }
-                        return array;
+			miv.DatetimeA = array;
+                        return miv;
                     }
                     break;
                 case CimType.Reference:
@@ -329,7 +384,7 @@ namespace Microsoft.Management.Infrastructure
                 default:
                     break;
             }
-            return value;
+            return miv;
         }
     }
 }

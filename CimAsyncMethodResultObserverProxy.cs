@@ -72,10 +72,9 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             MI_Type parameterType)
         {
             parameterValue = CimInstance.ConvertFromNativeLayer(
-                value: parameterValue,
-                sharedParentHandle: null,
-                clone: !this._shortenLifetimeOfResults);
-
+								value: (MI_Value)parameterValue,
+								sharedParentHandle: null,
+								clone: !this._shortenLifetimeOfResults);
             {
                 var cimInstance = parameterValue as CimInstance;
                 if (cimInstance != null)

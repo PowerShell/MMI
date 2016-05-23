@@ -6,7 +6,7 @@ using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
-    public enum ImpersonationType
+    public enum ImpersonationType : uint
     {
         None = MI_ImpersonationType.None,
         Default = MI_ImpersonationType.Default,

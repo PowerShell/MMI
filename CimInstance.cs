@@ -141,10 +141,8 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentNullException("cimClass");
             }
 
-	    // TODO: Need a way to get classDecl from class
-	    /*
             MI_Instance tmpHandle;
-            MI_Result result = CimApplication.Handle.NewInstance(cimClass.CimSystemProperties.ClassName, cimClass.ClassHandle, out tmpHandle);
+            MI_Result result = CimApplication.Handle.NewInstanceFromClass(cimClass.CimSystemProperties.ClassName, cimClass.ClassHandle, out tmpHandle);
             if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
                 throw new ArgumentOutOfRangeException("cimClass");
@@ -156,7 +154,6 @@ namespace Microsoft.Management.Infrastructure
             CimException.ThrowIfMiResultFailure(result);
             result = this._myHandle.Handle.SetServerName(cimClass.CimSystemProperties.ServerName);
             CimException.ThrowIfMiResultFailure(result);
-	    */
         }        
 
         #endregion Constructors
@@ -389,12 +386,12 @@ namespace Microsoft.Management.Infrastructure
 #endif
         internal static MI_Value ConvertToNativeLayer(object value, CimType cimType)
         {
-	    // TODO: Implement this for MI_Value
-	    /*
             var cimInstance = value as CimInstance;
             if (cimInstance != null)
             {
-                return cimInstance.InstanceHandle;
+		MI_Value retval = new MI_Value();
+		retval.Instance = cimInstance.InstanceHandle;
+		return retval;
             }
 
             var arrayOfCimInstances = value as CimInstance[];
@@ -413,14 +410,24 @@ namespace Microsoft.Management.Infrastructure
                         arrayOfInstanceHandles[i] = inst.InstanceHandle;
                     }
                 }
-                return arrayOfInstanceHandles;
+
+		MI_Value retval = new MI_Value();
+		retval.InstanceA = arrayOfInstanceHandles;
+                return retval;
             }
 
-            return (cimType != CimType.Unknown) ? CimProperty.ConvertToNativeLayer(value, cimType) : value;
+	    // TODO: What to do with Unknown types? Ignore? Uncomment and remove return line immediately below.
+	    return CimProperty.ConvertToNativeLayer(value, cimType);
+	    /*
+	    if (cimType != CimType.Unknown)
+	    {
+		return CimProperty.ConvertToNativeLayer(value, cimType);
+	    }
+	    else
+	    {
+		return value;
+	    }
 	    */
-	    MI_Value v = new MI_Value();
-	    v.String = "temp";
-	    return v;
         }
 
         internal static MI_Value ConvertToNativeLayer(object value)
@@ -429,16 +436,15 @@ namespace Microsoft.Management.Infrastructure
         }
 
         internal static object ConvertFromNativeLayer(
-            object value, 
+            MI_Value value, 
             SharedInstanceHandle sharedParentHandle = null, 
             CimInstance parent = null,
             bool clone = false)
         {
-            var instanceHandle = value as MI_Instance;
-            if (instanceHandle != null)
+	    if (value.Type == MI_Type.MI_INSTANCE)
             {
                 CimInstance instance = new CimInstance(
-                    clone ? instanceHandle.Clone() : instanceHandle, 
+                    clone ? value.Instance.Clone() : value.Instance, 
                     sharedParentHandle);
                 if (parent != null)
                 {
@@ -448,13 +454,12 @@ namespace Microsoft.Management.Infrastructure
                 return instance;
             }
 
-            var arrayOfInstanceHandles = value as MI_Instance[];
-            if (arrayOfInstanceHandles != null)
+	    if (value.Type == MI_Type.MI_INSTANCEA)
             {
-                CimInstance[] arrayOfInstances = new CimInstance[arrayOfInstanceHandles.Length];
-                for (int i = 0; i < arrayOfInstanceHandles.Length; i++)
+                CimInstance[] arrayOfInstances = new CimInstance[value.InstanceA.Length];
+                for (int i = 0; i < value.InstanceA.Length; i++)
                 {
-                    MI_Instance h = arrayOfInstanceHandles[i];
+                    MI_Instance h = value.InstanceA[i];
                     if (h == null)
                     {
                         arrayOfInstances[i] = null;

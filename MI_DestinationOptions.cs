@@ -64,7 +64,6 @@ namespace NativeObject
         private static int MI_DestinationOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_DestinationOptionsMembers>("ft");
         private static int MI_DestinationOptionsMembersSize = Marshal.SizeOf<MI_DestinationOptionsMembers>();
 
-	// TODO: this was made public
         private MI_DestinationOptionsPtr ptr;
         private bool isDirect;
         private Lazy<MI_DestinationOptionsFT> mft;
@@ -337,13 +336,12 @@ namespace NativeObject
 			       out MI_DestinationOptions newDestinationOptions
 			       )
         {
-
-	    // TODO: Fix MI API to support conversion between Ptr and non-Ptr
-            //MI_Result resultLocal = this.ft.Clone(this,
-	    //                                      out newDestinationOptions);
-            //return resultLocal;
-	    newDestinationOptions = new MI_DestinationOptions(false);
-	    return MI_Result.MI_RESULT_FAILED;
+            MI_DestinationOptions localDestinationOptions = MI_DestinationOptions.NewIndirectPtr();
+            
+	    MI_Result resultLocal = this.ft.Clone(this,
+	                                          localDestinationOptions);
+	    newDestinationOptions = localDestinationOptions;
+            return resultLocal;
         }
 
         private MI_DestinationOptionsFT ft { get { return this.mft.Value; } }
@@ -495,7 +493,7 @@ namespace NativeObject
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             public delegate MI_Result MI_DestinationOptions_Clone(
                 MI_DestinationOptionsPtr self,
-                out MI_DestinationOptionsPtr newDestinationOptions
+                [In, Out] MI_DestinationOptionsPtr newDestinationOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

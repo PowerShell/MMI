@@ -412,20 +412,25 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-		
-		// TODO: Add function to MI API
-                //MI_Result result = this._operationOptionsHandle.Value.SetWriteErrorModeOption((MI_CallbackMode)value);
-                //CimException.ThrowIfMiResultFailure(result);
+
+                MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_WRITEERRORMODE",
+										(uint)value,
+										MI_OperationOptionsFlags.Unused);
+                CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-		// TODO: Add function to MI API
-                //MI_CallbackMode mode;
-                //MI_Result result = this._operationOptionsHandle.Value.GetWriteErrorModeOption(out mode);
-                //CimException.ThrowIfMiResultFailure(result);
-		//return mode;
-		return CimCallbackMode.None;
+
+		UInt32 value;
+		UInt32 index;
+		MI_OperationOptionsFlags flags;
+                MI_Result result = this._operationOptionsHandle.Value.GetNumber("__MI_OPERATIONOPTIONS_WRITEERRORMODE",
+										 out value,
+										 out index,
+										 out flags);
+                CimException.ThrowIfMiResultFailure(result);
+                return (CimCallbackMode)value;
             }
         }
 
@@ -435,23 +440,26 @@ namespace Microsoft.Management.Infrastructure.Options
         /// <value></value>
         public CimCallbackMode PromptUserMode
         {
-            set
-            {
-                this.AssertNotDisposed();
-
-		// TODO: Add function to MI API
-                //MI_Result result = this._operationOptionsHandle.Value.SetPromptUserModeOption((MI_CallbackMode)value);
-                //CimException.ThrowIfMiResultFailure(result);
+	    set
+	    {
+                MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
+										(uint)value,
+										MI_OperationOptionsFlags.Unused);
+                CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-		// TODO: Add function to MI API
-                //MI_CallbackMode mode;
-                //MI_Result result = this._operationOptionsHandle.Value.GetPromptUserModeOption(out mode);
-                //CimException.ThrowIfMiResultFailure(result);
-		//return mode;
-		return CimCallbackMode.None;
+
+		UInt32 value;
+		UInt32 index;
+		MI_OperationOptionsFlags flags;
+                MI_Result result = this._operationOptionsHandle.Value.GetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
+										 out value,
+										 out index,
+										 out flags);
+                CimException.ThrowIfMiResultFailure(result);
+                return (CimCallbackMode)value;
             }
         }
 
@@ -720,7 +728,7 @@ namespace Microsoft.Management.Infrastructure.Options
             MI_Result result = this.OperationOptionsHandleOnDemand.SetCustomOption(
                 optionName, 
                 cimType.ToMiType(), 
-                nativeLayerValue,
+		nativeLayerValue,
                 mustComply,
 		flags);
             CimException.ThrowIfMiResultFailure(result);

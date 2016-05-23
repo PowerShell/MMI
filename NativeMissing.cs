@@ -16,7 +16,7 @@ namespace NativeObject
 	Ignore = 2,
     }
 
-    public enum MI_ImpersonationType
+    public enum MI_ImpersonationType : uint
     {
 	Default = 0,
 	None = 1,
