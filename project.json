@@ -7,10 +7,6 @@
         "allowUnsafe": true
     },
 
-    "dependencies": {
-        "Microsoft.Management.Infrastructure.Native": "1.0.0-rc4"
-    },
-
     "frameworks": {
         "netstandard1.5": {
             "imports": [ "dnxcore50" ],
