@@ -1,5 +1,87 @@
+using System.Security;
+using Microsoft.Management.Infrastructure.Options;
+
 namespace NativeObject
 {
+
+    public class NativeCimCredential
+    {
+        private SecureString passwordSecureStr;
+        private bool credentialIsCertificate;
+
+        internal NativeCimCredential(bool bIsCertificate, SecureString secureStr)
+        {
+            passwordSecureStr = null;
+            credentialIsCertificate = bIsCertificate;
+            if(secureStr != null && secureStr.Length > 0)
+            {
+                passwordSecureStr = secureStr.Copy();
+            }
+        }
+
+        internal SecureString GetSecureString()
+        {
+            return passwordSecureStr;
+        }
+
+        internal void AssertValidInternalState()
+	{
+	    return;
+	}
+
+	internal static void CreateCimCredential(string authenticationMechanism, string certificateThumbprint, out NativeCimCredential credential)
+	{
+	    // TODO: Implement
+	    credential = new NativeCimCredential(true, new SecureString());
+	}
+
+	internal static void CreateCimCredential(string authenticationMechanism, string domain, string userName, SecureString password, out NativeCimCredential credential)
+	{
+	    // TODO: Implement
+	    credential = new NativeCimCredential(true, new SecureString());
+	}
+
+	internal static void CreateCimCredential(string authenticationMechanism, out NativeCimCredential credential)
+	{
+	    // TODO: Implement
+	    credential = new NativeCimCredential(true, new SecureString());
+	}
+
+	internal static void CreateCimCredential(CertificateAuthenticationMechanism authenticationMechanism, string certificateThumbprint, out NativeCimCredential credential)
+	{
+	    // TODO: Implement
+	    credential = new NativeCimCredential(true, new SecureString());
+	}
+
+	internal static void CreateCimCredential(PasswordAuthenticationMechanism authenticationMechanism, string domain, string userName, SecureString password, out NativeCimCredential credential)
+	{
+	    // TODO: Implement
+	    credential = new NativeCimCredential(true, new SecureString());
+	}
+
+
+	internal static void CreateCimCredential(ImpersonatedAuthenticationMechanism authenticationMechanism, out NativeCimCredential credential)
+	{
+	    // TODO: Implement
+	    credential = new NativeCimCredential(true, new SecureString());
+	}
+
+    }
+
+    public class MI_AuthType
+    {
+	public static string DEFAULT = "Default";
+	public static string NONE = "None";
+	public static string DIGEST = "Digest";
+	public static string NEGO_WITH_CREDS = "NegoWithCreds";
+	public static string NEGO_NO_CREDS = "NegoNoCreds";
+	public static string BASIC = "Basic";
+	public static string KERBEROS = "Kerberos";
+	public static string CLIENT_CERTS = "ClientCerts";
+	public static string NTLM = "Ntlmdomain";
+	public static string CREDSSP = "CredSSP";
+	public static string ISSUER_CERT = "IssuerCert";
+    }
     
     public class MI_Serializer
     {

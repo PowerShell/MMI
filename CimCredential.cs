@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Security;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
 using NativeObject;
@@ -19,7 +18,7 @@ namespace Microsoft.Management.Infrastructure.Options
     /// </summary>
     public class CimCredential
     {
-        private NativeCimCredentialHandle credential;
+        private NativeCimCredential credential;
     
         /// <summary>
         /// Creates a new Credentials
@@ -69,15 +68,15 @@ namespace Microsoft.Management.Infrastructure.Options
             string strAuthenticationMechanism = null;
             if( authenticationMechanism == CertificateAuthenticationMechanism.Default)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeClientCerts;
+                strAuthenticationMechanism = MI_AuthType.CLIENT_CERTS;
             }
             else if( authenticationMechanism == CertificateAuthenticationMechanism.ClientCertificate)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeClientCerts;
+                strAuthenticationMechanism = MI_AuthType.CLIENT_CERTS;
             }
             else if( authenticationMechanism == CertificateAuthenticationMechanism.IssuerCertificate )
             {
-                strAuthenticationMechanism = AuthType.AuthTypeIssuerCert;
+                strAuthenticationMechanism = MI_AuthType.ISSUER_CERT;
             }
             else
             {
@@ -98,31 +97,31 @@ namespace Microsoft.Management.Infrastructure.Options
             string strAuthenticationMechanism = null;
             if( authenticationMechanism == PasswordAuthenticationMechanism.Default)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeDefault;
+                strAuthenticationMechanism = MI_AuthType.DEFAULT;
             }
             else if( authenticationMechanism == PasswordAuthenticationMechanism.Basic)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeBasic;
+                strAuthenticationMechanism = MI_AuthType.BASIC;
             }
             else if( authenticationMechanism == PasswordAuthenticationMechanism.Digest)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeDigest;
+                strAuthenticationMechanism = MI_AuthType.DIGEST;
             }
             else if( authenticationMechanism == PasswordAuthenticationMechanism.Negotiate)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeNegoWithCredentials;
+                strAuthenticationMechanism = MI_AuthType.NEGO_WITH_CREDS;
             }
             else if( authenticationMechanism == PasswordAuthenticationMechanism.Kerberos)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeKerberos;
+                strAuthenticationMechanism = MI_AuthType.KERBEROS;
             }
             else if( authenticationMechanism == PasswordAuthenticationMechanism.NtlmDomain)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeNTLM;
+                strAuthenticationMechanism = MI_AuthType.NTLM;
             }
             else if( authenticationMechanism == PasswordAuthenticationMechanism.CredSsp)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeCredSSP;
+                strAuthenticationMechanism = MI_AuthType.CREDSSP;
             }  
             else
             {
@@ -139,19 +138,19 @@ namespace Microsoft.Management.Infrastructure.Options
             string strAuthenticationMechanism = null;
             if( authenticationMechanism == ImpersonatedAuthenticationMechanism.None)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeNone;
+                strAuthenticationMechanism = MI_AuthType.NONE;
             }
             else if( authenticationMechanism == ImpersonatedAuthenticationMechanism.Negotiate)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeNegoNoCredentials;
+                strAuthenticationMechanism = MI_AuthType.NEGO_NO_CREDS;
             }
             else if( authenticationMechanism == ImpersonatedAuthenticationMechanism.Kerberos)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeKerberos;
+                strAuthenticationMechanism = MI_AuthType.KERBEROS;
             }
             else if( authenticationMechanism == ImpersonatedAuthenticationMechanism.NtlmDomain)
             {
-                strAuthenticationMechanism = AuthType.AuthTypeNTLM;
+                strAuthenticationMechanism = MI_AuthType.NTLM;
             }
             else
             {
@@ -160,6 +159,7 @@ namespace Microsoft.Management.Infrastructure.Options
             NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, out credential);
         }  
         
-        internal NativeCimCredentialHandle GetCredential(){ return credential; }
+	// TODO: return proper credential type here
+        //internal NativeCimCredentialHandle GetCredential(){ return credential; }
     }
 }
