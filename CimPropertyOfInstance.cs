@@ -84,7 +84,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                         Helpers.ValidateNoNullElements(value as IList);
                         result = this._instanceHandle.Handle.SetElementAt(
                             (uint)this._index, 
-                            (MI_Value)CimInstance.ConvertToNativeLayer(value, this.CimType),
+                            CimInstance.ConvertToNativeLayer(value, this.CimType),
 			    this.CimType.ToMiType(),
 			    MI_Flags.None);
                     }

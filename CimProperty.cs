@@ -137,11 +137,10 @@ namespace Microsoft.Management.Infrastructure
                     {
 #if(!_CORECLR)
                         miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture);
-			return miv;
 #else
                         miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower();
-			return miv;
 #endif
+			return miv;
                     }
                     miv.String = Convert.ToString(value, CultureInfo.InvariantCulture);
 		    return miv;
@@ -377,6 +376,9 @@ namespace Microsoft.Management.Infrastructure
                         return miv;
                     }
                     break;
+                case CimType.Unknown:
+		    miv.String = "UnknownType";
+		    return miv;
                 case CimType.Reference:
                 case CimType.ReferenceArray:
                 case CimType.Instance:
