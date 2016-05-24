@@ -366,14 +366,11 @@ namespace NativeObject
 			       out MI_SubscriptionDeliveryOptions newSubscriptionDeliveryOptions
 			       )
         {
-	    // TODO: uncomment block below once implicit conversion works
-	    //MI_SubscriptionDeliveryOptions newOptionsLocal = MI_SubscriptionDeliveryOptions.NewIndirectPtr();
-            //MI_Result resultLocal = this.ft.Clone(this,
-	//					  out newOptionsLocal);
-	    //newSubscriptionDeliveryOptions = newOptionsLocal;
-            //return resultLocal;
-	    newSubscriptionDeliveryOptions = MI_SubscriptionDeliveryOptions.NewIndirectPtr();
-	    return MI_Result.MI_RESULT_FAILED;
+	    MI_SubscriptionDeliveryOptions newOptionsLocal = MI_SubscriptionDeliveryOptions.NewIndirectPtr();
+            MI_Result resultLocal = this.ft.Clone(this,
+						  newOptionsLocal);
+	    newSubscriptionDeliveryOptions = newOptionsLocal;
+            return resultLocal;
         }
 
         private MI_SubscriptionDeliveryOptionsFT ft { get { return this.mft.Value; } }
@@ -561,7 +558,7 @@ namespace NativeObject
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             public delegate MI_Result MI_SubscriptionDeliveryOptions_Clone(
                 MI_SubscriptionDeliveryOptionsPtr self,
-                out MI_SubscriptionDeliveryOptionsPtr newSubscriptionDeliveryOptions
+                [In, Out] MI_SubscriptionDeliveryOptionsPtr newSubscriptionDeliveryOptions
                 );
         }
     }
