@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7349798-7E56-4235-9266-3A84B1294155}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Management.Infrastructure</RootNamespace>
+    <AssemblyName>Microsoft.Management.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNSIGNED VS2015</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CancellationMode.cs">
+      <Link>CancellationMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimApplication.cs">
+      <Link>CimApplication.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncCallbacksReceiverBase.cs">
+      <Link>CimAsyncCallbacksReceiverBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncCancellationDisposable.cs">
+      <Link>CimAsyncCancellationDisposable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncClassObservable.cs">
+      <Link>CimAsyncClassObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncClassObserverProxy.cs">
+      <Link>CimAsyncClassObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncCollection.cs">
+      <Link>CimAsyncCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncDelegatedObservable.cs">
+      <Link>CimAsyncDelegatedObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncIndicationObservable.cs">
+      <Link>CimAsyncIndicationObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncIndicationObserverProxy.cs">
+      <Link>CimAsyncIndicationObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncInstanceObservable.cs">
+      <Link>CimAsyncInstanceObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncInstanceObserverProxy.cs">
+      <Link>CimAsyncInstanceObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncMethodResultObservable.cs">
+      <Link>CimAsyncMethodResultObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncMethodResultObserverProxy.cs">
+      <Link>CimAsyncMethodResultObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncObservableBase.cs">
+      <Link>CimAsyncObservableBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncObserverProxyBase.cs">
+      <Link>CimAsyncObserverProxyBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncResult.cs">
+      <Link>CimAsyncResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimAsyncStatus.cs">
+      <Link>CimAsyncStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimClass.cs">
+      <Link>CimClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimClassPropertiesCollection.cs">
+      <Link>CimClassPropertiesCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimClassPropertyOfClass.cs">
+      <Link>CimClassPropertyOfClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimClassQualifierCollection.cs">
+      <Link>CimClassQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimConverter.cs">
+      <Link>CimConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimCredential.cs">
+      <Link>CimCredential.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimDeserializer.cs">
+      <Link>CimDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimException.cs">
+      <Link>CimException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimFlags.cs">
+      <Link>CimFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimInstance.cs">
+      <Link>CimInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimKeyedCollection.cs">
+      <Link>CimKeyedCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodDeclaration.cs">
+      <Link>CimMethodDeclaration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodDeclarationCollection.cs">
+      <Link>CimMethodDeclarationCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodDeclarationOfClass.cs">
+      <Link>CimMethodDeclarationOfClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameter.cs">
+      <Link>CimMethodParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameterBackedByCimProperty.cs">
+      <Link>CimMethodParameterBackedByCimProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameterDeclaration.cs">
+      <Link>CimMethodParameterDeclaration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameterDeclarationCollection.cs">
+      <Link>CimMethodParameterDeclarationCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameterDeclarationOfMethod.cs">
+      <Link>CimMethodParameterDeclarationOfMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameterQualifierCollection.cs">
+      <Link>CimMethodParameterQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParameterQualifierOfMethod.cs">
+      <Link>CimMethodParameterQualifierOfMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodParametersCollection.cs">
+      <Link>CimMethodParametersCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodQualifierCollection.cs">
+      <Link>CimMethodQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodQualifierOfMethod.cs">
+      <Link>CimMethodQualifierOfMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodResult.cs">
+      <Link>CimMethodResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodResultBase.cs">
+      <Link>CimMethodResultBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMethodStreamedResult.cs">
+      <Link>CimMethodStreamedResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMofDeserializer.cs">
+      <Link>CimMofDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimMofSerializer.cs">
+      <Link>CimMofSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimOperation.cs">
+      <Link>CimOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimOperationFlags.cs">
+      <Link>CimOperationFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimOperationOptions.cs">
+      <Link>CimOperationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimPropertiesCollection.cs">
+      <Link>CimPropertiesCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimProperty.cs">
+      <Link>CimProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimPropertyDeclaration.cs">
+      <Link>CimPropertyDeclaration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimPropertyOfInstance.cs">
+      <Link>CimPropertyOfInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimPropertyQualifierCollection.cs">
+      <Link>CimPropertyQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimPropertyStandalone.cs">
+      <Link>CimPropertyStandalone.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimQualifier.cs">
+      <Link>CimQualifier.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimQualifierOfClass.cs">
+      <Link>CimQualifierOfClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimQualifierOfProperty.cs">
+      <Link>CimQualifierOfProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimReadOnlyKeyedCollection.cs">
+      <Link>CimReadOnlyKeyedCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSemantics.cs">
+      <Link>CimSemantics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSerializer.cs">
+      <Link>CimSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSession.cs">
+      <Link>CimSession.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSessionOptions.cs">
+      <Link>CimSessionOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSubscriptionDeliveryOptions.cs">
+      <Link>CimSubscriptionDeliveryOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSubscriptionResult.cs">
+      <Link>CimSubscriptionResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncClassEnumerable.cs">
+      <Link>CimSyncClassEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncClassEnumerator.cs">
+      <Link>CimSyncClassEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncEnumerableBase.cs">
+      <Link>CimSyncEnumerableBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncEnumeratorBase.cs">
+      <Link>CimSyncEnumeratorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncIndicationEnumerable.cs">
+      <Link>CimSyncIndicationEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncIndicationEnumerator.cs">
+      <Link>CimSyncIndicationEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncInstanceEnumerable.cs">
+      <Link>CimSyncInstanceEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSyncInstanceEnumerator.cs">
+      <Link>CimSyncInstanceEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimSystemProperties.cs">
+      <Link>CimSystemProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\CimType.cs">
+      <Link>CimType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\ConvertingObservable.cs">
+      <Link>ConvertingObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\DComSessionOptions.cs">
+      <Link>DComSessionOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\EmptyDisposable.cs">
+      <Link>EmptyDisposable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Helpers.cs">
+      <Link>Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\ImpersonationType.cs">
+      <Link>ImpersonationType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Application.cs">
+      <Link>MI_Application.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_CancellationReason.cs">
+      <Link>MI_CancellationReason.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Class.cs">
+      <Link>MI_Class.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_ClassDecl.cs">
+      <Link>MI_ClassDecl.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Deserializer.cs">
+      <Link>MI_Deserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_DestinationOptions.cs">
+      <Link>MI_DestinationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_DestinationOptionsFlags.cs">
+      <Link>MI_DestinationOptionsFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Flags.cs">
+      <Link>MI_Flags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Instance.cs">
+      <Link>MI_Instance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_ModuleFlags.cs">
+      <Link>MI_ModuleFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Operation.cs">
+      <Link>MI_Operation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_OperationCallback_ResponseType.cs">
+      <Link>MI_OperationCallback_ResponseType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_OperationFlags.cs">
+      <Link>MI_OperationFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_OperationOptions.cs">
+      <Link>MI_OperationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_OperationOptionsFlags.cs">
+      <Link>MI_OperationOptionsFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_ParameterSet.cs">
+      <Link>MI_ParameterSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_PlatformSpecific.cs">
+      <Link>MI_PlatformSpecific.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_PromptType.cs">
+      <Link>MI_PromptType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_QualifierSet.cs">
+      <Link>MI_QualifierSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Result.cs">
+      <Link>MI_Result.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Serializer.cs">
+      <Link>MI_Serializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_SerializerFlags.cs">
+      <Link>MI_SerializerFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Session.cs">
+      <Link>MI_Session.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_String.cs">
+      <Link>MI_String.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_SubscriptionDeliveryOptions.cs">
+      <Link>MI_SubscriptionDeliveryOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_SubscriptionDeliveryType.cs">
+      <Link>MI_SubscriptionDeliveryType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Type.cs">
+      <Link>MI_Type.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_Value.cs">
+      <Link>MI_Value.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\MI_WriteMessageChannel.cs">
+      <Link>MI_WriteMessageChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NativeErrorCode.cs">
+      <Link>NativeErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NativeMethods.cs">
+      <Link>NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NativeMissing.cs">
+      <Link>NativeMissing.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\NativeTypes.cs">
+      <Link>NativeTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\PacketEncoding.cs">
+      <Link>PacketEncoding.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\ProxyType.cs">
+      <Link>ProxyType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\SharedInstanceHandle.cs">
+      <Link>SharedInstanceHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Strings.Designer.cs">
+      <Link>Strings.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\WSManSessionOptions.cs">
+      <Link>WSManSessionOptions.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
