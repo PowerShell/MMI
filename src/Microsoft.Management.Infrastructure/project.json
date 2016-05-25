@@ -3,7 +3,7 @@
     "version": "1.0.0-*",
     "authors": [ "garretts", "andschwa" ],
 
-    "compilationOptions": {
+    "buildOptions": {
         "allowUnsafe": true
     },
 
