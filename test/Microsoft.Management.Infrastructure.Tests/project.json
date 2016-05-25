@@ -1,7 +1,7 @@
 {
     "name": "Microsoft.Management.Infrastructure.Tests",
     "version": "1.0.0-*",
-    "authors": [ "andschwa" ],
+    "authors": [ "cbnilrem", "andschwa" ],
 
     "dependencies": {
         "Microsoft.Management.Infrastructure": "1.0.0-*"

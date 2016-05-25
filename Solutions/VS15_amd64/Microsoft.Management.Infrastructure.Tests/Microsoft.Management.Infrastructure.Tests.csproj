@@ -65,6 +65,21 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimApplication.cs">
       <Link>CimApplication.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers.cs">
+      <Link>Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
+      <Link>MIAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MIValueTests.cs">
+      <Link>NativeTests\MIValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SanityTests.cs">
+      <Link>NativeTests\SanityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\TestMIProperty.cs">
+      <Link>TestMIProperty.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

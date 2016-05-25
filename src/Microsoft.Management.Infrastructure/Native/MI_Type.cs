@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace NativeObject
 {
+    public class MI_TypeFlags
+    {
+        /* MI_ARRAY is not an actual type, rather this is the bit that signifies 
+         * the type is an array */
+        public const MI_Type MI_ARRAY = (MI_Type)16;
+    }
+
     public enum MI_Type : uint
     {
         MI_BOOLEAN = 0,
@@ -39,10 +46,6 @@ namespace NativeObject
         MI_DATETIMEA = 28,
         MI_STRINGA = 29,
         MI_REFERENCEA = 30,
-        MI_INSTANCEA = 31,
-
-        /* MI_ARRAY is not an actual type, rather this is the bit that signifies 
-         * the type is an array */
-        MI_ARRAY = 16
+        MI_INSTANCEA = 31
     }
 }

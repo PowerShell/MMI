@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +18,7 @@ namespace NativeObject
         {
             public IntPtr data;
         }
-
+        
         [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         public class MI_ValueLayout
         {
@@ -379,7 +379,7 @@ namespace NativeObject
 
         private void Free()
         {
-            if (this.type.HasValue && (this.type.Value & MI_Type.MI_ARRAY) != 0)
+            if (this.type.HasValue && (this.type.Value & MI_TypeFlags.MI_ARRAY) != 0)
             {
                 unsafe
                 {
@@ -389,7 +389,6 @@ namespace NativeObject
                 this.type = null;
             }
         }
-
         public byte Uint8
         {
             get
