@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
+      <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\..\CancellationMode.cs">
       <Link>CancellationMode.cs</Link>
@@ -287,104 +287,104 @@
     <Compile Include="..\..\..\ImpersonationType.cs">
       <Link>ImpersonationType.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\MI_Application.cs">
-      <Link>MI_Application.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_CancellationReason.cs">
-      <Link>MI_CancellationReason.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Class.cs">
-      <Link>MI_Class.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_ClassDecl.cs">
-      <Link>MI_ClassDecl.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Deserializer.cs">
-      <Link>MI_Deserializer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_DestinationOptions.cs">
-      <Link>MI_DestinationOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_DestinationOptionsFlags.cs">
-      <Link>MI_DestinationOptionsFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Flags.cs">
-      <Link>MI_Flags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Instance.cs">
-      <Link>MI_Instance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_ModuleFlags.cs">
-      <Link>MI_ModuleFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Operation.cs">
-      <Link>MI_Operation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_OperationCallback_ResponseType.cs">
-      <Link>MI_OperationCallback_ResponseType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_OperationFlags.cs">
-      <Link>MI_OperationFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_OperationOptions.cs">
-      <Link>MI_OperationOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_OperationOptionsFlags.cs">
-      <Link>MI_OperationOptionsFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_ParameterSet.cs">
-      <Link>MI_ParameterSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_PlatformSpecific.cs">
-      <Link>MI_PlatformSpecific.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_PromptType.cs">
-      <Link>MI_PromptType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_QualifierSet.cs">
-      <Link>MI_QualifierSet.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Result.cs">
-      <Link>MI_Result.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Serializer.cs">
-      <Link>MI_Serializer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_SerializerFlags.cs">
-      <Link>MI_SerializerFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Session.cs">
-      <Link>MI_Session.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_String.cs">
-      <Link>MI_String.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_SubscriptionDeliveryOptions.cs">
-      <Link>MI_SubscriptionDeliveryOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_SubscriptionDeliveryType.cs">
-      <Link>MI_SubscriptionDeliveryType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Type.cs">
-      <Link>MI_Type.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_Value.cs">
-      <Link>MI_Value.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\MI_WriteMessageChannel.cs">
-      <Link>MI_WriteMessageChannel.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\NativeErrorCode.cs">
       <Link>NativeErrorCode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\NativeMethods.cs">
-      <Link>NativeMethods.cs</Link>
     </Compile>
     <Compile Include="..\..\..\NativeMissing.cs">
       <Link>NativeMissing.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\NativeTypes.cs">
-      <Link>NativeTypes.cs</Link>
+    <Compile Include="..\..\..\Native\MI_Application.cs">
+      <Link>Native\MI_Application.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_CancellationReason.cs">
+      <Link>Native\MI_CancellationReason.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Class.cs">
+      <Link>Native\MI_Class.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_ClassDecl.cs">
+      <Link>Native\MI_ClassDecl.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Deserializer.cs">
+      <Link>Native\MI_Deserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_DestinationOptions.cs">
+      <Link>Native\MI_DestinationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_DestinationOptionsFlags.cs">
+      <Link>Native\MI_DestinationOptionsFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Flags.cs">
+      <Link>Native\MI_Flags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Instance.cs">
+      <Link>Native\MI_Instance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_ModuleFlags.cs">
+      <Link>Native\MI_ModuleFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Operation.cs">
+      <Link>Native\MI_Operation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_OperationCallback_ResponseType.cs">
+      <Link>Native\MI_OperationCallback_ResponseType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_OperationFlags.cs">
+      <Link>Native\MI_OperationFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_OperationOptions.cs">
+      <Link>Native\MI_OperationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_OperationOptionsFlags.cs">
+      <Link>Native\MI_OperationOptionsFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_ParameterSet.cs">
+      <Link>Native\MI_ParameterSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_PlatformSpecific.cs">
+      <Link>Native\MI_PlatformSpecific.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_PromptType.cs">
+      <Link>Native\MI_PromptType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_QualifierSet.cs">
+      <Link>Native\MI_QualifierSet.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Result.cs">
+      <Link>Native\MI_Result.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Serializer.cs">
+      <Link>Native\MI_Serializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_SerializerFlags.cs">
+      <Link>Native\MI_SerializerFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Session.cs">
+      <Link>Native\MI_Session.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_String.cs">
+      <Link>Native\MI_String.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_SubscriptionDeliveryOptions.cs">
+      <Link>Native\MI_SubscriptionDeliveryOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_SubscriptionDeliveryType.cs">
+      <Link>Native\MI_SubscriptionDeliveryType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Type.cs">
+      <Link>Native\MI_Type.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_Value.cs">
+      <Link>Native\MI_Value.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\MI_WriteMessageChannel.cs">
+      <Link>Native\MI_WriteMessageChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\NativeMethods.cs">
+      <Link>Native\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Native\NativeTypes.cs">
+      <Link>Native\NativeTypes.cs</Link>
     </Compile>
     <Compile Include="..\..\..\PacketEncoding.cs">
       <Link>PacketEncoding.cs</Link>
@@ -402,9 +402,7 @@
       <Link>WSManSessionOptions.cs</Link>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
