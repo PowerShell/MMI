@@ -1,6 +1,7 @@
 using Xunit;
+using Microsoft.Management.Infrastructure.Internal;
 
-namespace Microsoft.Management.Infrastructure.Internal
+namespace MMI.Tests.Internal
 {
     /// <summary>
     /// Example test that the string is correct.
