@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -116,6 +116,11 @@ namespace NativeObject
             var res = new MI_Instance(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
             return res;
+        }
+
+        public void AssertValidInternalState()
+        {
+            throw new NotImplementedException();
         }
 
         public static implicit operator MI_InstancePtr(MI_Instance instance)
@@ -444,7 +449,7 @@ namespace NativeObject
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             public delegate MI_Result MI_Instance_AddElement(
                 MI_InstancePtr self,
-                [MarshalAs(MI_PlatformSpecific.AppropriateStringType)]string name,
+                string name,
                 [In, Out] MI_Value.MIValueBlock value,
                 MI_Type type,
                 MI_Flags flags
@@ -471,7 +476,7 @@ namespace NativeObject
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             public delegate MI_Result MI_Instance_GetElement(
                 MI_InstancePtr self,
-                [MarshalAs(MI_PlatformSpecific.AppropriateStringType)] string name,
+                string name,
                 [In, Out] MI_Value.MIValueBlock value,
                 out MI_Type type,
                 out MI_Flags flags,
@@ -518,20 +523,5 @@ namespace NativeObject
                 [In, Out] MI_ClassOutPtr instanceClass
                 );
         }
-	
-	public void AssertValidInternalState()
-	{
-	    // TODO: Complete this function
-	}
-
-	// TODO: Complete this function
-	public bool IsInvalid
-	{
-	    get
-	    {
-		return this.Ptr == IntPtr.Zero;
-	    }
-	}
-
     }
 }

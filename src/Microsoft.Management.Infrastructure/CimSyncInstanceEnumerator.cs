@@ -38,7 +38,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 out errorMessage,
                 out errorDetailsHandle);
 
-            if ((instanceHandle != null) && !instanceHandle.IsInvalid)
+            if ((instanceHandle != null) && !instanceHandle.IsNull)
             {
                 if (!this.ShortenLifetimeOfResults)
                 {

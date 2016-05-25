@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -333,14 +333,16 @@ namespace NativeObject
         }
 
         public MI_Result Clone(
-			       out MI_DestinationOptions newDestinationOptions
-			       )
+            out MI_DestinationOptions newDestinationOptions
+            )
         {
-            MI_DestinationOptions localDestinationOptions = MI_DestinationOptions.NewIndirectPtr();
-            
-	    MI_Result resultLocal = this.ft.Clone(this,
-	                                          localDestinationOptions);
-	    newDestinationOptions = localDestinationOptions;
+            MI_DestinationOptions newDestinationOptionsLocal =
+                MI_DestinationOptions.NewIndirectPtr();
+
+            MI_Result resultLocal = this.ft.Clone(this,
+                newDestinationOptionsLocal);
+
+            newDestinationOptions = newDestinationOptionsLocal;
             return resultLocal;
         }
 

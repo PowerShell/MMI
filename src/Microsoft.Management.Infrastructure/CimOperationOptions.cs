@@ -359,7 +359,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 CimInstance cimInstance = null;
                 try
                 {
-                    if (!instanceHandle.IsInvalid)
+                    if (!instanceHandle.IsNull)
                     {
                         cimInstance = new CimInstance(instanceHandle.Clone(), null);
                         var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase) callbackProcessingContext.ManagedOperationContext;

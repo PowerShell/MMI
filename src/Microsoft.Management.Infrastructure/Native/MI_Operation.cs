@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,6 +72,11 @@ namespace NativeObject
             var res = new MI_Operation(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
             return res;
+        }
+
+        public void AssertValidInternalState()
+        {
+            throw new NotImplementedException();
         }
 
         public static implicit operator MI_OperationPtr(MI_Operation instance)
@@ -317,10 +322,5 @@ namespace NativeObject
                 [In, Out] MI_InstanceOutPtr completionDetails
                 );
         }
-
-	public void AssertValidInternalState()
-	{
-	    // TODO: Complete this function
-	}
     }
 }

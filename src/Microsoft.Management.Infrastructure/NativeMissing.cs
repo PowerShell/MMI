@@ -82,14 +82,6 @@ namespace NativeObject
 	public static string CREDSSP = "CredSSP";
 	public static string ISSUER_CERT = "IssuerCert";
     }
-    
-    public class MI_Serializer
-    {
-    }
-
-    public class MI_Deserializer
-    {
-    }
 
     public enum MI_CallbackMode : uint
     {

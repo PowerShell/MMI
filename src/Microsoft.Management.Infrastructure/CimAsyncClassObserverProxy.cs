@@ -29,7 +29,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             MI_Instance errorDetailsHandle)
         {
             CimClass currentItem = null;
-            if ((ClassHandle != null) && (!ClassHandle.IsInvalid))
+            if ((ClassHandle != null) && (!ClassHandle.IsNull))
             {
                 if (!_shortenLifetimeOfResults)
                 {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,20 +20,15 @@ namespace NativeObject
         public UInt32 __padding2;
         public UInt32 __padding3;
 
-	public static implicit operator MI_Interval(TimeSpan ts)
-	{
-	    // TODO: implement this
-	    MI_Interval interval;
-	    interval.days = interval.hours = interval.minutes = interval.seconds = interval.microseconds = interval.__padding1 = interval.__padding2 = interval.__padding3 = 0;
-	    return interval;
-	}
+        public static implicit operator TimeSpan(MI_Interval interval)
+        {
+            throw new NotImplementedException();
+        }
 
-	public static implicit operator TimeSpan(MI_Interval interval)
-	{
-	    // TODO: implement this
-	    TimeSpan ts = new TimeSpan(0);
-	    return ts;
-	}
+        public static implicit operator MI_Interval(TimeSpan timespan)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -61,23 +56,15 @@ namespace NativeObject
         [FieldOffset(4)]
         public MI_Interval interval;
 
-	public MI_Datetime(System.DateTime sdt)
-	{
-	    // TODO: Finish this function
-	    this.isTimestamp = true;
-	    this.interval.days = this.interval.hours = this.interval.minutes = this.interval.seconds = this.interval.microseconds = this.interval.__padding1 = this.interval.__padding2 = this.interval.__padding3 = 0;
-	    this.timestamp.year = this.timestamp.month = this.timestamp.day = this.timestamp.hour = this.timestamp.minute = this.timestamp.second = this.timestamp.microseconds = 0;
-	    this.timestamp.utc = 0;
-	}
+        public MI_Datetime(TimeSpan interval)
+        {
+            throw new NotImplementedException();
+        }
 
-	public MI_Datetime(System.TimeSpan sts)
-	{
-	    // TODO: Finish this function
-	    this.isTimestamp = true;
-	    this.interval.days = this.interval.hours = this.interval.minutes = this.interval.seconds = this.interval.microseconds = this.interval.__padding1 = this.interval.__padding2 = this.interval.__padding3 = 0;
-	    this.timestamp.year = this.timestamp.month = this.timestamp.day = this.timestamp.hour = this.timestamp.minute = this.timestamp.second = this.timestamp.microseconds = 0;
-	    this.timestamp.utc = 0;
-	}
+        public MI_Datetime(DateTime datetime)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

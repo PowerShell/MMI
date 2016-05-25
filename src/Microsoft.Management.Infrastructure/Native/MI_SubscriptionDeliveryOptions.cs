@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -363,13 +363,16 @@ namespace NativeObject
         }
 
         public MI_Result Clone(
-			       out MI_SubscriptionDeliveryOptions newSubscriptionDeliveryOptions
-			       )
+            out MI_SubscriptionDeliveryOptions newSubscriptionDeliveryOptions
+            )
         {
-	    MI_SubscriptionDeliveryOptions newOptionsLocal = MI_SubscriptionDeliveryOptions.NewIndirectPtr();
+            MI_SubscriptionDeliveryOptions newSubscriptionDeliveryOptionsLocal =
+                MI_SubscriptionDeliveryOptions.NewIndirectPtr();
+
             MI_Result resultLocal = this.ft.Clone(this,
-						  newOptionsLocal);
-	    newSubscriptionDeliveryOptions = newOptionsLocal;
+                newSubscriptionDeliveryOptionsLocal);
+
+            newSubscriptionDeliveryOptions = newSubscriptionDeliveryOptionsLocal;
             return resultLocal;
         }
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -497,14 +497,5 @@ namespace NativeObject
                 [In, Out] MI_ClassOutPtr newClass
                 );
         }
-
-	// TODO: Complete this function
-	public bool IsInvalid
-	{
-	    get
-	    {
-		return this.Ptr == IntPtr.Zero;
-	    }
-	}
     }
 }

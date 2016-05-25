@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,6 @@ namespace NativeObject
 {
     public enum MI_OperationOptionsFlags : uint
     {
-        Unused = 0,
-	Option1 = 1
+        Unused = 0
     }
 }

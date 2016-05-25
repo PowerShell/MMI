@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -451,6 +451,11 @@ namespace NativeObject
             return res;
         }
 
+        public void AssertValidInternalState()
+        {
+            throw new NotImplementedException();
+        }
+
         public static implicit operator MI_SessionPtr(MI_Session instance)
         {
             // If the indirect pointer is zero then the object has not
@@ -737,10 +742,5 @@ namespace NativeObject
                 [In, Out] MI_OperationPtr operation
                 );
         }
-
-	public void AssertValidInternalState()
-	{
-	    // TODO: Complete this function
-	}
     }
 }

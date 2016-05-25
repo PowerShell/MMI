@@ -1,4 +1,4 @@
-namespace NativeObject
+﻿namespace NativeObject
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@ namespace NativeObject
     using System.Threading.Tasks;
     using System.Runtime.InteropServices;
 
-    public partial class NativeMethods
+    public static partial class NativeMethods
     {
         [DllImport(MI_PlatformSpecific.MI, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
         public static extern MI_Result MI_Application_InitializeV1(

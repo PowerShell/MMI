@@ -36,7 +36,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             MI_Instance errorDetailsHandle)
         {
             CimInstance currentItem = null;
-            if ((instanceHandle != null) && (!instanceHandle.IsInvalid))
+            if ((instanceHandle != null) && (!instanceHandle.IsNull))
             {
                 if (!_shortenLifetimeOfResults)
                 {

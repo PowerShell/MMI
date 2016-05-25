@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,9 +26,8 @@ namespace NativeObject
         {
             MI_Application applicationLocal = MI_Application.NewDirectPtr();
             MI_Instance extendedErrorLocal = MI_Instance.NewIndirectPtr();
-            MI_Result result;
 
-            result = NativeMethods.MI_Application_InitializeV1(0, applicationId, extendedErrorLocal, applicationLocal);
+            MI_Result result = NativeMethods.MI_Application_InitializeV1(0, applicationId, extendedErrorLocal, applicationLocal);
 
             extendedError = extendedErrorLocal;
             application = applicationLocal;
@@ -216,11 +215,11 @@ namespace NativeObject
         {
             MI_DestinationOptions optionsLocal = MI_DestinationOptions.NewIndirectPtr();
             MI_Result resultLocal = this.ft.NewDestinationOptions(this,
-								  optionsLocal);
-	    
+                optionsLocal);
+
             options = optionsLocal;
             return resultLocal;
-	}
+        }
 
         public MI_Result NewOperationOptions(
             bool customOptionsMustUnderstand,
@@ -230,9 +229,9 @@ namespace NativeObject
             MI_OperationOptions operationOptionsLocal = MI_OperationOptions.NewDirectPtr();
 
             MI_Result resultLocal = this.ft.NewOperationOptions(this,
-								customOptionsMustUnderstand,
-								operationOptionsLocal);
-	    
+                customOptionsMustUnderstand,
+                operationOptionsLocal);
+
             operationOptions = operationOptionsLocal;
             return resultLocal;
         }
@@ -242,11 +241,13 @@ namespace NativeObject
             out MI_SubscriptionDeliveryOptions deliveryOptions
             )
         {
-            MI_SubscriptionDeliveryOptions deliveryOptionsLocal = MI_SubscriptionDeliveryOptions.NewDirectPtr();
+            MI_SubscriptionDeliveryOptions deliveryOptionsLocal =
+                MI_SubscriptionDeliveryOptions.NewIndirectPtr();
 
             MI_Result resultLocal = this.ft.NewSubscriptionDeliveryOptions(this,
-									   deliveryType,
-									   deliveryOptionsLocal);
+                deliveryType,
+                deliveryOptionsLocal);
+
             deliveryOptions = deliveryOptionsLocal;
             return resultLocal;
         }
@@ -279,7 +280,7 @@ namespace NativeObject
             MI_Result resultLocal = this.ft.NewDeserializer(this,
                 flags,
                 format,
-                out deserializerLocal);
+                deserializerLocal);
 
             deserializer = deserializerLocal;
             return resultLocal;
@@ -378,7 +379,7 @@ namespace NativeObject
                 [In, Out] MI_InstanceOutPtr instance
                 );
 
-	    [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+            [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             public delegate MI_Result MI_Application_NewDestinationOptions(
                 MI_ApplicationPtr application,
                 [In, Out] MI_DestinationOptionsPtr options
@@ -411,7 +412,7 @@ namespace NativeObject
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                out MI_Deserializer deserializer
+                MI_Deserializer deserializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
