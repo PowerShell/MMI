@@ -10,7 +10,7 @@
     "frameworks": {
         "netstandard1.5": {
             "imports": [ "dnxcore50" ],
-            "compilationOptions": {
+            "buildOptions": {
                 "warningsAsErrors": true,
                 "define": [ "_CORECLR" ]
             },
