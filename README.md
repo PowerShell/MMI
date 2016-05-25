@@ -1,6 +1,8 @@
 Microsoft.Management.Infrastructure
 ===================================
 
+[![Build Status](https://travis-ci.com/PowerShell/MMI.svg?token=31YifM4jfyVpBmEGitCm&branch=johnkord-mmi_changes)](https://travis-ci.com/PowerShell/MMI)
+
 This repo contains the `Microsoft.Management.Infrastructure` source code (and
 soon tests). This is a dependency of PowerShell, but is kept separate.
 
