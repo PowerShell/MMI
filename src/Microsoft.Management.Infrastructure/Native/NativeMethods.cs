@@ -17,7 +17,7 @@
         internal static extern MI_Result MI_Application_NewSerializer_Mof(
             MI_ApplicationPtr application,
             MI_SerializerFlags flags,
-            string format,
+            [MarshalAs(UnmanagedType.LPWStr)]string format,
             MI_SerializerPtr serializer
             );
 
@@ -25,7 +25,7 @@
         internal static extern MI_Result MI_Application_NewDeserializer_Mof(
             MI_ApplicationPtr application,
             MI_SerializerFlags flags,
-            string format,
+            [MarshalAs(UnmanagedType.LPWStr)] string format,
             MI_DeserializerPtr serializer
             );
 
