@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_DestinationOptionsPtr
+    internal struct MI_DestinationOptionsPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_DestinationOptionsOutPtr
+    internal struct MI_DestinationOptionsOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_DestinationOptions
+    internal class MI_DestinationOptions
     {
-        public MI_Result SetInterval(
+        internal MI_Result SetInterval(
             string optionName,
             MI_Interval value,
             MI_DestinationOptionsFlags flags
@@ -31,7 +31,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetInterval(
+        internal MI_Result GetInterval(
             string optionName,
             out MI_Interval value,
             out UInt32 index,
@@ -52,9 +52,9 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_DestinationOptionsMembers
         {
-            public UInt64 reserved1;
-            public IntPtr reserved2;
-            public IntPtr ft;
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -85,17 +85,17 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_DestinationOptions NewDirectPtr()
+        internal static MI_DestinationOptions NewDirectPtr()
         {
             return new MI_DestinationOptions(true);
         }
 
-        public static MI_DestinationOptions NewIndirectPtr()
+        internal static MI_DestinationOptions NewIndirectPtr()
         {
             return new MI_DestinationOptions(false);
         }
 
-        public static MI_DestinationOptions NewFromDirectPtr(IntPtr ptr)
+        internal static MI_DestinationOptions NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_DestinationOptions(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
@@ -126,10 +126,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_DestinationOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_DestinationOptions Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_DestinationOptions Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -153,12 +153,12 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public void Delete()
+        internal void Delete()
         {
             this.ft.Delete(this);
         }
 
-        public MI_Result SetString(
+        internal MI_Result SetString(
             string optionName,
             string value,
             MI_DestinationOptionsFlags flags
@@ -171,7 +171,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result SetNumber(
+        internal MI_Result SetNumber(
             string optionName,
             UInt32 value,
             MI_DestinationOptionsFlags flags
@@ -184,7 +184,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result AddCredentials(
+        internal MI_Result AddCredentials(
             string optionName,
             MI_UserCredentials credentials,
             MI_DestinationOptionsFlags flags
@@ -197,7 +197,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetString(
+        internal MI_Result GetString(
             string optionName,
             out string value,
             out UInt32 index,
@@ -216,7 +216,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetNumber(
+        internal MI_Result GetNumber(
             string optionName,
             out UInt32 value,
             out UInt32 index,
@@ -231,7 +231,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetOptionCount(
+        internal MI_Result GetOptionCount(
             out UInt32 count
             )
         {
@@ -240,7 +240,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetOptionAt(
+        internal MI_Result GetOptionAt(
             UInt32 index,
             out string optionName,
             MI_Value value,
@@ -261,7 +261,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetOption(
+        internal MI_Result GetOption(
             string optionName,
             MI_Value value,
             out MI_Type type,
@@ -278,7 +278,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetCredentialsCount(
+        internal MI_Result GetCredentialsCount(
             out UInt32 count
             )
         {
@@ -287,7 +287,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetCredentialsAt(
+        internal MI_Result GetCredentialsAt(
             UInt32 index,
             out string optionName,
             out MI_UserCredentials credentials,
@@ -308,7 +308,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetCredentialsPasswordAt(
+        internal MI_Result GetCredentialsPasswordAt(
             UInt32 index,
             out string optionName,
             string password,
@@ -331,7 +331,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result Clone(
+        internal MI_Result Clone(
             out MI_DestinationOptions newDestinationOptions
             )
         {
@@ -375,31 +375,31 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_DestinationOptionsFT
+        internal class MI_DestinationOptionsFT
         {
-            public MI_DestinationOptions_Delete Delete;
-            public MI_DestinationOptions_SetString SetString;
-            public MI_DestinationOptions_SetNumber SetNumber;
-            public MI_DestinationOptions_AddCredentials AddCredentials;
-            public MI_DestinationOptions_GetString GetString;
-            public MI_DestinationOptions_GetNumber GetNumber;
-            public MI_DestinationOptions_GetOptionCount GetOptionCount;
-            public MI_DestinationOptions_GetOptionAt GetOptionAt;
-            public MI_DestinationOptions_GetOption GetOption;
-            public MI_DestinationOptions_GetCredentialsCount GetCredentialsCount;
-            public MI_DestinationOptions_GetCredentialsAt GetCredentialsAt;
-            public MI_DestinationOptions_GetCredentialsPasswordAt GetCredentialsPasswordAt;
-            public MI_DestinationOptions_Clone Clone;
-            public MI_DestinationOptions_SetInterval SetInterval;
-            public MI_DestinationOptions_GetInterval GetInterval;
+            internal MI_DestinationOptions_Delete Delete;
+            internal MI_DestinationOptions_SetString SetString;
+            internal MI_DestinationOptions_SetNumber SetNumber;
+            internal MI_DestinationOptions_AddCredentials AddCredentials;
+            internal MI_DestinationOptions_GetString GetString;
+            internal MI_DestinationOptions_GetNumber GetNumber;
+            internal MI_DestinationOptions_GetOptionCount GetOptionCount;
+            internal MI_DestinationOptions_GetOptionAt GetOptionAt;
+            internal MI_DestinationOptions_GetOption GetOption;
+            internal MI_DestinationOptions_GetCredentialsCount GetCredentialsCount;
+            internal MI_DestinationOptions_GetCredentialsAt GetCredentialsAt;
+            internal MI_DestinationOptions_GetCredentialsPasswordAt GetCredentialsPasswordAt;
+            internal MI_DestinationOptions_Clone Clone;
+            internal MI_DestinationOptions_SetInterval SetInterval;
+            internal MI_DestinationOptions_GetInterval GetInterval;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_DestinationOptions_Delete(
+            internal delegate void MI_DestinationOptions_Delete(
                 MI_DestinationOptionsPtr options
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_SetString(
+            internal delegate MI_Result MI_DestinationOptions_SetString(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 string value,
@@ -407,7 +407,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_SetNumber(
+            internal delegate MI_Result MI_DestinationOptions_SetNumber(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 UInt32 value,
@@ -415,7 +415,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_AddCredentials(
+            internal delegate MI_Result MI_DestinationOptions_AddCredentials(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 MI_UserCredentials credentials,
@@ -423,7 +423,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetString(
+            internal delegate MI_Result MI_DestinationOptions_GetString(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 [In, Out] MI_String value,
@@ -432,7 +432,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetNumber(
+            internal delegate MI_Result MI_DestinationOptions_GetNumber(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 out UInt32 value,
@@ -441,13 +441,13 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetOptionCount(
+            internal delegate MI_Result MI_DestinationOptions_GetOptionCount(
                 MI_DestinationOptionsPtr options,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetOptionAt(
+            internal delegate MI_Result MI_DestinationOptions_GetOptionAt(
                 MI_DestinationOptionsPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
@@ -457,7 +457,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetOption(
+            internal delegate MI_Result MI_DestinationOptions_GetOption(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 [In, Out] MI_Value.MIValueBlock value,
@@ -467,13 +467,13 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetCredentialsCount(
+            internal delegate MI_Result MI_DestinationOptions_GetCredentialsCount(
                 MI_DestinationOptionsPtr options,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetCredentialsAt(
+            internal delegate MI_Result MI_DestinationOptions_GetCredentialsAt(
                 MI_DestinationOptionsPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
@@ -482,7 +482,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetCredentialsPasswordAt(
+            internal delegate MI_Result MI_DestinationOptions_GetCredentialsPasswordAt(
                 MI_DestinationOptionsPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
@@ -493,13 +493,13 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_Clone(
+            internal delegate MI_Result MI_DestinationOptions_Clone(
                 MI_DestinationOptionsPtr self,
                 [In, Out] MI_DestinationOptionsPtr newDestinationOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_SetInterval(
+            internal delegate MI_Result MI_DestinationOptions_SetInterval(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 ref MI_Interval value,
@@ -507,7 +507,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_DestinationOptions_GetInterval(
+            internal delegate MI_Result MI_DestinationOptions_GetInterval(
                 MI_DestinationOptionsPtr options,
                 string optionName,
                 ref MI_Interval value,

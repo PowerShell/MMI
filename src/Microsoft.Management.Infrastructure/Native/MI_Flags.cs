@@ -3,7 +3,7 @@
 namespace Microsoft.Management.Infrastructure.Native
 {
     [Flags]
-    public enum MI_Flags
+    internal enum MI_Flags
     {
         None = 0,
         /* CIM meta types (or qualifier scopes) */

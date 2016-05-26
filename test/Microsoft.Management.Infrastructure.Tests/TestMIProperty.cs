@@ -8,7 +8,7 @@ namespace MMI.Tests
 {
     using Microsoft.Management.Infrastructure.Native;
 
-    public class TestMIProperty
+    internal class TestMIProperty
     {
         private MI_Value actualValue;
 

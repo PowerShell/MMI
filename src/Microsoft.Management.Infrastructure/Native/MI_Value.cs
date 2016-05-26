@@ -5,24 +5,24 @@ namespace Microsoft.Management.Infrastructure.Native
     using System.Runtime.InteropServices;
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public partial class MI_Value : IDisposable
+    internal class MI_Value
     {
         private static readonly int ByteSize = Marshal.SizeOf<byte>();
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public struct MIValueBlock
+        internal struct MIValueBlock
         {
-            public IntPtr data;
+            internal IntPtr data;
         }
 
         [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_ValueLayout
+        internal class MI_ValueLayout
         {
             [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             private struct MI_Array
             {
-                public IntPtr data;
-                public UInt32 size;
+                internal IntPtr data;
+                internal UInt32 size;
             }
 
             [FieldOffset(0)]
@@ -86,7 +86,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MIValueBlock { data = value == null ? IntPtr.Zero : value.data };
         }
 
-        public MI_Value()
+        internal MI_Value()
         {
             this.data = Marshal.AllocHGlobal(MI_ValueSize);
         }
@@ -96,13 +96,13 @@ namespace Microsoft.Management.Infrastructure.Native
             this.Dispose(false);
         }
 
-        public void Dispose()
+        internal void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        public void DisownMemory()
+        internal void DisownMemory()
         {
             this.type = null;
         }
@@ -121,11 +121,11 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_Array
         {
-            public IntPtr data;
-            public UInt32 size;
+            internal IntPtr data;
+            internal UInt32 size;
         }
 
-        public string String
+        internal string String
         {
             get
             {
@@ -146,7 +146,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public bool Boolean
+        internal bool Boolean
         {
             get
             {
@@ -166,7 +166,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Instance Instance
+        internal MI_Instance Instance
         {
             get
             {
@@ -185,7 +185,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Instance Reference
+        internal MI_Instance Reference
         {
             get
             {
@@ -204,7 +204,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public string[] StringA
+        internal string[] StringA
         {
             get
             {
@@ -245,7 +245,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public bool[] BooleanA
+        internal bool[] BooleanA
         {
             get
             {
@@ -286,7 +286,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Instance[] InstanceA
+        internal MI_Instance[] InstanceA
         {
             get
             {
@@ -327,7 +327,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Instance[] ReferenceA
+        internal MI_Instance[] ReferenceA
         {
             get
             {
@@ -368,15 +368,15 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static int MI_ValueSize = Marshal.SizeOf<MI_ValueLayout>();
+        internal static int MI_ValueSize = Marshal.SizeOf<MI_ValueLayout>();
 
-        public static MI_Value NewDirectPtr()
+        internal static MI_Value NewDirectPtr()
         {
             return new MI_Value();
         }
 
-        public static MI_Value Null { get { return null; } }
-        public MI_Type? Type { get { return this.type; } }
+        internal static MI_Value Null { get { return null; } }
+        internal MI_Type? Type { get { return this.type; } }
 
         private void Free()
         {
@@ -391,7 +391,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public byte Uint8
+        internal byte Uint8
         {
             get
             {
@@ -420,7 +420,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public sbyte Sint8
+        internal sbyte Sint8
         {
             get
             {
@@ -449,7 +449,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public UInt16 Uint16
+        internal UInt16 Uint16
         {
             get
             {
@@ -478,7 +478,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public Int16 Sint16
+        internal Int16 Sint16
         {
             get
             {
@@ -507,7 +507,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public UInt32 Uint32
+        internal UInt32 Uint32
         {
             get
             {
@@ -536,7 +536,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public Int32 Sint32
+        internal Int32 Sint32
         {
             get
             {
@@ -565,7 +565,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public UInt64 Uint64
+        internal UInt64 Uint64
         {
             get
             {
@@ -594,7 +594,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public Int64 Sint64
+        internal Int64 Sint64
         {
             get
             {
@@ -623,7 +623,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public float Real32
+        internal float Real32
         {
             get
             {
@@ -652,7 +652,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public double Real64
+        internal double Real64
         {
             get
             {
@@ -681,7 +681,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public char Char16
+        internal char Char16
         {
             get
             {
@@ -710,7 +710,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Datetime Datetime
+        internal MI_Datetime Datetime
         {
             get
             {
@@ -739,7 +739,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public byte[] Uint8A
+        internal byte[] Uint8A
         {
             get
             {
@@ -782,7 +782,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public sbyte[] Sint8A
+        internal sbyte[] Sint8A
         {
             get
             {
@@ -825,7 +825,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public UInt16[] Uint16A
+        internal UInt16[] Uint16A
         {
             get
             {
@@ -868,7 +868,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public Int16[] Sint16A
+        internal Int16[] Sint16A
         {
             get
             {
@@ -911,7 +911,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public UInt32[] Uint32A
+        internal UInt32[] Uint32A
         {
             get
             {
@@ -954,7 +954,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public Int32[] Sint32A
+        internal Int32[] Sint32A
         {
             get
             {
@@ -997,7 +997,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public UInt64[] Uint64A
+        internal UInt64[] Uint64A
         {
             get
             {
@@ -1040,7 +1040,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public Int64[] Sint64A
+        internal Int64[] Sint64A
         {
             get
             {
@@ -1083,7 +1083,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public float[] Real32A
+        internal float[] Real32A
         {
             get
             {
@@ -1126,7 +1126,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public double[] Real64A
+        internal double[] Real64A
         {
             get
             {
@@ -1169,7 +1169,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public char[] Char16A
+        internal char[] Char16A
         {
             get
             {
@@ -1212,7 +1212,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Datetime[] DatetimeA
+        internal MI_Datetime[] DatetimeA
         {
             get
             {
@@ -1255,7 +1255,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public object GetValue(MI_Type type)
+        internal object GetValue(MI_Type type)
         {
             switch (type)
             {

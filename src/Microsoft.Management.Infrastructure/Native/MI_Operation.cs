@@ -4,26 +4,26 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_OperationPtr
+    internal struct MI_OperationPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_OperationOutPtr
+    internal struct MI_OperationOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_Operation
+    internal class MI_Operation
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_OperationMembers
         {
-            public UInt64 reserved1;
-            public IntPtr reserved2;
-            public IntPtr ft;
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -54,24 +54,24 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_Operation NewDirectPtr()
+        internal static MI_Operation NewDirectPtr()
         {
             return new MI_Operation(true);
         }
 
-        public static MI_Operation NewIndirectPtr()
+        internal static MI_Operation NewIndirectPtr()
         {
             return new MI_Operation(false);
         }
 
-        public static MI_Operation NewFromDirectPtr(IntPtr ptr)
+        internal static MI_Operation NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_Operation(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
             return res;
         }
 
-        public void AssertValidInternalState()
+        internal void AssertValidInternalState()
         {
             throw new NotImplementedException();
         }
@@ -100,10 +100,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_OperationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_Operation Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_Operation Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -127,12 +127,12 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Result Close()
+        internal MI_Result Close()
         {
             return this.ft.Close(this);
         }
 
-        public MI_Result Cancel(
+        internal MI_Result Cancel(
             MI_CancellationReason reason
             )
         {
@@ -141,7 +141,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetSession(
+        internal MI_Result GetSession(
             MI_Session session
             )
         {
@@ -150,7 +150,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetInstance(
+        internal MI_Result GetInstance(
             out MI_Instance instance,
             out bool moreResults,
             out MI_Result result,
@@ -175,7 +175,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetIndication(
+        internal MI_Result GetIndication(
             out MI_Instance instance,
             out string bookmark,
             out string machineID,
@@ -208,7 +208,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetClass(
+        internal MI_Result GetClass(
             out MI_Class classResult,
             out bool moreResults,
             out MI_Result result,
@@ -263,34 +263,34 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_OperationFT
+        internal class MI_OperationFT
         {
-            public MI_Operation_Close Close;
-            public MI_Operation_Cancel Cancel;
-            public MI_Operation_GetSession GetSession;
-            public MI_Operation_GetInstance GetInstance;
-            public MI_Operation_GetIndication GetIndication;
-            public MI_Operation_GetClass GetClass;
+            internal MI_Operation_Close Close;
+            internal MI_Operation_Cancel Cancel;
+            internal MI_Operation_GetSession GetSession;
+            internal MI_Operation_GetInstance GetInstance;
+            internal MI_Operation_GetIndication GetIndication;
+            internal MI_Operation_GetClass GetClass;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Operation_Close(
+            internal delegate MI_Result MI_Operation_Close(
                 MI_OperationPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Operation_Cancel(
+            internal delegate MI_Result MI_Operation_Cancel(
                 MI_OperationPtr operation,
                 MI_CancellationReason reason
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Operation_GetSession(
+            internal delegate MI_Result MI_Operation_GetSession(
                 MI_OperationPtr operation,
                 [In, Out] MI_SessionPtr session
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Operation_GetInstance(
+            internal delegate MI_Result MI_Operation_GetInstance(
                 MI_OperationPtr operation,
                 [In, Out] MI_InstanceOutPtr instance,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
@@ -300,7 +300,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Operation_GetIndication(
+            internal delegate MI_Result MI_Operation_GetIndication(
                 MI_OperationPtr operation,
                 [In, Out] MI_InstanceOutPtr instance,
                 [In, Out] MI_String bookmark,
@@ -312,7 +312,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Operation_GetClass(
+            internal delegate MI_Result MI_Operation_GetClass(
                 MI_OperationPtr operation,
                 [In, Out] MI_ClassOutPtr classResult,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,

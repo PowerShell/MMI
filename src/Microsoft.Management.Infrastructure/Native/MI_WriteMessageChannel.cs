@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Management.Infrastructure.Native
 {
-    public enum MI_WriteMessageChannel : uint
+    internal enum MI_WriteMessageChannel : uint
     {
         Warning = 0,
         Verbose = 1,

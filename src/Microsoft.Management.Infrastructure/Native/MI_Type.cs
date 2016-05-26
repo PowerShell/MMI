@@ -1,13 +1,13 @@
 ﻿namespace Microsoft.Management.Infrastructure.Native
 {
-    public class MI_TypeFlags
+    internal class MI_TypeFlags
     {
         /* MI_ARRAY is not an actual type, rather this is the bit that signifies
          * the type is an array */
-        public const MI_Type MI_ARRAY = (MI_Type)16;
+        internal const MI_Type MI_ARRAY = (MI_Type)16;
     }
 
-    public enum MI_Type : uint
+    internal enum MI_Type : uint
     {
         MI_BOOLEAN = 0,
         MI_UINT8 = 1,

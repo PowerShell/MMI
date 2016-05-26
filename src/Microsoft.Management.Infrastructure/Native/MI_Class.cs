@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ClassPtr
+    internal struct MI_ClassPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ClassOutPtr
+    internal struct MI_ClassOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_Class
+    internal class MI_Class
     {
-        public MI_Result GetElement(
+        internal MI_Result GetElement(
             string name,
             out MI_Value value,
             out bool valueExists,
@@ -49,7 +49,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetElementAt(
+        internal MI_Result GetElementAt(
             UInt32 index,
             out string name,
             out MI_Value value,
@@ -82,7 +82,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetClassQualifierSet(
+        internal MI_Result GetClassQualifierSet(
             out MI_QualifierSet qualifierSet
             )
         {
@@ -94,7 +94,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetMethod(
+        internal MI_Result GetMethod(
             string name,
             out MI_QualifierSet qualifierSet,
             out MI_ParameterSet parameterSet,
@@ -114,7 +114,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetMethodAt(
+        internal MI_Result GetMethodAt(
             UInt32 index,
             out string name,
             out MI_QualifierSet qualifierSet,
@@ -140,13 +140,13 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_ClassMembers
         {
-            public IntPtr ft;
-            public MI_ClassDeclPtr classDecl;
-            public string namespaceName;
-            public string serverName;
+            internal IntPtr ft;
+            internal MI_ClassDeclPtr classDecl;
+            internal string namespaceName;
+            internal string serverName;
 
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public IntPtr[] reserved;
+            internal IntPtr[] reserved;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -177,17 +177,17 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_Class NewDirectPtr()
+        internal static MI_Class NewDirectPtr()
         {
             return new MI_Class(true);
         }
 
-        public static MI_Class NewIndirectPtr()
+        internal static MI_Class NewIndirectPtr()
         {
             return new MI_Class(false);
         }
 
-        public static MI_Class NewFromDirectPtr(IntPtr ptr)
+        internal static MI_Class NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_Class(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
@@ -218,10 +218,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ClassOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_Class Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_Class Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -245,7 +245,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Result GetClassName(
+        internal MI_Result GetClassName(
             out string className
             )
         {
@@ -258,7 +258,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetNameSpace(
+        internal MI_Result GetNameSpace(
             out string nameSpace
             )
         {
@@ -271,7 +271,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetServerName(
+        internal MI_Result GetServerName(
             out string serverName
             )
         {
@@ -284,7 +284,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetElementCount(
+        internal MI_Result GetElementCount(
             out UInt32 count
             )
         {
@@ -293,7 +293,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetMethodCount(
+        internal MI_Result GetMethodCount(
             out UInt32 count
             )
         {
@@ -302,7 +302,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetParentClassName(
+        internal MI_Result GetParentClassName(
             out string name
             )
         {
@@ -315,7 +315,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetParentClass(
+        internal MI_Result GetParentClass(
             out MI_Class parentClass
             )
         {
@@ -328,12 +328,12 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result Delete()
+        internal MI_Result Delete()
         {
             return this.ft.Delete(this);
         }
 
-        public MI_Result Clone(
+        internal MI_Result Clone(
             out MI_Class newClass
             )
         {
@@ -376,49 +376,49 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_ClassFT
+        internal class MI_ClassFT
         {
-            public MI_Class_GetClassName GetClassName;
-            public MI_Class_GetNameSpace GetNameSpace;
-            public MI_Class_GetServerName GetServerName;
-            public MI_Class_GetElementCount GetElementCount;
-            public MI_Class_GetElement GetElement;
-            public MI_Class_GetElementAt GetElementAt;
-            public MI_Class_GetClassQualifierSet GetClassQualifierSet;
-            public MI_Class_GetMethodCount GetMethodCount;
-            public MI_Class_GetMethodAt GetMethodAt;
-            public MI_Class_GetMethod GetMethod;
-            public MI_Class_GetParentClassName GetParentClassName;
-            public MI_Class_GetParentClass GetParentClass;
-            public MI_Class_Delete Delete;
-            public MI_Class_Clone Clone;
+            internal MI_Class_GetClassName GetClassName;
+            internal MI_Class_GetNameSpace GetNameSpace;
+            internal MI_Class_GetServerName GetServerName;
+            internal MI_Class_GetElementCount GetElementCount;
+            internal MI_Class_GetElement GetElement;
+            internal MI_Class_GetElementAt GetElementAt;
+            internal MI_Class_GetClassQualifierSet GetClassQualifierSet;
+            internal MI_Class_GetMethodCount GetMethodCount;
+            internal MI_Class_GetMethodAt GetMethodAt;
+            internal MI_Class_GetMethod GetMethod;
+            internal MI_Class_GetParentClassName GetParentClassName;
+            internal MI_Class_GetParentClass GetParentClass;
+            internal MI_Class_Delete Delete;
+            internal MI_Class_Clone Clone;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetClassName(
+            internal delegate MI_Result MI_Class_GetClassName(
                 MI_ClassPtr self,
                 [In, Out] MI_String className
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetNameSpace(
+            internal delegate MI_Result MI_Class_GetNameSpace(
                 MI_ClassPtr self,
                 [In, Out] MI_String nameSpace
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetServerName(
+            internal delegate MI_Result MI_Class_GetServerName(
                 MI_ClassPtr self,
                 [In, Out] MI_String serverName
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetElementCount(
+            internal delegate MI_Result MI_Class_GetElementCount(
                 MI_ClassPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetElement(
+            internal delegate MI_Result MI_Class_GetElement(
                 MI_ClassPtr self,
                 string name,
                 [In, Out] MI_Value.MIValueBlock value,
@@ -431,7 +431,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetElementAt(
+            internal delegate MI_Result MI_Class_GetElementAt(
                 MI_ClassPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
@@ -444,19 +444,19 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetClassQualifierSet(
+            internal delegate MI_Result MI_Class_GetClassQualifierSet(
                 MI_ClassPtr self,
                 [In, Out] MI_QualifierSetPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetMethodCount(
+            internal delegate MI_Result MI_Class_GetMethodCount(
                 MI_ClassPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetMethodAt(
+            internal delegate MI_Result MI_Class_GetMethodAt(
                 MI_ClassPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
@@ -465,7 +465,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetMethod(
+            internal delegate MI_Result MI_Class_GetMethod(
                 MI_ClassPtr self,
                 string name,
                 [In, Out] MI_QualifierSetPtr qualifierSet,
@@ -474,24 +474,24 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetParentClassName(
+            internal delegate MI_Result MI_Class_GetParentClassName(
                 MI_ClassPtr self,
                 [In, Out] MI_String name
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_GetParentClass(
+            internal delegate MI_Result MI_Class_GetParentClass(
                 MI_ClassPtr self,
                 [In, Out] MI_ClassOutPtr parentClass
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_Delete(
+            internal delegate MI_Result MI_Class_Delete(
                 MI_ClassPtr self
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Class_Clone(
+            internal delegate MI_Result MI_Class_Clone(
                 MI_ClassPtr self,
                 [In, Out] MI_ClassOutPtr newClass
                 );

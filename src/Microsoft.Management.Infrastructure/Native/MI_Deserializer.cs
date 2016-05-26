@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Management.Infrastructure.Native
 {
-    public class MI_Deserializer
+    internal class MI_Deserializer
     {
     }
 }

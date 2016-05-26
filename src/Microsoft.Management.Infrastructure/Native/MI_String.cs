@@ -5,7 +5,7 @@ namespace Microsoft.Management.Infrastructure.Native
     using System.Runtime.InteropServices;
 
     [StructLayout(LayoutKind.Sequential)]
-    public class MI_String
+    internal class MI_String
     {
         private IntPtr ptr;
 
@@ -13,7 +13,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
         }
 
-        public MI_String(IntPtr ptr)
+        internal MI_String(IntPtr ptr)
         {
             this.ptr = ptr;
         }
@@ -23,12 +23,12 @@ namespace Microsoft.Management.Infrastructure.Native
             return wrapper.ptr;
         }
 
-        public static MI_String NewIndirectPtr()
+        internal static MI_String NewIndirectPtr()
         {
             return new MI_String();
         }
 
-        public string Value
+        internal string Value
         {
             get
             {

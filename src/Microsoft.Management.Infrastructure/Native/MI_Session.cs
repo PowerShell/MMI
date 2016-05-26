@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_SessionPtr
+    internal struct MI_SessionPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_SessionOutPtr
+    internal struct MI_SessionOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_Session
+    internal class MI_Session
     {
-        public void GetInstance(
+        internal void GetInstance(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -45,7 +45,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void ModifyInstance(
+        internal void ModifyInstance(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -72,7 +72,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void CreateInstance(
+        internal void CreateInstance(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -99,7 +99,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void DeleteInstance(
+        internal void DeleteInstance(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -126,7 +126,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void Invoke(
+        internal void Invoke(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -159,7 +159,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void EnumerateInstances(
+        internal void EnumerateInstances(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -188,7 +188,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void QueryInstances(
+        internal void QueryInstances(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -217,7 +217,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void AssociatorInstances(
+        internal void AssociatorInstances(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -254,7 +254,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void ReferenceInstances(
+        internal void ReferenceInstances(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -287,7 +287,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void Subscribe(
+        internal void Subscribe(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -318,7 +318,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void GetClass(
+        internal void GetClass(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -345,7 +345,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void EnumerateClasses(
+        internal void EnumerateClasses(
             MI_OperationFlags flags,
             MI_OperationOptions options,
             string namespaceName,
@@ -374,7 +374,7 @@ namespace Microsoft.Management.Infrastructure.Native
             operation = operationLocal;
         }
 
-        public void TestConnection(
+        internal void TestConnection(
             MI_OperationFlags flags,
             MI_OperationCallbacks callbacks,
             out MI_Operation operation
@@ -398,9 +398,9 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_SessionMembers
         {
-            public UInt64 reserved1;
-            public IntPtr reserved2;
-            public IntPtr ft;
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -431,24 +431,24 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_Session NewDirectPtr()
+        internal static MI_Session NewDirectPtr()
         {
             return new MI_Session(true);
         }
 
-        public static MI_Session NewIndirectPtr()
+        internal static MI_Session NewIndirectPtr()
         {
             return new MI_Session(false);
         }
 
-        public static MI_Session NewFromDirectPtr(IntPtr ptr)
+        internal static MI_Session NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_Session(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
             return res;
         }
 
-        public void AssertValidInternalState()
+        internal void AssertValidInternalState()
         {
             throw new NotImplementedException();
         }
@@ -477,10 +477,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_SessionOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_Session Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_Session Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -504,7 +504,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Result Close(
+        internal MI_Result Close(
             IntPtr completionContext,
             NativeMethods.MI_Session_Close_CompletionCallback completionCallback
             )
@@ -515,7 +515,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetApplication(
+        internal MI_Result GetApplication(
             MI_Application application
             )
         {
@@ -554,39 +554,39 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_SessionFT
+        internal class MI_SessionFT
         {
-            public MI_Session_Close Close;
-            public MI_Session_GetApplication GetApplication;
-            public MI_Session_GetInstance GetInstance;
-            public MI_Session_ModifyInstance ModifyInstance;
-            public MI_Session_CreateInstance CreateInstance;
-            public MI_Session_DeleteInstance DeleteInstance;
-            public MI_Session_Invoke Invoke;
-            public MI_Session_EnumerateInstances EnumerateInstances;
-            public MI_Session_QueryInstances QueryInstances;
-            public MI_Session_AssociatorInstances AssociatorInstances;
-            public MI_Session_ReferenceInstances ReferenceInstances;
-            public MI_Session_Subscribe Subscribe;
-            public MI_Session_GetClass GetClass;
-            public MI_Session_EnumerateClasses EnumerateClasses;
-            public MI_Session_TestConnection TestConnection;
+            internal MI_Session_Close Close;
+            internal MI_Session_GetApplication GetApplication;
+            internal MI_Session_GetInstance GetInstance;
+            internal MI_Session_ModifyInstance ModifyInstance;
+            internal MI_Session_CreateInstance CreateInstance;
+            internal MI_Session_DeleteInstance DeleteInstance;
+            internal MI_Session_Invoke Invoke;
+            internal MI_Session_EnumerateInstances EnumerateInstances;
+            internal MI_Session_QueryInstances QueryInstances;
+            internal MI_Session_AssociatorInstances AssociatorInstances;
+            internal MI_Session_ReferenceInstances ReferenceInstances;
+            internal MI_Session_Subscribe Subscribe;
+            internal MI_Session_GetClass GetClass;
+            internal MI_Session_EnumerateClasses EnumerateClasses;
+            internal MI_Session_TestConnection TestConnection;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Session_Close(
+            internal delegate MI_Result MI_Session_Close(
                 MI_SessionPtr session,
                 IntPtr completionContext,
                 NativeMethods.MI_Session_Close_CompletionCallback completionCallback
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Session_GetApplication(
+            internal delegate MI_Result MI_Session_GetApplication(
                 MI_SessionPtr session,
                 [In, Out] MI_ApplicationPtr application
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_GetInstance(
+            internal delegate void MI_Session_GetInstance(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -597,7 +597,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_ModifyInstance(
+            internal delegate void MI_Session_ModifyInstance(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -608,7 +608,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_CreateInstance(
+            internal delegate void MI_Session_CreateInstance(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -619,7 +619,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_DeleteInstance(
+            internal delegate void MI_Session_DeleteInstance(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -630,7 +630,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_Invoke(
+            internal delegate void MI_Session_Invoke(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -644,7 +644,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_EnumerateInstances(
+            internal delegate void MI_Session_EnumerateInstances(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -656,7 +656,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_QueryInstances(
+            internal delegate void MI_Session_QueryInstances(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -668,7 +668,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_AssociatorInstances(
+            internal delegate void MI_Session_AssociatorInstances(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -684,7 +684,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_ReferenceInstances(
+            internal delegate void MI_Session_ReferenceInstances(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -698,7 +698,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_Subscribe(
+            internal delegate void MI_Session_Subscribe(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -711,7 +711,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_GetClass(
+            internal delegate void MI_Session_GetClass(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -722,7 +722,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_EnumerateClasses(
+            internal delegate void MI_Session_EnumerateClasses(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 [In, Out] MI_OperationOptionsPtr options,
@@ -734,7 +734,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate void MI_Session_TestConnection(
+            internal delegate void MI_Session_TestConnection(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
                 MI_OperationCallbacksNative callbacks,

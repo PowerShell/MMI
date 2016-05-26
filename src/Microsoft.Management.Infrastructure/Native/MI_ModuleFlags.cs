@@ -3,7 +3,7 @@
 namespace Microsoft.Management.Infrastructure.Native
 {
     [Flags]
-    public enum MI_ModuleFlags
+    internal enum MI_ModuleFlags
     {
         /** Whether standard qualifiers were generated */
         MI_MODULE_FLAG_STANDARD_QUALIFIERS = (1 << 0),

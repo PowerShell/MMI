@@ -4,38 +4,38 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ClassDeclPtr
+    internal struct MI_ClassDeclPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ClassDeclOutPtr
+    internal struct MI_ClassDeclOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_ClassDecl
+    internal class MI_ClassDecl
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_ClassDeclMembers
         {
-            public UInt32 flags;
-            public UInt32 code;
-            public string name;
-            public IntPtr qualifiers;
-            public UInt32 numQualifiers;
-            public IntPtr properties;
-            public UInt32 numProperties;
-            public UInt32 size;
-            public string superClass;
-            public MI_ClassDeclPtr superClassDecl;
-            public IntPtr methods;
-            public UInt32 numMethods;
-            public IntPtr schema;
-            public IntPtr providerFT;
-            public MI_ClassPtr owningClass;
+            internal UInt32 flags;
+            internal UInt32 code;
+            internal string name;
+            internal IntPtr qualifiers;
+            internal UInt32 numQualifiers;
+            internal IntPtr properties;
+            internal UInt32 numProperties;
+            internal UInt32 size;
+            internal string superClass;
+            internal MI_ClassDeclPtr superClassDecl;
+            internal IntPtr methods;
+            internal UInt32 numMethods;
+            internal IntPtr schema;
+            internal IntPtr providerFT;
+            internal MI_ClassPtr owningClass;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -62,17 +62,17 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_ClassDecl NewDirectPtr()
+        internal static MI_ClassDecl NewDirectPtr()
         {
             return new MI_ClassDecl(true);
         }
 
-        public static MI_ClassDecl NewIndirectPtr()
+        internal static MI_ClassDecl NewIndirectPtr()
         {
             return new MI_ClassDecl(false);
         }
 
-        public static MI_ClassDecl NewFromDirectPtr(IntPtr ptr)
+        internal static MI_ClassDecl NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_ClassDecl(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
@@ -103,10 +103,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ClassDeclOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_ClassDecl Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_ClassDecl Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {

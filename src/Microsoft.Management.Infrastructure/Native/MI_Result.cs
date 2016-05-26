@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Management.Infrastructure.Native
 {
-    public enum MI_Result : uint
+    internal enum MI_Result : uint
     {
         /* The operation was successful */
         MI_RESULT_OK = 0,

@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Management.Infrastructure.Native
 {
-    public enum MI_OperationCallback_ResponseType : uint
+    internal enum MI_OperationCallback_ResponseType : uint
     {
         No = 0,
         Yes = 1,

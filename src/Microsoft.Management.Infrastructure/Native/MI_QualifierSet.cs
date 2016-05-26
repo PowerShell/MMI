@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_QualifierSetPtr
+    internal struct MI_QualifierSetPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_QualifierSetOutPtr
+    internal struct MI_QualifierSetOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_QualifierSet
+    internal class MI_QualifierSet
     {
-        public MI_Result GetQualifier(
+        internal MI_Result GetQualifier(
             string name,
             out MI_Type qualifierType,
             out MI_Flags qualifierFlags,
@@ -38,7 +38,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetQualifierAt(
+        internal MI_Result GetQualifierAt(
             UInt32 index,
             out string name,
             out MI_Type qualifierType,
@@ -64,9 +64,9 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_QualifierSetMembers
         {
-            public UInt64 reserved1;
-            public IntPtr reserved2;
-            public IntPtr ft;
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -97,17 +97,17 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_QualifierSet NewDirectPtr()
+        internal static MI_QualifierSet NewDirectPtr()
         {
             return new MI_QualifierSet(true);
         }
 
-        public static MI_QualifierSet NewIndirectPtr()
+        internal static MI_QualifierSet NewIndirectPtr()
         {
             return new MI_QualifierSet(false);
         }
 
-        public static MI_QualifierSet NewFromDirectPtr(IntPtr ptr)
+        internal static MI_QualifierSet NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_QualifierSet(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
@@ -138,10 +138,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_QualifierSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_QualifierSet Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_QualifierSet Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -165,7 +165,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Result GetQualifierCount(
+        internal MI_Result GetQualifierCount(
             out UInt32 count
             )
         {
@@ -204,20 +204,20 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_QualifierSetFT
+        internal class MI_QualifierSetFT
         {
-            public MI_QualifierSet_GetQualifierCount GetQualifierCount;
-            public MI_QualifierSet_GetQualifierAt GetQualifierAt;
-            public MI_QualifierSet_GetQualifier GetQualifier;
+            internal MI_QualifierSet_GetQualifierCount GetQualifierCount;
+            internal MI_QualifierSet_GetQualifierAt GetQualifierAt;
+            internal MI_QualifierSet_GetQualifier GetQualifier;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_QualifierSet_GetQualifierCount(
+            internal delegate MI_Result MI_QualifierSet_GetQualifierCount(
                 MI_QualifierSetPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_QualifierSet_GetQualifierAt(
+            internal delegate MI_Result MI_QualifierSet_GetQualifierAt(
                 MI_QualifierSetPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
@@ -227,7 +227,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_QualifierSet_GetQualifier(
+            internal delegate MI_Result MI_QualifierSet_GetQualifier(
                 MI_QualifierSetPtr self,
                 string name,
                 out MI_Type qualifierType,

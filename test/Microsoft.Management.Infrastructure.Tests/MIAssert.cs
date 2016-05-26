@@ -10,34 +10,34 @@ using Microsoft.Management.Infrastructure.Native;
 namespace MMI.Tests
 {
 
-    public static class MIAssert
+    internal static class MIAssert
     {
-        public static void Succeeded(MI_Result code)
+        internal static void Succeeded(MI_Result code)
         {
             Assert.Equal(MI_Result.MI_RESULT_OK, code);
         }
 
-        public static void Succeeded(MI_Result code, string message)
+        internal static void Succeeded(MI_Result code, string message)
         {
             Assert.Equal(MI_Result.MI_RESULT_OK, code);
         }
 
-        public static void Succeeded(MI_Result code, string message, params string[] formatValues)
+        internal static void Succeeded(MI_Result code, string message, params string[] formatValues)
         {
             Assert.Equal(MI_Result.MI_RESULT_OK, code);
         }
 
-        public static void Failed(MI_Result code)
+        internal static void Failed(MI_Result code)
         {
             Assert.NotEqual(MI_Result.MI_RESULT_OK, code);
         }
 
-        public static void Failed(MI_Result code, string message)
+        internal static void Failed(MI_Result code, string message)
         {
             Assert.NotEqual(MI_Result.MI_RESULT_OK, code);
         }
 
-        public static void MIIntervalsEqual(MI_Interval expected, MI_Interval actual)
+        internal static void MIIntervalsEqual(MI_Interval expected, MI_Interval actual)
         {
             Assert.Equal(expected.days, actual.days);
             Assert.Equal(expected.hours, actual.hours);
@@ -52,7 +52,7 @@ namespace MMI.Tests
             Assert.Equal(0u, actual.__padding3);
         }
 
-        public static void MIDatetimesEqual(MI_Datetime expected, MI_Datetime actual)
+        internal static void MIDatetimesEqual(MI_Datetime expected, MI_Datetime actual)
         {
             Assert.Equal(expected.isTimestamp, actual.isTimestamp);
             if (expected.isTimestamp)
@@ -71,7 +71,7 @@ namespace MMI.Tests
             }
         }
 
-        public static void MIPropertiesEqual(TestMIProperty expectedProperty, TestMIProperty actualProperty, string propertyName)
+        internal static void MIPropertiesEqual(TestMIProperty expectedProperty, TestMIProperty actualProperty, string propertyName)
         {
             Assert.Equal(expectedProperty.Type, actualProperty.Type);
             Assert.Equal(expectedProperty.Flags, actualProperty.Flags);

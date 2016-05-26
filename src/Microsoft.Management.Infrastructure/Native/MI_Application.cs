@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ApplicationPtr
+    internal struct MI_ApplicationPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ApplicationOutPtr
+    internal struct MI_ApplicationOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public partial class MI_Application
+    internal class MI_Application
     {
-        public static MI_Result Initialize(string applicationId, out MI_Instance extendedError, out MI_Application application)
+        internal static MI_Result Initialize(string applicationId, out MI_Instance extendedError, out MI_Application application)
         {
             MI_Application applicationLocal = MI_Application.NewDirectPtr();
             MI_Instance extendedErrorLocal = MI_Instance.NewIndirectPtr();
@@ -30,7 +30,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return result;
         }
 
-        public MI_Result NewSession(
+        internal MI_Result NewSession(
             string protocol,
             string destination,
             MI_DestinationOptions options,
@@ -63,9 +63,9 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_ApplicationMembers
         {
-            public UInt64 reserved1;
-            public IntPtr reserved2;
-            public IntPtr ft;
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -96,17 +96,17 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_Application NewDirectPtr()
+        internal static MI_Application NewDirectPtr()
         {
             return new MI_Application(true);
         }
 
-        public static MI_Application NewIndirectPtr()
+        internal static MI_Application NewIndirectPtr()
         {
             return new MI_Application(false);
         }
 
-        public static MI_Application NewFromDirectPtr(IntPtr ptr)
+        internal static MI_Application NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_Application(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
@@ -137,10 +137,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ApplicationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_Application Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_Application Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -164,12 +164,12 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Result Close()
+        internal MI_Result Close()
         {
             return this.ft.Close(this);
         }
 
-        public MI_Result NewHostedProvider(
+        internal MI_Result NewHostedProvider(
             string namespaceName,
             string providerName,
             IntPtr mi_Main,
@@ -190,7 +190,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewInstance(
+        internal MI_Result NewInstance(
             string className,
             MI_ClassDecl classRTTI,
             out MI_Instance instance
@@ -207,7 +207,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewDestinationOptions(
+        internal MI_Result NewDestinationOptions(
             out MI_DestinationOptions options
             )
         {
@@ -219,7 +219,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewOperationOptions(
+        internal MI_Result NewOperationOptions(
             bool customOptionsMustUnderstand,
             out MI_OperationOptions operationOptions
             )
@@ -234,7 +234,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewSubscriptionDeliveryOptions(
+        internal MI_Result NewSubscriptionDeliveryOptions(
             MI_SubscriptionDeliveryType deliveryType,
             out MI_SubscriptionDeliveryOptions deliveryOptions
             )
@@ -250,7 +250,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewSerializer(
+        internal MI_Result NewSerializer(
             MI_SerializerFlags flags,
             string format,
             out MI_Serializer serializer
@@ -267,7 +267,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewDeserializer(
+        internal MI_Result NewDeserializer(
             MI_SerializerFlags flags,
             string format,
             out MI_Deserializer deserializer
@@ -284,7 +284,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result NewInstanceFromClass(
+        internal MI_Result NewInstanceFromClass(
             string className,
             MI_Class classObject,
             out MI_Instance instance
@@ -331,26 +331,26 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_ApplicationFT
+        internal class MI_ApplicationFT
         {
-            public MI_Application_Close Close;
-            public MI_Application_NewSession NewSession;
-            public MI_Application_NewHostedProvider NewHostedProvider;
-            public MI_Application_NewInstance NewInstance;
-            public MI_Application_NewDestinationOptions NewDestinationOptions;
-            public MI_Application_NewOperationOptions NewOperationOptions;
-            public MI_Application_NewSubscriptionDeliveryOptions NewSubscriptionDeliveryOptions;
-            public MI_Application_NewSerializer NewSerializer;
-            public MI_Application_NewDeserializer NewDeserializer;
-            public MI_Application_NewInstanceFromClass NewInstanceFromClass;
+            internal MI_Application_Close Close;
+            internal MI_Application_NewSession NewSession;
+            internal MI_Application_NewHostedProvider NewHostedProvider;
+            internal MI_Application_NewInstance NewInstance;
+            internal MI_Application_NewDestinationOptions NewDestinationOptions;
+            internal MI_Application_NewOperationOptions NewOperationOptions;
+            internal MI_Application_NewSubscriptionDeliveryOptions NewSubscriptionDeliveryOptions;
+            internal MI_Application_NewSerializer NewSerializer;
+            internal MI_Application_NewDeserializer NewDeserializer;
+            internal MI_Application_NewInstanceFromClass NewInstanceFromClass;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_Close(
+            internal delegate MI_Result MI_Application_Close(
                 MI_ApplicationPtr application
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewSession(
+            internal delegate MI_Result MI_Application_NewSession(
                 MI_ApplicationPtr application,
                 string protocol,
                 string destination,
@@ -361,7 +361,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewHostedProvider(
+            internal delegate MI_Result MI_Application_NewHostedProvider(
                 MI_ApplicationPtr application,
                 string namespaceName,
                 string providerName,
@@ -371,7 +371,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewInstance(
+            internal delegate MI_Result MI_Application_NewInstance(
                 MI_ApplicationPtr application,
                 string className,
                 [In, Out] MI_ClassDeclPtr classRTTI,
@@ -379,27 +379,27 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewDestinationOptions(
+            internal delegate MI_Result MI_Application_NewDestinationOptions(
                 MI_ApplicationPtr application,
                 [In, Out] MI_DestinationOptionsPtr options
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewOperationOptions(
+            internal delegate MI_Result MI_Application_NewOperationOptions(
                 MI_ApplicationPtr application,
                 [MarshalAs(UnmanagedType.U1)] bool customOptionsMustUnderstand,
                 [In, Out] MI_OperationOptionsPtr operationOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewSubscriptionDeliveryOptions(
+            internal delegate MI_Result MI_Application_NewSubscriptionDeliveryOptions(
                 MI_ApplicationPtr application,
                 MI_SubscriptionDeliveryType deliveryType,
                 [In, Out] MI_SubscriptionDeliveryOptionsPtr deliveryOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewSerializer(
+            internal delegate MI_Result MI_Application_NewSerializer(
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
@@ -407,7 +407,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewDeserializer(
+            internal delegate MI_Result MI_Application_NewDeserializer(
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
@@ -415,7 +415,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_Application_NewInstanceFromClass(
+            internal delegate MI_Result MI_Application_NewInstanceFromClass(
                 MI_ApplicationPtr application,
                 string className,
                 [In, Out] MI_ClassPtr classObject,

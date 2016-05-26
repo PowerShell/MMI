@@ -7,7 +7,7 @@ namespace Microsoft.Management.Infrastructure.Native
      */
 
     [Flags]
-    public enum MI_OperationFlags
+    internal enum MI_OperationFlags
     {
         Default = 0x0000,
         MI_OPERATIONFLAGS_AUTOMATIC_ACK_RESULTS = 0x0000,

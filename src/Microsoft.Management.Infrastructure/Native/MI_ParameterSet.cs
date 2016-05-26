@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ParameterSetPtr
+    internal struct MI_ParameterSetPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public struct MI_ParameterSetOutPtr
+    internal struct MI_ParameterSetOutPtr
     {
-        public IntPtr ptr;
+        internal IntPtr ptr;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    public class MI_ParameterSet
+    internal class MI_ParameterSet
     {
-        public MI_Result GetParameterAt(
+        internal MI_Result GetParameterAt(
             UInt32 index,
             out string name,
             out MI_Type parameterType,
@@ -42,7 +42,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetParameter(
+        internal MI_Result GetParameter(
             string name,
             out MI_Type parameterType,
             out string referenceClass,
@@ -68,9 +68,9 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_ParameterSetMembers
         {
-            public UInt64 reserved1;
-            public IntPtr reserved2;
-            public IntPtr ft;
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
         }
 
         // Marshal implements these with Reflection - pay this hit only once
@@ -101,17 +101,17 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public static MI_ParameterSet NewDirectPtr()
+        internal static MI_ParameterSet NewDirectPtr()
         {
             return new MI_ParameterSet(true);
         }
 
-        public static MI_ParameterSet NewIndirectPtr()
+        internal static MI_ParameterSet NewIndirectPtr()
         {
             return new MI_ParameterSet(false);
         }
 
-        public static MI_ParameterSet NewFromDirectPtr(IntPtr ptr)
+        internal static MI_ParameterSet NewFromDirectPtr(IntPtr ptr)
         {
             var res = new MI_ParameterSet(false);
             Marshal.WriteIntPtr(res.ptr.ptr, ptr);
@@ -142,10 +142,10 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ParameterSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static MI_ParameterSet Null { get { return null; } }
-        public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        internal static MI_ParameterSet Null { get { return null; } }
+        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        public IntPtr Ptr
+        internal IntPtr Ptr
         {
             get
             {
@@ -169,7 +169,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        public MI_Result GetMethodReturnType(
+        internal MI_Result GetMethodReturnType(
             out MI_Type returnType,
             MI_QualifierSet qualifierSet
             )
@@ -180,7 +180,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        public MI_Result GetParameterCount(
+        internal MI_Result GetParameterCount(
             out UInt32 count
             )
         {
@@ -219,28 +219,28 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        public class MI_ParameterSetFT
+        internal class MI_ParameterSetFT
         {
-            public MI_ParameterSet_GetMethodReturnType GetMethodReturnType;
-            public MI_ParameterSet_GetParameterCount GetParameterCount;
-            public MI_ParameterSet_GetParameterAt GetParameterAt;
-            public MI_ParameterSet_GetParameter GetParameter;
+            internal MI_ParameterSet_GetMethodReturnType GetMethodReturnType;
+            internal MI_ParameterSet_GetParameterCount GetParameterCount;
+            internal MI_ParameterSet_GetParameterAt GetParameterAt;
+            internal MI_ParameterSet_GetParameter GetParameter;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_ParameterSet_GetMethodReturnType(
+            internal delegate MI_Result MI_ParameterSet_GetMethodReturnType(
                 MI_ParameterSetPtr self,
                 out MI_Type returnType,
                 [In, Out] MI_QualifierSetPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_ParameterSet_GetParameterCount(
+            internal delegate MI_Result MI_ParameterSet_GetParameterCount(
                 MI_ParameterSetPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_ParameterSet_GetParameterAt(
+            internal delegate MI_Result MI_ParameterSet_GetParameterAt(
                 MI_ParameterSetPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
@@ -250,7 +250,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            public delegate MI_Result MI_ParameterSet_GetParameter(
+            internal delegate MI_Result MI_ParameterSet_GetParameter(
                 MI_ParameterSetPtr self,
                 string name,
                 out MI_Type parameterType,

@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Management.Infrastructure.Native
 {
-    public class MI_Serializer
+    internal class MI_Serializer
     {
     }
 }
