@@ -9,7 +9,6 @@ using MMI.Tests;
 
 namespace MMI.Tests.Native
 {
-#if !_LINUX
     public class SanityTests : IDisposable
     {
         private readonly string ApplicationName = "MMINativeTests";
@@ -34,7 +33,7 @@ namespace MMI.Tests.Native
             }
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanCreateSession()
         {
             MI_Session newSession = null;
@@ -51,7 +50,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanTestSessionPositive()
         {
             MI_Session session = null;
@@ -82,7 +81,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanTestSessionNegative()
         {
             MI_Session session = null;
@@ -114,7 +113,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanDoSimpleSessionEnumerate()
         {
             MI_Session session = null;
@@ -183,7 +182,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res, "Expect to be able to close the session");
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanDoSimpleSessionGetClass()
         {
             MI_Session session = null;
@@ -273,7 +272,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res, "Expect to be able to close the session");
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanGetSetOperationOptionsInterval()
         {
             MI_OperationOptions options;
@@ -298,43 +297,43 @@ namespace MMI.Tests.Native
             MIAssert.MIIntervalsEqual(myInterval, retrievedInterval);
         }
 
-        [Fact]
+        [WindowsFact]
         public void DirectInstanceTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Instance.NewDirectPtr().Delete());
         }
 
-        [Fact]
+        [WindowsFact]
         public void IndirectInstanceTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Instance.NewIndirectPtr().Delete());
         }
 
-        [Fact]
+        [WindowsFact]
         public void DirectApplicationTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Application.NewDirectPtr().Close());
         }
 
-        [Fact]
+        [WindowsFact]
         public void IndirectApplicationTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Application.NewIndirectPtr().Close());
         }
 
-        [Fact]
+        [WindowsFact]
         public void DirectSessionTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Session.NewDirectPtr().Close(IntPtr.Zero, null));
         }
 
-        [Fact]
+        [WindowsFact]
         public void IndirectSessionTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Session.NewIndirectPtr().Close(IntPtr.Zero, null));
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanCreateSerializer()
         {
             MI_Serializer newSerializer = null;
@@ -348,7 +347,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanXMLSerializeInstance()
         {
             MI_Instance toSerialize;
@@ -377,7 +376,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanCreateDeserializer()
         {
             MI_Deserializer newDeserializer = null;
@@ -391,7 +390,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
 
-        [Fact]
+        [WindowsFact]
         public void CanXMLDeserializeInstance()
         {
             MI_Deserializer newDeserializer = null;
@@ -458,5 +457,4 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
     }
-#endif
 }

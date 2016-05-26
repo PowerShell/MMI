@@ -81,6 +81,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\TestMIProperty.cs">
       <Link>TestMIProperty.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsFact.cs">
+      <Link>WindowsFact.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
