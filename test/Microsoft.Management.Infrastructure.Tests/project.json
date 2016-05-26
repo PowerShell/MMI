@@ -6,6 +6,14 @@
     "dependencies": {
         "Microsoft.Management.Infrastructure": "1.0.0-*"
     },
+    
+    "configurations": {
+        "Linux": {
+            "buildOptions": {
+                "define": [ "_LINUX" ]
+            }
+        }
+    },
 
     "frameworks": {
         "netcoreapp1.0": {

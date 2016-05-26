@@ -7,6 +7,7 @@ using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests.Native
 {
+#if !_LINUX
     public class MIValueTests : IDisposable
     {
         private MI_Application application = null;
@@ -373,4 +374,5 @@ namespace MMI.Tests.Native
             Assert.NotNull(outerExpected);
         }
     }
+#endif
 }

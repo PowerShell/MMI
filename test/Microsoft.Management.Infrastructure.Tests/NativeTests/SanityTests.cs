@@ -9,6 +9,7 @@ using MMI.Tests;
 
 namespace MMI.Tests.Native
 {
+#if !_LINUX
     public class SanityTests : IDisposable
     {
         private readonly string ApplicationName = "MMINativeTests";
@@ -457,4 +458,5 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
         }
     }
+#endif
 }
