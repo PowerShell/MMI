@@ -3,7 +3,7 @@
  *============================================================================
  */
 
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

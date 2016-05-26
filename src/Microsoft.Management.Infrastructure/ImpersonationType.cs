@@ -3,7 +3,7 @@
  *============================================================================
  */
 
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure.Options
 {

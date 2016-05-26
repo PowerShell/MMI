@@ -1,7 +1,7 @@
 using Microsoft.Management.Infrastructure.Options;
 using System.Security;
 
-namespace NativeObject
+namespace Microsoft.Management.Infrastructure.Native
 {
     public class NativeCimCredential
     {

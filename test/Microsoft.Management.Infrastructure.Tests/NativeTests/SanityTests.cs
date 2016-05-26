@@ -3,7 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Xunit;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
 
 namespace MMI.Tests.Native

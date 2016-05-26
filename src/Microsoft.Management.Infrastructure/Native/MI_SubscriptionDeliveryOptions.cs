@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace NativeObject
+namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     public struct MI_SubscriptionDeliveryOptionsPtr

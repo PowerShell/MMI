@@ -1,4 +1,4 @@
-﻿namespace NativeObject
+﻿namespace Microsoft.Management.Infrastructure.Native
 {
     public enum MI_Result : uint
     {

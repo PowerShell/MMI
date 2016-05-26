@@ -3,8 +3,8 @@
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
 using System;
 using System.Globalization;
 

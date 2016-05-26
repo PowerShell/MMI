@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NativeObject
+namespace Microsoft.Management.Infrastructure.Native
 {
     [Flags]
     public enum MI_ModuleFlags

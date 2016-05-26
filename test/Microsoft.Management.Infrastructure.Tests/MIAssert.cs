@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests
 {

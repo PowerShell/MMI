@@ -23,7 +23,7 @@ using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -1642,8 +1642,6 @@ namespace Microsoft.Management.Infrastructure
         }
 
         #endregion GetClass
-
-
 
         public override string ToString()
         {

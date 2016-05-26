@@ -1,4 +1,4 @@
-﻿namespace NativeObject
+﻿namespace Microsoft.Management.Infrastructure.Native
 {
     using System;
     using System.Runtime.InteropServices;

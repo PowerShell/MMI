@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NativeObject
+namespace Microsoft.Management.Infrastructure.Native
 {
     /* Flags to be passed into Session operation functions.
      * One item from each group can be bit-wise combined.

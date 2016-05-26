@@ -4,8 +4,8 @@
  */
 
 using Microsoft.Management.Infrastructure.Generic;
+using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {

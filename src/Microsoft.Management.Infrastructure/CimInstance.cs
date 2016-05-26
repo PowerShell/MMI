@@ -22,7 +22,7 @@ using Microsoft.Win32;
 
 #endif
 
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure
 {

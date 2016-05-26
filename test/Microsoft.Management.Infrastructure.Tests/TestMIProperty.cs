@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MMI.Tests
 {
-    using NativeObject;
+    using Microsoft.Management.Infrastructure.Native;
 
     public class TestMIProperty
     {

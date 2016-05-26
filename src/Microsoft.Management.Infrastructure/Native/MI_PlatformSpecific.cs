@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NativeObject
+namespace Microsoft.Management.Infrastructure.Native
 {
     using System.Runtime.InteropServices;
 

@@ -3,7 +3,7 @@
  *============================================================================
  */
 
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 using System.Diagnostics;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations

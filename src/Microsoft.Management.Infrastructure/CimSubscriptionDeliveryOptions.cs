@@ -4,7 +4,7 @@
  */
 
 using Microsoft.Management.Infrastructure.Internal;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 using System;
 
 namespace Microsoft.Management.Infrastructure.Options

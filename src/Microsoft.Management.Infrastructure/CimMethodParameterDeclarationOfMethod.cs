@@ -4,7 +4,7 @@
  */
 
 using Microsoft.Management.Infrastructure.Generic;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
