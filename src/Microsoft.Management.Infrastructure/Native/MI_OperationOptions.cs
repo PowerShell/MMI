@@ -316,29 +316,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_OperationOptionsFT MarshalFT()
         {
-            MI_OperationOptionsFT res = new MI_OperationOptionsFT();
-            IntPtr ftPtr = IntPtr.Zero;
-            unsafe
-            {
-                // Just as easily could be implemented with Marshal
-                // but that would copy more than the one pointer we need
-                IntPtr structurePtr = this.Ptr;
-                if (structurePtr == IntPtr.Zero)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                ftPtr = *((IntPtr*)((byte*)structurePtr + MI_OperationOptionsMembersFTOffset));
-            }
-
-            if (ftPtr == IntPtr.Zero)
-            {
-                throw new InvalidOperationException();
-            }
-
-            // No apparent way to implement this in an unsafe block
-            Marshal.PtrToStructure(ftPtr, res);
-            return res;
+            return NativeMethods.GetFTAsOffsetFromPtr<MI_OperationOptionsFT>(this.Ptr, MI_OperationOptions.MI_OperationOptionsMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
