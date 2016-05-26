@@ -334,11 +334,25 @@ namespace MMI.Tests.Native
         }
 
         [WindowsFact]
-        public void CanCreateSerializer()
+        public void CanCreateXMLSerializer()
         {
             MI_Serializer newSerializer = null;
             MI_Result res = this.application.NewSerializer(MI_SerializerFlags.None,
                 MI_SerializationFormat.XML,
+                out newSerializer);
+            MIAssert.Succeeded(res);
+            Assert.NotNull(newSerializer);
+
+            res = newSerializer.Close();
+            MIAssert.Succeeded(res);
+        }
+
+        [WindowsFact]
+        public void CanCreateMOFSerializer()
+        {
+            MI_Serializer newSerializer = null;
+            MI_Result res = this.application.NewSerializer(MI_SerializerFlags.None,
+                MI_SerializationFormat.MOF,
                 out newSerializer);
             MIAssert.Succeeded(res);
             Assert.NotNull(newSerializer);

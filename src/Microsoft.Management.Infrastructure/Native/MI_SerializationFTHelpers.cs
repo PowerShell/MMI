@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal class MI_SerializationFT
+    internal class MI_SerializationFTHelpers
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_ClientFT_V1
@@ -24,7 +24,7 @@ namespace Microsoft.Management.Infrastructure.Native
             public IntPtr _utilitiesFT;
         }
 
-            private struct SerializationFTPair
+        private struct SerializationFTPair
         {
             public MI_Serializer.MI_SerializerFT SerializationFT;
             public MI_Deserializer.MI_DeserializerFT DeserializationFT;
@@ -33,6 +33,16 @@ namespace Microsoft.Management.Infrastructure.Native
         private static Lazy<SerializationFTPair> XmlSerializationFTs = new Lazy<SerializationFTPair>(() => GetXmlSerializationFTs());
         internal static MI_Serializer.MI_SerializerFT XMLSerializationFT { get { return XmlSerializationFTs.Value.SerializationFT; } }
         internal static MI_Deserializer.MI_DeserializerFT XMLDeserializationFT { get { return XmlSerializationFTs.Value.DeserializationFT; } }
+        
+        internal static MI_Serializer.MI_SerializerFT GetMOFSerializerFT(MI_Serializer serializer)
+        {
+            return NativeMethods.GetFTAsOffsetFromPtr<MI_Serializer.MI_SerializerFT>(serializer.Ptr, MI_Serializer.Reserved2Offset);
+        }
+
+        internal static MI_Deserializer.MI_DeserializerFT GetMOFDeserializerFT(MI_Deserializer deserializer)
+        {
+            return NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(deserializer.Ptr, MI_Deserializer.Reserved2Offset);
+        }
 
         private static SerializationFTPair GetXmlSerializationFTs()
         {

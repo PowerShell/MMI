@@ -12,6 +12,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal const CallingConvention MiMainCallConvention = CallingConvention.Cdecl;
         internal const CallingConvention MiCallConvention = CallingConvention.StdCall;
         internal const string MI = "mi.dll";
+        internal const string MOFCodecHost = "mimofcodec.dll";
 
         internal static string PtrToString(IntPtr ptr)
         {
@@ -29,6 +30,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal const CallingConvention MiMainCallConvention = CallingConvention.Cdecl;
         internal const CallingConvention MiCallConvention = CallingConvention.Cdecl;
         internal const string MI = "libmi.so";
+        internal const string MOFCodecHost = "libmi.so";
 
         internal static string PtrToString(IntPtr ptr)
         {

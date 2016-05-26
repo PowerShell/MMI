@@ -18,6 +18,9 @@ namespace Microsoft.Management.Infrastructure.Native
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal partial class MI_Deserializer
     {
+        // Marshal implements these with Reflection - pay this hit only once
+        internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Deserializer.MI_DeserializerMembers>("reserved2");
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_DeserializerMembers
         {
@@ -37,10 +40,22 @@ namespace Microsoft.Management.Infrastructure.Native
             Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_Deserializer(bool isDirect)
+        private MI_Deserializer(string format, bool isDirect)
         {
             this.isDirect = isDirect;
-            this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFT.XMLDeserializationFT);
+
+            if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
+            {
+                this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.XMLDeserializationFT);
+            }
+            else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
+            {
+                this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.GetMOFDeserializerFT(this));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
 
             var necessarySize = this.isDirect ? MI_DeserializerMembersSize : NativeMethods.IntPtrSize;
             this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
@@ -51,23 +66,11 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        internal static MI_Deserializer NewDirectPtr()
+        internal static MI_Deserializer NewDirectPtr(string format)
         {
-            return new MI_Deserializer(true);
+            return new MI_Deserializer(format, true);
         }
-
-        internal static MI_Deserializer NewIndirectPtr()
-        {
-            return new MI_Deserializer(false);
-        }
-
-        internal static MI_Deserializer NewFromDirectPtr(IntPtr ptr)
-        {
-            var res = new MI_Deserializer(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
-        }
-
+        
         public static implicit operator MI_DeserializerPtr(MI_Deserializer instance)
         {
             // If the indirect pointer is zero then the object has not

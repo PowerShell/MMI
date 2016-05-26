@@ -18,6 +18,9 @@ namespace Microsoft.Management.Infrastructure.Native
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal partial class MI_Serializer
     {
+        // Marshal implements these with Reflection - pay this hit only once
+        internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Serializer.MI_SerializerMembers>("reserved2");
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_SerializerMembers
         {
@@ -43,6 +46,10 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 this.mft = MI_SerializerFT.XmlSerializerFT;
             }
+            else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
+            {
+                this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetMOFSerializerFT(this) );
+            }
             else
             {
                 throw new NotImplementedException();
@@ -63,19 +70,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             return new MI_Serializer(format, true);
         }
-
-        internal static MI_Serializer NewIndirectPtr(string format)
-        {
-            return new MI_Serializer(format, false);
-        }
-
-        internal static MI_Serializer NewFromDirectPtr(string format, IntPtr ptr)
-        {
-            var res = new MI_Serializer(format, false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
-        }
-
+        
         public static implicit operator MI_SerializerPtr(MI_Serializer instance)
         {
             // If the indirect pointer is zero then the object has not
@@ -234,7 +229,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 out UInt32 clientBufferNeeded
                 );
             
-            internal static Lazy<MI_SerializerFT> XmlSerializerFT = new Lazy<MI_SerializerFT>(() => MI_SerializationFT.XMLSerializationFT);
+            internal static Lazy<MI_SerializerFT> XmlSerializerFT = new Lazy<MI_SerializerFT>(() => MI_SerializationFTHelpers.XMLSerializationFT);
         }
     }
 }

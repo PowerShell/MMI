@@ -258,10 +258,25 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             MI_Serializer serializerLocal = MI_Serializer.NewDirectPtr(format);
 
-            MI_Result resultLocal = this.ft.NewSerializer(this,
-                flags,
-                format,
-                serializerLocal);
+            MI_Result resultLocal;
+            if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
+            {
+                resultLocal = this.ft.NewSerializer(this,
+                    flags,
+                    format,
+                    serializerLocal);
+            }
+            else if(MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
+            {
+                resultLocal = NativeMethods.MI_Application_NewSerializer_Mof(this,
+                    flags,
+                    format,
+                    serializerLocal);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
 
             serializer = serializerLocal;
             return resultLocal;
@@ -273,12 +288,27 @@ namespace Microsoft.Management.Infrastructure.Native
             out MI_Deserializer deserializer
             )
         {
-            MI_Deserializer deserializerLocal = MI_Deserializer.NewDirectPtr();
+            MI_Deserializer deserializerLocal = MI_Deserializer.NewDirectPtr(format);
 
-            MI_Result resultLocal = this.ft.NewDeserializer(this,
-                flags,
-                format,
-                deserializerLocal);
+            MI_Result resultLocal;
+            if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
+            {
+                resultLocal = this.ft.NewDeserializer(this,
+                    flags,
+                    format,
+                    deserializerLocal);
+            }
+            else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
+            {
+                resultLocal = NativeMethods.MI_Application_NewDeserializer_Mof(this,
+                    flags,
+                    format,
+                    deserializerLocal);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
 
             deserializer = deserializerLocal;
             return resultLocal;

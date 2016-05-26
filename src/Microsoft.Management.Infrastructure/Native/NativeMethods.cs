@@ -13,6 +13,22 @@
             [In, Out] MI_ApplicationPtr application
             );
 
+        [DllImport(MI_PlatformSpecific.MOFCodecHost, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
+        internal static extern MI_Result MI_Application_NewSerializer_Mof(
+            MI_ApplicationPtr application,
+            MI_SerializerFlags flags,
+            string format,
+            MI_SerializerPtr serializer
+            );
+
+        [DllImport(MI_PlatformSpecific.MOFCodecHost, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
+        internal static extern MI_Result MI_Application_NewDeserializer_Mof(
+            MI_ApplicationPtr application,
+            MI_SerializerFlags flags,
+            string format,
+            MI_DeserializerPtr serializer
+            );
+
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
         internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPWStr)]string lpFileName);
 
@@ -100,6 +116,33 @@
             {
                 *dst++ = val;
             }
+        }
+        
+        internal static unsafe T GetFTAsOffsetFromPtr<T>(IntPtr ptr, int offset) where T : new()
+        {
+            T res = new T();
+            IntPtr ftPtr = IntPtr.Zero;
+            unsafe
+            {
+                // Just as easily could be implemented with Marshal
+                // but that would copy more than the one pointer we need
+                IntPtr structurePtr = ptr;
+                if (structurePtr == IntPtr.Zero)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                ftPtr = *((IntPtr*)((byte*)structurePtr + offset));
+            }
+
+            if (ftPtr == IntPtr.Zero)
+            {
+                throw new InvalidOperationException();
+            }
+
+            // No apparent way to implement this in an unsafe block
+            Marshal.PtrToStructure(ftPtr, res);
+            return res;
         }
     }
 }
