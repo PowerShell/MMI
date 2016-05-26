@@ -1,13 +1,12 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Generic;
+using NativeObject;
 using System;
 using System.Collections.Generic;
-using Microsoft.Management.Infrastructure.Generic;
-using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -40,13 +39,13 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("methodName");
                 }
 
-		MI_QualifierSet qualifierSet;
-		MI_ParameterSet parameterSet;
-		UInt32 index;
-		MI_Result result = this.classHandle.GetMethod(methodName,
-							      out qualifierSet,
-							      out parameterSet,
-							      out index);
+                MI_QualifierSet qualifierSet;
+                MI_ParameterSet parameterSet;
+                UInt32 index;
+                MI_Result result = this.classHandle.GetMethod(methodName,
+                                          out qualifierSet,
+                                          out parameterSet,
+                                          out index);
 
                 switch (result)
                 {

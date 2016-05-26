@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -29,11 +29,11 @@ namespace Microsoft.Management.Infrastructure.Internal
             }
 
             /*
-             * Our implementation does not allow individual array elements to be null. 
+             * Our implementation does not allow individual array elements to be null.
              * It is an open question whether CIM does. The MOF BNF seems to imply that
-             * they are supported but some think it was an oversight. As a practical matter, 
+             * they are supported but some think it was an oversight. As a practical matter,
              * it has not come up with any DMTF profiles (which require that all array elements
-             * be non-null so far). Also OpenPegasus does not allow individual array elements 
+             * be non-null so far). Also OpenPegasus does not allow individual array elements
              * to be null either, although CMPI does.
              */
 

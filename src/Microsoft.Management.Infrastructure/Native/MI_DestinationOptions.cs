@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace NativeObject
@@ -52,6 +48,7 @@ namespace NativeObject
             value = valueLocal;
             return resultLocal;
         }
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_DestinationOptionsMembers
         {
@@ -62,6 +59,7 @@ namespace NativeObject
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_DestinationOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_DestinationOptionsMembers>("ft");
+
         private static int MI_DestinationOptionsMembersSize = Marshal.SizeOf<MI_DestinationOptionsMembers>();
 
         private MI_DestinationOptionsPtr ptr;
@@ -119,7 +117,7 @@ namespace NativeObject
         public static implicit operator MI_DestinationOptionsOutPtr(MI_DestinationOptions instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
+            // of our direct pointer, though it is technically feasible
             if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
@@ -130,6 +128,7 @@ namespace NativeObject
 
         public static MI_DestinationOptions Null { get { return null; } }
         public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         public IntPtr Ptr
         {
             get
@@ -347,6 +346,7 @@ namespace NativeObject
         }
 
         private MI_DestinationOptionsFT ft { get { return this.mft.Value; } }
+
         private MI_DestinationOptionsFT MarshalFT()
         {
             MI_DestinationOptionsFT res = new MI_DestinationOptionsFT();

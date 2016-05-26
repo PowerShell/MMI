@@ -1,11 +1,11 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
 using Microsoft.Management.Infrastructure.Options;
 using NativeObject;
+using System;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -57,7 +57,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         public override void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
             base.RegisterAcceptedAsyncCallbacks(operationCallbacks, operationOptions);
-	    // TODO: Uncomment and fix below
+            // TODO: Uncomment and fix below
             //operationCallbacks.classResult = this.ClassCallback;
         }
     }

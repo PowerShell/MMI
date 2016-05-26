@@ -1,11 +1,8 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Collections;
-using Microsoft.Management.Infrastructure.Options.Internal;
 using Microsoft.Management.Infrastructure.Generic;
 using NativeObject;
 
@@ -27,18 +24,17 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             get
             {
                 string name;
-		MI_QualifierSet qualifierSet;
-		MI_ParameterSet parameterSet;
+                MI_QualifierSet qualifierSet;
+                MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt(
                     (uint)this.index,
                     out name,
-		    out qualifierSet,
-		    out parameterSet);
+            out qualifierSet,
+            out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
                 return name;
             }
         }
-
 
         public override CimType ReturnType
         {
@@ -46,16 +42,16 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             {
                 MI_Type type;
 
-		string name;
-		MI_QualifierSet qualifierSet;
-		MI_ParameterSet parameterSet;
+                string name;
+                MI_QualifierSet qualifierSet;
+                MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt(
                     (uint)this.index,
                     out name,
-		    out qualifierSet,
-		    out parameterSet);
+            out qualifierSet,
+            out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
-		result = parameterSet.GetMethodReturnType(out type, qualifierSet);
+                result = parameterSet.GetMethodReturnType(out type, qualifierSet);
                 CimException.ThrowIfMiResultFailure(result);
                 return type.ToCimType();
             }
@@ -68,6 +64,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 return new CimMethodParameterDeclarationCollection(this.classHandle, index);
             }
         }
+
         public override CimReadOnlyKeyedCollection<CimQualifier> Qualifiers
         {
             get

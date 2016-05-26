@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NativeObject
 {
@@ -113,7 +109,7 @@ namespace NativeObject
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     public class MI_SessionCallbacksNative
     {
-        IntPtr callbackContext;
+        private IntPtr callbackContext;
         public NativeMethods.MI_SessionCallbacks_WriteMessageNative writeMessage;
         public NativeMethods.MI_SessionCallbacks_WriteErrorNative writeError;
     }
@@ -135,7 +131,7 @@ namespace NativeObject
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     public class MI_OperationCallbacksNative
     {
-        IntPtr callbackContext;
+        private IntPtr callbackContext;
 
         public NativeMethods.MI_OperationCallback_PromptUserNative promptUser;
         public NativeMethods.MI_OperationCallback_WriteErrorNative writeError;

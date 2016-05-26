@@ -1,12 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -23,17 +22,18 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         private bool _reportOperationStarted = false;
+
         internal void SetReportOperationStarted(bool reportOperationStarted)
         {
             this._reportOperationStarted = reportOperationStarted;
         }
 
         internal void ProcessNativeCallback(
-            OperationCallbackProcessingContext callbackProcessingContext, 
-            T currentItem, 
-            bool moreResults, 
-            MI_Result operationResult, 
-            string errorMessage, 
+            OperationCallbackProcessingContext callbackProcessingContext,
+            T currentItem,
+            bool moreResults,
+            MI_Result operationResult,
+            string errorMessage,
             MI_Instance errorDetailsHandle)
         {
             Debug.Assert(callbackProcessingContext != null, "We should never get called with a null callbackProcessingContext");
@@ -82,7 +82,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         private void ProcessEndOfResultsWorker(
-            OperationCallbackProcessingContext callbackProcessingContext, 
+            OperationCallbackProcessingContext callbackProcessingContext,
             CimOperation cimOperation,
             Exception exception)
         {

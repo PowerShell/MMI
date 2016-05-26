@@ -1,10 +1,10 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System.Diagnostics.CodeAnalysis;
 using NativeObject;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.Management.Infrastructure
 {

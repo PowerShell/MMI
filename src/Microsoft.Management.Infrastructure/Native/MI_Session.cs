@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace NativeObject
@@ -409,6 +405,7 @@ namespace NativeObject
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_SessionMembersFTOffset = (int)Marshal.OffsetOf<MI_SessionMembers>("ft");
+
         private static int MI_SessionMembersSize = Marshal.SizeOf<MI_SessionMembers>();
 
         private MI_SessionPtr ptr;
@@ -471,7 +468,7 @@ namespace NativeObject
         public static implicit operator MI_SessionOutPtr(MI_Session instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
+            // of our direct pointer, though it is technically feasible
             if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
@@ -482,6 +479,7 @@ namespace NativeObject
 
         public static MI_Session Null { get { return null; } }
         public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         public IntPtr Ptr
         {
             get
@@ -527,6 +525,7 @@ namespace NativeObject
         }
 
         private MI_SessionFT ft { get { return this.mft.Value; } }
+
         private MI_SessionFT MarshalFT()
         {
             MI_SessionFT res = new MI_SessionFT();

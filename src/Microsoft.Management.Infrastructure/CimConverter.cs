@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -20,7 +19,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         /// <summary>
-        /// Gets the dotnet type of a given CimType 
+        /// Gets the dotnet type of a given CimType
         /// </summary>
         /// <param name="cimType">cimType input.</param>
         /// <returns>A string representing dotnet type.</returns>
@@ -30,69 +29,99 @@ namespace Microsoft.Management.Infrastructure
             {
                 case CimType.SInt8:
                     return typeof(SByte);
+
                 case CimType.UInt8:
                     return typeof(Byte);
+
                 case CimType.SInt16:
                     return typeof(Int16);
+
                 case CimType.UInt16:
                     return typeof(UInt16);
+
                 case CimType.SInt32:
                     return typeof(Int32);
+
                 case CimType.UInt32:
                     return typeof(UInt32);
+
                 case CimType.SInt64:
                     return typeof(Int64);
+
                 case CimType.UInt64:
                     return typeof(UInt64);
+
                 case CimType.Real32:
                     return typeof(Single);
+
                 case CimType.Real64:
                     return typeof(double);
+
                 case CimType.Boolean:
                     return typeof(bool);
+
                 case CimType.String:
                     return typeof(string);
+
                 case CimType.DateTime:
                     //This can be either DateTime or TimeSpan
                     return null;
+
                 case CimType.Reference:
                     return typeof(CimInstance);
+
                 case CimType.Char16:
                     return typeof(char);
+
                 case CimType.Instance:
                     return typeof(CimInstance);
 
                 case CimType.BooleanArray:
                     return typeof(bool[]);
+
                 case CimType.UInt8Array:
                     return typeof(Byte[]);
+
                 case CimType.SInt8Array:
                     return typeof(SByte[]);
+
                 case CimType.UInt16Array:
                     return typeof(UInt16[]);
+
                 case CimType.SInt16Array:
                     return typeof(Int64[]);
+
                 case CimType.UInt32Array:
                     return typeof(UInt32[]);
+
                 case CimType.SInt32Array:
                     return typeof(Int32[]);
+
                 case CimType.UInt64Array:
                     return typeof(UInt64[]);
+
                 case CimType.SInt64Array:
                     return typeof(Int64[]);
+
                 case CimType.Real32Array:
                     return typeof(Single[]);
+
                 case CimType.Real64Array:
                     return typeof(double[]);
+
                 case CimType.Char16Array:
                     return typeof(char[]);
+
                 case CimType.DateTimeArray:
                     // This can be either DateTime or TimeSpan
                     return null;
+
                 case CimType.StringArray:
                     return typeof(string[]);
+
                 case CimType.ReferenceArray:
                     return typeof(CimInstance[]);
+
                 case CimType.InstanceArray:
                     return typeof(CimInstance[]);
 
@@ -173,7 +202,7 @@ namespace Microsoft.Management.Infrastructure
 #else
                         i.GetTypeInfo().IsGenericType &&
 #endif
-                        i.GetGenericTypeDefinition().Equals(typeof (IList<>)));
+                        i.GetGenericTypeDefinition().Equals(typeof(IList<>)));
             if (ilistInterface != null)
             {
 #if(!_CORECLR)
@@ -225,34 +254,49 @@ namespace Microsoft.Management.Infrastructure
                     {
                         case CimType.SInt8:
                             return CimType.SInt8Array;
+
                         case CimType.UInt8:
                             return CimType.UInt8Array;
+
                         case CimType.SInt16:
                             return CimType.SInt16Array;
+
                         case CimType.UInt16:
                             return CimType.UInt16Array;
+
                         case CimType.SInt32:
                             return CimType.SInt32Array;
+
                         case CimType.UInt32:
                             return CimType.UInt32Array;
+
                         case CimType.SInt64:
                             return CimType.SInt64Array;
+
                         case CimType.UInt64:
                             return CimType.UInt64Array;
+
                         case CimType.Real32:
                             return CimType.Real32Array;
+
                         case CimType.Real64:
                             return CimType.Real64Array;
+
                         case CimType.Boolean:
                             return CimType.BooleanArray;
+
                         case CimType.String:
                             return CimType.StringArray;
+
                         case CimType.DateTime:
                             return CimType.DateTimeArray;
+
                         case CimType.Reference:
                             return CimType.ReferenceArray;
+
                         case CimType.Char16:
                             return CimType.Char16Array;
+
                         case CimType.Instance:
                             return CimType.InstanceArray;
                     }

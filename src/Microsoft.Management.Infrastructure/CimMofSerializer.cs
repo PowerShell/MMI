@@ -1,16 +1,15 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Management.Infrastructure.Internal;
 using NativeObject;
+using System;
+using System.Diagnostics;
 
 namespace Microsoft.Management.Infrastructure.Serialization
-{    
+{
     /// <summary>
     ///  Class use to craete a mof serializer
     /// </summary>
@@ -23,10 +22,10 @@ namespace Microsoft.Management.Infrastructure.Serialization
             Debug.Assert(!string.IsNullOrEmpty(format), "Caller should verify that format != null");
 
             MI_Serializer tmpHandle;
-	    // TODO: Fix MI_SerializerFlags in next line to come from "flags"
+            // TODO: Fix MI_SerializerFlags in next line to come from "flags"
             MI_Result result = CimApplication.Handle.NewSerializer(MI_SerializerFlags.None,
-								   format,
-								   out tmpHandle);
+                                   format,
+                                   out tmpHandle);
             if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
                 throw new ArgumentOutOfRangeException("format");
@@ -41,6 +40,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         {
             return CreateCimMofSerializer(format: "MI_MOF_CIMV2_EXTV1", flags: 0);
         }
-        #endregion
+
+        #endregion Constructors
     }
 }

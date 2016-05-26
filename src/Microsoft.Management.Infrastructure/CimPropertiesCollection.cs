@@ -1,13 +1,13 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Collections.Generic;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using NativeObject;
+using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -29,7 +29,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 throw new ArgumentNullException("newProperty");
             }
 
-            MI_Result result =  this._instanceHandle.Handle.AddElement(
+            MI_Result result = this._instanceHandle.Handle.AddElement(
                 newProperty.Name,
                 CimInstance.ConvertToNativeLayer(newProperty.Value),
                 newProperty.CimType.ToMiType(),
@@ -57,15 +57,15 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("propertyName");
                 }
 
-		MI_Value value;
-		MI_Type type;
-		MI_Flags flags;
-		UInt32 index;
+                MI_Value value;
+                MI_Type type;
+                MI_Flags flags;
+                UInt32 index;
                 MI_Result result = this._instanceHandle.Handle.GetElement(propertyName,
-									  out value,
-									  out type,
-									  out flags,
-									  out index);
+                                      out value,
+                                      out type,
+                                      out flags,
+                                      out index);
                 switch (result)
                 {
                     case MI_Result.MI_RESULT_NO_SUCH_PROPERTY:

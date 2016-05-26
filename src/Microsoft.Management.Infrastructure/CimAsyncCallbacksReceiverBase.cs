@@ -1,14 +1,14 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Options;
+using NativeObject;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using Microsoft.Management.Infrastructure.Options;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -97,7 +97,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 lock (this._operationLock)
                 {
                     Debug.Assert(
-                        this._operation != null, 
+                        this._operation != null,
                         "Caller should guarantee that this._operation != null OR use CimAsyncCallbacksReceiverBase.InvokeWhenOperationIsSet");
                     return this._operation;
                 }
@@ -137,8 +137,8 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void CallIntoUserCallback(
-            OperationCallbackProcessingContext callbackProcessingContext, 
-            Action userCallback, 
+            OperationCallbackProcessingContext callbackProcessingContext,
+            Action userCallback,
             bool serializeCallbacks = false,
             bool suppressFurtherUserCallbacks = false)
         {
@@ -176,7 +176,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             Debug.Assert(internalError != null, "Caller should make sure internalError != null");
 
             this.InvokeWhenOperationIsSet(
-                delegate(CimOperation cimOperation)
+                delegate (CimOperation cimOperation)
                 {
                     lock (this._suppressFurtherUserCallbacksLock)
                     {
@@ -200,7 +200,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
         public virtual void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
-	    // TODO: Uncomment and fix two lines below
+            // TODO: Uncomment and fix two lines below
             //operationCallbacks.InternalErrorCallback = this.ReportInternalErrorCore;
             //operationCallbacks.ManagedOperationContext = this;
         }

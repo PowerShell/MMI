@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NativeObject
+﻿namespace NativeObject
 {
     public enum MI_Result : uint
     {
@@ -21,7 +15,7 @@ namespace NativeObject
         MI_RESULT_INVALID_NAMESPACE = 3,
 
         /* One or more parameter values passed to the method are not valid. */
-        MI_RESULT_INVALID_PARAMETER  = 4,
+        MI_RESULT_INVALID_PARAMETER = 4,
 
         /* The specified class does not exist. */
         MI_RESULT_INVALID_CLASS = 5,

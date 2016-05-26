@@ -1,22 +1,22 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Internal;
+using NativeObject;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.Management.Infrastructure.Internal;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Serialization
 {
     /// <summary>
     /// Represents an CIM deserializer.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Deserializer", Justification = "Deserializer is a valid word?")]
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deserializer", Justification = "Deserializer is a valid word?")]
     public sealed class CimDeserializer : IDisposable
     {
         private readonly MI_Deserializer _myHandle;
@@ -28,7 +28,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             Debug.Assert(!string.IsNullOrEmpty(format), "Caller should verify that format != null");
 
             MI_Deserializer tmpHandle;
-	    // TODO: Fix MI_SerializerFlags in next line to come from "flags"
+            // TODO: Fix MI_SerializerFlags in next line to come from "flags"
             MI_Result result = CimApplication.Handle.NewDeserializer(MI_SerializerFlags.None, format, out tmpHandle);
             if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
@@ -73,7 +73,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// Offset where to start reading the data.
         /// When the method returns, the offset will be pointing to the next byte after the deserialied instance.
         /// </param>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public CimInstance DeserializeInstance(byte[] serializedData, ref uint offset)
         {
             return this.DeserializeInstance(serializedData, ref offset, null);
@@ -97,27 +97,27 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 nativeClassHandles = cimClasses.Select(cimClass => cimClass.ClassHandle).ToArray();
             }
 
-	    // TODO: Implement this next function
-	    /*
-            UInt32 inputBufferUsed;
-            MI_Instance deserializedInstance;
-            MI_Instance cimError;
-            MI_Result result = this._myHandle.DeserializeInstance(
-                0,
-                serializedData,
-                offset,
-                nativeClassHandles,
-                out deserializedInstance,
-                out inputBufferUsed,
-                out cimError);
-            CimException.ThrowIfMiResultFailure(result, cimError);
-            offset += inputBufferUsed;
+            // TODO: Implement this next function
+            /*
+                UInt32 inputBufferUsed;
+                MI_Instance deserializedInstance;
+                MI_Instance cimError;
+                MI_Result result = this._myHandle.DeserializeInstance(
+                    0,
+                    serializedData,
+                    offset,
+                    nativeClassHandles,
+                    out deserializedInstance,
+                    out inputBufferUsed,
+                    out cimError);
+                CimException.ThrowIfMiResultFailure(result, cimError);
+                offset += inputBufferUsed;
 
-            return deserializedInstance;
-	    */
+                return deserializedInstance;
+            */
 
-	    // TODO: remove this next line once above is fixed
-	    return MI_Instance.NewIndirectPtr();
+            // TODO: remove this next line once above is fixed
+            return MI_Instance.NewIndirectPtr();
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// </param>
         /// <param name="cimClasses">Optional cache of classes... (I can't concisely explain what this does... maybe Paul can...)</param>
         /// <returns>Deserialized CIM instance</returns>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public CimInstance DeserializeInstance(byte[] serializedData, ref uint offset, IEnumerable<CimClass> cimClasses)
         {
             MI_Instance instanceHandle = DeserializeInstanceHandle(serializedData, ref offset, cimClasses);
@@ -146,7 +146,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// When the method returns, the offset will be pointing to the next byte after the deserialied class.
         /// </param>
         /// <returns>Deserialized CIM class</returns>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public CimClass DeserializeClass(byte[] serializedData, ref uint offset)
         {
             return this.DeserializeClass(serializedData, ref offset, null);
@@ -164,31 +164,31 @@ namespace Microsoft.Management.Infrastructure.Serialization
             }
             this.AssertNotDisposed();
 
-	    // TODO: Implement the following function
-	    /*
-            MI_Class nativeClassHandle = parentClass != null ? parentClass.ClassHandle : null;
+            // TODO: Implement the following function
+            /*
+                MI_Class nativeClassHandle = parentClass != null ? parentClass.ClassHandle : null;
 
-            UInt32 inputBufferUsed;
-            MI_Class deserializedClass;
-            MI_Instance cimError;
-            MI_Result result = this._myHandle.DeserializeClass(
-                0,
-                serializedData,
-                offset,
-                nativeClassHandle,
-                computerName,
-                namespaceName,
-                out deserializedClass,
-                out inputBufferUsed,
-                out cimError);
-            CimException.ThrowIfMiResultFailure(result, cimError);
-            offset += inputBufferUsed;
+                UInt32 inputBufferUsed;
+                MI_Class deserializedClass;
+                MI_Instance cimError;
+                MI_Result result = this._myHandle.DeserializeClass(
+                    0,
+                    serializedData,
+                    offset,
+                    nativeClassHandle,
+                    computerName,
+                    namespaceName,
+                    out deserializedClass,
+                    out inputBufferUsed,
+                    out cimError);
+                CimException.ThrowIfMiResultFailure(result, cimError);
+                offset += inputBufferUsed;
 
-            return deserializedClass;
-	    */
+                return deserializedClass;
+            */
 
-	    // TODO: remove next line once above is fixed
-	    return MI_Class.NewIndirectPtr();
+            // TODO: remove next line once above is fixed
+            return MI_Class.NewIndirectPtr();
         }
 
         /// <summary>
@@ -217,15 +217,15 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// </param>
         /// <param name="parentClass">Optional parent class... (I can't concisely explain what this does and why this is needed... maybe Paul can...)</param>
         /// <returns>Deserialized CIM class</returns>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId="1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
+        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public CimClass DeserializeClass(byte[] serializedData, ref uint offset, CimClass parentClass, string computerName, string namespaceName)
         {
             MI_Class classHandle = DeserializeClassHandle(serializedData, ref offset, parentClass, computerName, namespaceName);
             return new CimClass(classHandle);
         }
 
-        /* Deserialize*ClassName is on the bubble 
-          
+        /* Deserialize*ClassName is on the bubble
+
         /// <summary>
         /// Deserializes a class name of a CIM instance
         /// </summary>
@@ -315,10 +315,10 @@ namespace Microsoft.Management.Infrastructure.Serialization
             CimException.ThrowIfMiResultFailure(result, cimError);
             return parentClassName;
         }
-         
+
          */
 
-        #endregion
+        #endregion Methods
 
         #region IDisposable Members
 
@@ -343,7 +343,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             if (disposing)
             {
-		// TODO: Add Delete/Dispose function then uncomment
+                // TODO: Add Delete/Dispose function then uncomment
                 //this._myHandle.Dispose();
             }
 
@@ -360,6 +360,6 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

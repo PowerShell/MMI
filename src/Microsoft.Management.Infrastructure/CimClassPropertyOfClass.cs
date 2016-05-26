@@ -1,12 +1,10 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Collections;
-using Microsoft.Management.Infrastructure.Options.Internal;
 using Microsoft.Management.Infrastructure.Generic;
+using Microsoft.Management.Infrastructure.Options.Internal;
 using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
@@ -26,21 +24,21 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_Value value;
-		bool valueExists;
-		MI_Type type;
-		string referenceClass;
-		MI_QualifierSet qualifierSet;
-		MI_Flags flags;
+                string name;
+                MI_Value value;
+                bool valueExists;
+                MI_Type type;
+                string referenceClass;
+                MI_QualifierSet qualifierSet;
+                MI_Flags flags;
                 MI_Result result = this.classHandle.GetElementAt((uint)index,
-								 out name,
-								 out value,
-								 out valueExists,
-								 out type,
-								 out referenceClass,
-								 out qualifierSet,
-								 out flags);
+                                 out name,
+                                 out value,
+                                 out valueExists,
+                                 out type,
+                                 out referenceClass,
+                                 out qualifierSet,
+                                 out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return name;
             }
@@ -50,21 +48,21 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_Value value;
-		bool valueExists;
-		MI_Type type;
-		string referenceClass;
-		MI_QualifierSet qualifierSet;
-		MI_Flags flags;
+                string name;
+                MI_Value value;
+                bool valueExists;
+                MI_Type type;
+                string referenceClass;
+                MI_QualifierSet qualifierSet;
+                MI_Flags flags;
                 MI_Result result = this.classHandle.GetElementAt((uint)index,
-								 out name,
-								 out value,
-								 out valueExists,
-								 out type,
-								 out referenceClass,
-								 out qualifierSet,
-								 out flags);
+                                 out name,
+                                 out value,
+                                 out valueExists,
+                                 out type,
+                                 out referenceClass,
+                                 out qualifierSet,
+                                 out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return (object)value;
             }
@@ -74,21 +72,21 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_Value value;
-		bool valueExists;
-		MI_Type type;
-		string referenceClass;
-		MI_QualifierSet qualifierSet;
-		MI_Flags flags;
+                string name;
+                MI_Value value;
+                bool valueExists;
+                MI_Type type;
+                string referenceClass;
+                MI_QualifierSet qualifierSet;
+                MI_Flags flags;
                 MI_Result result = this.classHandle.GetElementAt((uint)index,
-								 out name,
-								 out value,
-								 out valueExists,
-								 out type,
-								 out referenceClass,
-								 out qualifierSet,
-								 out flags);
+                                 out name,
+                                 out value,
+                                 out valueExists,
+                                 out type,
+                                 out referenceClass,
+                                 out qualifierSet,
+                                 out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return type.ToCimType();
             }
@@ -98,21 +96,21 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_Value value;
-		bool valueExists;
-		MI_Type type;
-		string referenceClass;
-		MI_QualifierSet qualifierSet;
-		MI_Flags flags;
+                string name;
+                MI_Value value;
+                bool valueExists;
+                MI_Type type;
+                string referenceClass;
+                MI_QualifierSet qualifierSet;
+                MI_Flags flags;
                 MI_Result result = this.classHandle.GetElementAt((uint)index,
-								 out name,
-								 out value,
-								 out valueExists,
-								 out type,
-								 out referenceClass,
-								 out qualifierSet,
-								 out flags);
+                                 out name,
+                                 out value,
+                                 out valueExists,
+                                 out type,
+                                 out referenceClass,
+                                 out qualifierSet,
+                                 out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return flags.ToCimFlags();
             }
@@ -130,21 +128,21 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_Value value;
-		bool valueExists;
-		MI_Type type;
-		string referenceClass;
-		MI_QualifierSet qualifierSet;
-		MI_Flags flags;
+                string name;
+                MI_Value value;
+                bool valueExists;
+                MI_Type type;
+                string referenceClass;
+                MI_QualifierSet qualifierSet;
+                MI_Flags flags;
                 MI_Result result = this.classHandle.GetElementAt((uint)index,
-								 out name,
-								 out value,
-								 out valueExists,
-								 out type,
-								 out referenceClass,
-								 out qualifierSet,
-								 out flags);
+                                 out name,
+                                 out value,
+                                 out valueExists,
+                                 out type,
+                                 out referenceClass,
+                                 out qualifierSet,
+                                 out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return referenceClass;
             }

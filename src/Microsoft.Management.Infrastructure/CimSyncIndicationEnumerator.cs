@@ -1,10 +1,10 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System.Diagnostics;
 using NativeObject;
+using System.Diagnostics;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -15,8 +15,8 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         {
         }
 
-        internal override MI_Result NativeMoveNext(MI_Operation operationHandle, out CimSubscriptionResult currentItem, 
-                    out bool moreResults, out MI_Result operationResult, 
+        internal override MI_Result NativeMoveNext(MI_Operation operationHandle, out CimSubscriptionResult currentItem,
+                    out bool moreResults, out MI_Result operationResult,
             out string errorMessage, out MI_Instance errorDetailsHandle)
         {
             Debug.Assert(operationHandle != null, "Caller should verify operationHandle != null");

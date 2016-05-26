@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -20,7 +20,7 @@ namespace Microsoft.Management.Infrastructure.Generic
     /// Results of an operation are asynchronously communicated to the observer passed to the <see cref="Subscribe"/> method.
     /// </para>
     /// <para>
-    /// See <see cref="IObservable&lt;T&gt;"/>  and <see cref="IObserver&lt;T&gt;"/> for more details 
+    /// See <see cref="IObservable&lt;T&gt;"/>  and <see cref="IObserver&lt;T&gt;"/> for more details
     /// about the asynchronous pattern exposed by this class.
     /// </para>
     /// </summary>
@@ -57,6 +57,6 @@ namespace Microsoft.Management.Infrastructure.Generic
             return this._wrappedObservable.Subscribe(observer);
         }
 
-        #endregion
+        #endregion IObservable<T> Members
     }
 }

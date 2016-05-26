@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NativeObject
+﻿namespace NativeObject
 {
     public class MI_TypeFlags
     {
-        /* MI_ARRAY is not an actual type, rather this is the bit that signifies 
+        /* MI_ARRAY is not an actual type, rather this is the bit that signifies
          * the type is an array */
         public const MI_Type MI_ARRAY = (MI_Type)16;
     }

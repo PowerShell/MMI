@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NativeObject
 {
     using System.Runtime.InteropServices;
+
     public class MI_PlatformSpecific
     {
 #if !_LINUX
@@ -25,6 +22,7 @@ namespace NativeObject
         {
             return Marshal.StringToHGlobalUni(str);
         }
+
 #else
         public const UnmanagedType AppropriateStringType = UnmanagedType.LPStr;
         public const CharSet AppropriateCharSet = CharSet.Ansi;

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NativeObject
 {
@@ -18,7 +14,7 @@ namespace NativeObject
         {
             public IntPtr data;
         }
-        
+
         [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         public class MI_ValueLayout
         {
@@ -373,7 +369,12 @@ namespace NativeObject
         }
 
         public static int MI_ValueSize = Marshal.SizeOf<MI_ValueLayout>();
-        public static MI_Value NewDirectPtr() { return new MI_Value(); }
+
+        public static MI_Value NewDirectPtr()
+        {
+            return new MI_Value();
+        }
+
         public static MI_Value Null { get { return null; } }
         public MI_Type? Type { get { return this.type; } }
 
@@ -389,6 +390,7 @@ namespace NativeObject
                 this.type = null;
             }
         }
+
         public byte Uint8
         {
             get
@@ -1259,68 +1261,100 @@ namespace NativeObject
             {
                 case MI_Type.MI_BOOLEAN:
                     return this.Boolean;
+
                 case MI_Type.MI_UINT8:
                     return this.Uint8;
+
                 case MI_Type.MI_SINT8:
                     return this.Sint8;
+
                 case MI_Type.MI_UINT16:
                     return this.Uint16;
+
                 case MI_Type.MI_SINT16:
                     return this.Sint16;
+
                 case MI_Type.MI_UINT32:
                     return this.Uint32;
+
                 case MI_Type.MI_SINT32:
                     return this.Sint32;
+
                 case MI_Type.MI_UINT64:
                     return this.Uint64;
+
                 case MI_Type.MI_SINT64:
                     return this.Sint64;
+
                 case MI_Type.MI_REAL32:
                     return this.Real32;
+
                 case MI_Type.MI_REAL64:
                     return this.Real64;
+
                 case MI_Type.MI_CHAR16:
                     return this.Char16;
+
                 case MI_Type.MI_DATETIME:
                     return this.Datetime;
+
                 case MI_Type.MI_STRING:
                     return this.String;
+
                 case MI_Type.MI_REFERENCE:
                     return this.Reference;
+
                 case MI_Type.MI_INSTANCE:
                     return this.Instance;
+
                 case MI_Type.MI_BOOLEANA:
                     return this.BooleanA;
+
                 case MI_Type.MI_UINT8A:
                     return this.Uint8A;
+
                 case MI_Type.MI_SINT8A:
                     return this.Sint8A;
+
                 case MI_Type.MI_UINT16A:
                     return this.Uint16A;
+
                 case MI_Type.MI_SINT16A:
                     return this.Sint16A;
+
                 case MI_Type.MI_UINT32A:
                     return this.Uint32A;
+
                 case MI_Type.MI_SINT32A:
                     return this.Sint32A;
+
                 case MI_Type.MI_UINT64A:
                     return this.Uint64A;
+
                 case MI_Type.MI_SINT64A:
                     return this.Sint64A;
+
                 case MI_Type.MI_REAL32A:
                     return this.Real32A;
+
                 case MI_Type.MI_REAL64A:
                     return this.Real64A;
+
                 case MI_Type.MI_CHAR16A:
                     return this.Char16A;
+
                 case MI_Type.MI_DATETIMEA:
                     return this.DatetimeA;
+
                 case MI_Type.MI_STRINGA:
                     return this.StringA;
+
                 case MI_Type.MI_REFERENCEA:
                     return this.ReferenceA;
+
                 case MI_Type.MI_INSTANCEA:
                     return this.InstanceA;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

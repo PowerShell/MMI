@@ -1,13 +1,11 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using Microsoft.Management.Infrastructure.Internal;
 using NativeObject;
+using System;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -15,7 +13,7 @@ namespace Microsoft.Management.Infrastructure.Options
     /// Represents options of <see cref="CimSubscriptionDelivery"/>
     /// </summary>
     public class CimSubscriptionDeliveryOptions : IDisposable
-#if(!_CORECLR)
+#if (!_CORECLR)
         //
         // Only implement these interfaces on FULL CLR and not Core CLR
         //
@@ -25,8 +23,9 @@ namespace Microsoft.Management.Infrastructure.Options
         #region Constructors
 
         private MI_SubscriptionDeliveryOptions _subscriptionDeliveryOptionsHandle;
-        internal MI_SubscriptionDeliveryOptions SubscriptionDeliveryOptionsHandle 
-        { 
+
+        internal MI_SubscriptionDeliveryOptions SubscriptionDeliveryOptionsHandle
+        {
             get
             {
                 this.AssertNotDisposed();
@@ -52,7 +51,6 @@ namespace Microsoft.Management.Infrastructure.Options
 
         private void Initialize(CimSubscriptionDeliveryType types)
         {
-
             MI_SubscriptionDeliveryOptions tmp;
             MI_Result result = CimApplication.Handle.NewSubscriptionDeliveryOptions((MI_SubscriptionDeliveryType)types, out tmp);
             CimException.ThrowIfMiResultFailure(result);
@@ -75,6 +73,7 @@ namespace Microsoft.Management.Infrastructure.Options
             CimException.ThrowIfMiResultFailure(result);
             this._subscriptionDeliveryOptionsHandle = tmp;
         }
+
         #endregion Constructors
 
         #region Options
@@ -84,7 +83,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         /// <param name="optionName"></param>
         /// <param name="optionValue"></param>
-        /// <param name="flags"></param>        
+        /// <param name="flags"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionName"/> is <c>null</c></exception>
         public void SetString(string optionName, string optionValue, UInt32 flags)
         {
@@ -103,7 +102,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         /// <param name="optionName"></param>
         /// <param name="optionValue"></param>
-        /// <param name="flags"></param>           
+        /// <param name="flags"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionName"/> is <c>null</c></exception>
         public void SetNumber(string optionName, UInt32 optionValue, UInt32 flags)
         {
@@ -122,7 +121,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         /// <param name="optionName"></param>
         /// <param name="optionValue"></param>
-        /// <param name="flags"></param>           
+        /// <param name="flags"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionName"/> is <c>null</c></exception>
         public void SetDateTime(string optionName, DateTime optionValue, UInt32 flags)
         {
@@ -132,7 +131,7 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-	    MI_Datetime dt = new MI_Datetime(optionValue);
+            MI_Datetime dt = new MI_Datetime(optionValue);
             MI_Result result = this._subscriptionDeliveryOptionsHandle.SetDateTime(optionName, dt, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
@@ -142,7 +141,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         /// <param name="optionName"></param>
         /// <param name="optionValue"></param>
-        /// <param name="flags"></param>           
+        /// <param name="flags"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionName"/> is <c>null</c></exception>
         public void SetDateTime(string optionName, TimeSpan optionValue, UInt32 flags)
         {
@@ -152,7 +151,7 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-	    MI_Datetime dt = new MI_Datetime(optionValue);
+            MI_Datetime dt = new MI_Datetime(optionValue);
             MI_Result result = this._subscriptionDeliveryOptionsHandle.SetDateTime(optionName, dt, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
@@ -162,7 +161,7 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         /// <param name="optionName"></param>
         /// <param name="optionValue"></param>
-        /// <param name="flags"></param>           
+        /// <param name="flags"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionName"/> is <c>null</c></exception>
         public void SetInterval(string optionName, TimeSpan optionValue, UInt32 flags)
         {
@@ -172,36 +171,36 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-	    // TODO: convert optionValue to MI_Interval
-	    MI_Interval interval;
-	    interval.days = interval.hours = interval.minutes = interval.seconds = interval.microseconds = interval.__padding1 = interval.__padding2 = interval.__padding3 = 0;
+            // TODO: convert optionValue to MI_Interval
+            MI_Interval interval;
+            interval.days = interval.hours = interval.minutes = interval.seconds = interval.microseconds = interval.__padding1 = interval.__padding2 = interval.__padding3 = 0;
             MI_Result result = this._subscriptionDeliveryOptionsHandle.SetInterval(optionName, interval, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
+
         /// <summary>
         /// AddCredentials
         /// </summary>
         /// <param name="optionName"></param>
         /// <param name="optionValue"></param>
-        /// <param name="flags"></param>           
+        /// <param name="flags"></param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="optionName"/> is <c>null</c></exception>
         public void AddCredentials(string optionName, CimCredential optionValue, UInt32 flags)
         {
             if (string.IsNullOrWhiteSpace(optionName) || optionValue == null)
             {
                 throw new ArgumentNullException("optionName");
-            }   
-            if( optionValue == null )
+            }
+            if (optionValue == null)
             {
                 throw new ArgumentNullException("optionValue");
             }
             this.AssertNotDisposed();
-	    
-	    // TODO: Implement this
+
+            // TODO: Implement this
             //MI_Result result = this._subscriptionDeliveryOptionsHandle.SubscriptionDeliveryOptionsMethods.AddCredentials(optionName, optionValue.GetCredential(), flags);
             //CimException.ThrowIfMiResultFailure(result);
-        }        
-
+        }
 
         #endregion Options
 
@@ -245,18 +244,20 @@ namespace Microsoft.Management.Infrastructure.Options
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
 
         #region ICloneable Members
 
 #if(!_CORECLR)
+
         object ICloneable.Clone()
         {
             return new CimSubscriptionDeliveryOptions(this);
         }
+
 #endif // !_CORECLR
 
-        #endregion
+        #endregion ICloneable Members
     }
 }
 
@@ -270,4 +271,3 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
         }
     }
 }
-

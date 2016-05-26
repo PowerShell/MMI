@@ -1,11 +1,11 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -53,9 +53,9 @@ namespace Microsoft.Management.Infrastructure.Options
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct copy of the native flags enum (which has zero as one of the members.")]
     public enum CimWriteMessageChannel : int
     {
-        Warning = (int)  MI_WriteMessageChannel.Warning,
-        Verbose = (int)  MI_WriteMessageChannel.Verbose,
-        Debug = (int)    MI_WriteMessageChannel.Debug,
+        Warning = (int)MI_WriteMessageChannel.Warning,
+        Verbose = (int)MI_WriteMessageChannel.Verbose,
+        Debug = (int)MI_WriteMessageChannel.Debug,
     };
 
     /// <summary>
@@ -87,4 +87,3 @@ namespace Microsoft.Management.Infrastructure.Options
     /// <value></value>
     public delegate CimResponseType PromptUserCallback(string message, CimPromptType promptType);
 }
-

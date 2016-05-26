@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -38,6 +38,6 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             return EmptyDisposable.Singleton;
         }
 
-        #endregion
+        #endregion IObservable<T> Members
     }
 }

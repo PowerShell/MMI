@@ -1,12 +1,12 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -34,7 +34,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
         public T Current { get; private set; }
 
-        #endregion
+        #endregion IEnumerator<CimInstance> Members
 
         #region IDisposable Members
 
@@ -93,7 +93,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private bool _disposed;
         private readonly object _disposeThreadSafetyLock = new object();
 
-        #endregion
+        #endregion IDisposable Members
 
         #region IEnumerator Members
 
@@ -190,7 +190,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             throw new NotSupportedException();
         }
 
-        #endregion
+        #endregion IEnumerator Members
 
         private Exception _internalErrorWhileProcessingAsyncCallback;
         private readonly object _internalErrorWhileProcessingAsyncCallbackLock = new object();

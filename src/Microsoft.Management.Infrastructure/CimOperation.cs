@@ -1,13 +1,12 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -15,7 +14,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
     // 1) a thread that calls
     //      1a) CimOperation.Cancel (called via CancellationToken or via IDisposable from IObservable.Subscribe)
     // and
-    // 2) a thread that does the main processing: 
+    // 2) a thread that does the main processing:
     //      2a) CimOperation.Close
     //      2b) Native.OperationMethods.GetInstance/GetClassName/...
     internal class CimOperation : IDisposable
@@ -48,6 +47,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 }
             }
         }
+
         private CancellationMode _cancellationMode = CancellationMode.NoCancellationOccured;
 
         internal void Cancel(CancellationMode cancellationMode)
@@ -115,7 +115,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
             if (disposing)
             {
-		// TODO: do we need to call Delete/Dispose here? Looks like it is freed on destruction in MI_Operation
+                // TODO: do we need to call Delete/Dispose here? Looks like it is freed on destruction in MI_Operation
                 //this._handle.Delete();
 
                 if (this._cancellationTokenRegistration != null)
@@ -138,6 +138,6 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

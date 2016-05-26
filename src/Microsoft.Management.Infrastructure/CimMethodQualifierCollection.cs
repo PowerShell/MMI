@@ -1,13 +1,12 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Generic;
+using NativeObject;
 using System;
 using System.Collections.Generic;
-using Microsoft.Management.Infrastructure.Generic;
-using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -26,18 +25,18 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_QualifierSet qualifierSet;
-		MI_ParameterSet parameterSet;
+                string name;
+                MI_QualifierSet qualifierSet;
+                MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
-								out name,
-								out qualifierSet,
-								out parameterSet);
-		CimException.ThrowIfMiResultFailure(result);
+                                out name,
+                                out qualifierSet,
+                                out parameterSet);
+                CimException.ThrowIfMiResultFailure(result);
 
-		UInt32 count;
-		result = qualifierSet.GetQualifierCount(out count);
-		CimException.ThrowIfMiResultFailure(result);
+                UInt32 count;
+                result = qualifierSet.GetQualifierCount(out count);
+                CimException.ThrowIfMiResultFailure(result);
 
                 return (int)count;
             }
@@ -52,24 +51,24 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("methodName");
                 }
 
-		string name;
-		MI_QualifierSet qualifierSet;
-		MI_ParameterSet parameterSet;
+                string name;
+                MI_QualifierSet qualifierSet;
+                MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
-								out name,
-								out qualifierSet,
-								out parameterSet);
-		CimException.ThrowIfMiResultFailure(result);
+                                out name,
+                                out qualifierSet,
+                                out parameterSet);
+                CimException.ThrowIfMiResultFailure(result);
 
-		MI_Type qualifierType;
-		MI_Flags qualifierFlags;
-		MI_Value qualifierValue;
-		UInt32 index;
-		result = qualifierSet.GetQualifier(name,
-						   out qualifierType,
-						   out qualifierFlags,
-						   out qualifierValue,
-						   out index);
+                MI_Type qualifierType;
+                MI_Flags qualifierFlags;
+                MI_Value qualifierValue;
+                UInt32 index;
+                result = qualifierSet.GetQualifier(name,
+                                   out qualifierType,
+                                   out qualifierFlags,
+                                   out qualifierValue,
+                                   out index);
 
                 switch (result)
                 {

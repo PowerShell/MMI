@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace NativeObject
@@ -51,6 +47,7 @@ namespace NativeObject
             value = valueLocal;
             return resultLocal;
         }
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_OperationOptionsMembers
         {
@@ -61,6 +58,7 @@ namespace NativeObject
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_OperationOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_OperationOptionsMembers>("ft");
+
         private static int MI_OperationOptionsMembersSize = Marshal.SizeOf<MI_OperationOptionsMembers>();
 
         private MI_OperationOptionsPtr ptr;
@@ -118,7 +116,7 @@ namespace NativeObject
         public static implicit operator MI_OperationOptionsOutPtr(MI_OperationOptions instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
+            // of our direct pointer, though it is technically feasible
             if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
@@ -129,6 +127,7 @@ namespace NativeObject
 
         public static MI_OperationOptions Null { get { return null; } }
         public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         public IntPtr Ptr
         {
             get
@@ -314,6 +313,7 @@ namespace NativeObject
         }
 
         private MI_OperationOptionsFT ft { get { return this.mft.Value; } }
+
         private MI_OperationOptionsFT MarshalFT()
         {
             MI_OperationOptionsFT res = new MI_OperationOptionsFT();

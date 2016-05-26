@@ -1,17 +1,16 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Generic;
+using NativeObject;
 using System;
 using System.Collections.Generic;
-using Microsoft.Management.Infrastructure.Generic;
-using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
-    internal class CimClassQualifierCollection: CimReadOnlyKeyedCollection<CimQualifier>
+    internal class CimClassQualifierCollection : CimReadOnlyKeyedCollection<CimQualifier>
     {
         private readonly MI_Class classHandle;
 
@@ -24,13 +23,12 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-
-		MI_QualifierSet qualifierSet;
-		MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
+                MI_QualifierSet qualifierSet;
+                MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
                 CimException.ThrowIfMiResultFailure(result);
-		
-		UInt32 count;
-		result = qualifierSet.GetQualifierCount(out count);
+
+                UInt32 count;
+                result = qualifierSet.GetQualifierCount(out count);
                 CimException.ThrowIfMiResultFailure(result);
 
                 return (int)count;
@@ -46,22 +44,22 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("qualifierName");
                 }
 
-		MI_QualifierSet qualifierSet;
-		MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
+                MI_QualifierSet qualifierSet;
+                MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
                 CimException.ThrowIfMiResultFailure(result);
-		// TODO: there aren't many comments for the above pattern throughout the MMI sources, but if the above fails we shouldn't throw exception, just return MI_RESULT_NOT_FOUND like below. Make sure all of these cases are accounted for in MMI
-		
-		MI_Type qualifierType;
-		MI_Flags qualifierFlags;
-		MI_Value qualifierValue;
-		UInt32 index;
+                // TODO: there aren't many comments for the above pattern throughout the MMI sources, but if the above fails we shouldn't throw exception, just return MI_RESULT_NOT_FOUND like below. Make sure all of these cases are accounted for in MMI
 
-		result = qualifierSet.GetQualifier(qualifierName,
-							out qualifierType,
-							out qualifierFlags,
-							out qualifierValue,
-							out index);
-							
+                MI_Type qualifierType;
+                MI_Flags qualifierFlags;
+                MI_Value qualifierValue;
+                UInt32 index;
+
+                result = qualifierSet.GetQualifier(qualifierName,
+                                    out qualifierType,
+                                    out qualifierFlags,
+                                    out qualifierValue,
+                                    out index);
+
                 switch (result)
                 {
                     case MI_Result.MI_RESULT_NOT_FOUND:

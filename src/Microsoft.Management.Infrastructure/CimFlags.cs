@@ -1,11 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -78,7 +78,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
     {
         public static CimFlags ToCimFlags(this MI_Flags miFlags)
         {
-            return (CimFlags) miFlags;
+            return (CimFlags)miFlags;
         }
     }
 }

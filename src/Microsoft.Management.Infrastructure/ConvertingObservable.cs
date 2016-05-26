@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -28,6 +28,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private class ConvertingObserverProxy : IObserver<TWrappedType>
         {
             private readonly IObserver<TTargetType> _targetObserver;
+
             internal ConvertingObserverProxy(IObserver<TTargetType> targetObserver)
             {
                 Debug.Assert(targetObserver != null, "targetObserver != null");

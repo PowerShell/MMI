@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace NativeObject
@@ -74,6 +70,7 @@ namespace NativeObject
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ApplicationMembersFTOffset = (int)Marshal.OffsetOf<MI_ApplicationMembers>("ft");
+
         private static int MI_ApplicationMembersSize = Marshal.SizeOf<MI_ApplicationMembers>();
 
         private MI_ApplicationPtr ptr;
@@ -131,7 +128,7 @@ namespace NativeObject
         public static implicit operator MI_ApplicationOutPtr(MI_Application instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
+            // of our direct pointer, though it is technically feasible
             if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
@@ -142,6 +139,7 @@ namespace NativeObject
 
         public static MI_Application Null { get { return null; } }
         public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         public IntPtr Ptr
         {
             get
@@ -304,6 +302,7 @@ namespace NativeObject
         }
 
         private MI_ApplicationFT ft { get { return this.mft.Value; } }
+
         private MI_ApplicationFT MarshalFT()
         {
             MI_ApplicationFT res = new MI_ApplicationFT();

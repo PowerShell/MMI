@@ -1,24 +1,18 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.Serialization;
 using Microsoft.Management.Infrastructure.Generic;
-using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
-using System.Diagnostics.CodeAnalysis;
 using NativeObject;
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace Microsoft.Management.Infrastructure
 {
-
     /// <summary>
     /// Represents an CIM Class.
     /// </summary>
@@ -26,7 +20,8 @@ namespace Microsoft.Management.Infrastructure
     {
         private CimSystemProperties _systemProperties = null;
         private MI_Class _classHandle;
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] 
+
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal MI_Class ClassHandle
         {
             get
@@ -50,7 +45,7 @@ namespace Microsoft.Management.Infrastructure
         #region Properties
 
         /// <summary>
-        /// Name of the Super CIM class 
+        /// Name of the Super CIM class
         /// </summary>
         public string CimSuperClassName
         {
@@ -68,9 +63,9 @@ namespace Microsoft.Management.Infrastructure
                     default:
                         CimException.ThrowIfMiResultFailure(result);
                         return tmp;
-                }                
+                }
             }
-        }        
+        }
 
         /// <summary>
         /// Super class schema
@@ -91,9 +86,9 @@ namespace Microsoft.Management.Infrastructure
                     default:
                         CimException.ThrowIfMiResultFailure(result);
                         return new CimClass(tmp);
-                }                
+                }
             }
-        }        
+        }
 
         /// <summary>
         /// Properties of this CimClass
@@ -105,7 +100,7 @@ namespace Microsoft.Management.Infrastructure
                 this.AssertNotDisposed();
                 return new CimClassPropertiesCollection(this._classHandle);
             }
-        }        
+        }
 
         /// <summary>
         /// Qualifiers of this CimClass
@@ -117,7 +112,7 @@ namespace Microsoft.Management.Infrastructure
                 this.AssertNotDisposed();
                 return new CimClassQualifierCollection(this._classHandle);
             }
-        }        
+        }
 
         /// <summary>
         /// Qualifiers of this CimClass
@@ -129,7 +124,7 @@ namespace Microsoft.Management.Infrastructure
                 this.AssertNotDisposed();
                 return new CimMethodDeclarationCollection(this._classHandle);
             }
-        }        
+        }
 
         /// <summary>
         /// System Properties of this CimInstance
@@ -139,7 +134,7 @@ namespace Microsoft.Management.Infrastructure
             get
             {
                 this.AssertNotDisposed();
-                if(_systemProperties == null) 
+                if (_systemProperties == null)
                 {
                     CimSystemProperties tmpSystemProperties = new CimSystemProperties();
 
@@ -153,21 +148,21 @@ namespace Microsoft.Management.Infrastructure
                     result = this._classHandle.GetClassName(out tmpClassName);
                     CimException.ThrowIfMiResultFailure(result);
 
-                    //Namespace 
+                    //Namespace
                     string tmpNamespace;
                     result = this._classHandle.GetNameSpace(out tmpNamespace);
                     CimException.ThrowIfMiResultFailure(result);
                     tmpSystemProperties.UpdateCimSystemProperties(tmpNamespace, tmpComputerName, tmpClassName);
 
                     //Path
-                    tmpSystemProperties.UpdateSystemPath(CimInstance.GetCimSystemPath(tmpSystemProperties, null));                    
+                    tmpSystemProperties.UpdateSystemPath(CimInstance.GetCimSystemPath(tmpSystemProperties, null));
                     _systemProperties = tmpSystemProperties;
                 }
                 return _systemProperties;
             }
-        }          
+        }
 
-        #endregion
+        #endregion Properties
 
         #region IDisposable Members
 
@@ -209,13 +204,13 @@ namespace Microsoft.Management.Infrastructure
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
 
         public override int GetHashCode()
         {
-	    // TODO: implement this function?
+            // TODO: implement this function?
             //return this.ClassHandle.GetClassHashCode();
-	    return 0;
+            return 0;
         }
 
         public override bool Equals(object obj)

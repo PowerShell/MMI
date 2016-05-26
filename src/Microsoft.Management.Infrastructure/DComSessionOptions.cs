@@ -1,11 +1,10 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using Microsoft.Management.Infrastructure.Options.Internal;
 using NativeObject;
+using System;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -44,25 +43,25 @@ namespace Microsoft.Management.Infrastructure.Options
 
                 bool packetPrivacy = value;
 
-		UInt32 packetPrivacyInt = packetPrivacy == true ? (uint)1 : (uint)0;
-		MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber("__MI_DESTINATIONOPTIONS_PACKET_PRIVACY",
-										   packetPrivacyInt,
-										   MI_DestinationOptionsFlags.Unused);
+                UInt32 packetPrivacyInt = packetPrivacy == true ? (uint)1 : (uint)0;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber("__MI_DESTINATIONOPTIONS_PACKET_PRIVACY",
+                                                   packetPrivacyInt,
+                                                   MI_DestinationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
 
-		UInt32 packetPrivacyInt;
-		UInt32 index;
-		MI_DestinationOptionsFlags flags;
-		MI_Result result = this.DestinationOptionsHandleOnDemand.GetNumber("__MI_DESTINATIONOPTIONS_PACKET_PRIVACY",
-										   out packetPrivacyInt,
-										   out index,
-										   out flags);
+                UInt32 packetPrivacyInt;
+                UInt32 index;
+                MI_DestinationOptionsFlags flags;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.GetNumber("__MI_DESTINATIONOPTIONS_PACKET_PRIVACY",
+                                                   out packetPrivacyInt,
+                                                   out index,
+                                                   out flags);
                 CimException.ThrowIfMiResultFailure(result);
-		bool packetPrivacyBool = packetPrivacyInt == 1 ? true : false;
+                bool packetPrivacyBool = packetPrivacyInt == 1 ? true : false;
                 return packetPrivacyBool;
             }
         }
@@ -79,26 +78,26 @@ namespace Microsoft.Management.Infrastructure.Options
 
                 bool packetIntegrity = value;
 
-		UInt32 packetIntegrityInt = packetIntegrity == true ? (uint)1 : (uint)0;
-		MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber("__MI_DESTINATIONOPTIONS_PACKET_INTEGRITY",
-										   packetIntegrityInt,
-										   MI_DestinationOptionsFlags.Unused);
+                UInt32 packetIntegrityInt = packetIntegrity == true ? (uint)1 : (uint)0;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber("__MI_DESTINATIONOPTIONS_PACKET_INTEGRITY",
+                                                   packetIntegrityInt,
+                                                   MI_DestinationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
 
-		UInt32 packetIntegrityInt;
-		UInt32 index;
-		MI_DestinationOptionsFlags flags;
-		MI_Result result = this.DestinationOptionsHandleOnDemand.GetNumber("__MI_DESTINATIONOPTIONS_PACKET_INTEGRITY",
-										   out packetIntegrityInt,
-										   out index,
-										   out flags);
+                UInt32 packetIntegrityInt;
+                UInt32 index;
+                MI_DestinationOptionsFlags flags;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.GetNumber("__MI_DESTINATIONOPTIONS_PACKET_INTEGRITY",
+                                                   out packetIntegrityInt,
+                                                   out index,
+                                                   out flags);
                 CimException.ThrowIfMiResultFailure(result);
-		bool packetIntegrityBool = packetIntegrityInt == 1 ? true : false;
-                return packetIntegrityBool;		
+                bool packetIntegrityBool = packetIntegrityInt == 1 ? true : false;
+                return packetIntegrityBool;
             }
         }
 
@@ -112,24 +111,24 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
 
-		MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber("__MI_DESTINATIONOPTIONS_IMPERSONATION_TYPE",
-										   (uint)value,
-										   MI_DestinationOptionsFlags.Unused);
+                MI_Result result = this.DestinationOptionsHandleOnDemand.SetNumber("__MI_DESTINATIONOPTIONS_IMPERSONATION_TYPE",
+                                                   (uint)value,
+                                                   MI_DestinationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
 
-		UInt32 impersonationType;
-		UInt32 index;
-		MI_DestinationOptionsFlags flags;
-		MI_Result result = this.DestinationOptionsHandleOnDemand.GetNumber("__MI_DESTINATIONOPTIONS_IMPERSONATION_TYPE",
-										   out impersonationType,
-										   out index,
-										   out flags);
+                UInt32 impersonationType;
+                UInt32 index;
+                MI_DestinationOptionsFlags flags;
+                MI_Result result = this.DestinationOptionsHandleOnDemand.GetNumber("__MI_DESTINATIONOPTIONS_IMPERSONATION_TYPE",
+                                                   out impersonationType,
+                                                   out index,
+                                                   out flags);
                 CimException.ThrowIfMiResultFailure(result);
-		return (ImpersonationType)impersonationType;
+                return (ImpersonationType)impersonationType;
             }
         }
     }

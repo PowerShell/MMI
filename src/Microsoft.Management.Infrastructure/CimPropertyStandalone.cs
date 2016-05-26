@@ -1,12 +1,12 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Collections;
 using System.Diagnostics;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -24,6 +24,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         }
 
         private readonly string _name;
+
         public override string Name
         {
             get
@@ -33,6 +34,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         }
 
         private object _value;
+
         public override object Value
         {
             get
@@ -68,6 +70,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         }
 
         private readonly CimType _cimType;
+
         public override CimType CimType
         {
             get
@@ -77,6 +80,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         }
 
         private CimFlags _flags;
+
         public override CimFlags Flags
         {
             get

@@ -1,9 +1,8 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
 
@@ -33,7 +32,7 @@ namespace Microsoft.Management.Infrastructure
         /// </para>
         /// </summary>
         /// <exception cref="ArgumentException">Thrown by the property setter, when the value doesn't match <see cref="CimMethodParameter.CimType"/></exception>
-        public abstract object Value { get; set;  }
+        public abstract object Value { get; set; }
 
         /// <summary>
         /// CIM type of the parameter
@@ -46,7 +45,7 @@ namespace Microsoft.Management.Infrastructure
         public abstract CimFlags Flags { get; }
 
         /// <summary>
-        /// Creates a new parameter. 
+        /// Creates a new parameter.
         /// This method overload tries to infer <see cref="CimType"/> from the property <paramref name="value"/>
         /// </summary>
         /// <param name="name">Name of the parameter</param>
@@ -62,7 +61,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         /// <summary>
-        /// Creates a new parameter. 
+        /// Creates a new parameter.
         /// </summary>
         /// <param name="name">Name of the parameter</param>
         /// <param name="value">Value of the parameter.  <c>null</c> is the parameter doesn't have an associated value.</param>

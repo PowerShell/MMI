@@ -1,16 +1,16 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using NativeObject;
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -18,7 +18,7 @@ namespace Microsoft.Management.Infrastructure.Options
     /// Represents options of a CIM operation.
     /// </summary>
     public class CimOperationOptions : IDisposable
-#if(!_CORECLR)
+#if (!_CORECLR)
         //
         // Only implement these interfaces on FULL CLR and not Core CLR
         //
@@ -26,6 +26,7 @@ namespace Microsoft.Management.Infrastructure.Options
 #endif
     {
         private readonly Lazy<MI_OperationOptions> _operationOptionsHandle;
+
         private MI_OperationOptions OperationOptionsHandleOnDemand
         {
             get
@@ -34,6 +35,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 return this._operationOptionsHandle.Value;
             }
         }
+
         internal MI_OperationOptions OperationOptionsHandle
         {
             get
@@ -47,6 +49,7 @@ namespace Microsoft.Management.Infrastructure.Options
         }
 
         private readonly MI_OperationCallbacks _operationCallback;
+
         internal MI_OperationCallbacks OperationCallback
         {
             get
@@ -56,7 +59,6 @@ namespace Microsoft.Management.Infrastructure.Options
             }
         }
 
-        
         /// <summary>
         /// Creates a new <see cref="CimOperationOptions"/> instance (where the server has to understand all the options).
         /// </summary>
@@ -114,6 +116,7 @@ namespace Microsoft.Management.Infrastructure.Options
                         return tmp;
                     });
         }
+
         /// <summary>
         /// Sets operation timeout
         /// </summary>
@@ -123,23 +126,23 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-		MI_Interval interval = value;
+                MI_Interval interval = value;
 
                 MI_Result result = this.OperationOptionsHandleOnDemand.SetInterval("__MI_OPERATIONOPTIONS_TIMEOUT",
-										   interval,
-										   MI_OperationOptionsFlags.Unused);
+                                           interval,
+                                           MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
-		MI_Interval value;
-		UInt32 index;
-		MI_OperationOptionsFlags flags;
+                MI_Interval value;
+                UInt32 index;
+                MI_OperationOptionsFlags flags;
                 MI_Result result = this.OperationOptionsHandleOnDemand.GetInterval("__MI_OPERATIONOPTIONS_TIMEOUT",
-										   out value,
-										   out index,
-										   out flags);
+                                           out value,
+                                           out index,
+                                           out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 TimeSpan tempTimeout = value;
                 return tempTimeout;
@@ -161,28 +164,28 @@ namespace Microsoft.Management.Infrastructure.Options
                 this.AssertNotDisposed();
 
                 MI_Result result = this.OperationOptionsHandleOnDemand.SetString("__MI_OPERATIONOPTIONS_RESOURCE_URI_PREFIX",
-										 value.ToString(),
-										 MI_OperationOptionsFlags.Unused);
+                                         value.ToString(),
+                                         MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
             get
             {
                 this.AssertNotDisposed();
-		string value;
-		UInt32 index;
-		MI_OperationOptionsFlags flags;
+                string value;
+                UInt32 index;
+                MI_OperationOptionsFlags flags;
                 MI_Result result = this.OperationOptionsHandleOnDemand.GetString("__MI_OPERATIONOPTIONS_RESOURCE_URI_PREFIX",
-										 out value,
-										 out index,
-										 out flags);
+                                         out value,
+                                         out index,
+                                         out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return new Uri(value);
             }
         }
 
         /// <summary>
-        /// Sets resource URI 
+        /// Sets resource URI
         /// </summary>
         /// <value></value>
         public Uri ResourceUri
@@ -196,29 +199,26 @@ namespace Microsoft.Management.Infrastructure.Options
                 this.AssertNotDisposed();
 
                 MI_Result result = this.OperationOptionsHandleOnDemand.SetString("__MI_OPERATIONOPTIONS_RESOURCE_URI",
-										 value.ToString(),
-										 MI_OperationOptionsFlags.Unused);
+                                         value.ToString(),
+                                         MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
-
             }
 
             get
             {
                 this.AssertNotDisposed();
 
-		string value;
-		UInt32 index;
-		MI_OperationOptionsFlags flags;
+                string value;
+                UInt32 index;
+                MI_OperationOptionsFlags flags;
                 MI_Result result = this.OperationOptionsHandleOnDemand.GetString("__MI_OPERATIONOPTIONS_RESOURCE_URI",
-										 out value,
-										 out index,
-										 out flags);
+                                         out value,
+                                         out index,
+                                         out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return new Uri(value);
             }
-        }        
-
- 
+        }
 
         /// <summary>
         /// Sets whether to use machine ID
@@ -229,10 +229,10 @@ namespace Microsoft.Management.Infrastructure.Options
             set
             {
                 this.AssertNotDisposed();
-		UInt32 number = value ? (uint)1 : (uint)0;
+                UInt32 number = value ? (uint)1 : (uint)0;
                 MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber("__MI_OPERATIONOPTIONS_USE_MACHINE_ID",
-										 number,
-										 MI_OperationOptionsFlags.Unused);
+                                         number,
+                                         MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
 
@@ -240,15 +240,15 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 this.AssertNotDisposed();
                 bool tmp;
-		UInt32 value;
-		UInt32 index;
-		MI_OperationOptionsFlags flags;
+                UInt32 value;
+                UInt32 index;
+                MI_OperationOptionsFlags flags;
                 MI_Result result = this.OperationOptionsHandleOnDemand.GetNumber("__MI_OPERATIONOPTIONS_USE_MACHINE_ID",
-										 out value,
-										 out index,
-										 out flags);
+                                         out value,
+                                         out index,
+                                         out flags);
                 CimException.ThrowIfMiResultFailure(result);
-		tmp = value == 1 ? true : false;
+                tmp = value == 1 ? true : false;
                 return tmp;
             }
         }
@@ -268,8 +268,8 @@ namespace Microsoft.Management.Infrastructure.Options
             this.AssertNotDisposed();
 
             MI_Result result = this.OperationOptionsHandleOnDemand.SetString(optionName,
-									     optionValue,
-									     MI_OperationOptionsFlags.Unused);
+                                         optionValue,
+                                         MI_OperationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -282,11 +282,11 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             this.AssertNotDisposed();
 
-	    MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
-									     (UInt32)callbackMode,
-									     MI_OperationOptionsFlags.Unused);
+            MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
+                                             (UInt32)callbackMode,
+                                             MI_OperationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
-        }        
+        }
 
         /// <summary>
         /// Sets a custom transport option
@@ -303,12 +303,13 @@ namespace Microsoft.Management.Infrastructure.Options
             this.AssertNotDisposed();
 
             MI_Result result = this.OperationOptionsHandleOnDemand.SetNumber(optionName,
-									     optionValue,
-									     MI_OperationOptionsFlags.Unused);
+                                         optionValue,
+                                         MI_OperationOptionsFlags.Unused);
             CimException.ThrowIfMiResultFailure(result);
         }
 
         #region PSSEMANTICS
+
         internal void WriteMessageCallbackInternal(
             OperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
@@ -317,7 +318,7 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             if (_writeMessageCallback != null)
             {
-                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase) callbackProcessingContext.ManagedOperationContext;
+                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
                 callbacksReceiverBase.CallIntoUserCallback(
                     callbackProcessingContext,
                     () => _writeMessageCallback(channel, message));
@@ -337,7 +338,7 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             if (_writeProgressCallback != null)
             {
-                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase) callbackProcessingContext.ManagedOperationContext;
+                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
                 callbacksReceiverBase.CallIntoUserCallback(
                     callbackProcessingContext,
                     () => _writeProgressCallback(activity, currentOperation, statusDescription, percentageCompleted, secondsRemaining));
@@ -362,12 +363,12 @@ namespace Microsoft.Management.Infrastructure.Options
                     if (!instanceHandle.IsNull)
                     {
                         cimInstance = new CimInstance(instanceHandle.Clone(), null);
-                        var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase) callbackProcessingContext.ManagedOperationContext;
+                        var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
                         CimResponseType userResponse = CimResponseType.None;
                         callbacksReceiverBase.CallIntoUserCallback(
                             callbackProcessingContext,
                             delegate { userResponse = _writeErrorCallback(cimInstance); });
-                        response = (MI_OperationCallback_ResponseType) userResponse;
+                        response = (MI_OperationCallback_ResponseType)userResponse;
                     }
                 }
                 finally
@@ -392,12 +393,12 @@ namespace Microsoft.Management.Infrastructure.Options
             response = MI_OperationCallback_ResponseType.Yes;
             if (_promptUserCallback != null)
             {
-                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase) callbackProcessingContext.ManagedOperationContext;
+                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
                 CimResponseType userResponse = CimResponseType.None;
                 callbacksReceiverBase.CallIntoUserCallback(
                     callbackProcessingContext,
-                    delegate { userResponse = _promptUserCallback(message, (CimPromptType) promptType); });
-                response = (MI_OperationCallback_ResponseType) userResponse;
+                    delegate { userResponse = _promptUserCallback(message, (CimPromptType)promptType); });
+                response = (MI_OperationCallback_ResponseType)userResponse;
             }
         }
 
@@ -414,21 +415,21 @@ namespace Microsoft.Management.Infrastructure.Options
                 this.AssertNotDisposed();
 
                 MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_WRITEERRORMODE",
-										(uint)value,
-										MI_OperationOptionsFlags.Unused);
+                                        (uint)value,
+                                        MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
 
-		UInt32 value;
-		UInt32 index;
-		MI_OperationOptionsFlags flags;
+                UInt32 value;
+                UInt32 index;
+                MI_OperationOptionsFlags flags;
                 MI_Result result = this._operationOptionsHandle.Value.GetNumber("__MI_OPERATIONOPTIONS_WRITEERRORMODE",
-										 out value,
-										 out index,
-										 out flags);
+                                         out value,
+                                         out index,
+                                         out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return (CimCallbackMode)value;
             }
@@ -440,24 +441,24 @@ namespace Microsoft.Management.Infrastructure.Options
         /// <value></value>
         public CimCallbackMode PromptUserMode
         {
-	    set
-	    {
+            set
+            {
                 MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
-										(uint)value,
-										MI_OperationOptionsFlags.Unused);
+                                        (uint)value,
+                                        MI_OperationOptionsFlags.Unused);
                 CimException.ThrowIfMiResultFailure(result);
             }
             get
             {
                 this.AssertNotDisposed();
 
-		UInt32 value;
-		UInt32 index;
-		MI_OperationOptionsFlags flags;
+                UInt32 value;
+                UInt32 index;
+                MI_OperationOptionsFlags flags;
                 MI_Result result = this._operationOptionsHandle.Value.GetNumber("__MI_OPERATIONOPTIONS_PROMPTUSERMODE",
-										 out value,
-										 out index,
-										 out flags);
+                                         out value,
+                                         out index,
+                                         out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return (CimCallbackMode)value;
             }
@@ -478,7 +479,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeMessageCallback = value;
-		// TODO: Get callbacks working
+                // TODO: Get callbacks working
                 //OperationCallback.writeMessage = this.WriteMessageCallbackInternal;
             }
         }
@@ -498,7 +499,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeProgressCallback = value;
-		// TODO: Get callbacks working
+                // TODO: Get callbacks working
                 //OperationCallback.WriteProgressCallback = this.WriteProgressCallbackInternal;
             }
         }
@@ -518,7 +519,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeErrorCallback = value;
-		// TODO: Get callbacks working
+                // TODO: Get callbacks working
                 //OperationCallback.WriteErrorCallback = this.WriteErrorCallbackInternal;
             }
         }
@@ -538,7 +539,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _promptUserCallback = value;
-		// TODO: Get callbacks working
+                // TODO: Get callbacks working
                 //OperationCallback.PromptUserCallback = this.PromptUserCallbackInternal;
             }
         }
@@ -552,8 +553,8 @@ namespace Microsoft.Management.Infrastructure.Options
             this.AssertNotDisposed();
 
             MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_CHANNEL",
-									    channelNumber,
-									    (MI_OperationOptionsFlags)0);
+                                        channelNumber,
+                                        (MI_OperationOptionsFlags)0);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -566,11 +567,12 @@ namespace Microsoft.Management.Infrastructure.Options
             this.AssertNotDisposed();
 
             MI_Result result = this._operationOptionsHandle.Value.SetNumber("__MI_OPERATIONOPTIONS_CHANNEL",
-									    channelNumber,
-									    (MI_OperationOptionsFlags)1);
+                                        channelNumber,
+                                        (MI_OperationOptionsFlags)1);
             CimException.ThrowIfMiResultFailure(result);
         }
-#endregion
+
+        #endregion PSSEMANTICS
 
         /// <summary>
         /// Sets a custom server or CIM provider option
@@ -724,13 +726,13 @@ namespace Microsoft.Management.Infrastructure.Options
                 throw new ArgumentException(e.Message, "optionValue", e);
             }
 
-	    MI_OperationOptionsFlags flags = MI_OperationOptionsFlags.Unused;
+            MI_OperationOptionsFlags flags = MI_OperationOptionsFlags.Unused;
             MI_Result result = this.OperationOptionsHandleOnDemand.SetCustomOption(
-                optionName, 
-                cimType.ToMiType(), 
-		nativeLayerValue,
+                optionName,
+                cimType.ToMiType(),
+        nativeLayerValue,
                 mustComply,
-		flags);
+        flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -762,28 +764,28 @@ namespace Microsoft.Management.Infrastructure.Options
         public bool ReportOperationStarted { get { return (Flags & CimOperationFlags.ReportOperationStarted) == CimOperationFlags.ReportOperationStarted; } }
 
         /// <summary>
-        /// Enables streaming of method results. 
-        /// See 
+        /// Enables streaming of method results.
+        /// See
         /// <see cref="CimSession.InvokeMethodAsync(string, string, string, CimMethodParametersCollection)"/>,
         /// <see cref="CimSession.InvokeMethodAsync(string, CimInstance, string, CimMethodParametersCollection)"/>,
         /// <see cref="CimMethodStreamedResult" />,
         /// <see cref="CimMethodResult" />,
         /// <see cref="CimMethodResultBase" />.
-        /// </summary> 
+        /// </summary>
         public bool EnableMethodResultStreaming { get; set; }
 
         /// <summary>
         /// When <see cref="ShortenLifetimeOfResults"/> is set to <c>true</c>, then
-        /// returned results (for example <see cref="CimInstance"/> objects) are 
+        /// returned results (for example <see cref="CimInstance"/> objects) are
         /// valid only for a short duration.  This can improve performance by allowing
         /// to avoid copying of data from the transport layer.
-        /// 
+        ///
         /// Shorter lifetime means that:
         /// - argument of IObserver.OnNext is disposed when OnNext returns
-        /// - previous value of IEnumerator.Current is disposed after calling IEnumerator.MoveNext 
+        /// - previous value of IEnumerator.Current is disposed after calling IEnumerator.MoveNext
         /// - value of IEnumerator.Current is disposed after calling IEnumerator.Dispose
         /// </summary>
-        public bool ShortenLifetimeOfResults { get; set; } 
+        public bool ShortenLifetimeOfResults { get; set; }
 
         #region IDisposable Members
 
@@ -821,7 +823,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 return this._disposed == 1;
             }
         }
-        
+
         internal void AssertNotDisposed()
         {
             if (this.IsDisposed)
@@ -832,19 +834,20 @@ namespace Microsoft.Management.Infrastructure.Options
 
         private int _disposed;
 
-        #endregion
-
+        #endregion IDisposable Members
 
         #region ICloneable Members
 
- #if(!_CORECLR)
-      
+#if (!_CORECLR)
+
         object ICloneable.Clone()
         {
             return new CimOperationOptions(this);
         }
+
 #endif
-        #endregion
+
+        #endregion ICloneable Members
     }
 }
 
@@ -855,23 +858,23 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
         static internal MI_OperationCallbacks GetOperationCallbacks(this CimOperationOptions operationOptions)
         {
             var operationCallbacks = new MI_OperationCallbacks();
-            if (operationOptions!= null)
+            if (operationOptions != null)
             {
-		// TODO: Uncomment these
-		//operationCallbacks.writeError = operationOptions.OperationCallback.WriteErrorCallback;
-		//operationCallbacks.writeMessage = operationOptions.OperationCallback.WriteMessageCallback;
-		//operationCallbacks.writeProgress = operationOptions.OperationCallback.WriteProgressCallback;
-		//operationCallbacks.promptUser = operationOptions.OperationCallback.PromptUserCallback;
+                // TODO: Uncomment these
+                //operationCallbacks.writeError = operationOptions.OperationCallback.WriteErrorCallback;
+                //operationCallbacks.writeMessage = operationOptions.OperationCallback.WriteMessageCallback;
+                //operationCallbacks.writeProgress = operationOptions.OperationCallback.WriteProgressCallback;
+                //operationCallbacks.promptUser = operationOptions.OperationCallback.PromptUserCallback;
             }
             return operationCallbacks;
         }
 
         static internal MI_OperationCallbacks GetOperationCallbacks(
-            this CimOperationOptions operationOptions, 
+            this CimOperationOptions operationOptions,
             CimAsyncCallbacksReceiverBase acceptCallbacksReceiver)
         {
             MI_OperationCallbacks operationCallbacks = operationOptions.GetOperationCallbacks();
-            
+
             if (acceptCallbacksReceiver != null)
             {
                 acceptCallbacksReceiver.RegisterAcceptedAsyncCallbacks(operationCallbacks, operationOptions);
@@ -882,14 +885,14 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 
         static internal MI_OperationFlags GetOperationFlags(this CimOperationOptions operationOptions)
         {
-            return operationOptions != null 
-                       ? operationOptions.Flags.ToNative() 
+            return operationOptions != null
+                       ? operationOptions.Flags.ToNative()
                        : CimOperationFlags.None.ToNative();
         }
 
         static internal MI_OperationOptions GetOperationOptionsHandle(this CimOperationOptions operationOptions)
         {
-            return operationOptions != null 
+            return operationOptions != null
                        ? operationOptions.OperationOptionsHandle
                        : null;
         }
@@ -906,15 +909,15 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 
         static internal CancellationToken? GetCancellationToken(this CimOperationOptions operationOptions)
         {
-            return operationOptions != null 
-                       ? operationOptions.CancellationToken 
+            return operationOptions != null
+                       ? operationOptions.CancellationToken
                        : null;
         }
 
         static internal bool GetShortenLifetimeOfResults(this CimOperationOptions operationOptions)
         {
-            return operationOptions != null 
-                       ? operationOptions.ShortenLifetimeOfResults 
+            return operationOptions != null
+                       ? operationOptions.ShortenLifetimeOfResults
                        : false;
         }
 

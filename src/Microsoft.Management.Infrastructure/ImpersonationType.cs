@@ -1,7 +1,8 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
+
 using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
@@ -22,7 +23,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
     {
         public static MI_ImpersonationType ToNativeType(this ImpersonationType impersonationType)
         {
-            return (MI_ImpersonationType) impersonationType;
+            return (MI_ImpersonationType)impersonationType;
         }
     }
 }

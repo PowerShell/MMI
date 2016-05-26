@@ -1,11 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Globalization;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -27,16 +27,16 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
             switch (proxyType)
             {
                 case ProxyType.None:
-		    return MI_ProxyType.None;
-                
+                    return MI_ProxyType.None;
+
                 case ProxyType.WinHttp:
-		    return MI_ProxyType.WinHTTP;
-                
+                    return MI_ProxyType.WinHTTP;
+
                 case ProxyType.Auto:
-		    return MI_ProxyType.Auto;
+                    return MI_ProxyType.Auto;
 
                 case ProxyType.InternetExplorer:
-		    return MI_ProxyType.IE;
+                    return MI_ProxyType.IE;
 
                 default:
                     throw new ArgumentOutOfRangeException("proxyType");
@@ -46,7 +46,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
         public static ProxyType FromNativeType(string proxyType)
         {
 #if(!_CORECLR)
-            if ( String.Compare( proxyType, MI_ProxyType.None, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+            if (String.Compare(proxyType, MI_ProxyType.None, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             if ( String.Compare( proxyType, MI_ProxyType.None, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif
@@ -54,7 +54,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
                 return ProxyType.None;
             }
 #if(!_CORECLR)
-            else if ( String.Compare( proxyType, MI_ProxyType.WinHTTP, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+            else if (String.Compare(proxyType, MI_ProxyType.WinHTTP, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             else if ( String.Compare( proxyType, MI_ProxyType.WinHTTP, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif
@@ -62,7 +62,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
                 return ProxyType.WinHttp;
             }
 #if(!_CORECLR)
-            else if ( String.Compare( proxyType, MI_ProxyType.Auto, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+            else if (String.Compare(proxyType, MI_ProxyType.Auto, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             else if ( String.Compare( proxyType, MI_ProxyType.Auto, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif
@@ -70,7 +70,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
                 return ProxyType.Auto;
             }
 #if(!_CORECLR)
-            else if ( String.Compare( proxyType, MI_ProxyType.IE, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+            else if (String.Compare(proxyType, MI_ProxyType.IE, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             else if ( String.Compare( proxyType, MI_ProxyType.IE, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif

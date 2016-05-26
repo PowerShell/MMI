@@ -1,15 +1,10 @@
-/* Copyright (C) Microsoft Corporation, All rights reserved. 
+/* Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Diagnostics;
-using System.Security;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using Microsoft.Management.Infrastructure.Internal;
-using Microsoft.Management.Infrastructure.Internal.Operations;
 using NativeObject;
+using System;
+using System.Security;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -19,16 +14,16 @@ namespace Microsoft.Management.Infrastructure.Options
     public class CimCredential
     {
         private NativeCimCredential credential;
-    
+
         /// <summary>
         /// Creates a new Credentials
         /// </summary>
         public CimCredential(string authenticationMechanism, string certificateThumbprint)
         {
-            if( authenticationMechanism == null)
+            if (authenticationMechanism == null)
             {
                 throw new ArgumentNullException("authenticationMechanism");
-            }               
+            }
             NativeCimCredential.CreateCimCredential(authenticationMechanism, certificateThumbprint, out credential);
         }
 
@@ -37,14 +32,14 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         public CimCredential(string authenticationMechanism, string domain, string userName, SecureString password)
         {
-            if( authenticationMechanism == null)
+            if (authenticationMechanism == null)
             {
                 throw new ArgumentNullException("authenticationMechanism");
-            }             
-            if( userName == null)
+            }
+            if (userName == null)
             {
                 throw new ArgumentNullException("userName");
-            }            
+            }
             NativeCimCredential.CreateCimCredential(authenticationMechanism, domain, userName, password, out credential);
         }
 
@@ -53,12 +48,12 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         public CimCredential(string authenticationMechanism)
         {
-            if( authenticationMechanism == null)
+            if (authenticationMechanism == null)
             {
                 throw new ArgumentNullException("authenticationMechanism");
-            }             
-            NativeCimCredential.CreateCimCredential(authenticationMechanism, out credential);        
-        }    
+            }
+            NativeCimCredential.CreateCimCredential(authenticationMechanism, out credential);
+        }
 
         /// <summary>
         /// Creates a new Credentials
@@ -66,15 +61,15 @@ namespace Microsoft.Management.Infrastructure.Options
         public CimCredential(CertificateAuthenticationMechanism authenticationMechanism, string certificateThumbprint)
         {
             string strAuthenticationMechanism = null;
-            if( authenticationMechanism == CertificateAuthenticationMechanism.Default)
+            if (authenticationMechanism == CertificateAuthenticationMechanism.Default)
             {
                 strAuthenticationMechanism = MI_AuthType.CLIENT_CERTS;
             }
-            else if( authenticationMechanism == CertificateAuthenticationMechanism.ClientCertificate)
+            else if (authenticationMechanism == CertificateAuthenticationMechanism.ClientCertificate)
             {
                 strAuthenticationMechanism = MI_AuthType.CLIENT_CERTS;
             }
-            else if( authenticationMechanism == CertificateAuthenticationMechanism.IssuerCertificate )
+            else if (authenticationMechanism == CertificateAuthenticationMechanism.IssuerCertificate)
             {
                 strAuthenticationMechanism = MI_AuthType.ISSUER_CERT;
             }
@@ -82,7 +77,7 @@ namespace Microsoft.Management.Infrastructure.Options
             {
                 throw new ArgumentOutOfRangeException("authenticationMechanism");
             }
-            NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, certificateThumbprint, out credential);        
+            NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, certificateThumbprint, out credential);
         }
 
         /// <summary>
@@ -90,44 +85,44 @@ namespace Microsoft.Management.Infrastructure.Options
         /// </summary>
         public CimCredential(PasswordAuthenticationMechanism authenticationMechanism, string domain, string userName, SecureString password)
         {
-            if( userName == null)
+            if (userName == null)
             {
                 throw new ArgumentNullException("userName");
             }
             string strAuthenticationMechanism = null;
-            if( authenticationMechanism == PasswordAuthenticationMechanism.Default)
+            if (authenticationMechanism == PasswordAuthenticationMechanism.Default)
             {
                 strAuthenticationMechanism = MI_AuthType.DEFAULT;
             }
-            else if( authenticationMechanism == PasswordAuthenticationMechanism.Basic)
+            else if (authenticationMechanism == PasswordAuthenticationMechanism.Basic)
             {
                 strAuthenticationMechanism = MI_AuthType.BASIC;
             }
-            else if( authenticationMechanism == PasswordAuthenticationMechanism.Digest)
+            else if (authenticationMechanism == PasswordAuthenticationMechanism.Digest)
             {
                 strAuthenticationMechanism = MI_AuthType.DIGEST;
             }
-            else if( authenticationMechanism == PasswordAuthenticationMechanism.Negotiate)
+            else if (authenticationMechanism == PasswordAuthenticationMechanism.Negotiate)
             {
                 strAuthenticationMechanism = MI_AuthType.NEGO_WITH_CREDS;
             }
-            else if( authenticationMechanism == PasswordAuthenticationMechanism.Kerberos)
+            else if (authenticationMechanism == PasswordAuthenticationMechanism.Kerberos)
             {
                 strAuthenticationMechanism = MI_AuthType.KERBEROS;
             }
-            else if( authenticationMechanism == PasswordAuthenticationMechanism.NtlmDomain)
+            else if (authenticationMechanism == PasswordAuthenticationMechanism.NtlmDomain)
             {
                 strAuthenticationMechanism = MI_AuthType.NTLM;
             }
-            else if( authenticationMechanism == PasswordAuthenticationMechanism.CredSsp)
+            else if (authenticationMechanism == PasswordAuthenticationMechanism.CredSsp)
             {
                 strAuthenticationMechanism = MI_AuthType.CREDSSP;
-            }  
+            }
             else
             {
                 throw new ArgumentOutOfRangeException("authenticationMechanism");
-            }            
-            NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, domain, userName, password, out credential);                
+            }
+            NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, domain, userName, password, out credential);
         }
 
         /// <summary>
@@ -136,30 +131,30 @@ namespace Microsoft.Management.Infrastructure.Options
         public CimCredential(ImpersonatedAuthenticationMechanism authenticationMechanism)
         {
             string strAuthenticationMechanism = null;
-            if( authenticationMechanism == ImpersonatedAuthenticationMechanism.None)
+            if (authenticationMechanism == ImpersonatedAuthenticationMechanism.None)
             {
                 strAuthenticationMechanism = MI_AuthType.NONE;
             }
-            else if( authenticationMechanism == ImpersonatedAuthenticationMechanism.Negotiate)
+            else if (authenticationMechanism == ImpersonatedAuthenticationMechanism.Negotiate)
             {
                 strAuthenticationMechanism = MI_AuthType.NEGO_NO_CREDS;
             }
-            else if( authenticationMechanism == ImpersonatedAuthenticationMechanism.Kerberos)
+            else if (authenticationMechanism == ImpersonatedAuthenticationMechanism.Kerberos)
             {
                 strAuthenticationMechanism = MI_AuthType.KERBEROS;
             }
-            else if( authenticationMechanism == ImpersonatedAuthenticationMechanism.NtlmDomain)
+            else if (authenticationMechanism == ImpersonatedAuthenticationMechanism.NtlmDomain)
             {
                 strAuthenticationMechanism = MI_AuthType.NTLM;
             }
             else
             {
                 throw new ArgumentOutOfRangeException("authenticationMechanism");
-            }            
+            }
             NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, out credential);
-        }  
-        
-	// TODO: return proper credential type here
+        }
+
+        // TODO: return proper credential type here
         //internal NativeCimCredentialHandle GetCredential(){ return credential; }
     }
 }

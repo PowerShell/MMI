@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -14,7 +14,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private readonly CimOperation _operation;
         private bool _disposed;
         private readonly object _disposeThreadSafetyLock = new object();
-#if(!_CORECLR) 
+#if(!_CORECLR)
         private readonly SecurityContext _securityContext = SecurityContext.Capture();
 #else
         //
@@ -23,6 +23,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         //private readonly WindowsIdentity _windowsIdentiy = new WindowsIdentity( LogonUser() );
 
 #endif
+
         internal CimAsyncCancellationDisposable(CimOperation operation)
         {
             Debug.Assert(operation != null, "Caller should verify that operation != null");
@@ -42,7 +43,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 _disposed = true;
             }
 
-#if(!_CORECLR) 
+#if(!_CORECLR)
             SecurityContext.Run(
                 this._securityContext,
                 callback: _ => this._operation.Cancel(CancellationMode.SilentlyStopProducingResults),
@@ -51,6 +52,6 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 #endif
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

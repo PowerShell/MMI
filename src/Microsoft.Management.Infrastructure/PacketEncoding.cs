@@ -1,11 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Globalization;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -27,13 +27,13 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
             switch (packetEncoding)
             {
                 case PacketEncoding.Default:
-		    return MI_PacketEncoding.Default;
-                
+                    return MI_PacketEncoding.Default;
+
                 case PacketEncoding.Utf8:
-		    return MI_PacketEncoding.UTF8;
-                
+                    return MI_PacketEncoding.UTF8;
+
                 case PacketEncoding.Utf16:
-		    return MI_PacketEncoding.UTF16;
+                    return MI_PacketEncoding.UTF16;
 
                 default:
                     throw new ArgumentOutOfRangeException("packetEncoding");
@@ -42,8 +42,8 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 
         public static PacketEncoding FromNativeType(string packetEncoding)
         {
-#if(!_CORECLR)
-	    if ( String.Compare( packetEncoding, MI_PacketEncoding.Default, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+#if (!_CORECLR)
+            if (String.Compare(packetEncoding, MI_PacketEncoding.Default, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             if ( String.Compare( packetEncoding, MI_PacketEncoding.Default, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif
@@ -51,7 +51,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
                 return PacketEncoding.Default;
             }
 #if(!_CORECLR)
-            else if ( String.Compare( packetEncoding, MI_PacketEncoding.UTF8, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+            else if (String.Compare(packetEncoding, MI_PacketEncoding.UTF8, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             else if ( String.Compare( packetEncoding, MI_PacketEncoding.UTF8, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif
@@ -59,7 +59,7 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
                 return PacketEncoding.Utf8;
             }
 #if(!_CORECLR)
-            else if ( String.Compare( packetEncoding, MI_PacketEncoding.UTF16, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase ) == 0 )
+            else if (String.Compare(packetEncoding, MI_PacketEncoding.UTF16, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
 #else
             else if ( String.Compare( packetEncoding, MI_PacketEncoding.UTF16, StringComparison.CurrentCultureIgnoreCase ) == 0 )
 #endif

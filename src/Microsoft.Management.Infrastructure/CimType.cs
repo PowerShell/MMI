@@ -1,12 +1,12 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using NativeObject;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -15,8 +15,8 @@ namespace Microsoft.Management.Infrastructure
     /// CIM type of a value.
     /// </para>
     /// <para>
-    /// This is a .NET representation of intrinsic CIM types (as defined by DSP0004).  
-    /// 
+    /// This is a .NET representation of intrinsic CIM types (as defined by DSP0004).
+    ///
     /// The mapping of scalar types is as follows:
     /// - CIM: uint8 -> .NET: System.Byte
     /// - CIM: sint8 -> .NET: System.SByte
@@ -33,7 +33,7 @@ namespace Microsoft.Management.Infrastructure
     /// - CIM: datetime -> .NET: either System.DateTime or System.TimeSpan
     /// - CIM: class ref -> .NET: CimInstance
     /// - CIM: char16 -> .NET: System.Char
-    /// 
+    ///
     /// The mapping of arrays uses a single-dimensional .NET array of an appropriate type.
     /// The only exception is the CIM: datetime[] -> .NET: System.Object[] mapping
     /// (which is necessary because the CIM array can contain a mixture of dates and intervals).
@@ -135,64 +135,92 @@ namespace Microsoft.Management.Infrastructure.Internal
             {
                 case CimType.Boolean:
                     return typeof(System.Boolean);
+
                 case CimType.UInt8:
                     return typeof(System.Byte);
+
                 case CimType.SInt8:
                     return typeof(System.SByte);
+
                 case CimType.UInt16:
                     return typeof(System.UInt16);
+
                 case CimType.SInt16:
                     return typeof(System.Int16);
+
                 case CimType.UInt32:
                     return typeof(System.UInt32);
+
                 case CimType.SInt32:
                     return typeof(System.Int32);
+
                 case CimType.UInt64:
                     return typeof(System.UInt64);
+
                 case CimType.SInt64:
                     return typeof(System.Int64);
+
                 case CimType.Real32:
                     return typeof(System.Single);
+
                 case CimType.Real64:
                     return typeof(System.Double);
+
                 case CimType.Char16:
                     return typeof(System.Char);
+
                 case CimType.DateTime:
                     return typeof(System.Object);
+
                 case CimType.String:
                     return typeof(System.String);
+
                 case CimType.Reference:
                 case CimType.Instance:
                     return typeof(CimInstance);
 
                 case CimType.BooleanArray:
                     return typeof(Boolean[]);
+
                 case CimType.UInt8Array:
                     return typeof(Byte[]);
+
                 case CimType.SInt8Array:
                     return typeof(SByte[]);
+
                 case CimType.UInt16Array:
                     return typeof(UInt16[]);
+
                 case CimType.SInt16Array:
                     return typeof(Int16[]);
+
                 case CimType.UInt32Array:
                     return typeof(UInt32[]);
+
                 case CimType.SInt32Array:
                     return typeof(Int32[]);
+
                 case CimType.UInt64Array:
                     return typeof(UInt64[]);
+
                 case CimType.SInt64Array:
                     return typeof(Int64[]);
+
                 case CimType.Real32Array:
                     return typeof(Single[]);
+
                 case CimType.Real64Array:
                     return typeof(Double[]);
+
                 case CimType.Char16Array:
                     return typeof(Char[]);
+
                 case CimType.DateTimeArray:
                     return typeof(object[]);
+
                 case CimType.StringArray:
                     return typeof(String[]);
+
                 case CimType.ReferenceArray:
                 case CimType.InstanceArray:
                     return typeof(CimInstance[]);

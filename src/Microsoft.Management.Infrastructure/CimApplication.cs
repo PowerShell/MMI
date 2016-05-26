@@ -1,25 +1,26 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
 using NativeObject;
+using System;
 
 namespace Microsoft.Management.Infrastructure.Internal
 {
     internal static class CimApplication
     {
         #region Initializing CimApplication singleton
-	static internal string ApplicationID = "CoreCLRSingletonAppDomain";
+
+        static internal string ApplicationID = "CoreCLRSingletonAppDomain";
 
         static private MI_Application GetApplicationHandle()
         {
             MI_Application applicationHandle;
             MI_Instance errorDetailsHandle;
             MI_Result result = MI_Application.Initialize(ApplicationID,
-							 out errorDetailsHandle,
-							 out applicationHandle);
+                             out errorDetailsHandle,
+                             out applicationHandle);
             CimException.ThrowIfMiResultFailure(result, errorDetailsHandle);
 
             return applicationHandle;
@@ -35,6 +36,6 @@ namespace Microsoft.Management.Infrastructure.Internal
 
         private static readonly Lazy<MI_Application> LazyHandle = new Lazy<MI_Application>(CimApplication.GetApplicationHandle);
 
-        #endregion
+        #endregion Initializing CimApplication singleton
     }
 }

@@ -1,12 +1,12 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Collections;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using NativeObject;
+using System;
+using System.Collections;
 
 namespace Microsoft.Management.Infrastructure.Internal.Data
 {
@@ -27,15 +27,15 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
         {
             get
             {
-		string name;
-		MI_Value value;
-		MI_Type type;
-		MI_Flags flags;
-		MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
-									    out name,
-									    out value,
-									    out type,
-									    out flags);
+                string name;
+                MI_Value value;
+                MI_Type type;
+                MI_Flags flags;
+                MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
+                                                out name,
+                                                out value,
+                                                out type,
+                                                out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return name;
             }
@@ -50,14 +50,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 {
                     this._instanceHandle.AddRef();
 
-		    string name;
-		    MI_Type type;
-		    MI_Flags flags;
+                    string name;
+                    MI_Type type;
+                    MI_Flags flags;
                     MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
-										out name,
-										out value,
-										out type,
-										out flags);
+                                        out name,
+                                        out value,
+                                        out type,
+                                        out flags);
                     CimException.ThrowIfMiResultFailure(result);
                     return CimInstance.ConvertFromNativeLayer(
                         value: value,
@@ -83,10 +83,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     {
                         Helpers.ValidateNoNullElements(value as IList);
                         result = this._instanceHandle.Handle.SetElementAt(
-                            (uint)this._index, 
+                            (uint)this._index,
                             CimInstance.ConvertToNativeLayer(value, this.CimType),
-			    this.CimType.ToMiType(),
-			    MI_Flags.None);
+                this.CimType.ToMiType(),
+                MI_Flags.None);
                     }
                     catch (InvalidCastException e)
                     {
@@ -110,15 +110,15 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             get
             {
                 MI_Type type;
-		string name;
-		MI_Value value;
-		MI_Flags flags;
+                string name;
+                MI_Value value;
+                MI_Flags flags;
 
                 MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
-									    out name,
-									    out value,
-									    out type,
-									    out flags);
+                                        out name,
+                                        out value,
+                                        out type,
+                                        out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return type.ToCimType();
             }
@@ -130,14 +130,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             {
                 MI_Flags flags;
                 MI_Type type;
-		string name;
-		MI_Value value;
+                string name;
+                MI_Value value;
 
                 MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
-									    out name,
-									    out value,
-									    out type,
-									    out flags);
+                                        out name,
+                                        out value,
+                                        out type,
+                                        out flags);
                 CimException.ThrowIfMiResultFailure(result);
                 return flags.ToCimFlags();
             }
@@ -153,23 +153,23 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             {
                 bool notModifiedFlag = !value;
 
-		string name;
-		MI_Value mi_value;
-		MI_Type type;
-		MI_Flags flags;
-		MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
-									    out name,
-									    out mi_value,
-									    out type,
-									    out flags);
+                string name;
+                MI_Value mi_value;
+                MI_Type type;
+                MI_Flags flags;
+                MI_Result result = this._instanceHandle.Handle.GetElementAt((uint)this._index,
+                                                out name,
+                                                out mi_value,
+                                                out type,
+                                                out flags);
                 CimException.ThrowIfMiResultFailure(result);
 
-		bool isValueNull = (MI_Flags.MI_FLAG_NULL == (flags & MI_Flags.MI_FLAG_NULL));
+                bool isValueNull = (MI_Flags.MI_FLAG_NULL == (flags & MI_Flags.MI_FLAG_NULL));
 
-		result = this._instanceHandle.Handle.SetElementAt((uint)this._index,
-								  isValueNull ? null : mi_value,
-								  type,
-								  (notModifiedFlag ? MI_Flags.MI_FLAG_NOT_MODIFIED : 0) | (isValueNull ? MI_Flags.MI_FLAG_NULL : 0));
+                result = this._instanceHandle.Handle.SetElementAt((uint)this._index,
+                                          isValueNull ? null : mi_value,
+                                          type,
+                                          (notModifiedFlag ? MI_Flags.MI_FLAG_NOT_MODIFIED : 0) | (isValueNull ? MI_Flags.MI_FLAG_NULL : 0));
                 CimException.ThrowIfMiResultFailure(result);
             }
         }

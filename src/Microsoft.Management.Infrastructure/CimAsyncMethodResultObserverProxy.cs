@@ -1,11 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
 using Microsoft.Management.Infrastructure.Options;
 using NativeObject;
+using System;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {
@@ -72,9 +72,9 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             MI_Type parameterType)
         {
             parameterValue = CimInstance.ConvertFromNativeLayer(
-								value: (MI_Value)parameterValue,
-								sharedParentHandle: null,
-								clone: !this._shortenLifetimeOfResults);
+                                value: (MI_Value)parameterValue,
+                                sharedParentHandle: null,
+                                clone: !this._shortenLifetimeOfResults);
             {
                 var cimInstance = parameterValue as CimInstance;
                 if (cimInstance != null)
@@ -130,11 +130,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         public override void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
             base.RegisterAcceptedAsyncCallbacks(operationCallbacks, operationOptions);
-	    // TODO: Uncomment and fix below
+            // TODO: Uncomment and fix below
             //operationCallbacks.instanceResult = this.InstanceResultCallback;
             if ((operationOptions != null) && (operationOptions.EnableMethodResultStreaming))
             {
-		// TODO: Uncomment and fix below
+                // TODO: Uncomment and fix below
                 //operationCallbacks.streamedParameterResult = this.StreamedParameterCallback;
             }
         }

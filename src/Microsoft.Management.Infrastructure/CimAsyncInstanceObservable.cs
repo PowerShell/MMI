@@ -1,13 +1,13 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Diagnostics;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using NativeObject;
+using System;
+using System.Diagnostics;
 
 namespace Microsoft.Management.Infrastructure.Internal.Operations
 {

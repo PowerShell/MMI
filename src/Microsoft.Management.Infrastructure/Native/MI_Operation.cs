@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace NativeObject
@@ -32,6 +28,7 @@ namespace NativeObject
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_OperationMembersFTOffset = (int)Marshal.OffsetOf<MI_OperationMembers>("ft");
+
         private static int MI_OperationMembersSize = Marshal.SizeOf<MI_OperationMembers>();
 
         private MI_OperationPtr ptr;
@@ -83,7 +80,7 @@ namespace NativeObject
         {
             // If the indirect pointer is zero then the object has not
             // been initialized and it is not valid to refer to its data
-            if(instance != null && instance.Ptr == IntPtr.Zero)
+            if (instance != null && instance.Ptr == IntPtr.Zero)
             {
                 throw new InvalidCastException();
             }
@@ -94,8 +91,8 @@ namespace NativeObject
         public static implicit operator MI_OperationOutPtr(MI_Operation instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
-            if(instance != null && instance.isDirect)
+            // of our direct pointer, though it is technically feasible
+            if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
             }
@@ -105,6 +102,7 @@ namespace NativeObject
 
         public static MI_Operation Null { get { return null; } }
         public bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         public IntPtr Ptr
         {
             get
@@ -236,7 +234,8 @@ namespace NativeObject
         }
 
         private MI_OperationFT ft { get { return this.mft.Value; } }
-        private MI_OperationFT MarshalFT() 
+
+        private MI_OperationFT MarshalFT()
         {
             MI_OperationFT res = new MI_OperationFT();
             IntPtr ftPtr = IntPtr.Zero;
