@@ -256,7 +256,7 @@ namespace Microsoft.Management.Infrastructure.Native
             out MI_Serializer serializer
             )
         {
-            MI_Serializer serializerLocal = new MI_Serializer();
+            MI_Serializer serializerLocal = MI_Serializer.NewDirectPtr(format);
 
             MI_Result resultLocal = this.ft.NewSerializer(this,
                 flags,
@@ -273,7 +273,7 @@ namespace Microsoft.Management.Infrastructure.Native
             out MI_Deserializer deserializer
             )
         {
-            MI_Deserializer deserializerLocal = new MI_Deserializer();
+            MI_Deserializer deserializerLocal = MI_Deserializer.NewDirectPtr();
 
             MI_Result resultLocal = this.ft.NewDeserializer(this,
                 flags,
@@ -403,7 +403,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                MI_Serializer serializer
+                MI_SerializerPtr serializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -411,7 +411,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                MI_Deserializer deserializer
+                MI_DeserializerPtr deserializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

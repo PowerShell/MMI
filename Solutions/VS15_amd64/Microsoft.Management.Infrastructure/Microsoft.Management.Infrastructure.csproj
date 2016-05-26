@@ -353,6 +353,12 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Result.cs">
       <Link>Native\MI_Result.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SerializationFormat.cs">
+      <Link>Native\MI_SerializationFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SerializationFT.cs">
+      <Link>Native\MI_SerializationFT.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Serializer.cs">
       <Link>Native\MI_Serializer.cs</Link>
     </Compile>

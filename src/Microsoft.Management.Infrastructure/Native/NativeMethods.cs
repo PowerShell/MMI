@@ -13,6 +13,16 @@
             [In, Out] MI_ApplicationPtr application
             );
 
+        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
+        internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPWStr)]string lpFileName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool FreeLibrary(IntPtr hModule);
+
+        [DllImport("kernel32", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
+        internal static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
+
         internal static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();
 
         [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention)]

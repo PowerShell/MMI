@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Xunit;
@@ -330,6 +331,49 @@ namespace MMI.Tests.Native
         public void IndirectSessionTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Session.NewIndirectPtr().Close(IntPtr.Zero, null));
+        }
+
+        [Fact]
+        public void CanCreateSerializer()
+        {
+            MI_Serializer newSerializer = null;
+            MI_Result res = this.application.NewSerializer(MI_SerializerFlags.None,
+                MI_SerializationFormat.XML,
+                out newSerializer);
+            MIAssert.Succeeded(res);
+            Assert.NotNull(newSerializer);
+
+            res = newSerializer.Close();
+            MIAssert.Succeeded(res);
+        }
+
+        [Fact]
+        public void CanXMLSerializeInstance()
+        {
+            MI_Instance toSerialize;
+            MI_Result res = this.application.NewInstance("TestInstance", null, out toSerialize);
+            MIAssert.Succeeded(res);
+            MI_Value valueToSerialize = MI_Value.NewDirectPtr();
+            valueToSerialize.String = "Test string";
+            res = toSerialize.AddElement("string", valueToSerialize, MI_Type.MI_STRING, MI_Flags.None);
+            MIAssert.Succeeded(res);
+
+            MI_Serializer newSerializer = null;
+            res = this.application.NewSerializer(MI_SerializerFlags.None,
+                MI_SerializationFormat.XML,
+                out newSerializer);
+            MIAssert.Succeeded(res);
+            Assert.NotNull(newSerializer);
+
+            byte[] serializedInstance;
+            res = newSerializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
+            MIAssert.Succeeded(res);
+
+            string serializedString = Encoding.Unicode.GetString(serializedInstance);
+            Assert.Equal("<INSTANCE CLASSNAME=\"TestInstance\"><PROPERTY NAME=\"string\" TYPE=\"string\" MODIFIED=\"TRUE\"><VALUE>Test string</VALUE></PROPERTY></INSTANCE>", serializedString);
+
+            res = newSerializer.Close();
+            MIAssert.Succeeded(res);
         }
     }
 }

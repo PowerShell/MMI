@@ -3,7 +3,7 @@
 namespace Microsoft.Management.Infrastructure.Native
 {
     using System.Runtime.InteropServices;
-
+    
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal struct MI_Interval
     {
