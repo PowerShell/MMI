@@ -111,11 +111,6 @@ namespace Microsoft.Management.Infrastructure.Native
         public static string UTF16 = "UTF16";
     }
 
-    public class MI_Protocol
-    {
-        public static string WSMan = "WinRM";
-    }
-
     public class MI_Transport
     {
         public static string HTTPS = "HTTPS";

@@ -38,7 +38,7 @@ namespace MMI.Tests.Native
         {
             MI_Session newSession = null;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession("WMIDCOM",
+            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
@@ -55,7 +55,7 @@ namespace MMI.Tests.Native
         {
             MI_Session session = null;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession("WMIDCOM",
+            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
@@ -86,7 +86,7 @@ namespace MMI.Tests.Native
         {
             MI_Session session = null;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession("WMIDCOM",
+            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
                     "badhost",
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
@@ -118,7 +118,7 @@ namespace MMI.Tests.Native
         {
             MI_Session session = null;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession("WMIDCOM",
+            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
@@ -187,7 +187,7 @@ namespace MMI.Tests.Native
         {
             MI_Session session = null;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession("WMIDCOM",
+            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
@@ -244,7 +244,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res, "Expect to be able to get qualifier information from class");
 
             Assert.Equal(MI_Type.MI_STRING, miClassQualifierType); // Expect qualifier type to be a string
-            Assert.Equal(MI_Flags.MI_FLAG_ENABLEOVERRIDE | MI_Flags.MI_FLAG_TOSUBCLASS, miClassQualifierFlags); // Expect flags to be standard flags
+            Assert.True((miClassQualifierFlags & MI_Flags.MI_FLAG_ENABLEOVERRIDE) != 0); // Expect flags to be standard flags
             Assert.Equal("{8502C4B0-5FBB-11D2-AAC1-006008C78BC7}", miClassQualifierValue.String); // Expect UUID of class to be the known UUID
 
             MI_ParameterSet parameters;
@@ -459,7 +459,7 @@ namespace MMI.Tests.Native
 
             MI_Session newSession = null;
             MI_Instance extendedError = null;
-            res = this.application.NewSession("WMIDCOM",
+            res = this.application.NewSession(MI_Protocol.WSMan,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
@@ -526,7 +526,7 @@ namespace MMI.Tests.Native
 
             MI_Session newSession = null;
             MI_Instance extendedError = null;
-            res = this.application.NewSession("WMIDCOM",
+            res = this.application.NewSession(MI_Protocol.WSMan,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
