@@ -26,8 +26,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_DeserializerFTOffset = (int)Marshal.OffsetOf<MI_Deserializer>("ft");
-
         private static int MI_DeserializerMembersSize = Marshal.SizeOf<MI_DeserializerMembers>();
 
         private MI_DeserializerPtr ptr;
@@ -37,12 +35,12 @@ namespace Microsoft.Management.Infrastructure.Native
         ~MI_Deserializer()
         {
             Marshal.FreeHGlobal(this.ptr.ptr);
-            this.mft = new Lazy<MI_DeserializerFT>(this.MarshalFT);
         }
 
         private MI_Deserializer(bool isDirect)
         {
             this.isDirect = isDirect;
+            this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFT.XMLDeserializationFT);
 
             var necessarySize = this.isDirect ? MI_DeserializerMembersSize : NativeMethods.IntPtrSize;
             this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
@@ -205,11 +203,10 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal MI_Result DeserializeInstance(
-            UInt32 flags,
+            MI_SerializerFlags flags,
             IntPtr serializedBuffer,
             UInt32 serializedBufferLength,
-            out MI_Class classObjects,
-            UInt32 numberClassObjects,
+            MI_Class[] classObjects,
             IntPtr classObjectNeeded,
             IntPtr classObjectNeededContext,
             out UInt32 serializedBufferRead,
@@ -217,28 +214,67 @@ namespace Microsoft.Management.Infrastructure.Native
             out MI_Instance cimErrorDetails
             )
         {
-            throw new NotImplementedException();
-            //MI_Class classObjectsLocal = MI_Class.NewIndirectPtr();
-            //MI_Instance instanceObjectLocal = MI_Instance.NewIndirectPtr();
-            //MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
+            if (classObjectNeeded != IntPtr.Zero || classObjectNeededContext != IntPtr.Zero)
+            {
+                throw new NotImplementedException();
+            }
+            
+            MI_Instance instanceObjectLocal = MI_Instance.NewIndirectPtr();
+            MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
+            MI_ClassArrayPtr classArrayPtr = (MI_ClassArrayPtr)classObjects;
 
-            //MI_Result resultLocal = this.ft.DeserializeInstance(this,
-            //    flags,
-            //    serializedBuffer,
-            //    serializedBufferLength,
-            //    classObjectsLocal,
-            //    numberClassObjects,
-            //    classObjectNeeded,
-            //    classObjectNeededContext,
-            //    out serializedBufferRead,
-            //    instanceObjectLocal,
-            //    cimErrorDetailsLocal);
+            MI_Result resultLocal = this.ft.DeserializeInstance(this,
+                flags,
+                serializedBuffer,
+                serializedBufferLength,
+                classArrayPtr.ptr,
+                (uint)classObjects.Length,
+                classObjectNeeded,
+                classObjectNeededContext,
+                out serializedBufferRead,
+                instanceObjectLocal,
+                cimErrorDetailsLocal);
+            
+            instanceObject = instanceObjectLocal;
+            cimErrorDetails = cimErrorDetailsLocal;
+            return resultLocal;
+        }
 
-            //classObjects = classObjectsLocal;
-            //classObjectNeeded = classObjectNeededLocal;
-            //instanceObject = instanceObjectLocal;
-            //cimErrorDetails = cimErrorDetailsLocal;
-            //return resultLocal;
+
+        internal MI_Result DeserializeInstance(
+            MI_SerializerFlags flags,
+            byte[] serializedBuffer,
+            MI_Class[] classObjects,
+            IntPtr classObjectNeeded,
+            IntPtr classObjectNeededContext,
+            out UInt32 serializedBufferRead,
+            out MI_Instance instanceObject,
+            out MI_Instance cimErrorDetails
+            )
+        {
+            if (serializedBuffer == null || serializedBuffer.Length == 0)
+            {
+                throw new InvalidOperationException();
+            }
+
+            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length);
+            try
+            {
+                Marshal.Copy(serializedBuffer, 0, clientBuffer, serializedBuffer.Length);
+                return this.DeserializeInstance(flags,
+                    clientBuffer,
+                    (UInt32)(serializedBuffer.Length),
+                    classObjects,
+                    classObjectNeeded,
+                    classObjectNeededContext,
+                    out serializedBufferRead,
+                    out instanceObject,
+                    out cimErrorDetails);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(clientBuffer);
+            }
         }
 
         internal MI_Result Instance_GetClassName(
@@ -264,34 +300,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
 
         private MI_DeserializerFT ft { get { return this.mft.Value; } }
-
-        private MI_DeserializerFT MarshalFT()
-        {
-            MI_DeserializerFT res = new MI_DeserializerFT();
-            IntPtr ftPtr = IntPtr.Zero;
-            unsafe
-            {
-                // Just as easily could be implemented with Marshal
-                // but that would copy more than the one pointer we need
-                IntPtr structurePtr = this.Ptr;
-                if (structurePtr == IntPtr.Zero)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                ftPtr = *((IntPtr*)((byte*)structurePtr + MI_DeserializerFTOffset));
-            }
-
-            if (ftPtr == IntPtr.Zero)
-            {
-                throw new InvalidOperationException();
-            }
-
-            // No apparent way to implement this in an unsafe block
-            Marshal.PtrToStructure(ftPtr, res);
-            return res;
-        }
-
+        
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_DeserializerFT
         {
@@ -346,10 +355,10 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeInstance(
                 MI_DeserializerPtr deserializer,
-                UInt32 flags,
+                MI_SerializerFlags flags,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                [In, Out] MI_ClassOutPtr classObjects,
+                IntPtr[] classObjects,
                 UInt32 numberClassObjects,
                 IntPtr classObjectNeeded,
                 IntPtr classObjectNeededContext,

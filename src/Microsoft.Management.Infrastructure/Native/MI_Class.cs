@@ -16,6 +16,28 @@ namespace Microsoft.Management.Infrastructure.Native
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+    internal struct MI_ClassArrayPtr
+    {
+        internal IntPtr[] ptr;
+
+        public static implicit operator MI_ClassArrayPtr(MI_Class[] classes)
+        {
+            if (classes == null)
+            {
+                throw new InvalidCastException();
+            }
+
+            IntPtr[] ptrs = new IntPtr[classes.Length];
+            for (int i = 0; i < classes.Length; i++)
+            {
+                ptrs[i] = classes[i].Ptr;
+            }
+
+            return new MI_ClassArrayPtr() { ptr = ptrs };
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_Class
     {
         internal MI_Result GetElement(

@@ -32,6 +32,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private static Lazy<SerializationFTPair> XmlSerializationFTs = new Lazy<SerializationFTPair>(() => GetXmlSerializationFTs());
         internal static MI_Serializer.MI_SerializerFT XMLSerializationFT { get { return XmlSerializationFTs.Value.SerializationFT; } }
+        internal static MI_Deserializer.MI_DeserializerFT XMLDeserializationFT { get { return XmlSerializationFTs.Value.DeserializationFT; } }
 
         private static SerializationFTPair GetXmlSerializationFTs()
         {
