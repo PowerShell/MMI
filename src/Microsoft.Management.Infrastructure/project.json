@@ -10,7 +10,7 @@
     "configurations": {
         "Linux": {
             "buildOptions": {
-                "define": [ "_LINUX", "1" ]
+                "define": [ "_LINUX" ]
             }
         }
     },
