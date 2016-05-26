@@ -26,7 +26,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_SerializerMembersSize = Marshal.SizeOf(typeof(MI_SerializerMembers));
+        private static int MI_SerializerMembersSize = Marshal.SizeOf<MI_SerializerMembers>();
 
         private MI_SerializerPtr ptr;
         private bool isDirect;
