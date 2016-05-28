@@ -58,7 +58,7 @@ namespace MMI.Tests.Native
             MIAssert.MIPropertiesEqual(new TestMIProperty(this.value, this.value.Type.Value, MI_Flags.None), testproperty, propertyName);
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_ValuesNull_Test()
         {
             foreach (MI_Type type in Enum.GetValues(typeof(MI_Type)))
@@ -78,7 +78,7 @@ namespace MMI.Tests.Native
             }
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_BooleanTypes_Test()
         {
             this.value.Boolean = true;
@@ -87,7 +87,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_Char16Types_Test()
         {
             this.value.Char16 = Char.MaxValue;
@@ -96,7 +96,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_DatetimeTypes_Test()
         {
             this.value.Datetime = new MI_Datetime()
@@ -137,7 +137,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_FloatingPointTypes_Test()
         {
             this.value.Real32 = .99f;
@@ -151,7 +151,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_InstanceTypes_Test()
         {
             MI_Instance InnerInstance = null;
@@ -197,7 +197,7 @@ namespace MMI.Tests.Native
             }
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_IntegerTypes_Test()
         {
             this.value.Sint8 = 64;
@@ -241,7 +241,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_IntervalTypes_Test()
         {
             this.value.Datetime = new MI_Datetime()
@@ -279,7 +279,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_ReferenceTypes_Test()
         {
             MI_Instance InnerInstance = null;
@@ -325,7 +325,7 @@ namespace MMI.Tests.Native
             }
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_StringTypes_Test()
         {
             const string expectedString = "Foobar";
@@ -337,7 +337,7 @@ namespace MMI.Tests.Native
             this.TestValueRoundtrip();
         }
 
-        [WindowsFact]
+        [Fact]
         public void MIValue_PreventsBadCast_Test()
         {
             this.value.String = "Foobar";
