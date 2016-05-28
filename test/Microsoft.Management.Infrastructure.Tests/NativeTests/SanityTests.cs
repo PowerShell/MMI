@@ -33,12 +33,12 @@ namespace MMI.Tests.Native
             }
         }
 
-        [WindowsFact]
+        [Fact]
         public void CanCreateSession()
         {
             MI_Session newSession = null;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
+            MI_Result res = this.application.NewSession(null,
                     null,
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
