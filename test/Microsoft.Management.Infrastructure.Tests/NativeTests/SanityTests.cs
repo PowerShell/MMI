@@ -272,7 +272,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res, "Expect to be able to close the session");
         }
 
-        [WindowsFact]
+        [Fact]
         public void CanGetSetOperationOptionsInterval()
         {
             MI_OperationOptions options;
@@ -297,37 +297,37 @@ namespace MMI.Tests.Native
             MIAssert.MIIntervalsEqual(myInterval, retrievedInterval);
         }
 
-        [WindowsFact]
+        [Fact]
         public void DirectInstanceTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Instance.NewDirectPtr().Delete());
         }
 
-        [WindowsFact]
+        [Fact]
         public void IndirectInstanceTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Instance.NewIndirectPtr().Delete());
         }
 
-        [WindowsFact]
+        [Fact]
         public void DirectApplicationTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Application.NewDirectPtr().Close());
         }
 
-        [WindowsFact]
+        [Fact]
         public void IndirectApplicationTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Application.NewIndirectPtr().Close());
         }
 
-        [WindowsFact]
+        [Fact]
         public void DirectSessionTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Session.NewDirectPtr().Close(IntPtr.Zero, null));
         }
 
-        [WindowsFact]
+        [Fact]
         public void IndirectSessionTableAccessesThrowWhenNotInitialized()
         {
             Assert.Throws<InvalidOperationException>(() => MI_Session.NewIndirectPtr().Close(IntPtr.Zero, null));
