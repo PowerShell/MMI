@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests
@@ -16,6 +15,12 @@ namespace MMI.Tests
         {
 #if !_LINUX
             Assert.Equal(expected, actual);
+#endif
+        }
+        internal static void Equal<T>(T expected, T actual, string message)
+        {
+#if !_LINUX
+            Assert.Equal(expected, actual, message);
 #endif
         }
     }

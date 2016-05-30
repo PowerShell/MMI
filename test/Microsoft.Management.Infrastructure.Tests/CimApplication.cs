@@ -1,4 +1,3 @@
-using Xunit;
 using Microsoft.Management.Infrastructure.Internal;
 
 namespace MMI.Tests.Internal
@@ -11,7 +10,7 @@ namespace MMI.Tests.Internal
         [Fact]
         public void ApplicationID()
         {
-            Assert.Equal("CoreCLRSingletonAppDomain", CimApplication.ApplicationID);
+            Assert.Equal("CoreCLRSingletonAppDomain", CimApplication.ApplicationID, "Expect test framework to be sane");
         }
     }
 }

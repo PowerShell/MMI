@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using Xunit;
 using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests.Native
@@ -345,32 +344,12 @@ namespace MMI.Tests.Native
             {
                 if(enumValue != MI_Type.MI_STRING)
                 {
-                    InvalidCastException expected = null;
-                    try
-                    {
-                        this.value.GetValue(enumValue);
-                    }
-                    catch(InvalidCastException ex)
-                    {
-                        expected = ex;
-                    }
-
-                    Assert.NotNull(expected);
+                    Assert.Throws<InvalidCastException>(() => this.value.GetValue(enumValue));
                 }
             }
 
             this.value.Uint8 = 5;
-            InvalidCastException outerExpected = null;
-            try
-            {
-                this.value.GetValue(MI_Type.MI_STRING);
-            }
-            catch (InvalidCastException ex)
-            {
-                outerExpected = ex;
-            }
-
-            Assert.NotNull(outerExpected);
+            Assert.Throws<InvalidCastException>(() => this.value.GetValue(MI_Type.MI_STRING));
         }
     }
 }

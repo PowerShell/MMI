@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests
@@ -19,12 +18,12 @@ namespace MMI.Tests
 
         internal static void Succeeded(MI_Result code, string message)
         {
-            Assert.Equal(MI_Result.MI_RESULT_OK, code);
+            Assert.Equal(MI_Result.MI_RESULT_OK, code, message);
         }
 
         internal static void Succeeded(MI_Result code, string message, params string[] formatValues)
         {
-            Assert.Equal(MI_Result.MI_RESULT_OK, code);
+            Assert.Equal(MI_Result.MI_RESULT_OK, code, string.Format(message, formatValues));
         }
 
         internal static void Failed(MI_Result code)
@@ -34,22 +33,22 @@ namespace MMI.Tests
 
         internal static void Failed(MI_Result code, string message)
         {
-            Assert.NotEqual(MI_Result.MI_RESULT_OK, code);
+            Assert.NotEqual(MI_Result.MI_RESULT_OK, code, message);
         }
 
         internal static void MIIntervalsEqual(MI_Interval expected, MI_Interval actual)
         {
-            Assert.Equal(expected.days, actual.days);
-            Assert.Equal(expected.hours, actual.hours);
-            Assert.Equal(expected.minutes, actual.minutes);
-            Assert.Equal(expected.seconds, actual.seconds);
-            Assert.Equal(expected.microseconds, actual.microseconds);
-            Assert.Equal(0u, expected.__padding1);
-            Assert.Equal(0u, expected.__padding2);
-            Assert.Equal(0u, expected.__padding3);
-            Assert.Equal(0u, actual.__padding1);
-            Assert.Equal(0u, actual.__padding2);
-            Assert.Equal(0u, actual.__padding3);
+            Assert.Equal(expected.days, actual.days, "Expect days to be equal");
+            Assert.Equal(expected.hours, actual.hours, "Expect hours to be equal");
+            Assert.Equal(expected.minutes, actual.minutes, "Expect minutes to be equal");
+            Assert.Equal(expected.seconds, actual.seconds, "Expect seconds to be equal");
+            Assert.Equal(expected.microseconds, actual.microseconds, "Expect microseconds to be equal");
+            Assert.Equal(0u, expected.__padding1, "Expect __padding1 of expected to be empty");
+            Assert.Equal(0u, expected.__padding2, "Expect __padding2 of expected to be empty");
+            Assert.Equal(0u, expected.__padding3, "Expect __padding3 of expected to be empty");
+            Assert.Equal(0u, actual.__padding1, "Expect __padding1 of actual to be empty");
+            Assert.Equal(0u, actual.__padding2, "Expect __padding2 of actual to be empty");
+            Assert.Equal(0u, actual.__padding3, "Expect __padding3 of actual to be empty");
         }
 
         internal static void MIDatetimesEqual(MI_Datetime expected, MI_Datetime actual)
@@ -57,13 +56,13 @@ namespace MMI.Tests
             Assert.Equal(expected.isTimestamp, actual.isTimestamp);
             if (expected.isTimestamp)
             {
-                Assert.Equal(expected.timestamp.day, actual.timestamp.day);
-                Assert.Equal(expected.timestamp.month, actual.timestamp.month);
-                Assert.Equal(expected.timestamp.year, actual.timestamp.year);
-                Assert.Equal(expected.timestamp.second, actual.timestamp.second);
-                Assert.Equal(expected.timestamp.hour, actual.timestamp.hour);
-                Assert.Equal(expected.timestamp.minute, actual.timestamp.minute);
-                Assert.Equal(expected.timestamp.microseconds, actual.timestamp.microseconds);
+                Assert.Equal(expected.timestamp.day, actual.timestamp.day, "Expect day to be equal");
+                Assert.Equal(expected.timestamp.month, actual.timestamp.month, "Expect month to be equal");
+                Assert.Equal(expected.timestamp.year, actual.timestamp.year, "Expect year to be equal");
+                Assert.Equal(expected.timestamp.second, actual.timestamp.second, "Expect second to be equal");
+                Assert.Equal(expected.timestamp.hour, actual.timestamp.hour, "Expect hour to be equal");
+                Assert.Equal(expected.timestamp.minute, actual.timestamp.minute, "Expect minute to be equal");
+                Assert.Equal(expected.timestamp.microseconds, actual.timestamp.microseconds, "Expect microseconds to be equal");
             }
             else
             {
@@ -76,9 +75,9 @@ namespace MMI.Tests
             // Windows and Linux behaviors differ on the Flags, even on a newly created property
             // Avoid testing this as a stopgap until the proper behavior is defined
             // It isn't a marshalling issue at any rate
-            WindowsAssert.Equal(expectedProperty.Flags, actualProperty.Flags);
+            WindowsAssert.Equal(expectedProperty.Flags, actualProperty.Flags, "Expect the flags to be the normal flags on Windows");
 
-            Assert.Equal(expectedProperty.Type, actualProperty.Type);
+            Assert.Equal(expectedProperty.Type, actualProperty.Type, "Expect the property types to be the same");
             if ((expectedProperty.Flags & MI_Flags.MI_FLAG_NULL) != 0)
             {
                 return;
@@ -97,7 +96,7 @@ namespace MMI.Tests
             {
                 MI_Datetime[] expected = (MI_Datetime[])expectedProperty.Value;
                 var actual = (MI_Datetime[])actualProperty.Value;
-                Assert.Equal(expected.Length, actual.Length);
+                Assert.Equal(expected.Length, actual.Length, "Expect the MI_DATETIME arrays to be of the same length");
                 for (int i = 0; i < expected.Length; i++)
                 {
                     MIAssert.MIDatetimesEqual(expected[i], (MI_Datetime)actual[i]);
@@ -126,7 +125,7 @@ namespace MMI.Tests
                     string actualElementName = null;
                     actual.GetElementAt(i, out actualElementName, out actualElementValue, out actualElementType, out actualElementFlags);
 
-                    Assert.Equal(expectedElementName, actualElementName);
+                    Assert.Equal(expectedElementName, actualElementName, "Expect the element names to be the same within the instances");
                     MIAssert.MIPropertiesEqual(new TestMIProperty(expectedElementValue, expectedElementType, expectedElementFlags),
                         new TestMIProperty(actualElementValue, actualElementType, actualElementFlags), propertyName);
                 }
@@ -135,7 +134,7 @@ namespace MMI.Tests
             {
                 MI_Instance[] expectedArray = (MI_Instance[])expectedProperty.Value;
                 MI_Instance[] actualArray = actualProperty.Value as MI_Instance[];
-                Assert.Equal(expectedArray.Length, actualArray.Length);
+                Assert.Equal(expectedArray.Length, actualArray.Length, "Expect instance/reference arrays to have the same length");
                 for (int j = 0; j < expectedArray.Length; j++)
                 {
                     MI_Instance expected = expectedArray[j];
@@ -144,7 +143,7 @@ namespace MMI.Tests
                     expected.GetElementCount(out expectedElementCount);
                     uint actualElementCount;
                     actual.GetElementCount(out actualElementCount);
-                    Assert.Equal(expectedElementCount, actualElementCount);
+                    Assert.Equal(expectedElementCount, actualElementCount, "Expect the instance/references arrays to be of the same length");
                     for (uint i = 0; i < expectedElementCount; i++)
                     {
                         MI_Flags expectedElementFlags;
@@ -159,7 +158,7 @@ namespace MMI.Tests
                         string actualElementName = null;
                         actual.GetElementAt(i, out actualElementName, out actualElementValue, out actualElementType, out actualElementFlags);
 
-                        Assert.Equal(expectedElementName, actualElementName);
+                        Assert.Equal(expectedElementName, actualElementName, "Expect the element names to be the same within the instances");
                         MIAssert.MIPropertiesEqual(new TestMIProperty(expectedElementValue, expectedElementType, expectedElementFlags),
                             new TestMIProperty(actualElementValue, actualElementType, actualElementFlags), propertyName);
                     }
@@ -168,12 +167,12 @@ namespace MMI.Tests
             else if ((expectedProperty.Type & MI_TypeFlags.MI_ARRAY) == MI_TypeFlags.MI_ARRAY)
             {
                 ICollection collectionValue = actualProperty.Value as ICollection;
-                Assert.NotNull(collectionValue);
+                Assert.NotNull(collectionValue, "Expect the property value to be an ICollection since it was an MI_ARRAY");
                 Assert.Equal(expectedProperty.Value as ICollection, collectionValue);
             }
             else
             {
-                Assert.Equal(expectedProperty.Value, actualProperty.Value);
+                Assert.Equal(expectedProperty.Value, actualProperty.Value, "Expect the simple MI property values to match");
             }
         }
     }

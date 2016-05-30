@@ -63,8 +63,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimApplication.cs">
       <Link>CimApplication.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Fact.cs">
+      <Link>Fact.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers.cs">
       <Link>Helpers.cs</Link>
