@@ -9,7 +9,8 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class XMLSerializerTests : NativeTestsBase, IClassFixture<ApplicationFixture>
+    [Collection(ApplicationFixture.RequiresApplicationCollection)]
+    public class XMLSerializerTests : NativeTestsBase
     {   
         public XMLSerializerTests(ApplicationFixture appFixture) : base(appFixture)
         {

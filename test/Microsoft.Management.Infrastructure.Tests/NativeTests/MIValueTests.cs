@@ -7,7 +7,8 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MIValueTests : NativeTestsBase, IDisposable, IClassFixture<ApplicationFixture>
+    [Collection(ApplicationFixture.RequiresApplicationCollection)]
+    public class MIValueTests : NativeTestsBase, IDisposable
     {
         private MI_Value value = new MI_Value();
         private MI_Instance instance = null;

@@ -9,7 +9,8 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MOFSerializerTests : NativeTestsBase, IClassFixture<ApplicationFixture>
+    [Collection(ApplicationFixture.RequiresApplicationCollection)]
+    public class MOFSerializerTests : NativeTestsBase
     {   
         public MOFSerializerTests(ApplicationFixture appFixture) : base(appFixture)
         {

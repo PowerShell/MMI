@@ -63,6 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
       <Link>Assert.cs</Link>
     </Compile>
@@ -96,6 +99,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionTests.cs">
       <Link>NativeTests\SessionTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\XMLDeserializerTests.cs">
+      <Link>NativeTests\XMLDeserializerTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\XMLSerializerTests.cs">
       <Link>NativeTests\XMLSerializerTests.cs</Link>
     </Compile>
@@ -108,7 +114,6 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsFact.cs">
       <Link>WindowsFact.cs</Link>
     </Compile>
-    <Compile Include="NativeTests\XMLDeserializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

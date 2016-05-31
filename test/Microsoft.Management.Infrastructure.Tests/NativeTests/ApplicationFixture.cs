@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
+using Xunit;
 
 namespace MMI.Tests.Native
 {
@@ -33,5 +34,16 @@ namespace MMI.Tests.Native
                 MIAssert.Succeeded(shutdownTask.Result);
             }
         }
+
+        public const string RequiresApplicationCollection = "Requires MI_Application collection";
+    }
+
+
+    [CollectionDefinition(ApplicationFixture.RequiresApplicationCollection)]
+    public class RequiresApplicationFixtureRelationship : ICollectionFixture<ApplicationFixture>
+    {
+        // This class has no code, and is never created. Its purpose is simply
+        // to be the place to apply [CollectionDefinition] and all the
+        // ICollectionFixture<> interfaces.
     }
 }
