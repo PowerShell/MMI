@@ -42,10 +42,15 @@ namespace MMI.Tests.Native
         {
             if (this.application != null)
             {
+                // This is annoying
+                // You can't close the Application if there are outstanding sessions because it
+                // will wait for them and hang. Since we're in a finalizer we can't throw.
+                // Thus there can be legitimate test bugs that we can't detect or error on here
+                // If we hang the Close it'll just upset test runners
+                // Better to try to do the right thing and possibly leak than. If we find
+                // a test shutdown hook we should probably move to that
                 var shutdownTask = Task.Factory.StartNew(() => this.application.Close());
                 bool completed = shutdownTask.Wait(TimeSpan.FromSeconds(5));
-                Assert.True(completed, "MI_Application did not complete shutdown in the expected time - did you leave an object open?");
-                MIAssert.Succeeded(shutdownTask.Result);
                 ApplicationFixture.CurrentFixture = null;
             }
         }

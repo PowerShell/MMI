@@ -117,6 +117,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionTests.cs">
       <Link>NativeTests\SessionTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SlowTests.cs">
+      <Link>NativeTests\SlowTests.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\XMLDeserializerTests.cs">
       <Link>NativeTests\XMLDeserializerTests.cs</Link>
     </Compile>
