@@ -9,28 +9,15 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class XMLDeserializerTests : NativeTestsBase, IClassFixture<SessionFixture>
+    [Collection(SessionFixture.RequiresSessionCollection)]
+    public class MOFDeserializerTests : NativeTestsBase, IClassFixture<MOFDeserializerFixture>
     {   
-        public XMLDeserializerTests(SessionFixture sessionFixture) : base(sessionFixture)
+        public MOFDeserializerTests(MOFDeserializerFixture sessionFixture) : base(sessionFixture)
         {
-        }
-
-        [WindowsFact]
-        public void CanCreateMOFDeserializer()
-        {
-            MI_Deserializer newDeserializer = null;
-            MI_Result res = this.Application.NewDeserializer(MI_SerializerFlags.None,
-                MI_SerializationFormat.MOF,
-                out newDeserializer);
-            MIAssert.Succeeded(res);
-            Assert.NotNull(newDeserializer, "Expect newly created deserializer to be non-null");
-
-            res = newDeserializer.Close();
-            MIAssert.Succeeded(res);
         }
         
         [WindowsFact]
-        public void CanMOFDeserializeInstance()
+        public void CanDeserializeInstance()
         {
             MI_Deserializer newDeserializer = null;
             MI_Result res = this.Application.NewDeserializer(MI_SerializerFlags.None,

@@ -61,6 +61,11 @@ namespace MMI.Tests
         {
             Xunit.Assert.NotNull(actual);
         }
+        
+        internal static void Null<T>(T actual) where T : class
+        {
+            Xunit.Assert.Null(actual);
+        }
 
         internal static void True(bool? value, string message)
         {

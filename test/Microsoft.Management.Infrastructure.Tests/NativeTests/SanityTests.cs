@@ -9,10 +9,9 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    [Collection(ApplicationFixture.RequiresApplicationCollection)]
     public class SanityTests : NativeTestsBase
     {
-        public SanityTests(ApplicationFixture appFixture) : base(appFixture)
+        public SanityTests() : base()
         {
         }
 

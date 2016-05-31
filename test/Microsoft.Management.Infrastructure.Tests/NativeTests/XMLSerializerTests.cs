@@ -9,25 +9,10 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    [Collection(ApplicationFixture.RequiresApplicationCollection)]
-    public class XMLSerializerTests : NativeTestsBase
+    public class XMLSerializerTests : NativeTestsBase, IClassFixture<XMLSerializerFixture>
     {   
-        public XMLSerializerTests(ApplicationFixture appFixture) : base(appFixture)
+        public XMLSerializerTests() : base()
         {
-        }
-        
-        [WindowsFact]
-        public void CanCreateSerializer()
-        {
-            MI_Serializer newSerializer = null;
-            MI_Result res = this.Application.NewSerializer(MI_SerializerFlags.None,
-                MI_SerializationFormat.XML,
-                out newSerializer);
-            MIAssert.Succeeded(res);
-            Assert.NotNull(newSerializer, "Expect newly created serializer to be non-null");
-
-            res = newSerializer.Close();
-            MIAssert.Succeeded(res);
         }
         
         [WindowsFact]

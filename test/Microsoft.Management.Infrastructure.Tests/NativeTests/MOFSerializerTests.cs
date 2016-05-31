@@ -9,27 +9,12 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    [Collection(ApplicationFixture.RequiresApplicationCollection)]
-    public class MOFSerializerTests : NativeTestsBase
+    public class MOFSerializerTests : NativeTestsBase, IClassFixture<MOFSerializerFixture>
     {   
-        public MOFSerializerTests(ApplicationFixture appFixture) : base(appFixture)
+        public MOFSerializerTests() : base()
         {
         }
 
-        [WindowsFact]
-        public void CanCreateSerializer()
-        {
-            MI_Serializer newSerializer = null;
-            MI_Result res = this.Application.NewSerializer(MI_SerializerFlags.None,
-                MI_SerializationFormat.MOF,
-                out newSerializer);
-            MIAssert.Succeeded(res);
-            Assert.NotNull(newSerializer, "Expect newly created serializer to be non-null");
-
-            res = newSerializer.Close();
-            MIAssert.Succeeded(res);
-        }
-        
         [WindowsFact]
         public void CanSerializeInstance()
         {

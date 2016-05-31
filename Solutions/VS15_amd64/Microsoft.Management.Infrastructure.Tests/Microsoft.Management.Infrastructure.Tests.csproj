@@ -75,8 +75,29 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
       <Link>MIAssert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\ApplicationFixture.cs">
-      <Link>NativeTests\ApplicationFixture.cs</Link>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\ApplicationFixture.cs">
+      <Link>NativeTests\Fixtures\ApplicationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\DeserializerFixture.cs">
+      <Link>NativeTests\Fixtures\DeserializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\MOFDeserializerFixture.cs">
+      <Link>NativeTests\Fixtures\MOFDeserializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\MOFSerializerFixture.cs">
+      <Link>NativeTests\Fixtures\MOFSerializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\SerializerFixture.cs">
+      <Link>NativeTests\Fixtures\SerializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\SessionFixture.cs">
+      <Link>NativeTests\Fixtures\SessionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\XMLDeserializerFixture.cs">
+      <Link>NativeTests\Fixtures\XMLDeserializerFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\XMLSerializerFixture.cs">
+      <Link>NativeTests\Fixtures\XMLSerializerFixture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MIValueTests.cs">
       <Link>NativeTests\MIValueTests.cs</Link>
@@ -92,9 +113,6 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SanityTests.cs">
       <Link>NativeTests\SanityTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionFixture.cs">
-      <Link>NativeTests\SessionFixture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionTests.cs">
       <Link>NativeTests\SessionTests.cs</Link>
