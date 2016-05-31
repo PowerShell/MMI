@@ -9,29 +9,10 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MOFDeserializerTests : NativeTestsBase
+    public class MOFDeserializerTests : DeserializerTestsBase
     {
-        private MI_Deserializer Deserializer;
-
-        public MOFDeserializerTests() : base()
+        public MOFDeserializerTests() : base(MI_SerializationFormat.MOF)
         {
-            var application = StaticFixtures.Application;
-
-            MI_Deserializer newDeserializer = null;
-            MI_Result res = application.NewDeserializer(MI_SerializerFlags.None,
-                MI_SerializationFormat.MOF,
-                out newDeserializer);
-            MIAssert.Succeeded(res);
-            Assert.NotNull(newDeserializer, "Expect newly created deserializer to be non-null");
-            this.Deserializer = newDeserializer;
-        }
-
-        public virtual void Dispose()
-        {
-            if (this.Deserializer != null)
-            {
-                this.Deserializer.Close();
-            }
         }
 
         [WindowsFact]

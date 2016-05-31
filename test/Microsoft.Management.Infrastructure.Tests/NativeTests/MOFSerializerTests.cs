@@ -9,26 +9,10 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MOFSerializerTests : NativeTestsBase
+    public class MOFSerializerTests : SerializerTestsBase
     {
-        internal MI_Serializer Serializer { get; private set; }
-
-        public MOFSerializerTests()
+        public MOFSerializerTests() : base(MI_SerializationFormat.MOF)
         {
-            MI_Serializer newSerializer;
-            MI_Result res = this.Application.NewSerializer(MI_SerializerFlags.None,
-                    MI_SerializationFormat.MOF,
-                    out newSerializer);
-            MIAssert.Succeeded(res, "Expect simple NewSerializer to succeed");
-            this.Serializer = newSerializer;
-        }
-
-        public virtual void Dispose()
-        {
-            if (this.Serializer != null)
-            {
-                this.Serializer.Close();
-            }
         }
 
         [WindowsFact]
@@ -41,23 +25,13 @@ namespace MMI.Tests.Native
             valueToSerialize.String = "Test string";
             res = toSerialize.AddElement("string", valueToSerialize, MI_Type.MI_STRING, MI_Flags.None);
             MIAssert.Succeeded(res);
-
-            MI_Serializer newSerializer = null;
-            res = this.Application.NewSerializer(MI_SerializerFlags.None,
-                MI_SerializationFormat.MOF,
-                out newSerializer);
-            MIAssert.Succeeded(res);
-            Assert.NotNull(newSerializer, "Expect newly created serializer to be non-null");
-
+            
             byte[] serializedInstance;
-            res = newSerializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
+            res = this.Serializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
             MIAssert.Succeeded(res);
 
             string serializedString = Encoding.Unicode.GetString(serializedInstance);
             Assert.Equal("instance of TestInstance\n{\n    string = \"Test string\";\n};\n\n", serializedString, "Expect the serialized string to be the one we generated elsewhere");
-
-            res = newSerializer.Close();
-            MIAssert.Succeeded(res);
         }
     }
 }

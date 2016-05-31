@@ -75,6 +75,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
       <Link>MIAssert.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\DeserializerTestsBase.cs">
+      <Link>NativeTests\DeserializerTestsBase.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\ApplicationFixture.cs">
       <Link>NativeTests\Fixtures\ApplicationFixture.cs</Link>
     </Compile>
@@ -98,6 +101,9 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SanityTests.cs">
       <Link>NativeTests\SanityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SerializerTestsBase.cs">
+      <Link>NativeTests\SerializerTestsBase.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionTests.cs">
       <Link>NativeTests\SessionTests.cs</Link>
