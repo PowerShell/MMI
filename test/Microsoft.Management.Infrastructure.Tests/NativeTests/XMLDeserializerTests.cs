@@ -11,20 +11,18 @@ namespace MMI.Tests.Native
 {
     [Collection(SessionFixture.RequiresSessionCollection)]
     public class XMLDeserializerTests : NativeTestsBase, IClassFixture<XMLDeserializerFixture> 
-    {   
+    {
+        XMLDeserializerFixture deserializerFixture;
+
         public XMLDeserializerTests(XMLDeserializerFixture deserializerFixture) : base(deserializerFixture)
         {
+            this.deserializerFixture = deserializerFixture;
         }
         
         [WindowsFact]
         public void CanDeserializeInstance()
         {
-            MI_Deserializer newDeserializer = null;
-            MI_Result res = this.Application.NewDeserializer(MI_SerializerFlags.None,
-                MI_SerializationFormat.XML,
-                out newDeserializer);
-            MIAssert.Succeeded(res);
-            Assert.NotNull(newDeserializer, "Expect newly created deserializer to be non-null");
+            MI_Deserializer deserializer = this.deserializerFixture.Deserializer;
             
             MI_Operation cimClassOperation;
             this.Session.GetClass(MI_OperationFlags.Default, null, "root/cimv2", "Win32_ComputerSystem", null, out cimClassOperation);
@@ -34,7 +32,7 @@ namespace MMI.Tests.Native
             MI_Result operationRes;
             MI_Instance completionDetails;
             string errorMessage;
-            res = cimClassOperation.GetClass(out cimClass, out moreResults, out operationRes, out errorMessage, out completionDetails);
+            var res = cimClassOperation.GetClass(out cimClass, out moreResults, out operationRes, out errorMessage, out completionDetails);
             MIAssert.Succeeded(res);
             MIAssert.Succeeded(operationRes);
             Assert.False(moreResults, "Expect no more results after getting named class");
@@ -45,7 +43,7 @@ namespace MMI.Tests.Native
             MI_Instance instance;
             uint bufferRead;
             MI_Instance cimErrorDetails;
-            res = newDeserializer.DeserializeInstance(MI_SerializerFlags.None,
+            res = deserializer.DeserializeInstance(MI_SerializerFlags.None,
                 Encoding.Unicode.GetBytes(serializedString),
                 new MI_Class[] { cimClass, cimClass }, // Deliberate, tests the serialization of the object array
                 IntPtr.Zero,
@@ -65,9 +63,6 @@ namespace MMI.Tests.Native
             Assert.Equal(MI_Type.MI_STRING, elementType, "Expect the property to have the normal type");
             Assert.Equal("BECARR-LENOVO", elementValue.String, "Expect the property to have the value from the serialized blob");
             instance.Delete();
-
-            res = newDeserializer.Close();
-            MIAssert.Succeeded(res);
         }
     }
 }
