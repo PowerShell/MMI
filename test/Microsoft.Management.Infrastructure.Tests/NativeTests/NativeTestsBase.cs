@@ -10,23 +10,12 @@ namespace MMI.Tests.Native
 {
     public class NativeTestsBase
     {
-        internal MI_Application Application { get { return ApplicationFixture.Application; } }
+        internal MI_Application Application { get { return StaticFixtures.Application; } }
 
-        internal MI_Session Session { get; private set; }
-
+        internal MI_Session Session { get { return StaticFixtures.Session; } }
+        
         protected NativeTestsBase()
         {
-
-        }
-        
-        public NativeTestsBase(SessionFixture sessionFixture)
-        {
-            this.Session = sessionFixture.Session;
-        }
-
-        public NativeTestsBase(DeserializerFixture deserializerFixture)
-        {
-            this.Session = SessionFixture.CurrentFixture.Session;
         }
     }
 }

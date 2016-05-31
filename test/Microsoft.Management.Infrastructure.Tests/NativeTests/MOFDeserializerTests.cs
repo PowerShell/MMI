@@ -9,20 +9,34 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    [Collection(SessionFixture.RequiresSessionCollection)]
-    public class MOFDeserializerTests : NativeTestsBase, IClassFixture<MOFDeserializerFixture>
+    public class MOFDeserializerTests : NativeTestsBase
     {
-        MOFDeserializerFixture deserializerFixture;
+        private MI_Deserializer Deserializer;
 
-        public MOFDeserializerTests(MOFDeserializerFixture deserializerFixture) : base(deserializerFixture)
+        public MOFDeserializerTests() : base()
         {
-            this.deserializerFixture = deserializerFixture;
+            var application = StaticFixtures.Application;
+
+            MI_Deserializer newDeserializer = null;
+            MI_Result res = application.NewDeserializer(MI_SerializerFlags.None,
+                MI_SerializationFormat.MOF,
+                out newDeserializer);
+            MIAssert.Succeeded(res);
+            Assert.NotNull(newDeserializer, "Expect newly created deserializer to be non-null");
+            this.Deserializer = newDeserializer;
         }
-        
+
+        public virtual void Dispose()
+        {
+            if (this.Deserializer != null)
+            {
+                this.Deserializer.Close();
+            }
+        }
+
         [WindowsFact]
         public void CanDeserializeInstance()
         {
-            MI_Deserializer deserializer = this.deserializerFixture.Deserializer;
             MI_Operation cimClassOperation;
             this.Session.GetClass(MI_OperationFlags.Default, null, "root/cimv2", "Win32_ComputerSystem", null, out cimClassOperation);
 
@@ -42,7 +56,7 @@ namespace MMI.Tests.Native
             MI_Instance instance;
             uint bufferRead;
             MI_Instance cimErrorDetails;
-            res = deserializer.DeserializeInstance(MI_SerializerFlags.None,
+            res = this.Deserializer.DeserializeInstance(MI_SerializerFlags.None,
                 Encoding.Unicode.GetBytes(serializedString),
                 new MI_Class[] { cimClass, cimClass }, // Deliberate, tests the serialization of the object array
                 IntPtr.Zero,

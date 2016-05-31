@@ -17,7 +17,7 @@ namespace MMI.Tests.Native
             {
                 MI_Session badSession;
                 MI_Instance extendedError = null;
-                MI_Result res = ApplicationFixture.Application.NewSession(null,
+                MI_Result res = StaticFixtures.Application.NewSession(null,
                         "badhost",
                         MI_DestinationOptions.Null,
                         MI_SessionCallbacks.Null,

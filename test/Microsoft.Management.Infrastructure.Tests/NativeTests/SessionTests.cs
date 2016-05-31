@@ -9,12 +9,8 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class SessionTests : NativeTestsBase, IClassFixture<SessionFixture>
+    public class SessionTests : NativeTestsBase
     {
-        public SessionTests(SessionFixture sessionFixture) : base(sessionFixture)
-        {
-        }
-
         [WindowsFact]
         public void TestSessionPositive()
         {

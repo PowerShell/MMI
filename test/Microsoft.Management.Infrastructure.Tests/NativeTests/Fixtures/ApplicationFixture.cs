@@ -13,45 +13,24 @@ namespace MMI.Tests.Native
     {
         private readonly string ApplicationName = "MMINativeTests";
 
-        private static Lazy<ApplicationFixture> CurrentFixture { get; set; }
+        internal MI_Application Application { get; private set; }
 
-        private MI_Application application;
-
-        internal static MI_Application Application { get { return CurrentFixture.Value.application; } }
-
-        static ApplicationFixture()
-        {
-            CurrentFixture = new Lazy<ApplicationFixture>(() => new ApplicationFixture());
-        }
-
-        ~ApplicationFixture()
-        {
-            this.Dispose();
-        }
-
-        private ApplicationFixture()
+        public ApplicationFixture()
         {
             MI_Instance extendedError = null;
             MI_Application newApplication;
             MI_Result res = MI_Application.Initialize(ApplicationName, out extendedError, out newApplication);
             MIAssert.Succeeded(res, "Expect basic application initialization to succeed");
-            this.application = newApplication;
+            this.Application = newApplication;
         }
 
-        private void Dispose()
+        public void Dispose()
         {
-            if (this.application != null)
+            if (this.Application != null)
             {
-                // This is annoying
-                // You can't close the Application if there are outstanding sessions because it
-                // will wait for them and hang. Since we're in a finalizer we can't throw.
-                // Thus there can be legitimate test bugs that we can't detect or error on here
-                // If we hang the Close it'll just upset test runners
-                // Better to try to do the right thing and possibly leak than. If we find
-                // a test shutdown hook we should probably move to that
-                var shutdownTask = Task.Factory.StartNew(() => this.application.Close());
+                var shutdownTask = Task.Factory.StartNew(() => this.Application.Close());
                 bool completed = shutdownTask.Wait(TimeSpan.FromSeconds(5));
-                ApplicationFixture.CurrentFixture = null;
+                Assert.True(completed, "Expect shutdown to complete successfully (did you leave an object open?)");
             }
         }
     }

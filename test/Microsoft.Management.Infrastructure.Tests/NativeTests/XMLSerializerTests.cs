@@ -9,10 +9,26 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class XMLSerializerTests : NativeTestsBase, IClassFixture<XMLSerializerFixture>
-    {   
-        public XMLSerializerTests() : base()
+    public class XMLSerializerTests : NativeTestsBase
+    {
+        internal MI_Serializer Serializer { get; private set; }
+
+        public XMLSerializerTests()
         {
+            MI_Serializer newSerializer;
+            MI_Result res = this.Application.NewSerializer(MI_SerializerFlags.None,
+                    MI_SerializationFormat.XML,
+                    out newSerializer);
+            MIAssert.Succeeded(res, "Expect simple NewSerializer to succeed");
+            this.Serializer = newSerializer;
+        }
+
+        public virtual void Dispose()
+        {
+            if (this.Serializer != null)
+            {
+                this.Serializer.Close();
+            }
         }
         
         [WindowsFact]
