@@ -5,37 +5,21 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
+using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class SanityTests : NativeTestsBase
+    public class SanityTests : NativeTestsBase, IClassFixture<ApplicationFixture>
     {
-        public SanityTests() : base()
+        public SanityTests(ApplicationFixture appFixture) : base(appFixture)
         {
-        }
-
-        [Fact]
-        public void CanCreateSession()
-        {
-            MI_Session newSession = null;
-            MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(null,
-                    null,
-                    MI_DestinationOptions.Null,
-                    MI_SessionCallbacks.Null,
-                    out extendedError,
-                    out newSession);
-            MIAssert.Succeeded(res, "Expect simple NewSession to succeed");
-
-            res = newSession.Close(IntPtr.Zero, null);
-            MIAssert.Succeeded(res, "Expect to be able to close untouched session");
         }
 
         [Fact]
         public void CanGetSetOperationOptionsInterval()
         {
             MI_OperationOptions options;
-            this.application.NewOperationOptions(false, out options);
+            this.Application.NewOperationOptions(false, out options);
 
             MI_Interval myInterval = new MI_Interval()
             {

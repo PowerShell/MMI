@@ -3,22 +3,18 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
+using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MIValueTests : IDisposable
+    public class MIValueTests : NativeTestsBase, IDisposable, IClassFixture<ApplicationFixture>
     {
-        private MI_Application application = null;
         private MI_Value value = new MI_Value();
         private MI_Instance instance = null;
         
-        public MIValueTests()
+        public MIValueTests(ApplicationFixture fixture) : base(fixture)
         {
-            MI_Instance extendedError = null;
-            var res = MI_Application.Initialize("MIValueTests", out extendedError, out this.application);
-            MIAssert.Succeeded(res);
-
-            res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out this.instance);
+            var res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out this.instance);
             MIAssert.Succeeded(res);
         }
         
@@ -30,14 +26,6 @@ namespace MMI.Tests.Native
             }
 
             this.value.Dispose();
-
-            if (this.application != null)
-            {
-                var shutdownTask = Task.Factory.StartNew(() => this.application.Close() );
-                bool completed = shutdownTask.Wait(TimeSpan.FromSeconds(5));
-                Assert.True(completed, "MI_Application did not complete shutdown in the expected time - did you leave an object open?");
-                MIAssert.Succeeded(shutdownTask.Result);
-            }
         }
 
         private void TestValueRoundtrip()
@@ -154,11 +142,11 @@ namespace MMI.Tests.Native
         public void MIValue_InstanceTypes_Test()
         {
             MI_Instance InnerInstance = null;
-            var res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
+            var res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
             MIAssert.Succeeded(res);
 
             MI_Instance InnerInstance2 = null;
-            res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
+            res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
             MIAssert.Succeeded(res);
 
             try
@@ -282,11 +270,11 @@ namespace MMI.Tests.Native
         public void MIValue_ReferenceTypes_Test()
         {
             MI_Instance InnerInstance = null;
-            var res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
+            var res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
             MIAssert.Succeeded(res);
 
             MI_Instance InnerInstance2 = null;
-            res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
+            res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
             MIAssert.Succeeded(res);
 
             try

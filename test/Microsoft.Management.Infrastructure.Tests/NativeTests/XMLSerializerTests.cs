@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
+using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class XMLSerializerTests : NativeTestsBase
+    public class XMLSerializerTests : NativeTestsBase, IClassFixture<ApplicationFixture>
     {   
-        public XMLSerializerTests() : base()
+        public XMLSerializerTests(ApplicationFixture appFixture) : base(appFixture)
         {
         }
         
@@ -18,7 +19,7 @@ namespace MMI.Tests.Native
         public void CanCreateSerializer()
         {
             MI_Serializer newSerializer = null;
-            MI_Result res = this.application.NewSerializer(MI_SerializerFlags.None,
+            MI_Result res = this.Application.NewSerializer(MI_SerializerFlags.None,
                 MI_SerializationFormat.XML,
                 out newSerializer);
             MIAssert.Succeeded(res);
@@ -32,7 +33,7 @@ namespace MMI.Tests.Native
         public void CanSerializeInstance()
         {
             MI_Instance toSerialize;
-            MI_Result res = this.application.NewInstance("TestInstance", null, out toSerialize);
+            MI_Result res = this.Application.NewInstance("TestInstance", null, out toSerialize);
             MIAssert.Succeeded(res);
             MI_Value valueToSerialize = MI_Value.NewDirectPtr();
             valueToSerialize.String = "Test string";
@@ -40,7 +41,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
 
             MI_Serializer newSerializer = null;
-            res = this.application.NewSerializer(MI_SerializerFlags.None,
+            res = this.Application.NewSerializer(MI_SerializerFlags.None,
                 MI_SerializationFormat.XML,
                 out newSerializer);
             MIAssert.Succeeded(res);

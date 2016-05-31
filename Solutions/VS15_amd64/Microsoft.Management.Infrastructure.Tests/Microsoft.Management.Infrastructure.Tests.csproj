@@ -66,20 +66,20 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
       <Link>Assert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimApplication.cs">
-      <Link>CimApplication.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Fact.cs">
-      <Link>Fact.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers.cs">
       <Link>Helpers.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
       <Link>MIAssert.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\ApplicationFixture.cs">
+      <Link>NativeTests\ApplicationFixture.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MIValueTests.cs">
       <Link>NativeTests\MIValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MOFDeserializerTests.cs">
+      <Link>NativeTests\MOFDeserializerTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MOFSerializerTests.cs">
       <Link>NativeTests\MOFSerializerTests.cs</Link>
@@ -89,6 +89,9 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SanityTests.cs">
       <Link>NativeTests\SanityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionFixture.cs">
+      <Link>NativeTests\SessionFixture.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionTests.cs">
       <Link>NativeTests\SessionTests.cs</Link>
@@ -105,6 +108,7 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsFact.cs">
       <Link>WindowsFact.cs</Link>
     </Compile>
+    <Compile Include="NativeTests\XMLDeserializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

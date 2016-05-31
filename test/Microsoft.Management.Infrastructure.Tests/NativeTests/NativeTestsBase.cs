@@ -8,28 +8,21 @@ using MMI.Tests;
 
 namespace MMI.Tests.Native
 {
-    public class NativeTestsBase : IDisposable
+    public class NativeTestsBase
     {
-        private readonly string ApplicationName = "MMINativeTests";
+        internal MI_Application Application { get; private set; }
 
-        internal MI_Application application = null;
+        internal MI_Session Session { get; private set; }
 
-        public NativeTestsBase()
+        public NativeTestsBase(ApplicationFixture appFixture)
         {
-            MI_Instance extendedError = null;
-            MI_Result res = MI_Application.Initialize(ApplicationName, out extendedError, out this.application);
-            MIAssert.Succeeded(res, "Expect basic application initialization to succeed");
+            this.Application = appFixture.Application;
         }
 
-        public virtual void Dispose()
+        public NativeTestsBase(SessionFixture sessionFixture)
         {
-            if (this.application != null)
-            {
-                var shutdownTask = Task.Factory.StartNew(() => this.application.Close());
-                bool completed = shutdownTask.Wait(TimeSpan.FromSeconds(5));
-                Assert.True(completed, "MI_Application did not complete shutdown in the expected time - did you leave an object open?");
-                MIAssert.Succeeded(shutdownTask.Result);
-            }
+            this.Application = sessionFixture.Application;
+            this.Session = sessionFixture.Session;
         }
     }
 }

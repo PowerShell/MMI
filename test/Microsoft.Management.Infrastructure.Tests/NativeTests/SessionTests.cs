@@ -5,78 +5,50 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
+using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class SessionTests : NativeTestsBase
+    public class SessionTests : NativeTestsBase, IClassFixture<SessionFixture>
     {
-        internal MI_Session session = null;
-
-        public SessionTests() : base()
+        public SessionTests(SessionFixture sessionFixture) : base(sessionFixture)
         {
-            MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(null,
-                    null,
-                    MI_DestinationOptions.Null,
-                    MI_SessionCallbacks.Null,
-                    out extendedError,
-                    out this.session);
-            MIAssert.Succeeded(res, "Expect simple NewSession to succeed");
-        }
-
-        public override void Dispose()
-        {
-            var res = this.session.Close(IntPtr.Zero, null);
-            MIAssert.Succeeded(res, "Expect simple session close to succceed");
-            base.Dispose();
         }
 
         [WindowsFact]
         public void TestSessionPositive()
         {
-            MI_Session session = null;
-            MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
-                    null,
-                    MI_DestinationOptions.Null,
-                    MI_SessionCallbacks.Null,
-                    out extendedError,
-                    out session);
-            MIAssert.Succeeded(res, "Expect simple NewSession to succeed");
-
             MI_Operation operation = null;
-            session.TestConnection(MI_OperationFlags.Default, null, out operation);
+            this.Session.TestConnection(MI_OperationFlags.Default, null, out operation);
 
             bool moreResults;
             MI_Result result;
             string errorMessage = null;
             MI_Instance instance = null;
             MI_Instance errorDetails = null;
-            res = operation.GetInstance(out instance, out moreResults, out result, out errorMessage, out errorDetails);
+            var res = operation.GetInstance(out instance, out moreResults, out result, out errorMessage, out errorDetails);
             MIAssert.Succeeded(res, "Expect GetInstance result to succeed");
             MIAssert.Succeeded(result, "Expect actual operation result to be success");
 
             res = operation.Close();
             MIAssert.Succeeded(res, "Expect to be able to close completed operation");
-            res = session.Close(IntPtr.Zero, null);
-            MIAssert.Succeeded(res, "Expect to be able to close session");
         }
 
         [WindowsFact]
         public void TestSessionNegative()
         {
-            MI_Session session = null;
+            MI_Session badSession;
             MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
+            MI_Result res = this.Application.NewSession(null,
                     "badhost",
                     MI_DestinationOptions.Null,
                     MI_SessionCallbacks.Null,
                     out extendedError,
-                    out session);
+                    out badSession);
             MIAssert.Succeeded(res, "Expect simple NewSession to succeed");
 
             MI_Operation operation = null;
-            session.TestConnection(0, null, out operation);
+            badSession.TestConnection(0, null, out operation);
 
             bool moreResults;
             MI_Result result;
@@ -90,25 +62,16 @@ namespace MMI.Tests.Native
 
             res = operation.Close();
             MIAssert.Succeeded(res, "Expect to be able to close operation now");
-            res = session.Close(IntPtr.Zero, null);
-            MIAssert.Succeeded(res, "Expect to be able to close session");
+
+            res = badSession.Close(IntPtr.Zero, null);
+            MIAssert.Succeeded(res, "Expect to be able to close the bad session");
         }
 
         [WindowsFact]
         public void SimpleEnumerateInstance()
         {
-            MI_Session session = null;
-            MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
-                    null,
-                    MI_DestinationOptions.Null,
-                    MI_SessionCallbacks.Null,
-                    out extendedError,
-                    out session);
-            MIAssert.Succeeded(res, "Expect simple NewSession to succeed");
-
             MI_Operation operation = null;
-            session.EnumerateInstances(MI_OperationFlags.MI_OPERATIONFLAGS_DEFAULT_RTTI,
+            this.Session.EnumerateInstances(MI_OperationFlags.MI_OPERATIONFLAGS_DEFAULT_RTTI,
                 MI_OperationOptions.Null,
                 "root/cimv2",
                 "Win32_ComputerSystem",
@@ -123,7 +86,7 @@ namespace MMI.Tests.Native
             string errorMessage = null;
             MI_Instance instanceOut = null;
             MI_Instance errorDetails = null;
-            res = operation.GetInstance(out instanceOut, out moreResults, out result, out errorMessage, out errorDetails);
+            var res = operation.GetInstance(out instanceOut, out moreResults, out result, out errorMessage, out errorDetails);
             MIAssert.Succeeded(res, "Expect the first GetInstance call to succeed");
 
             if (!instanceOut.IsNull)
@@ -158,26 +121,13 @@ namespace MMI.Tests.Native
             Assert.Equal(MI_Flags.MI_FLAG_KEY | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_NOT_MODIFIED | MI_Flags.MI_FLAG_READONLY,
                 elementFlags, "Expect the element flags to also be properly available from the query");
             Assert.Equal(Environment.MachineName, elementValue.String, "Expect the machine name to have survived the whole journey");
-
-            res = session.Close(IntPtr.Zero, null);
-            MIAssert.Succeeded(res, "Expect to be able to close the session");
         }
 
         [WindowsFact]
         public void SimpleGetClass()
         {
-            MI_Session session = null;
-            MI_Instance extendedError = null;
-            MI_Result res = this.application.NewSession(MI_Protocol.WSMan,
-                    null,
-                    MI_DestinationOptions.Null,
-                    MI_SessionCallbacks.Null,
-                    out extendedError,
-                    out session);
-            MIAssert.Succeeded(res, "Expect simple NewSession to succeed");
-
             MI_Operation operation = null;
-            session.GetClass(MI_OperationFlags.Default, MI_OperationOptions.Null, "root/cimv2", "Win32_ComputerSystem", null, out operation);
+            this.Session.GetClass(MI_OperationFlags.Default, MI_OperationOptions.Null, "root/cimv2", "Win32_ComputerSystem", null, out operation);
 
             MI_Class classOut;
             MI_Class clonedClass = null;
@@ -185,7 +135,7 @@ namespace MMI.Tests.Native
             string errorMessage = null;
             MI_Instance errorDetails = null;
             bool moreResults = false;
-            res = operation.GetClass(out classOut, out moreResults, out result, out errorMessage, out errorDetails);
+            var res = operation.GetClass(out classOut, out moreResults, out result, out errorMessage, out errorDetails);
             MIAssert.Succeeded(res, "Expect the first GetClass call to succeed");
 
             Assert.True(!classOut.IsNull, "Expect retrieved class instance to be non-null");
@@ -248,9 +198,6 @@ namespace MMI.Tests.Native
 
             Assert.Equal(MI_Type.MI_UINT16, parameterType, "Expect parameter type to be the documented type");
             Assert.Equal(0u, parameterIndex, "Expect the power state to be the first parameter");
-
-            res = session.Close(IntPtr.Zero, null);
-            MIAssert.Succeeded(res, "Expect to be able to close the session");
         }
     }
 }
