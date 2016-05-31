@@ -30,5 +30,23 @@ namespace MMI.Tests.Native
                 this.Serializer.Close();
             }
         }
+
+        internal void TestSerializationInput(Func<MI_Instance> instanceGetter, string expected)
+        {
+            string serializedString = this.GetStringRepresentationFromInstanceThunk(instanceGetter);
+            Assert.Equal(expected, serializedString, "Expect serialized version to match canonical serialization");
+        }
+
+        private string GetStringRepresentationFromInstanceThunk(Func<MI_Instance> instanceGetter)
+        {
+            MI_Instance toSerialize = instanceGetter();
+
+            byte[] serializedInstance;
+            var res = this.Serializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
+            MIAssert.Succeeded(res);
+            toSerialize.Delete();
+
+            return Encoding.Unicode.GetString(serializedInstance);
+        }
     }
 }
