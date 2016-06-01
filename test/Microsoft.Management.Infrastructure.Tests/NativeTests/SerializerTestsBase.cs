@@ -46,7 +46,12 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
             toSerialize.Delete();
 
-            return Encoding.Unicode.GetString(serializedInstance);
+#if !_LINUX
+            var encodedString = Encoding.Unicode.GetString(serializedInstance);
+#else
+            var encodedString = Encoding.ASCII.GetString(serializedInstance);
+#endif
+            return encodedString;
         }
     }
 }

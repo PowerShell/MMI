@@ -42,6 +42,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_Serializer(string format, bool isDirect)
         {
+#if !_LINUX
             if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
                 this.mft = MI_SerializerFT.XmlSerializerFT;
@@ -54,7 +55,9 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 throw new NotImplementedException();
             }
-
+#else
+            this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetMOFSerializerFT(this) );
+#endif
             this.isDirect = isDirect;
 
             var necessarySize = this.isDirect ? MI_SerializerMembersSize : NativeMethods.IntPtrSize;
