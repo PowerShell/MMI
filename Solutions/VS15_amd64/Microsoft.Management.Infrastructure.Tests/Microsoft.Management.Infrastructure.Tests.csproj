@@ -69,6 +69,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
       <Link>Assert.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimApplication.cs">
+      <Link>CimApplication.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers.cs">
       <Link>Helpers.cs</Link>
     </Compile>
@@ -110,6 +113,9 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SlowTests.cs">
       <Link>NativeTests\SlowTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\TestData\AllTypesClass.cs">
+      <Link>NativeTests\TestData\AllTypesClass.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\TestData\SerializationTestData.cs">
       <Link>NativeTests\TestData\SerializationTestData.cs</Link>

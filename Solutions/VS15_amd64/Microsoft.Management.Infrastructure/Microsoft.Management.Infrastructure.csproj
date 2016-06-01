@@ -367,8 +367,14 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PromptType.cs">
       <Link>Native\MI_PromptType.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PropertyDecl.cs">
+      <Link>Native\MI_PropertyDecl.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Protocol.cs">
       <Link>Native\MI_Protocol.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_QualifierDecl.cs">
+      <Link>Native\MI_QualifierDecl.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_QualifierSet.cs">
       <Link>Native\MI_QualifierSet.cs</Link>

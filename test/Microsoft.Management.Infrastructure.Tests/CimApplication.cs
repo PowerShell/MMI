@@ -1,4 +1,5 @@
 using Microsoft.Management.Infrastructure.Internal;
+using Xunit;
 
 namespace MMI.Tests.Internal
 {

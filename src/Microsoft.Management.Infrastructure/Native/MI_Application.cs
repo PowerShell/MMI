@@ -331,6 +331,41 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
+        internal MI_Result NewClass(
+            MI_ClassDecl classDecl,
+            string namespaceName,
+            string serverName,
+            out MI_Class classObject
+            )
+        {
+            MI_Class classObjectLocal = MI_Class.NewIndirectPtr();
+
+            MI_Result resultLocal = this.ft.NewClass(this,
+                classDecl,
+                namespaceName,
+                serverName,
+                classObjectLocal);
+
+            classObject = classObjectLocal;
+            return resultLocal;
+        }
+
+        internal MI_Result NewParameterSet(
+            MI_ClassDecl classDecl,
+            out MI_ParameterSet parameterSet
+            )
+        {
+            MI_ParameterSet parameterSetLocal = MI_ParameterSet.NewIndirectPtr();
+
+            MI_Result resultLocal = this.ft.NewInstance(this,
+                "Parameters",
+                classDecl,
+                (MI_InstanceOutPtr)parameterSetLocal);
+
+            parameterSet = parameterSetLocal;
+            return resultLocal;
+        }
+
         private MI_ApplicationFT ft { get { return this.mft.Value; } }
 
         private MI_ApplicationFT MarshalFT()
@@ -351,6 +386,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal MI_Application_NewSerializer NewSerializer;
             internal MI_Application_NewDeserializer NewDeserializer;
             internal MI_Application_NewInstanceFromClass NewInstanceFromClass;
+            internal MI_Application_NewClass NewClass;
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_Close(
@@ -428,6 +464,15 @@ namespace Microsoft.Management.Infrastructure.Native
                 string className,
                 [In, Out] MI_ClassPtr classObject,
                 [In, Out] MI_InstanceOutPtr instance
+                );
+
+            [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+            internal delegate MI_Result MI_Application_NewClass(
+                MI_ApplicationPtr application,
+                MI_ClassDecl classDecl,
+                string namespaceName,
+                string serverName,
+                [In, Out] MI_ClassOutPtr classObject
                 );
         }
     }
