@@ -70,12 +70,37 @@ namespace MMI.Tests
             }
         }
 
+        internal static void InstancesEqual(MI_Instance expected, MI_Instance actual, string propertyName)
+        {
+            uint expectedElementCount;
+            expected.GetElementCount(out expectedElementCount);
+            uint actualElementCount;
+            actual.GetElementCount(out actualElementCount);
+            Assert.Equal(expectedElementCount, actualElementCount);
+            for (uint i = 0; i < expectedElementCount; i++)
+            {
+                MI_Flags expectedElementFlags;
+                MI_Type expectedElementType;
+                string expectedElementName = null;
+                MI_Value expectedElementValue = null;
+                expected.GetElementAt(i, out expectedElementName, out expectedElementValue, out expectedElementType, out expectedElementFlags);
+
+                MI_Flags actualElementFlags;
+                MI_Value actualElementValue = null;
+                MI_Type actualElementType;
+                string actualElementName = null;
+                actual.GetElementAt(i, out actualElementName, out actualElementValue, out actualElementType, out actualElementFlags);
+
+                Assert.Equal(expectedElementName, actualElementName, "Expect the element names to be the same within the instances");
+                MIAssert.MIPropertiesEqual(new TestMIProperty(expectedElementValue, expectedElementType, expectedElementFlags),
+                    new TestMIProperty(actualElementValue, actualElementType, actualElementFlags), propertyName);
+            }
+        }
+
         internal static void MIPropertiesEqual(TestMIProperty expectedProperty, TestMIProperty actualProperty, string propertyName)
         {
-            // Windows and Linux behaviors differ on the Flags, even on a newly created property
-            // Avoid testing this as a stopgap until the proper behavior is defined
-            // It isn't a marshalling issue at any rate
-            WindowsAssert.Equal(expectedProperty.Flags, actualProperty.Flags, "Expect the flags to be the normal flags on Windows");
+            // Note that we do not check the flags - the behavior is too inconsistent across scenarios to be worth
+            // the current amount of effort, and it's not a marshalling issue
 
             Assert.Equal(expectedProperty.Type, actualProperty.Type, "Expect the property types to be the same");
             if ((expectedProperty.Flags & MI_Flags.MI_FLAG_NULL) != 0)
@@ -106,29 +131,7 @@ namespace MMI.Tests
             {
                 MI_Instance expected = (MI_Instance)expectedProperty.Value;
                 MI_Instance actual = actualProperty.Value as MI_Instance;
-                uint expectedElementCount;
-                expected.GetElementCount(out expectedElementCount);
-                uint actualElementCount;
-                actual.GetElementCount(out actualElementCount);
-                Assert.Equal(expectedElementCount, actualElementCount);
-                for (uint i = 0; i < expectedElementCount; i++)
-                {
-                    MI_Flags expectedElementFlags;
-                    MI_Type expectedElementType;
-                    string expectedElementName = null;
-                    MI_Value expectedElementValue = null;
-                    expected.GetElementAt(i, out expectedElementName, out expectedElementValue, out expectedElementType, out expectedElementFlags);
-                    
-                    MI_Flags actualElementFlags;
-                    MI_Value actualElementValue = null;
-                    MI_Type actualElementType;
-                    string actualElementName = null;
-                    actual.GetElementAt(i, out actualElementName, out actualElementValue, out actualElementType, out actualElementFlags);
-
-                    Assert.Equal(expectedElementName, actualElementName, "Expect the element names to be the same within the instances");
-                    MIAssert.MIPropertiesEqual(new TestMIProperty(expectedElementValue, expectedElementType, expectedElementFlags),
-                        new TestMIProperty(actualElementValue, actualElementType, actualElementFlags), propertyName);
-                }
+                MIAssert.InstancesEqual(expected, actual, propertyName);
             }
             else if (expectedProperty.Type == MI_Type.MI_INSTANCEA || expectedProperty.Type == MI_Type.MI_REFERENCEA)
             {

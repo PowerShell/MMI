@@ -37,14 +37,9 @@ namespace MMI.Tests.Native
             Assert.Equal(expected, serializedString, "Expect serialized version to match canonical serialization");
         }
 
-        private string GetStringRepresentationFromInstanceThunk(Func<MI_Instance> instanceGetter)
+        internal string GetStringRepresentationFromInstanceThunk(Func<MI_Instance> instanceGetter)
         {
-            MI_Instance toSerialize = instanceGetter();
-
-            byte[] serializedInstance;
-            var res = this.Serializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
-            MIAssert.Succeeded(res);
-            toSerialize.Delete();
+            byte[] serializedInstance = this.GetSerializationFromInstanceThunk(instanceGetter);
 
 #if !_LINUX
             var encodedString = Encoding.Unicode.GetString(serializedInstance);
@@ -52,6 +47,17 @@ namespace MMI.Tests.Native
             var encodedString = Encoding.ASCII.GetString(serializedInstance);
 #endif
             return encodedString;
+        }
+
+        internal byte[] GetSerializationFromInstanceThunk(Func<MI_Instance> instanceGetter)
+        {
+            MI_Instance toSerialize = instanceGetter();
+
+            byte[] serializedInstance;
+            var res = this.Serializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
+            MIAssert.Succeeded(res);
+            toSerialize.Delete();
+            return serializedInstance;
         }
     }
 }

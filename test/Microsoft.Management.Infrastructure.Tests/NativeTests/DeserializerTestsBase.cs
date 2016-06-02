@@ -13,8 +13,13 @@ namespace MMI.Tests.Native
     {
         internal MI_Deserializer Deserializer;
 
+        protected const string SingletonClassNamespace = "root/cimv2";
+        protected const string SingletonClassClassname = "Win32_ComputerSystem";
+        private string format;
+
         public DeserializerTestsBase(string format) : base()
         {
+            this.format = format;
             var application = StaticFixtures.Application;
 
             MI_Deserializer newDeserializer = null;
@@ -32,6 +37,81 @@ namespace MMI.Tests.Native
             {
                 this.Deserializer.Close();
             }
+        }
+
+        internal MI_Class GetClassDefinition()
+        {
+            MI_Operation cimClassOperation;
+            this.Session.GetClass(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, null, out cimClassOperation);
+
+            MI_Class cimClass;
+            bool moreResults;
+            MI_Result operationRes;
+            MI_Instance completionDetails;
+            string errorMessage;
+            var res = cimClassOperation.GetClass(out cimClass, out moreResults, out operationRes, out errorMessage, out completionDetails);
+            MIAssert.Succeeded(res);
+            MIAssert.Succeeded(operationRes);
+            Assert.False(moreResults, "Expect no more results after getting named class");
+            cimClassOperation.Close();
+
+            return cimClass;
+        }
+
+        internal MI_Instance GetSerializableInstance()
+        {
+            MI_Operation cimInstanceOperation;
+            this.Session.EnumerateInstances(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, true, null, out cimInstanceOperation);
+
+            MI_Instance instance;
+            MI_Instance outInstance;
+            bool moreResults;
+            MI_Result operationRes;
+            MI_Instance completionDetails;
+            string errorMessage;
+            var res = cimInstanceOperation.GetInstance(out instance, out moreResults, out operationRes, out errorMessage, out completionDetails);
+            MIAssert.Succeeded(res);
+            MIAssert.Succeeded(operationRes);
+            Assert.False(moreResults, "Expect no more results after getting singleton instance");
+            res = instance.Clone(out outInstance);
+            MIAssert.Succeeded(res);
+            cimInstanceOperation.Close();
+            
+            return outInstance;
+        }
+
+        internal void VerifyRoundTripInstance()
+        {
+            var cimClass = this.GetClassDefinition();
+            var serializedInstance = this.GetSerializedSingleton();
+
+            MI_Instance instance;
+            uint bufferRead;
+            MI_Instance cimErrorDetails;
+            var res = this.Deserializer.DeserializeInstance(MI_SerializerFlags.None,
+                serializedInstance,
+                new MI_Class[] { cimClass, cimClass }, // Deliberate, tests the serialization of the object array
+                IntPtr.Zero,
+                IntPtr.Zero,
+                out bufferRead,
+                out instance,
+                out cimErrorDetails);
+            MIAssert.Succeeded(res);
+
+            var expectedInstance = this.GetSerializableInstance();
+            MIAssert.InstancesEqual(expectedInstance, instance, "SerializedInstance");
+
+            cimClass.Delete();
+            instance.Delete();
+            expectedInstance.Delete();
+        }
+        
+
+        internal byte[] GetSerializedSingleton()
+        {
+            SerializerTestsBase serializerHelper = new SerializerTestsBase(this.format);
+            return serializerHelper.GetSerializationFromInstanceThunk(this.GetSerializableInstance);
+
         }
     }
 }
