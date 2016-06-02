@@ -15,7 +15,7 @@ namespace MMI.Tests.Native
         {
         }
 
-        [WindowsFact]
+        [Fact]
         public void CanDeserializeInstance()
         {
             this.VerifyRoundTripInstance();

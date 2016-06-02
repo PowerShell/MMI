@@ -59,7 +59,10 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
             MIAssert.Succeeded(operationRes);
             Assert.False(moreResults, "Expect no more results after getting named class");
-            cimClass.Clone(out cimClassOut);
+
+            res = cimClass.Clone(out cimClassOut);
+            MIAssert.Succeeded(res, "Class Clone failed");
+
             cimClassOperation.Close();
 
             return cimClassOut;
@@ -102,6 +105,7 @@ namespace MMI.Tests.Native
             MI_Instance instance;
             uint bufferRead;
             MI_Instance cimErrorDetails;
+
             var res = this.Deserializer.DeserializeInstance(MI_SerializerFlags.None,
                 serializedInstance,
                 new MI_Class[] { cimClass },
