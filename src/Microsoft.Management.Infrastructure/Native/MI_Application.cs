@@ -297,6 +297,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Deserializer deserializerLocal = MI_Deserializer.NewDirectPtr(format);
 
             MI_Result resultLocal;
+#if !_LINUX
             if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
                 resultLocal = this.ft.NewDeserializer(this,
@@ -315,6 +316,12 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 throw new NotImplementedException();
             }
+#else
+            resultLocal = this.ft.NewDeserializer(this,
+                flags,
+                format,
+                deserializerLocal);
+#endif
 
             deserializer = deserializerLocal;
             return resultLocal;

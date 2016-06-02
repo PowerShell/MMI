@@ -13,8 +13,13 @@ namespace MMI.Tests.Native
     {
         internal MI_Deserializer Deserializer;
 
+#if !_LINUX
         protected const string SingletonClassNamespace = "root/cimv2";
         protected const string SingletonClassClassname = "Win32_ComputerSystem";
+#else
+        protected const string SingletonClassNamespace = "root/test";
+        protected const string SingletonClassClassname = "TestClass_AllDMTFTypes";
+#endif
         private string format;
 
         public DeserializerTestsBase(string format) : base()
@@ -45,6 +50,7 @@ namespace MMI.Tests.Native
             this.Session.GetClass(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, null, out cimClassOperation);
 
             MI_Class cimClass;
+            MI_Class cimClassOut;
             bool moreResults;
             MI_Result operationRes;
             MI_Instance completionDetails;
@@ -53,9 +59,10 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
             MIAssert.Succeeded(operationRes);
             Assert.False(moreResults, "Expect no more results after getting named class");
+            cimClass.Clone(out cimClassOut);
             cimClassOperation.Close();
 
-            return cimClass;
+            return cimClassOut;
         }
 
         internal MI_Instance GetSerializableInstance()
@@ -72,9 +79,16 @@ namespace MMI.Tests.Native
             var res = cimInstanceOperation.GetInstance(out instance, out moreResults, out operationRes, out errorMessage, out completionDetails);
             MIAssert.Succeeded(res);
             MIAssert.Succeeded(operationRes);
-            Assert.False(moreResults, "Expect no more results after getting singleton instance");
+
             res = instance.Clone(out outInstance);
             MIAssert.Succeeded(res);
+
+            while (moreResults)
+            {
+                res = cimInstanceOperation.GetInstance(out instance, out moreResults, out operationRes, out errorMessage, out completionDetails);
+                MIAssert.Succeeded(res);
+            }
+
             cimInstanceOperation.Close();
             
             return outInstance;
@@ -90,13 +104,13 @@ namespace MMI.Tests.Native
             MI_Instance cimErrorDetails;
             var res = this.Deserializer.DeserializeInstance(MI_SerializerFlags.None,
                 serializedInstance,
-                new MI_Class[] { cimClass, cimClass }, // Deliberate, tests the serialization of the object array
+                new MI_Class[] { cimClass },
                 IntPtr.Zero,
                 IntPtr.Zero,
                 out bufferRead,
                 out instance,
                 out cimErrorDetails);
-            MIAssert.Succeeded(res);
+            MIAssert.Succeeded(res, "Expect to be able to deserialize instance");
 
             var expectedInstance = this.GetSerializableInstance();
             MIAssert.InstancesEqual(expectedInstance, instance, "SerializedInstance");
