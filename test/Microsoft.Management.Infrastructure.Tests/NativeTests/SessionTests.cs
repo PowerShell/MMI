@@ -11,6 +11,42 @@ namespace MMI.Tests.Native
 {
     public class SessionTests : NativeTestsBase
     {
+#if !_LINUX
+        private const string TestEnumerateInstanceNamespace = "root/cimv2";
+        private const string TestEnumerateInstanceClassName = "Win32_ComputerSystem";
+        private const string TestEnumerateInstanceStringPropertyName = "Name";
+        private const MI_Flags TestEnumerateInstanceStringPropertyFlags = MI_Flags.MI_FLAG_KEY | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_NOT_MODIFIED | MI_Flags.MI_FLAG_READONLY;
+        private string TestEnumerateInstanceStringPropertyValue = Environment.MachineName;
+        
+        private const string TestGetClassNamespace = "root/cimv2";
+        private const string TestGetClassClassName = "Win32_ComputerSystem";
+        private const string TestGetClassUUID = "{8502C4B0-5FBB-11D2-AAC1-006008C78BC7}";
+        private const string TestGetClassPropertyName = "Name";
+        private const MI_Flags TestGetClassPropertyFlags = MI_Flags.MI_FLAG_READONLY | MI_Flags.MI_FLAG_NULL | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_EXTENDED;
+        private string TestGetClassMethodName = "SetPowerState";
+        private uint TestGetClassParameterCount = 2u;
+        private string TestGetClassParameterName = "PowerState";
+        private MI_Type TestGetClassParameterType = MI_Type.MI_UINT16;
+        private uint TestGetClassParameterIndex = 0;
+#else
+        private const string TestEnumerateInstanceNamespace = "root/test";
+        private const string TestEnumerateInstanceClassName = "TestClass_AllDMTFTypes";
+        private const string TestEnumerateInstanceStringPropertyName = "v_string";
+        private const MI_Flags TestEnumerateInstanceStringPropertyFlags = MI_Flags.MI_FLAG_KEY | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_NOT_MODIFIED | MI_Flags.MI_FLAG_READONLY;
+        private string TestEnumerateInstanceStringPropertyValue = "TestString 1";
+        
+        private const string TestGetClassNamespace = "root/cimv2";
+        private const string TestGetClassClassName = "MSFT_Person";
+        private const string TestGetClassUUID = "{8502C4B0-5FBB-11D2-AAC1-006008C78BC7}";
+        private const string TestGetClassPropertyName = "First";
+        private const MI_Flags TestGetClassPropertyFlags = MI_Flags.MI_FLAG_READONLY | MI_Flags.MI_FLAG_NULL | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_EXTENDED;
+        private string TestGetClassMethodName = "Add";
+        private uint TestGetClassParameterCount = 3u;
+        private string TestGetClassParameterName = "Z";
+        private MI_Type TestGetClassParameterType = MI_Type.MI_REAL32;
+        private uint TestGetClassParameterIndex = 2;
+#endif
+
         [WindowsFact]
         public void TestSessionPositive()
         {
@@ -36,8 +72,8 @@ namespace MMI.Tests.Native
             MI_Operation operation = null;
             this.Session.EnumerateInstances(MI_OperationFlags.MI_OPERATIONFLAGS_DEFAULT_RTTI,
                 MI_OperationOptions.Null,
-                "root/cimv2",
-                "Win32_ComputerSystem",
+                TestEnumerateInstanceNamespace,
+                TestEnumerateInstanceClassName,
                 false,
                 null,
                 out operation);
@@ -71,26 +107,26 @@ namespace MMI.Tests.Native
             string className = null;
             res = clonedInstance.GetClassName(out className);
             MIAssert.Succeeded(res, "Expect GetClassName to succeed");
-            Assert.Equal("Win32_ComputerSystem", className, "Expect the class name to be the one we queried");
+            Assert.Equal(TestEnumerateInstanceClassName, className, "Expect the class name to be the one we queried");
 
             MI_Value elementValue = null;
             MI_Type elementType;
             MI_Flags elementFlags;
             UInt32 elementIndex;
-            res = clonedInstance.GetElement("Name", out elementValue, out elementType, out elementFlags, out elementIndex);
+            res = clonedInstance.GetElement(TestEnumerateInstanceStringPropertyName, out elementValue, out elementType, out elementFlags, out elementIndex);
             MIAssert.Succeeded(res, "Expect GetElement to succeed");
 
-            Assert.Equal(MI_Type.MI_STRING, elementType, "Expect that the Name property is registered as a string");
-            Assert.Equal(MI_Flags.MI_FLAG_KEY | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_NOT_MODIFIED | MI_Flags.MI_FLAG_READONLY,
+            Assert.Equal(MI_Type.MI_STRING, elementType, "Expect that the property is registered as a string");
+            Assert.Equal(TestEnumerateInstanceStringPropertyFlags,
                 elementFlags, "Expect the element flags to also be properly available from the query");
-            Assert.Equal(Environment.MachineName, elementValue.String, "Expect the machine name to have survived the whole journey");
+            Assert.Equal(TestEnumerateInstanceStringPropertyValue, elementValue.String, "Expect the machine name to have survived the whole journey");
         }
 
         [WindowsFact]
         public void SimpleGetClass()
         {
             MI_Operation operation = null;
-            this.Session.GetClass(MI_OperationFlags.Default, MI_OperationOptions.Null, "root/cimv2", "Win32_ComputerSystem", null, out operation);
+            this.Session.GetClass(MI_OperationFlags.Default, MI_OperationOptions.Null, TestGetClassNamespace, TestGetClassClassName, null, out operation);
 
             MI_Class classOut;
             MI_Class clonedClass = null;
@@ -122,10 +158,10 @@ namespace MMI.Tests.Native
             bool valueExists;
             string referenceClass;
             MI_QualifierSet propertyQualifierSet;
-            res = clonedClass.GetElement("TotalPhysicalMemory", out elementValue, out valueExists, out elementType, out referenceClass, out propertyQualifierSet, out elementFlags, out elementIndex);
+            res = clonedClass.GetElement(TestGetClassPropertyName, out elementValue, out valueExists, out elementType, out referenceClass, out propertyQualifierSet, out elementFlags, out elementIndex);
             MIAssert.Succeeded(res, "Expect to see the normal property on the class");
-            Assert.Equal(MI_Type.MI_UINT64, elementType, "Expect the CIM property to have the right width");
-            Assert.Equal(MI_Flags.MI_FLAG_READONLY | MI_Flags.MI_FLAG_NULL | MI_Flags.MI_FLAG_PROPERTY, elementFlags, "Expect the CIM property to have the normal flags");
+            Assert.Equal(MI_Type.MI_STRING, elementType, "Expect the CIM property to have the right type");
+            Assert.Equal(TestGetClassPropertyFlags, elementFlags, "Expect the CIM property to have the normal flags");
 
             MI_Type miClassQualifierType;
             MI_Value miClassQualifierValue;
@@ -139,28 +175,28 @@ namespace MMI.Tests.Native
 
             Assert.Equal(MI_Type.MI_STRING, miClassQualifierType, "Expect qualifier type to be a string");
             Assert.True((miClassQualifierFlags & MI_Flags.MI_FLAG_ENABLEOVERRIDE) != 0, "Expect flags to be standard flags");
-            Assert.Equal("{8502C4B0-5FBB-11D2-AAC1-006008C78BC7}", miClassQualifierValue.String, "Expect UUID of class to be the known UUID");
+            Assert.Equal(TestGetClassUUID, miClassQualifierValue.String, "Expect UUID of class to be the known UUID");
 
             MI_ParameterSet parameters;
             MI_QualifierSet methodQualifierSet;
             UInt32 methodIndex;
-            res = clonedClass.GetMethod("SetPowerState", out methodQualifierSet, out parameters, out methodIndex);
+            res = clonedClass.GetMethod(TestGetClassMethodName, out methodQualifierSet, out parameters, out methodIndex);
             MIAssert.Succeeded(res, "Expect to be able to get method from class");
 
             UInt32 parameterCount;
             res = parameters.GetParameterCount(out parameterCount);
             MIAssert.Succeeded(res, "Expect to be able to get count from parameter set");
-            Assert.Equal(2u, parameterCount, "Expect there to be the documented number of parameters");
+            Assert.Equal(TestGetClassParameterCount, parameterCount, "Expect there to be the documented number of parameters");
 
             MI_Type parameterType;
             string parameterReferenceClass;
             MI_QualifierSet parameterQualifierSet;
             UInt32 parameterIndex;
-            res = parameters.GetParameter("PowerState", out parameterType, out parameterReferenceClass, out parameterQualifierSet, out parameterIndex);
+            res = parameters.GetParameter(TestGetClassParameterName, out parameterType, out parameterReferenceClass, out parameterQualifierSet, out parameterIndex);
             MIAssert.Succeeded(res, "Expect to be able to get parameter from parameter set");
 
-            Assert.Equal(MI_Type.MI_UINT16, parameterType, "Expect parameter type to be the documented type");
-            Assert.Equal(0u, parameterIndex, "Expect the power state to be the first parameter");
+            Assert.Equal(TestGetClassParameterType, parameterType, "Expect parameter type to be the documented type");
+            Assert.Equal(TestGetClassParameterIndex, parameterIndex, "Expect the power state to be the first parameter");
         }
     }
 }
