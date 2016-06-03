@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
+using Xunit;
 
 namespace MMI.Tests.Native
 {

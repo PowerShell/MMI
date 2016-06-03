@@ -32,22 +32,22 @@ namespace MMI.Tests.Native
         private const string TestEnumerateInstanceNamespace = "root/test";
         private const string TestEnumerateInstanceClassName = "TestClass_AllDMTFTypes";
         private const string TestEnumerateInstanceStringPropertyName = "v_string";
-        private const MI_Flags TestEnumerateInstanceStringPropertyFlags = MI_Flags.MI_FLAG_KEY | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_NOT_MODIFIED | MI_Flags.MI_FLAG_READONLY;
-        private string TestEnumerateInstanceStringPropertyValue = "TestString 1";
+        private const MI_Flags TestEnumerateInstanceStringPropertyFlags = MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_NOT_MODIFIED | MI_Flags.MI_FLAG_BORROW;
+        private string TestEnumerateInstanceStringPropertyValue = "TestString 0";
         
-        private const string TestGetClassNamespace = "root/cimv2";
+        private const string TestGetClassNamespace = "test/c";
         private const string TestGetClassClassName = "MSFT_Person";
         private const string TestGetClassUUID = "{8502C4B0-5FBB-11D2-AAC1-006008C78BC7}";
         private const string TestGetClassPropertyName = "First";
-        private const MI_Flags TestGetClassPropertyFlags = MI_Flags.MI_FLAG_READONLY | MI_Flags.MI_FLAG_NULL | MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_EXTENDED;
-        private string TestGetClassMethodName = "Add";
+        private const MI_Flags TestGetClassPropertyFlags = MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_BORROW;
+        private string TestGetClassMethodName = "TestAllTypes";
         private uint TestGetClassParameterCount = 3u;
         private string TestGetClassParameterName = "Z";
         private MI_Type TestGetClassParameterType = MI_Type.MI_REAL32;
         private uint TestGetClassParameterIndex = 2;
 #endif
 
-        [WindowsFact]
+        [Fact]
         public void TestSessionPositive()
         {
             MI_Operation operation = null;
@@ -66,7 +66,7 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res, "Expect to be able to close completed operation");
         }
         
-        [WindowsFact]
+        [Fact]
         public void SimpleEnumerateInstance()
         {
             MI_Operation operation = null;
@@ -169,6 +169,7 @@ namespace MMI.Tests.Native
             MI_QualifierSet classQualifierSet;
             res = clonedClass.GetClassQualifierSet(out classQualifierSet);
             MIAssert.Succeeded(res, "Expect to be able to get class qualifiers set");
+
             UInt32 qualifierIndex;
             res = classQualifierSet.GetQualifier("UUID", out miClassQualifierType, out miClassQualifierFlags, out miClassQualifierValue, out qualifierIndex);
             MIAssert.Succeeded(res, "Expect to be able to get qualifier information from class");
