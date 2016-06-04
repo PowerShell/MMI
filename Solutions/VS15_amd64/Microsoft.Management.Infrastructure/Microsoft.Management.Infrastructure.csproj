@@ -286,14 +286,17 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeErrorCode.cs">
       <Link>NativeErrorCode.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeMissing.cs">
-      <Link>NativeMissing.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Application.cs">
       <Link>Native\MI_Application.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Array.cs">
       <Link>Native\MI_Array.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_AuthType.cs">
+      <Link>Native\MI_AuthType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_CallbackMode.cs">
+      <Link>Native\MI_CallbackMode.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_CancellationReason.cs">
       <Link>Native\MI_CancellationReason.cs</Link>
@@ -316,6 +319,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Flags.cs">
       <Link>Native\MI_Flags.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ImpersonationType.cs">
+      <Link>Native\MI_ImpersonationType.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
     </Compile>
@@ -337,6 +343,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_OperationOptionsFlags.cs">
       <Link>Native\MI_OperationOptionsFlags.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PacketEncoding.cs">
+      <Link>Native\MI_PacketEncoding.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ParameterSet.cs">
       <Link>Native\MI_ParameterSet.cs</Link>
     </Compile>
@@ -351,6 +360,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Protocol.cs">
       <Link>Native\MI_Protocol.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ProxyType.cs">
+      <Link>Native\MI_ProxyType.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_QualifierDecl.cs">
       <Link>Native\MI_QualifierDecl.cs</Link>
@@ -385,6 +397,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SubscriptionDeliveryType.cs">
       <Link>Native\MI_SubscriptionDeliveryType.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Transport.cs">
+      <Link>Native\MI_Transport.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Type.cs">
       <Link>Native\MI_Type.cs</Link>
     </Compile>
@@ -394,8 +409,14 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_WriteMessageChannel.cs">
       <Link>Native\MI_WriteMessageChannel.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeCimCredential.cs">
+      <Link>Native\NativeCimCredential.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeMethods.cs">
       <Link>Native\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeMissing.cs">
+      <Link>Native\NativeMissing.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeTypes.cs">
       <Link>Native\NativeTypes.cs</Link>
