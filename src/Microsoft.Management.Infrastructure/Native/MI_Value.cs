@@ -18,13 +18,6 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_ValueLayout
         {
-            [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-            private struct MI_Array
-            {
-                internal IntPtr data;
-                internal UInt32 size;
-            }
-
             [FieldOffset(0)]
             [MarshalAs(UnmanagedType.U1)]
             private bool boolean;

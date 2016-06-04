@@ -33,7 +33,8 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_DeserializerPtr ptr;
         private bool isDirect;
-        private Lazy<MI_DeserializerFT> mft;
+        private Lazy<MI_MOFDeserializerFT> mft;
+        private string format;
 
         ~MI_Deserializer()
         {
@@ -42,24 +43,10 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_Deserializer(string format, bool isDirect)
         {
+            this.format = format;
             this.isDirect = isDirect;
-
-#if !_LINUX
-            if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
-            {
-                this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.XMLDeserializationFT);
-            }
-            else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
-            {
-                this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.GetMOFDeserializerFT(this));
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-#else
-            this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.GetMOFDeserializerFT(this));
-#endif
+            
+            this.mft = new Lazy<MI_MOFDeserializerFT>(this.GetStandardizedDeserializerFT);
 
             var necessarySize = this.isDirect ? MI_DeserializerMembersSize : NativeMethods.IntPtrSize;
             this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
@@ -122,6 +109,28 @@ namespace Microsoft.Management.Infrastructure.Native
                 }
 
                 return structurePtr;
+            }
+        }
+
+        internal MI_MOFDeserializerFT GetStandardizedDeserializerFT()
+        {
+            if (MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
+            {
+                return NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_MOFDeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
+            }
+            else if(MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
+            {
+                MI_MOFDeserializerFT tmp = new MI_MOFDeserializerFT();
+#if !_LINUX
+                tmp.deserializerFT = MI_SerializationFTHelpers.XMLDeserializationFT;
+#else
+                tmp.deserializerFT = NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
+#endif
+                return tmp;
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -264,12 +273,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidOperationException();
             }
 
-            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length+2);
-            unsafe
-            {
-                NativeMethods.memset((byte*)clientBuffer, 0, (uint)(serializedBuffer.Length+2));
-            }
-
+            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length);
             try
             {
                 Marshal.Copy(serializedBuffer, 0, clientBuffer, serializedBuffer.Length);
@@ -281,6 +285,138 @@ namespace Microsoft.Management.Infrastructure.Native
                     classObjectNeededContext,
                     out serializedBufferRead,
                     out instanceObject,
+                    out cimErrorDetails);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(clientBuffer);
+            }
+        }
+
+        internal MI_Result DeserializeClassArray(
+                MI_SerializerFlags flags,
+                MI_OperationOptions options,
+                IntPtr MI_DeserializerCallbacks_callbacks,
+                IntPtr serializedBuffer,
+                UInt32 serializedBufferLength,
+                MI_Class[] classDefinitions,
+                string serverName,
+                string namespaceName,
+                out UInt32 serializedBufferRead,
+                out MI_Class[] classes,
+                out MI_Instance cimErrorDetails)
+        {
+            if (!MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+
+            MI_ClassArrayPtr classPtrs = (MI_ClassArrayPtr)classDefinitions;
+            MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
+            MI_ExtendedArray outClassObjects = MI_ExtendedArray.NewIndirectPtr();
+            classes = null;
+
+            var resLocal = this.mofFT.DeserializeClassArray_MOF(
+                this,
+                flags,
+                options,
+                MI_DeserializerCallbacks_callbacks,
+                serializedBuffer,
+                serializedBufferLength,
+                classPtrs.ptr,
+                serverName,
+                namespaceName,
+                out serializedBufferRead,
+                outClassObjects,
+                cimErrorDetailsLocal);
+
+            cimErrorDetails = cimErrorDetailsLocal;
+            if (!outClassObjects.IsNull)
+            {
+                classes = outClassObjects.ReadAsManagedPointerArray(MI_Class.NewFromDirectPtr);
+                outClassObjects.Delete();
+            }
+
+            return resLocal;
+        }
+
+        internal MI_Result DeserializeInstanceArray(
+                MI_SerializerFlags flags,
+                MI_OperationOptions options,
+                IntPtr MI_DeserializerCallbacks_callbacks,
+                IntPtr serializedBuffer,
+                UInt32 serializedBufferLength,
+                MI_Class[] classDefinitions,
+                out UInt32 serializedBufferRead,
+                out MI_ExtendedArray instances,
+                out MI_Instance cimErrorDetails)
+        {
+            if (!MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+
+            MI_ClassArrayPtr classPtrs = (MI_ClassArrayPtr)classDefinitions;
+            MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
+            MI_ExtendedArray resultingArray = MI_ExtendedArray.NewIndirectPtr();
+            MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
+            classDetailsArray.WritePointerArray(classPtrs.ptr);
+
+            instances = null;
+
+            var resLocal = this.mofFT.DeserializeInstanceArray_MOF(
+                this,
+                flags,
+                options,
+                MI_DeserializerCallbacks_callbacks,
+                serializedBuffer,
+                serializedBufferLength,
+                classDetailsArray,
+                out serializedBufferRead,
+                resultingArray,
+                cimErrorDetailsLocal);
+
+            cimErrorDetails = cimErrorDetailsLocal;
+            instances = resultingArray;
+
+            return resLocal;
+        }
+        
+        internal MI_Result DeserializeInstanceArray(
+                MI_SerializerFlags flags,
+                MI_OperationOptions options,
+                IntPtr MI_DeserializerCallbacks_callbacks,
+                byte[] serializedBuffer,
+                MI_Class[] classDefinitions,
+                out UInt32 serializedBufferRead,
+                out MI_ExtendedArray instances,
+                out MI_Instance cimErrorDetails)
+        {
+            if (!MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new NotImplementedException();
+            }
+
+            if (serializedBuffer == null || serializedBuffer.Length == 0)
+            {
+                throw new InvalidOperationException();
+            }
+
+            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length);
+            try
+            {
+                Marshal.Copy(serializedBuffer, 0, clientBuffer, serializedBuffer.Length);
+                instances = null;
+
+                return this.DeserializeInstanceArray(
+                    flags,
+                    options,
+                    MI_DeserializerCallbacks_callbacks,
+                    clientBuffer,
+                    (uint)serializedBuffer.Length,
+                    classDefinitions,
+                    out serializedBufferRead,
+                    out instances,
                     out cimErrorDetails);
             }
             finally
@@ -309,10 +445,11 @@ namespace Microsoft.Management.Infrastructure.Native
             cimErrorDetails = cimErrorDetailsLocal;
             return resultLocal;
         }
-
-
-        private MI_DeserializerFT ft { get { return this.mft.Value; } }
         
+        private MI_DeserializerFT ft { get { return this.mft.Value.deserializerFT; } }
+
+        private MI_MOFDeserializerFT mofFT { get { return this.mft.Value; } }
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_DeserializerFT
         {
@@ -386,6 +523,44 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32 serializedBufferLength,
                 string className,
                 out UInt32 classNameLength,
+                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                );
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal class MI_MOFDeserializerFT
+        {
+            internal MI_DeserializerFT deserializerFT;
+            internal MI_Deserializer_DeserializeClassArray_MOF DeserializeClassArray_MOF;
+            internal MI_Deserializer_DeserializeInstanceArray_MOF DeserializeInstanceArray_MOF;
+
+            [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+            internal delegate MI_Result MI_Deserializer_DeserializeClassArray_MOF(
+                MI_DeserializerPtr deserializer,
+                MI_SerializerFlags flags,
+                MI_OperationOptionsPtr options,
+                IntPtr MI_DeserializerCallbacks_callbacks,
+                IntPtr serializedBuffer,
+                UInt32 serializedBufferLength,
+                IntPtr[] classes,
+                string serverName,
+                string namespaceName,
+                out UInt32 serializedBufferRead,
+                [In, Out] MI_ExtendedArrayOutPtr resultingArray,
+                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                );
+
+            [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+            internal delegate MI_Result MI_Deserializer_DeserializeInstanceArray_MOF(
+                MI_DeserializerPtr deserializer,
+                MI_SerializerFlags flags,
+                MI_OperationOptionsPtr options,
+                IntPtr MI_DeserializerCallbacks_callbacks,
+                IntPtr serializedBuffer,
+                UInt32 serializedBufferLength,
+                MI_ExtendedArrayPtr classes,
+                out UInt32 serializedBufferRead,
+                [In, Out] MI_ExtendedArrayOutPtr resultingArray,
                 [In, Out] MI_InstanceOutPtr cimErrorDetails
                 );
         }

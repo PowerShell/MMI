@@ -49,14 +49,14 @@ namespace Microsoft.Management.Infrastructure.Native
             }
             else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
             {
-                this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetMOFSerializerFT(this) );
+                this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetSerializerFTFromReserved2(this) );
             }
             else
             {
                 throw new NotImplementedException();
             }
 #else
-            this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetMOFSerializerFT(this) );
+            this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetSerializerFTFromReserved2(this) );
 #endif
             this.isDirect = isDirect;
 

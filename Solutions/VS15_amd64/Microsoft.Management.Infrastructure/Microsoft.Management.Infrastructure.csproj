@@ -316,6 +316,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Application.cs">
       <Link>Native\MI_Application.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Array.cs">
+      <Link>Native\MI_Array.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_CancellationReason.cs">
       <Link>Native\MI_CancellationReason.cs</Link>
     </Compile>
