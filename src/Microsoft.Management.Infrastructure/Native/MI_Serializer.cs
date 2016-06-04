@@ -130,7 +130,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal MI_Result SerializeClass(
-            UInt32 flags,
+            MI_SerializerFlags flags,
             MI_Class classObject,
             IntPtr clientBuffer,
             UInt32 clientBufferLength,
@@ -143,6 +143,41 @@ namespace Microsoft.Management.Infrastructure.Native
                 clientBuffer,
                 clientBufferLength,
                 out clientBufferNeeded);
+            return resultLocal;
+        }
+
+        internal MI_Result SerializeClass(
+            MI_SerializerFlags flags,
+            MI_Class classObject,
+            out byte[] clientBuffer
+            )
+        {
+            clientBuffer = null;
+            UInt32 spaceNeeded = 0;
+            MI_Result resultLocal = this.ft.SerializeClass(this,
+                flags,
+                classObject,
+                IntPtr.Zero,
+                0,
+                out spaceNeeded);
+            if (resultLocal == MI_Result.MI_RESULT_OK || (resultLocal == MI_Result.MI_RESULT_FAILED && spaceNeeded != 0))
+            {
+                UInt32 spaceUsed;
+                IntPtr clientBufferLocal = Marshal.AllocHGlobal((IntPtr)spaceNeeded);
+                resultLocal = this.ft.SerializeClass(this,
+                    flags,
+                    classObject,
+                    clientBufferLocal,
+                    spaceNeeded,
+                    out spaceUsed);
+                if (clientBufferLocal != IntPtr.Zero)
+                {
+                    clientBuffer = new byte[spaceNeeded];
+                    Marshal.Copy(clientBufferLocal, clientBuffer, 0, (int)spaceNeeded);
+                    Marshal.FreeHGlobal(clientBufferLocal);
+                }
+            }
+
             return resultLocal;
         }
 
@@ -215,7 +250,7 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_SerializeClass(
                 MI_SerializerPtr serializer,
-                UInt32 flags,
+                MI_SerializerFlags flags,
                 [In, Out] MI_ClassPtr classObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,

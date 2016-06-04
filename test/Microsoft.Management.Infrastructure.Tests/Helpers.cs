@@ -24,5 +24,14 @@ namespace MMI.Tests
         {
             return (Y)typeof(X).GetField(name, PrivateBindingFlags).GetValue(self);
         }
+
+        public static string GetStringRepresentationOfSerializedData(byte[] data)
+        {
+#if !_LINUX
+            return Encoding.Unicode.GetString(data);
+#else
+            return Encoding.ASCII.GetString(data);
+#endif
+        }
     }
 }

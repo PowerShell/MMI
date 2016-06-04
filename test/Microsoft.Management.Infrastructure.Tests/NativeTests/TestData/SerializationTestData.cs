@@ -10,6 +10,16 @@ namespace MMI.Tests.Native
 {
     internal static class SerializationTestData
     {
+#if !_LINUX
+        internal const string SingletonClassNamespace = "root/cimv2";
+        internal const string SingletonClassClassname = "Win32_ComputerSystem";
+        internal const string SingletonClassSerializationHeuristicString = "CIM_UnitaryComputerSystem";
+#else
+        protected const string SingletonClassNamespace = "root/test";
+        protected const string SingletonClassClassname = "TestClass_AllDMTFTypes";
+        internal const string SingletonClassSerializationHeuristicString = "TestClass_PropertyValues";
+#endif
+
         internal static MI_Instance CreateBasicSerializableTestInstance()
         {
             MI_Instance toSerialize;
@@ -21,6 +31,30 @@ namespace MMI.Tests.Native
             MIAssert.Succeeded(res);
 
             return toSerialize;
+        }
+
+        internal static MI_Class GetSerializableTestClass()
+        {
+            MI_Operation queryOperation;
+            StaticFixtures.Session.GetClass(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, null, out queryOperation);
+
+            MI_Class classResult;
+            MI_Result operationResult;
+            bool moreResults;
+            string errorMessage;
+            MI_Instance completionDetails;
+            MI_Result res = queryOperation.GetClass(out classResult, out moreResults, out operationResult, out errorMessage, out completionDetails);
+            MIAssert.Succeeded(res);
+            MIAssert.Succeeded(operationResult);
+            Assert.False(moreResults);
+
+            MI_Class clonedClass;
+            res = classResult.Clone(out clonedClass);
+            MIAssert.Succeeded(res);
+
+            queryOperation.Close();
+
+            return clonedClass;
         }
 
         public const string BasicSerializableTestInstanceXMLRepresentation = "<INSTANCE CLASSNAME=\"TestInstance\"><PROPERTY NAME=\"string\" TYPE=\"string\" MODIFIED=\"TRUE\"><VALUE>Test string</VALUE></PROPERTY></INSTANCE>";

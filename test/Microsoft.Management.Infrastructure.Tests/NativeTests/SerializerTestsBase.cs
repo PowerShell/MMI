@@ -31,22 +31,22 @@ namespace MMI.Tests.Native
             }
         }
 
-        internal void TestSerializationInput(Func<MI_Instance> instanceGetter, string expected)
+        internal void TestInstanceSerializationInput(Func<MI_Instance> instanceGetter, string expected)
         {
             string serializedString = this.GetStringRepresentationFromInstanceThunk(instanceGetter);
             Assert.Equal(expected, serializedString, "Expect serialized version to match canonical serialization");
         }
-
+        
         internal string GetStringRepresentationFromInstanceThunk(Func<MI_Instance> instanceGetter)
         {
             byte[] serializedInstance = this.GetSerializationFromInstanceThunk(instanceGetter);
+            return Helpers.GetStringRepresentationOfSerializedData(serializedInstance);
+        }
 
-#if !_LINUX
-            var encodedString = Encoding.Unicode.GetString(serializedInstance);
-#else
-            var encodedString = Encoding.ASCII.GetString(serializedInstance);
-#endif
-            return encodedString;
+        internal string GetStringRepresentationFromClassThunk(Func<MI_Class> classGetter)
+        {
+            byte[] serializedInstance = this.GetSerializationFromClassThunk(classGetter);
+            return Helpers.GetStringRepresentationOfSerializedData(serializedInstance);
         }
 
         internal byte[] GetSerializationFromInstanceThunk(Func<MI_Instance> instanceGetter)
@@ -55,6 +55,17 @@ namespace MMI.Tests.Native
 
             byte[] serializedInstance;
             var res = this.Serializer.SerializeInstance(MI_SerializerFlags.None, toSerialize, out serializedInstance);
+            MIAssert.Succeeded(res);
+            toSerialize.Delete();
+            return serializedInstance;
+        }
+
+        internal byte[] GetSerializationFromClassThunk(Func<MI_Class> classGetter)
+        {
+            MI_Class toSerialize = classGetter();
+
+            byte[] serializedInstance;
+            var res = this.Serializer.SerializeClass(MI_SerializerFlags.None, toSerialize, out serializedInstance);
             MIAssert.Succeeded(res);
             toSerialize.Delete();
             return serializedInstance;

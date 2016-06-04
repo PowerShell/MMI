@@ -12,14 +12,7 @@ namespace MMI.Tests.Native
     public class DeserializerTestsBase : NativeTestsBase
     {
         internal MI_Deserializer Deserializer;
-
-#if !_LINUX
-        protected const string SingletonClassNamespace = "root/cimv2";
-        protected const string SingletonClassClassname = "Win32_ComputerSystem";
-#else
-        protected const string SingletonClassNamespace = "root/test";
-        protected const string SingletonClassClassname = "TestClass_AllDMTFTypes";
-#endif
+        
         private string format;
 
         public DeserializerTestsBase(string format) : base()
@@ -47,7 +40,7 @@ namespace MMI.Tests.Native
         internal MI_Class GetClassDefinition()
         {
             MI_Operation cimClassOperation;
-            this.Session.GetClass(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, null, out cimClassOperation);
+            this.Session.GetClass(MI_OperationFlags.Default, null, SerializationTestData.SingletonClassNamespace, SerializationTestData.SingletonClassClassname, null, out cimClassOperation);
 
             MI_Class cimClass;
             MI_Class cimClassOut;
@@ -71,7 +64,7 @@ namespace MMI.Tests.Native
         internal MI_Instance GetSerializableInstance()
         {
             MI_Operation cimInstanceOperation;
-            this.Session.EnumerateInstances(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, true, null, out cimInstanceOperation);
+            this.Session.EnumerateInstances(MI_OperationFlags.Default, null, SerializationTestData.SingletonClassNamespace, SerializationTestData.SingletonClassClassname, true, null, out cimInstanceOperation);
 
             MI_Instance instance;
             MI_Instance outInstance;
