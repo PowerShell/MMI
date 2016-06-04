@@ -140,7 +140,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal MI_Result DeserializeClass(
-            UInt32 flags,
+            MI_SerializerFlags flags,
             IntPtr serializedBuffer,
             UInt32 serializedBufferLength,
             MI_Class parentClass,
@@ -153,27 +153,65 @@ namespace Microsoft.Management.Infrastructure.Native
             out MI_Instance cimErrorDetails
             )
         {
-            throw new NotImplementedException();
-            //MI_Class classObjectLocal = MI_Class.NewIndirectPtr();
-            //MI_Instance cimErrorDetailsLocal = MI_Instance();
+            MI_Class classObjectLocal = MI_Class.NewIndirectPtr();
+            MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
 
-            //MI_Result resultLocal = this.ft.DeserializeClass(this,
-            //    flags,
-            //    serializedBuffer,
-            //    serializedBufferLength,
-            //    parentClass,
-            //    serverName,
-            //    namespaceName,
-            //    classObjectNeeded,
-            //    classObjectNeededContext,
-            //    out serializedBufferRead,
-            //    classObjectLocal,
-            //    cimErrorDetailsLocal);
+            MI_Result resultLocal = this.ft.DeserializeClass(this,
+                flags,
+                serializedBuffer,
+                serializedBufferLength,
+                parentClass,
+                serverName,
+                namespaceName,
+                classObjectNeeded,
+                classObjectNeededContext,
+                out serializedBufferRead,
+                classObjectLocal,
+                cimErrorDetailsLocal);
+            
+            classObject = classObjectLocal;
+            cimErrorDetails = cimErrorDetailsLocal;
+            return resultLocal;
+        }
+        
+        internal MI_Result DeserializeClass(
+            MI_SerializerFlags flags,
+            byte[] serializedBuffer,
+            MI_Class parentClass,
+            string serverName,
+            string namespaceName,
+            IntPtr classObjectNeeded,
+            IntPtr classObjectNeededContext,
+            out UInt32 serializedBufferRead,
+            out MI_Class classObject,
+            out MI_Instance cimErrorDetails
+            )
+        {
+            if (serializedBuffer == null || serializedBuffer.Length == 0)
+            {
+                throw new InvalidOperationException();
+            }
 
-            //classObjectNeeded = classObjectNeededLocal;
-            //classObject = classObjectLocal;
-            //cimErrorDetails = cimErrorDetailsLocal;
-            //return resultLocal;
+            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length);
+            try
+            {
+                Marshal.Copy(serializedBuffer, 0, clientBuffer, serializedBuffer.Length);
+                return this.DeserializeClass(flags,
+                    clientBuffer,
+                    (uint)serializedBuffer.Length,
+                    parentClass,
+                    serverName,
+                    namespaceName,
+                    classObjectNeeded,
+                    classObjectNeededContext,
+                    out serializedBufferRead,
+                    out classObject,
+                    out cimErrorDetails);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(clientBuffer);
+            }
         }
 
         internal MI_Result Class_GetClassName(
@@ -255,8 +293,7 @@ namespace Microsoft.Management.Infrastructure.Native
             cimErrorDetails = cimErrorDetailsLocal;
             return resultLocal;
         }
-
-
+        
         internal MI_Result DeserializeInstance(
             MI_SerializerFlags flags,
             byte[] serializedBuffer,
@@ -468,7 +505,7 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeClass(
                 MI_DeserializerPtr deserializer,
-                UInt32 flags,
+                MI_SerializerFlags flags,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 [In, Out] MI_ClassPtr parentClass,

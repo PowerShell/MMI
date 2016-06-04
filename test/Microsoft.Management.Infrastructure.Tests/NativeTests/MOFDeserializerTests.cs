@@ -20,7 +20,13 @@ namespace MMI.Tests.Native
         {
             this.VerifyRoundTripInstance();
         }
-        
+
+        [WindowsFact]
+        public void CanDeserializeClass()
+        {
+            this.VerifyRoundTripClass();
+        }
+
         [WindowsFact]
         public void CanDeserializeInstanceWithInternalMOFMethod()
         {

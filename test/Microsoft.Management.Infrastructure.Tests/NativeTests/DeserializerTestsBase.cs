@@ -116,13 +116,53 @@ namespace MMI.Tests.Native
             instance.Delete();
             expectedInstance.Delete();
         }
-        
+
+        internal void VerifyRoundTripClass()
+        {
+            var cimClass = this.GetClassDefinition();
+            var serializedClass = this.GetSerializedClass();
+
+            MI_Class deserializedClass;
+            uint bufferRead;
+            MI_Instance cimErrorDetails;
+
+            var res = this.Deserializer.DeserializeClass(MI_SerializerFlags.None,
+                serializedClass,
+                null,
+                null,
+                null,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                out bufferRead,
+                out deserializedClass,
+                out cimErrorDetails);
+            MIAssert.Succeeded(res, "Expect to be able to deserialize instance");
+
+            MI_Value elementValue;
+            UInt32 elementIndex;
+            MI_Type elementType;
+            MI_Flags elementFlags;
+            bool valueExists;
+            string referenceClass;
+            MI_QualifierSet qualifierSet;
+            res = deserializedClass.GetElement(SerializationTestData.SerializableClassStringProperty, out elementValue, out valueExists, out elementType, out referenceClass, out qualifierSet, out elementFlags, out elementIndex);
+            MIAssert.Succeeded(res, "Expect to be able to get property from deserialized class");
+            Assert.Equal(MI_Type.MI_STRING, elementType, "Expect the type to be correct");
+
+            cimClass.Delete();
+            deserializedClass.Delete();
+        }
 
         internal byte[] GetSerializedSingleton()
         {
             SerializerTestsBase serializerHelper = new SerializerTestsBase(this.format);
             return serializerHelper.GetSerializationFromInstanceThunk(this.GetSerializableInstance);
+        }
 
+        internal byte[] GetSerializedClass()
+        {
+            SerializerTestsBase serializerHelper = new SerializerTestsBase(this.format);
+            return serializerHelper.GetSerializationFromClassThunk(SerializationTestData.GetSerializableTestClass);
         }
     }
 }

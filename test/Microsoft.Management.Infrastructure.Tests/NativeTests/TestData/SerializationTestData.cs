@@ -13,11 +13,18 @@ namespace MMI.Tests.Native
 #if !_LINUX
         internal const string SingletonClassNamespace = "root/cimv2";
         internal const string SingletonClassClassname = "Win32_ComputerSystem";
-        internal const string SingletonClassSerializationHeuristicString = "CIM_UnitaryComputerSystem";
+        internal const string SerializableClassNamespace = "root/cimv2";
+        internal const string SerializableClassClassname = "CIM_Error";
+        internal const string SingletonClassSerializableClassHeuristicString = "CIMStatusCodeDescription";
+        internal const string SerializableClassStringProperty = "OtherErrorSourceFormat";
 #else
         protected const string SingletonClassNamespace = "root/test";
         protected const string SingletonClassClassname = "TestClass_AllDMTFTypes";
         internal const string SingletonClassSerializationHeuristicString = "TestClass_PropertyValues";
+        internal const string SerializableClassNamespace = "root/cimv2";
+        internal const string SerializableClassClassname = "CIM_Error";
+        internal const string SingletonClassSerializableClassHeuristicString = "CIMStatusCodeDescription";
+        internal const string SerializableClassStringProperty = "OtherErrorSourceFormat";
 #endif
 
         internal static MI_Instance CreateBasicSerializableTestInstance()
@@ -36,7 +43,7 @@ namespace MMI.Tests.Native
         internal static MI_Class GetSerializableTestClass()
         {
             MI_Operation queryOperation;
-            StaticFixtures.Session.GetClass(MI_OperationFlags.Default, null, SingletonClassNamespace, SingletonClassClassname, null, out queryOperation);
+            StaticFixtures.Session.GetClass(MI_OperationFlags.Default, null, SerializableClassNamespace, SerializableClassClassname, null, out queryOperation);
 
             MI_Class classResult;
             MI_Result operationResult;
