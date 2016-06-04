@@ -137,7 +137,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void CallIntoUserCallback(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             Action userCallback,
             bool serializeCallbacks = false,
             bool suppressFurtherUserCallbacks = false)
@@ -169,9 +169,9 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        internal abstract void ReportInternalError(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError);
+        internal abstract void ReportInternalError(CimOperationCallbackProcessingContext callbackProcessingContext, Exception internalError);
 
-        private void ReportInternalErrorCore(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        private void ReportInternalErrorCore(CimOperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
         {
             Debug.Assert(internalError != null, "Caller should make sure internalError != null");
 

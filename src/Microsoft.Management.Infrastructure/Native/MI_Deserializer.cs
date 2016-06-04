@@ -16,7 +16,7 @@ namespace Microsoft.Management.Infrastructure.Native
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal partial class MI_Deserializer
+    internal class MI_Deserializer
     {
         // Marshal implements these with Reflection - pay this hit only once
         internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Deserializer.MI_DeserializerMembers>("reserved2");

@@ -29,7 +29,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void ProcessNativeCallback(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             T currentItem,
             bool moreResults,
             MI_Result operationResult,
@@ -82,7 +82,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         private void ProcessEndOfResultsWorker(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             CimOperation cimOperation,
             Exception exception)
         {
@@ -114,7 +114,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             }
         }
 
-        private void OnErrorInternal(OperationCallbackProcessingContext callbackProcessingContext, Exception exception)
+        private void OnErrorInternal(CimOperationCallbackProcessingContext callbackProcessingContext, Exception exception)
         {
             this.CallIntoUserCallback(
                 callbackProcessingContext,
@@ -122,7 +122,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 suppressFurtherUserCallbacks: true);
         }
 
-        private void OnCompletedInternal(OperationCallbackProcessingContext callbackProcessingContext)
+        private void OnCompletedInternal(CimOperationCallbackProcessingContext callbackProcessingContext)
         {
             this.CallIntoUserCallback(
                 callbackProcessingContext,
@@ -130,14 +130,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 suppressFurtherUserCallbacks: true);
         }
 
-        private void OnNextInternal(OperationCallbackProcessingContext callbackProcessingContext, T item)
+        private void OnNextInternal(CimOperationCallbackProcessingContext callbackProcessingContext, T item)
         {
             this.CallIntoUserCallback(
                 callbackProcessingContext,
                 () => this._observer.OnNext(item));
         }
 
-        internal override void ReportInternalError(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        internal override void ReportInternalError(CimOperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
         {
             this.OnErrorInternal(callbackProcessingContext, internalError);
         }

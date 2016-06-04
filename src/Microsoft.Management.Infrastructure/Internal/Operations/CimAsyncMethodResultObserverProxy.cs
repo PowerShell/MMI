@@ -27,7 +27,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void InstanceResultCallback(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             MI_Instance instanceHandle,
             bool moreResults,
@@ -65,7 +65,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void StreamedParameterCallback(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             string parameterName,
             object parameterValue,

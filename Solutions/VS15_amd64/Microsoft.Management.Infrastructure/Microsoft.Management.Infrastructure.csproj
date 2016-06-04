@@ -136,6 +136,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimApplication.cs">
       <Link>Internal\CimApplication.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimOperationCallbackProcessingContext.cs">
+      <Link>Internal\CimOperationCallbackProcessingContext.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimTypeExtensionMethods.cs">
       <Link>Internal\CimTypeExtensionMethods.cs</Link>
     </Compile>
@@ -283,6 +286,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\SharedInstanceHandle.cs">
       <Link>Internal\SharedInstanceHandle.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\ValueHelpers.cs">
+      <Link>Internal\ValueHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeErrorCode.cs">
       <Link>NativeErrorCode.cs</Link>
     </Compile>
@@ -352,17 +358,11 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Application.cs">
       <Link>Native\MI_Application.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Array.cs">
-      <Link>Native\MI_Array.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Class.cs">
       <Link>Native\MI_Class.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ClassDecl.cs">
       <Link>Native\MI_ClassDecl.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Datetime.cs">
-      <Link>Native\MI_Datetime.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Deserializer.cs">
       <Link>Native\MI_Deserializer.cs</Link>
@@ -370,14 +370,8 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_DestinationOptions.cs">
       <Link>Native\MI_DestinationOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ExtendedArray.cs">
-      <Link>Native\MI_ExtendedArray.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Interval.cs">
-      <Link>Native\MI_Interval.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Operation.cs">
       <Link>Native\MI_Operation.cs</Link>
@@ -409,20 +403,8 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Session.cs">
       <Link>Native\MI_Session.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_String.cs">
-      <Link>Native\MI_String.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SubscriptionDeliveryOptions.cs">
       <Link>Native\MI_SubscriptionDeliveryOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Timestamp.cs">
-      <Link>Native\MI_Timestamp.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_UserCredentials.cs">
-      <Link>Native\MI_UserCredentials.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Value.cs">
-      <Link>Native\MI_Value.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeCimCredential.cs">
       <Link>Native\NativeCimCredential.cs</Link>
@@ -430,11 +412,35 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeMethods.cs">
       <Link>Native\NativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeMissing.cs">
-      <Link>Native\NativeMissing.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeTypes.cs">
       <Link>Native\NativeTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Array.cs">
+      <Link>Native\Structures\MI_Array.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Datetime.cs">
+      <Link>Native\Structures\MI_Datetime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_ExtendedArray.cs">
+      <Link>Native\Structures\MI_ExtendedArray.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Interval.cs">
+      <Link>Native\Structures\MI_Interval.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_OperationCallbacks.cs">
+      <Link>Native\Structures\MI_OperationCallbacks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_String.cs">
+      <Link>Native\Structures\MI_String.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Timestamp.cs">
+      <Link>Native\Structures\MI_Timestamp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_UserCredentials.cs">
+      <Link>Native\Structures\MI_UserCredentials.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Value.cs">
+      <Link>Native\Structures\MI_Value.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\CimCredential.cs">
       <Link>Options\CimCredential.cs</Link>

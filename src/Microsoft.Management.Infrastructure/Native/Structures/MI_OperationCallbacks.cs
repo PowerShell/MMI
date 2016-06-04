@@ -1,61 +1,37 @@
-﻿namespace Microsoft.Management.Infrastructure.Native
+﻿using System;
+using System.Runtime.InteropServices;
+
+namespace Microsoft.Management.Infrastructure.Native
 {
-    using System;
-    using System.Runtime.InteropServices;
-
-    internal static partial class NativeMethods
+    internal class MI_OperationCallbacks
     {
-        [DllImport(MI_PlatformSpecific.MI, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
-        internal static extern MI_Result MI_Application_InitializeV1(
-            UInt32 flags,
-            [MarshalAs(MI_PlatformSpecific.AppropriateStringType)] string applicationID,
-            MI_InstanceOutPtr extendedError,
-            [In, Out] MI_ApplicationPtr application
-            );
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal class MI_OperationCallbacksNative
+        {
+            private IntPtr callbackContext;
 
-        [DllImport(MI_PlatformSpecific.MOFCodecHost, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
-        internal static extern MI_Result MI_Application_NewSerializer_Mof(
-            MI_ApplicationPtr application,
-            MI_SerializerFlags flags,
-            [MarshalAs(UnmanagedType.LPWStr)]string format,
-            MI_SerializerPtr serializer
-            );
+            internal MI_OperationCallback_PromptUserNative promptUser;
+            internal MI_OperationCallback_WriteErrorNative writeError;
+            internal MI_OperationCallback_WriteMessageNative writeMessage;
+            internal MI_OperationCallback_WriteProgressNative writeProgress;
 
-        [DllImport(MI_PlatformSpecific.MOFCodecHost, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
-        internal static extern MI_Result MI_Application_NewDeserializer_Mof(
-            MI_ApplicationPtr application,
-            MI_SerializerFlags flags,
-            [MarshalAs(UnmanagedType.LPWStr)] string format,
-            MI_DeserializerPtr serializer
-            );
+            internal MI_OperationCallback_InstanceNative instanceResult;
+            internal MI_OperationCallback_IndicationNative indicationResult;
+            internal MI_OperationCallback_ClassNative classResult;
 
-        [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPWStr)]string lpFileName);
+            internal MI_OperationCallback_StreamedParameterNative streamedParameterResult;
+        }
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool FreeLibrary(IntPtr hModule);
+        internal MI_OperationCallback_PromptUser promptUser;
+        internal MI_OperationCallback_WriteError writeError;
+        internal MI_OperationCallback_WriteMessage writeMessage;
+        internal MI_OperationCallback_WriteProgress writeProgress;
 
-        [DllImport("kernel32", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-        internal static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
+        internal MI_OperationCallback_Instance instanceResult;
+        internal MI_OperationCallback_Indication indicationResult;
+        internal MI_OperationCallback_Class classResult;
 
-        internal static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();
-
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention)]
-        internal delegate void MI_Session_Close_CompletionCallback(IntPtr callbackContext);
-
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiMainCallConvention)]
-        internal delegate IntPtr MI_MainFunction(IntPtr callbackContext);
-
-        internal delegate void MI_SessionCallbacks_WriteError(MI_Application application, object callbackContext, MI_Instance instance);
-
-        internal delegate void MI_SessionCallbacks_WriteMessage(MI_Application application, object callbackContext, MI_WriteMessageChannel channel, string message);
-
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal delegate void MI_SessionCallbacks_WriteErrorNative(IntPtr application, IntPtr callbackContext, IntPtr instance);
-
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal delegate void MI_SessionCallbacks_WriteMessageNative(IntPtr application, IntPtr callbackContext, MI_WriteMessageChannel channel, IntPtr message);
+        internal MI_OperationCallback_StreamedParameter streamedParameterResult;
 
         internal delegate void MI_OperationCallback_PromptUserResult(MI_Operation operation, MI_OperationCallback_ResponseType responseType);
 
@@ -100,49 +76,5 @@
 
         [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal delegate void MI_OperationCallback_StreamedParameterNative(MI_Operation operation, object callbackContext, string parameterName, MI_Type resultType, MI_Value result, MI_OperationCallback_ResultAcknowledgement resultAcknowledgement);
-
-        internal static unsafe void memcpy(byte* dst, byte* src, int size, uint count)
-        {
-            long byteCount = size * count;
-            for (long i = 0; i < byteCount; i++)
-            {
-                *dst++ = *src++;
-            }
-        }
-
-        internal static unsafe void memset(byte* dst, byte val, uint byteCount)
-        {
-            for (long i = 0; i < byteCount; i++)
-            {
-                *dst++ = val;
-            }
-        }
-        
-        internal static unsafe T GetFTAsOffsetFromPtr<T>(IntPtr ptr, int offset) where T : new()
-        {
-            T res = new T();
-            IntPtr ftPtr = IntPtr.Zero;
-            unsafe
-            {
-                // Just as easily could be implemented with Marshal
-                // but that would copy more than the one pointer we need
-                IntPtr structurePtr = ptr;
-                if (structurePtr == IntPtr.Zero)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                ftPtr = *((IntPtr*)((byte*)structurePtr + offset));
-            }
-
-            if (ftPtr == IntPtr.Zero)
-            {
-                throw new InvalidOperationException();
-            }
-
-            // No apparent way to implement this in an unsafe block
-            Marshal.PtrToStructure(ftPtr, res);
-            return res;
-        }
     }
 }

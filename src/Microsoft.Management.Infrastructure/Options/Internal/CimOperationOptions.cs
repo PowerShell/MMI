@@ -311,7 +311,7 @@ namespace Microsoft.Management.Infrastructure.Options
         #region PSSEMANTICS
 
         internal void WriteMessageCallbackInternal(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             UInt32 channel,
             string message)
@@ -328,7 +328,7 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteMessageCallback _writeMessageCallback;
 
         private void WriteProgressCallbackInternal(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             string activity,
             string currentOperation,
@@ -348,7 +348,7 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteProgressCallback _writeProgressCallback;
 
         internal void WriteErrorCallbackInternal(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             MI_Instance instanceHandle,
             out MI_OperationCallback_ResponseType response)
@@ -384,7 +384,7 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteErrorCallback _writeErrorCallback;
 
         internal void PromptUserCallbackInternal(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             string message,
             MI_PromptType promptType,
@@ -711,7 +711,7 @@ namespace Microsoft.Management.Infrastructure.Options
             MI_Value nativeLayerValue = CimInstance.ConvertToNativeLayer(optionValue);
             try
             {
-                InstanceMethods.ThrowIfMismatchedType(cimType.ToMiType(), nativeLayerValue);
+                ValueHelpers.ThrowIfMismatchedType(cimType.ToMiType(), nativeLayerValue);
             }
             catch (InvalidCastException e)
             {

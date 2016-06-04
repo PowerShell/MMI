@@ -16,7 +16,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal class MI_ValueLayout
+        private class MI_ValueLayout
         {
             [FieldOffset(0)]
             [MarshalAs(UnmanagedType.U1)]

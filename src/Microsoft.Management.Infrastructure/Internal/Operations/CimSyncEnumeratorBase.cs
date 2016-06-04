@@ -195,7 +195,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private Exception _internalErrorWhileProcessingAsyncCallback;
         private readonly object _internalErrorWhileProcessingAsyncCallbackLock = new object();
 
-        internal override void ReportInternalError(OperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        internal override void ReportInternalError(CimOperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
         {
             lock (_internalErrorWhileProcessingAsyncCallbackLock)
             {

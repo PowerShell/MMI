@@ -48,7 +48,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     try
                     {
                         Helpers.ValidateNoNullElements(value as IList);
-                        InstanceMethods.ThrowIfMismatchedType(this.CimType.ToMiType(), CimInstance.ConvertToNativeLayer(value, this.CimType));
+                        ValueHelpers.ThrowIfMismatchedType(this.CimType.ToMiType(), CimInstance.ConvertToNativeLayer(value, this.CimType));
                     }
                     catch (InvalidCastException e)
                     {

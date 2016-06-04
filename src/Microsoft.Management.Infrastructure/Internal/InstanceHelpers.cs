@@ -19,24 +19,11 @@ using System.IO;
 
 namespace Microsoft.Management.Infrastructure.Internal
 {
-    internal static class ValueHelpers
+    internal static class NativeErrorCodeExtensionMethods
     {
-        internal static void ThrowIfMismatchedType(MI_Type type, object managedValue)
+        public static NativeErrorCode ToNativeErrorCode(this MI_Result miResult)
         {
-            // TODO: Implement this
-            /*
-              MI_Value throwAway;
-              memset(&throwAway, 0, sizeof(MI_Value));
-              IEnumerable<DangerousHandleAccessor^>^ dangerousHandleAccesorsFromConversion = nullptr;
-              try
-              {
-              dangerousHandleAccesorsFromConversion = ConvertToMiValue(type, managedValue, &throwAway);
-              }
-              finally
-              {
-              ReleaseMiValue(type, &throwAway, dangerousHandleAccesorsFromConversion);
-              }
-            */
+            return (NativeErrorCode)miResult;
         }
     }
 }

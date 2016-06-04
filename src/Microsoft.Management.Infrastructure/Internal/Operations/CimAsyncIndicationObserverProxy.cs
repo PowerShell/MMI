@@ -20,7 +20,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void IndicationResultCallback(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             MI_Instance instanceHandle,
             String bookMark,

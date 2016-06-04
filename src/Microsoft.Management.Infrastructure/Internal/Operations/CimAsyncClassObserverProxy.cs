@@ -20,7 +20,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void ClassCallback(
-            OperationCallbackProcessingContext callbackProcessingContext,
+            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
             MI_Class ClassHandle,
             bool moreResults,

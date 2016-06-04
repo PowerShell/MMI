@@ -570,7 +570,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
                 string namespaceName,
                 [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -581,7 +581,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
                 string namespaceName,
                 [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -592,7 +592,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
                 string namespaceName,
                 [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -603,7 +603,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
                 string namespaceName,
                 [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -617,7 +617,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string methodName,
                 [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
                 [In, Out] MI_Instance.MI_InstancePtr inboundProperties,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -629,7 +629,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string namespaceName,
                 string className,
                 [MarshalAs(UnmanagedType.U1)] bool keysOnly,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -641,7 +641,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string namespaceName,
                 string queryDialect,
                 string queryExpression,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -657,7 +657,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string role,
                 string resultRole,
                 [MarshalAs(UnmanagedType.U1)] bool keysOnly,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -671,7 +671,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string resultClass,
                 string role,
                 [MarshalAs(UnmanagedType.U1)] bool keysOnly,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -684,7 +684,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string queryDialect,
                 string queryExpression,
                 [In, Out] MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsPtr deliverOptions,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -695,7 +695,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
                 string namespaceName,
                 string className,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -707,7 +707,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string namespaceName,
                 string className,
                 [MarshalAs(UnmanagedType.U1)] bool classNamesOnly,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
 
@@ -715,7 +715,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate void MI_Session_TestConnection(
                 MI_SessionPtr session,
                 MI_OperationFlags flags,
-                MI_OperationCallbacksNative callbacks,
+                MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.MI_OperationPtr operation
                 );
         }
