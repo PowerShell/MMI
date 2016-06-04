@@ -286,20 +286,74 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeErrorCode.cs">
       <Link>NativeErrorCode.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_AuthType.cs">
+      <Link>Native\Enumerations\MI_AuthType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_CallbackMode.cs">
+      <Link>Native\Enumerations\MI_CallbackMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_CancellationReason.cs">
+      <Link>Native\Enumerations\MI_CancellationReason.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_DestinationOptionsFlags.cs">
+      <Link>Native\Enumerations\MI_DestinationOptionsFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_Flags.cs">
+      <Link>Native\Enumerations\MI_Flags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_ImpersonationType.cs">
+      <Link>Native\Enumerations\MI_ImpersonationType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_ModuleFlags.cs">
+      <Link>Native\Enumerations\MI_ModuleFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_OperationCallback_ResponseType.cs">
+      <Link>Native\Enumerations\MI_OperationCallback_ResponseType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_OperationFlags.cs">
+      <Link>Native\Enumerations\MI_OperationFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_OperationOptionsFlags.cs">
+      <Link>Native\Enumerations\MI_OperationOptionsFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_PacketEncoding.cs">
+      <Link>Native\Enumerations\MI_PacketEncoding.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_PromptType.cs">
+      <Link>Native\Enumerations\MI_PromptType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_Protocol.cs">
+      <Link>Native\Enumerations\MI_Protocol.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_ProxyType.cs">
+      <Link>Native\Enumerations\MI_ProxyType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_Result.cs">
+      <Link>Native\Enumerations\MI_Result.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_SerializationFormat.cs">
+      <Link>Native\Enumerations\MI_SerializationFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_SerializerFlags.cs">
+      <Link>Native\Enumerations\MI_SerializerFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_SubscriptionDeliveryType.cs">
+      <Link>Native\Enumerations\MI_SubscriptionDeliveryType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_Transport.cs">
+      <Link>Native\Enumerations\MI_Transport.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_Type.cs">
+      <Link>Native\Enumerations\MI_Type.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Enumerations\MI_WriteMessageChannel.cs">
+      <Link>Native\Enumerations\MI_WriteMessageChannel.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Application.cs">
       <Link>Native\MI_Application.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Array.cs">
       <Link>Native\MI_Array.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_AuthType.cs">
-      <Link>Native\MI_AuthType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_CallbackMode.cs">
-      <Link>Native\MI_CallbackMode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_CancellationReason.cs">
-      <Link>Native\MI_CancellationReason.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Class.cs">
       <Link>Native\MI_Class.cs</Link>
@@ -313,38 +367,14 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_DestinationOptions.cs">
       <Link>Native\MI_DestinationOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_DestinationOptionsFlags.cs">
-      <Link>Native\MI_DestinationOptionsFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Flags.cs">
-      <Link>Native\MI_Flags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ImpersonationType.cs">
-      <Link>Native\MI_ImpersonationType.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ModuleFlags.cs">
-      <Link>Native\MI_ModuleFlags.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Operation.cs">
       <Link>Native\MI_Operation.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_OperationCallback_ResponseType.cs">
-      <Link>Native\MI_OperationCallback_ResponseType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_OperationFlags.cs">
-      <Link>Native\MI_OperationFlags.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_OperationOptions.cs">
       <Link>Native\MI_OperationOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_OperationOptionsFlags.cs">
-      <Link>Native\MI_OperationOptionsFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PacketEncoding.cs">
-      <Link>Native\MI_PacketEncoding.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ParameterSet.cs">
       <Link>Native\MI_ParameterSet.cs</Link>
@@ -352,17 +382,8 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PlatformSpecific.cs">
       <Link>Native\MI_PlatformSpecific.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PromptType.cs">
-      <Link>Native\MI_PromptType.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_PropertyDecl.cs">
       <Link>Native\MI_PropertyDecl.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Protocol.cs">
-      <Link>Native\MI_Protocol.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ProxyType.cs">
-      <Link>Native\MI_ProxyType.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_QualifierDecl.cs">
       <Link>Native\MI_QualifierDecl.cs</Link>
@@ -370,20 +391,11 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_QualifierSet.cs">
       <Link>Native\MI_QualifierSet.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Result.cs">
-      <Link>Native\MI_Result.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SerializationFormat.cs">
-      <Link>Native\MI_SerializationFormat.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SerializationFTHelpers.cs">
       <Link>Native\MI_SerializationFTHelpers.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Serializer.cs">
       <Link>Native\MI_Serializer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SerializerFlags.cs">
-      <Link>Native\MI_SerializerFlags.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Session.cs">
       <Link>Native\MI_Session.cs</Link>
@@ -394,20 +406,8 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SubscriptionDeliveryOptions.cs">
       <Link>Native\MI_SubscriptionDeliveryOptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SubscriptionDeliveryType.cs">
-      <Link>Native\MI_SubscriptionDeliveryType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Transport.cs">
-      <Link>Native\MI_Transport.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Type.cs">
-      <Link>Native\MI_Type.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Value.cs">
       <Link>Native\MI_Value.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_WriteMessageChannel.cs">
-      <Link>Native\MI_WriteMessageChannel.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeCimCredential.cs">
       <Link>Native\NativeCimCredential.cs</Link>
