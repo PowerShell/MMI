@@ -18,8 +18,8 @@ namespace MMI.Tests.Native
         internal const string SingletonClassSerializableClassHeuristicString = "CIMStatusCodeDescription";
         internal const string SerializableClassStringProperty = "OtherErrorSourceFormat";
 #else
-        protected const string SingletonClassNamespace = "root/test";
-        protected const string SingletonClassClassname = "TestClass_AllDMTFTypes";
+        internal const string SingletonClassNamespace = "root/test";
+        internal const string SingletonClassClassname = "TestClass_AllDMTFTypes";
         internal const string SingletonClassSerializationHeuristicString = "TestClass_PropertyValues";
         internal const string SerializableClassNamespace = "root/cimv2";
         internal const string SerializableClassClassname = "CIM_Error";
