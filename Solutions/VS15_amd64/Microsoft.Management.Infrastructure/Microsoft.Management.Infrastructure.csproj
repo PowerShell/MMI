@@ -64,128 +64,23 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CancellationMode.cs">
-      <Link>CancellationMode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimApplication.cs">
-      <Link>CimApplication.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncCallbacksReceiverBase.cs">
-      <Link>CimAsyncCallbacksReceiverBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncCancellationDisposable.cs">
-      <Link>CimAsyncCancellationDisposable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncClassObservable.cs">
-      <Link>CimAsyncClassObservable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncClassObserverProxy.cs">
-      <Link>CimAsyncClassObserverProxy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncCollection.cs">
-      <Link>CimAsyncCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncDelegatedObservable.cs">
-      <Link>CimAsyncDelegatedObservable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncIndicationObservable.cs">
-      <Link>CimAsyncIndicationObservable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncIndicationObserverProxy.cs">
-      <Link>CimAsyncIndicationObserverProxy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncInstanceObservable.cs">
-      <Link>CimAsyncInstanceObservable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncInstanceObserverProxy.cs">
-      <Link>CimAsyncInstanceObserverProxy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncMethodResultObservable.cs">
-      <Link>CimAsyncMethodResultObservable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncMethodResultObserverProxy.cs">
-      <Link>CimAsyncMethodResultObserverProxy.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncObservableBase.cs">
-      <Link>CimAsyncObservableBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncObserverProxyBase.cs">
-      <Link>CimAsyncObserverProxyBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncResult.cs">
-      <Link>CimAsyncResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimAsyncStatus.cs">
-      <Link>CimAsyncStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimClass.cs">
-      <Link>CimClass.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimClassPropertiesCollection.cs">
-      <Link>CimClassPropertiesCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimClassPropertyOfClass.cs">
-      <Link>CimClassPropertyOfClass.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimClassQualifierCollection.cs">
-      <Link>CimClassQualifierCollection.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimConverter.cs">
       <Link>CimConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimCredential.cs">
-      <Link>CimCredential.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimException.cs">
       <Link>CimException.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimFlags.cs">
-      <Link>CimFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimInstance.cs">
-      <Link>CimInstance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimKeyedCollection.cs">
-      <Link>CimKeyedCollection.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodDeclaration.cs">
       <Link>CimMethodDeclaration.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodDeclarationCollection.cs">
-      <Link>CimMethodDeclarationCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodDeclarationOfClass.cs">
-      <Link>CimMethodDeclarationOfClass.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameter.cs">
       <Link>CimMethodParameter.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameterBackedByCimProperty.cs">
-      <Link>CimMethodParameterBackedByCimProperty.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameterDeclaration.cs">
       <Link>CimMethodParameterDeclaration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameterDeclarationCollection.cs">
-      <Link>CimMethodParameterDeclarationCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameterDeclarationOfMethod.cs">
-      <Link>CimMethodParameterDeclarationOfMethod.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameterQualifierCollection.cs">
-      <Link>CimMethodParameterQualifierCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParameterQualifierOfMethod.cs">
-      <Link>CimMethodParameterQualifierOfMethod.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodParametersCollection.cs">
       <Link>CimMethodParametersCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodQualifierCollection.cs">
-      <Link>CimMethodQualifierCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodQualifierOfMethod.cs">
-      <Link>CimMethodQualifierOfMethod.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodResult.cs">
       <Link>CimMethodResult.cs</Link>
@@ -196,107 +91,188 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodStreamedResult.cs">
       <Link>CimMethodStreamedResult.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimOperation.cs">
-      <Link>CimOperation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimOperationFlags.cs">
-      <Link>CimOperationFlags.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimOperationOptions.cs">
-      <Link>CimOperationOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimPropertiesCollection.cs">
-      <Link>CimPropertiesCollection.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimProperty.cs">
       <Link>CimProperty.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimPropertyDeclaration.cs">
       <Link>CimPropertyDeclaration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimPropertyOfInstance.cs">
-      <Link>CimPropertyOfInstance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimPropertyQualifierCollection.cs">
-      <Link>CimPropertyQualifierCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimPropertyStandalone.cs">
-      <Link>CimPropertyStandalone.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimQualifier.cs">
       <Link>CimQualifier.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimQualifierOfClass.cs">
-      <Link>CimQualifierOfClass.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimQualifierOfProperty.cs">
-      <Link>CimQualifierOfProperty.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimReadOnlyKeyedCollection.cs">
-      <Link>CimReadOnlyKeyedCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSemantics.cs">
-      <Link>CimSemantics.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSession.cs">
       <Link>CimSession.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSessionOptions.cs">
-      <Link>CimSessionOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSubscriptionDeliveryOptions.cs">
-      <Link>CimSubscriptionDeliveryOptions.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSubscriptionResult.cs">
       <Link>CimSubscriptionResult.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncClassEnumerable.cs">
-      <Link>CimSyncClassEnumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncClassEnumerator.cs">
-      <Link>CimSyncClassEnumerator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncEnumerableBase.cs">
-      <Link>CimSyncEnumerableBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncEnumeratorBase.cs">
-      <Link>CimSyncEnumeratorBase.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncIndicationEnumerable.cs">
-      <Link>CimSyncIndicationEnumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncIndicationEnumerator.cs">
-      <Link>CimSyncIndicationEnumerator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncInstanceEnumerable.cs">
-      <Link>CimSyncInstanceEnumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSyncInstanceEnumerator.cs">
-      <Link>CimSyncInstanceEnumerator.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSystemProperties.cs">
       <Link>CimSystemProperties.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimType.cs">
-      <Link>CimType.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Generic\CimAsyncCollection.cs">
+      <Link>Generic\CimAsyncCollection.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\ConvertingObservable.cs">
-      <Link>ConvertingObservable.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Generic\CimAsyncResult.cs">
+      <Link>Generic\CimAsyncResult.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\DComSessionOptions.cs">
-      <Link>DComSessionOptions.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Generic\CimAsyncStatus.cs">
+      <Link>Generic\CimAsyncStatus.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\EmptyDisposable.cs">
-      <Link>EmptyDisposable.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Generic\CimKeyedCollection.cs">
+      <Link>Generic\CimKeyedCollection.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Helpers.cs">
-      <Link>Helpers.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Generic\CimReadOnlyKeyedCollection.cs">
+      <Link>Generic\CimReadOnlyKeyedCollection.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\ImpersonationType.cs">
-      <Link>ImpersonationType.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimApplication.cs">
+      <Link>Internal\CimApplication.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeErrorCode.cs">
-      <Link>NativeErrorCode.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimClass.cs">
+      <Link>Internal\CimClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimInstance.cs">
+      <Link>Internal\CimInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimType.cs">
+      <Link>Internal\CimType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimClassPropertiesCollection.cs">
+      <Link>Internal\Data\CimClassPropertiesCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimClassPropertyOfClass.cs">
+      <Link>Internal\Data\CimClassPropertyOfClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimClassQualifierCollection.cs">
+      <Link>Internal\Data\CimClassQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodDeclarationCollection.cs">
+      <Link>Internal\Data\CimMethodDeclarationCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodDeclarationOfClass.cs">
+      <Link>Internal\Data\CimMethodDeclarationOfClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodParameterBackedByCimProperty.cs">
+      <Link>Internal\Data\CimMethodParameterBackedByCimProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodParameterDeclarationCollection.cs">
+      <Link>Internal\Data\CimMethodParameterDeclarationCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodParameterDeclarationOfMethod.cs">
+      <Link>Internal\Data\CimMethodParameterDeclarationOfMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodParameterQualifierCollection.cs">
+      <Link>Internal\Data\CimMethodParameterQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodParameterQualifierOfMethod.cs">
+      <Link>Internal\Data\CimMethodParameterQualifierOfMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodQualifierCollection.cs">
+      <Link>Internal\Data\CimMethodQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimMethodQualifierOfMethod.cs">
+      <Link>Internal\Data\CimMethodQualifierOfMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimPropertiesCollection.cs">
+      <Link>Internal\Data\CimPropertiesCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimPropertyOfInstance.cs">
+      <Link>Internal\Data\CimPropertyOfInstance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimPropertyQualifierCollection.cs">
+      <Link>Internal\Data\CimPropertyQualifierCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimPropertyStandalone.cs">
+      <Link>Internal\Data\CimPropertyStandalone.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimQualifierOfClass.cs">
+      <Link>Internal\Data\CimQualifierOfClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimQualifierOfProperty.cs">
+      <Link>Internal\Data\CimQualifierOfProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Helpers.cs">
+      <Link>Internal\Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\NativeErrorCode.cs">
+      <Link>Internal\NativeErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CancellationMode.cs">
+      <Link>Internal\Operations\CancellationMode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncCallbacksReceiverBase.cs">
+      <Link>Internal\Operations\CimAsyncCallbacksReceiverBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncCancellationDisposable.cs">
+      <Link>Internal\Operations\CimAsyncCancellationDisposable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncClassObservable.cs">
+      <Link>Internal\Operations\CimAsyncClassObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncClassObserverProxy.cs">
+      <Link>Internal\Operations\CimAsyncClassObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncDelegatedObservable.cs">
+      <Link>Internal\Operations\CimAsyncDelegatedObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncIndicationObservable.cs">
+      <Link>Internal\Operations\CimAsyncIndicationObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncIndicationObserverProxy.cs">
+      <Link>Internal\Operations\CimAsyncIndicationObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncInstanceObservable.cs">
+      <Link>Internal\Operations\CimAsyncInstanceObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncInstanceObserverProxy.cs">
+      <Link>Internal\Operations\CimAsyncInstanceObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncMethodResultObservable.cs">
+      <Link>Internal\Operations\CimAsyncMethodResultObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncMethodResultObserverProxy.cs">
+      <Link>Internal\Operations\CimAsyncMethodResultObserverProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncObservableBase.cs">
+      <Link>Internal\Operations\CimAsyncObservableBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimAsyncObserverProxyBase.cs">
+      <Link>Internal\Operations\CimAsyncObserverProxyBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimOperation.cs">
+      <Link>Internal\Operations\CimOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncClassEnumerable.cs">
+      <Link>Internal\Operations\CimSyncClassEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncClassEnumerator.cs">
+      <Link>Internal\Operations\CimSyncClassEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncEnumerableBase.cs">
+      <Link>Internal\Operations\CimSyncEnumerableBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncEnumeratorBase.cs">
+      <Link>Internal\Operations\CimSyncEnumeratorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncIndicationEnumerable.cs">
+      <Link>Internal\Operations\CimSyncIndicationEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncIndicationEnumerator.cs">
+      <Link>Internal\Operations\CimSyncIndicationEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncInstanceEnumerable.cs">
+      <Link>Internal\Operations\CimSyncInstanceEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CimSyncInstanceEnumerator.cs">
+      <Link>Internal\Operations\CimSyncInstanceEnumerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\ConvertingObservable.cs">
+      <Link>Internal\Operations\ConvertingObservable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\EmptyDisposable.cs">
+      <Link>Internal\Operations\EmptyDisposable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\SharedInstanceHandle.cs">
+      <Link>Internal\SharedInstanceHandle.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeMissing.cs">
       <Link>NativeMissing.cs</Link>
@@ -412,11 +388,41 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeTypes.cs">
       <Link>Native\NativeTypes.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\PacketEncoding.cs">
-      <Link>PacketEncoding.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\CimCredential.cs">
+      <Link>Options\CimCredential.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\ProxyType.cs">
-      <Link>ProxyType.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\CimSemantics.cs">
+      <Link>Options\CimSemantics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\CimSessionOptions.cs">
+      <Link>Options\CimSessionOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\DComSessionOptions.cs">
+      <Link>Options\DComSessionOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\CimFlags.cs">
+      <Link>Options\Internal\CimFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\CimOperationFlags.cs">
+      <Link>Options\Internal\CimOperationFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\CimOperationOptions.cs">
+      <Link>Options\Internal\CimOperationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\CimSubscriptionDeliveryOptions.cs">
+      <Link>Options\Internal\CimSubscriptionDeliveryOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\ImpersonationType.cs">
+      <Link>Options\Internal\ImpersonationType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\PacketEncoding.cs">
+      <Link>Options\Internal\PacketEncoding.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\ProxyType.cs">
+      <Link>Options\Internal\ProxyType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\WSManSessionOptions.cs">
+      <Link>Options\WSManSessionOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimDeserializer.cs">
       <Link>Serialization\CimDeserializer.cs</Link>
@@ -430,14 +436,8 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimSerializer.cs">
       <Link>Serialization\CimSerializer.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\SharedInstanceHandle.cs">
-      <Link>SharedInstanceHandle.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Strings.Designer.cs">
       <Link>Strings.Designer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\WSManSessionOptions.cs">
-      <Link>WSManSessionOptions.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup />
