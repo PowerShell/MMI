@@ -57,5 +57,45 @@ namespace MMI.Tests.Native
             expectedInstance.Delete();
             deserializedArray.Delete();
         }
+
+        [WindowsFact]
+        public void CanDeserializeClassWithInternalMOFMethod()
+        {
+            var serializedClass = this.GetSerializedClass();
+
+            MI_ExtendedArray deserializedArray;
+            MI_Class[] classes;
+            uint bufferRead;
+            MI_Instance cimErrorDetails;
+
+            var res = this.Deserializer.DeserializeClassArray(MI_SerializerFlags.None,
+                MI_OperationOptions.Null,
+                IntPtr.Zero,
+                serializedClass,
+                new MI_Class[] {},
+                null,
+                null,
+                out bufferRead,
+                out deserializedArray,
+                out cimErrorDetails);
+            MIAssert.Succeeded(res, "Expect to be able to deserialize instance");
+
+            classes = deserializedArray.ReadAsManagedPointerArray(MI_Class.NewFromDirectPtr);
+            var expectedInstance = this.GetSerializableInstance();
+            Assert.Equal(1, classes.Length, "Expect only the class we serialized");
+            MI_Value elementValue;
+            UInt32 elementIndex;
+            MI_Type elementType;
+            MI_Flags elementFlags;
+            bool valueExists;
+            string referenceClass;
+            MI_QualifierSet qualifierSet;
+            res = classes[0].GetElement(SerializationTestData.SerializableClassStringProperty, out elementValue, out valueExists, out elementType, out referenceClass, out qualifierSet, out elementFlags, out elementIndex);
+            MIAssert.Succeeded(res, "Expect to be able to get property from deserialized class");
+            Assert.Equal(MI_Type.MI_STRING, elementType, "Expect the type to be correct");
+            
+            expectedInstance.Delete();
+            deserializedArray.Delete();
+        }
     }
 }
