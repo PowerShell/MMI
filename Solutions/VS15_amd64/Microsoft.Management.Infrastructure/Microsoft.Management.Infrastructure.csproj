@@ -136,9 +136,6 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimCredential.cs">
       <Link>CimCredential.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimDeserializer.cs">
-      <Link>CimDeserializer.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimException.cs">
       <Link>CimException.cs</Link>
     </Compile>
@@ -199,12 +196,6 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodStreamedResult.cs">
       <Link>CimMethodStreamedResult.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMofDeserializer.cs">
-      <Link>CimMofDeserializer.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMofSerializer.cs">
-      <Link>CimMofSerializer.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimOperation.cs">
       <Link>CimOperation.cs</Link>
     </Compile>
@@ -246,9 +237,6 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSemantics.cs">
       <Link>CimSemantics.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSerializer.cs">
-      <Link>CimSerializer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSession.cs">
       <Link>CimSession.cs</Link>
@@ -429,6 +417,18 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\ProxyType.cs">
       <Link>ProxyType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimDeserializer.cs">
+      <Link>Serialization\CimDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimMofDeserializer.cs">
+      <Link>Serialization\CimMofDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimMofSerializer.cs">
+      <Link>Serialization\CimMofSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimSerializer.cs">
+      <Link>Serialization\CimSerializer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\SharedInstanceHandle.cs">
       <Link>SharedInstanceHandle.cs</Link>
