@@ -9,9 +9,16 @@ namespace MMI.Tests.Internal
     public class CimApplicationTests
     {
         [Fact]
-        public void ApplicationID()
+        public void ApplicationIDSane()
         {
             Assert.Equal("CoreCLRSingletonAppDomain", CimApplication.ApplicationID, "Expect test framework to be sane");
+        }
+
+        [Fact]
+        public void CimApplicationInitializes()
+        {
+            Assert.NotNull(CimApplication.Handle, "Expect the application handle to initialize properly");
+            Assert.False(CimApplication.Handle.IsNull, "Expect the pointer to be logically non-null");
         }
     }
 }

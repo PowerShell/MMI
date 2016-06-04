@@ -64,11 +64,17 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimClass.cs">
+      <Link>CimClass.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimConverter.cs">
       <Link>CimConverter.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimException.cs">
       <Link>CimException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimInstance.cs">
+      <Link>CimInstance.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimMethodDeclaration.cs">
       <Link>CimMethodDeclaration.cs</Link>
@@ -109,6 +115,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimSystemProperties.cs">
       <Link>CimSystemProperties.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimType.cs">
+      <Link>CimType.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Generic\CimAsyncCollection.cs">
       <Link>Generic\CimAsyncCollection.cs</Link>
     </Compile>
@@ -127,14 +136,11 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimApplication.cs">
       <Link>Internal\CimApplication.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimClass.cs">
-      <Link>Internal\CimClass.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimTypeExtensionMethods.cs">
+      <Link>Internal\CimTypeExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimInstance.cs">
-      <Link>Internal\CimInstance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimType.cs">
-      <Link>Internal\CimType.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\ClassHandleExtensionMethods.cs">
+      <Link>Internal\ClassHandleExtensionMethods.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Data\CimClassPropertiesCollection.cs">
       <Link>Internal\Data\CimClassPropertiesCollection.cs</Link>
@@ -193,8 +199,11 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Helpers.cs">
       <Link>Internal\Helpers.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\NativeErrorCode.cs">
-      <Link>Internal\NativeErrorCode.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\InstanceHandleExtensionMethods.cs">
+      <Link>Internal\InstanceHandleExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\NativeErrorCodeExtensionMethods.cs">
+      <Link>Internal\NativeErrorCodeExtensionMethods.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\CancellationMode.cs">
       <Link>Internal\Operations\CancellationMode.cs</Link>
@@ -273,6 +282,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\SharedInstanceHandle.cs">
       <Link>Internal\SharedInstanceHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeErrorCode.cs">
+      <Link>NativeErrorCode.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\NativeMissing.cs">
       <Link>NativeMissing.cs</Link>

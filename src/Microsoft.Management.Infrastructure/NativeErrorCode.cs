@@ -43,14 +43,3 @@ namespace Microsoft.Management.Infrastructure
         ServerIsShuttingDown = (int)MI_Result.MI_RESULT_SERVER_IS_SHUTTING_DOWN,
     }
 }
-
-namespace Microsoft.Management.Infrastructure.Internal
-{
-    internal static class NativeErrorCodeExtensionMethods
-    {
-        public static NativeErrorCode ToNativeErrorCode(this MI_Result miResult)
-        {
-            return (NativeErrorCode)miResult;
-        }
-    }
-}

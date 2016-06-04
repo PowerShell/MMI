@@ -69,11 +69,11 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
       <Link>Assert.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimApplication.cs">
-      <Link>CimApplication.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers.cs">
       <Link>Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\InternalTests\CimApplicationTests.cs">
+      <Link>InternalTests\CimApplicationTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
       <Link>MIAssert.cs</Link>
