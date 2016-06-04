@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ApplicationPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ApplicationOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_Application
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ApplicationPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ApplicationOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         internal static MI_Result Initialize(string applicationId, out MI_Instance extendedError, out MI_Application application)
         {
             MI_Application applicationLocal = MI_Application.NewDirectPtr();
@@ -375,7 +375,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Result resultLocal = this.ft.NewInstance(this,
                 "Parameters",
                 classDecl,
-                (MI_InstanceOutPtr)parameterSetLocal);
+                (MI_Instance.MI_InstanceOutPtr)parameterSetLocal);
 
             parameterSet = parameterSetLocal;
             return resultLocal;
@@ -417,8 +417,8 @@ namespace Microsoft.Management.Infrastructure.Native
                 string destination,
                 [In, Out] MI_DestinationOptionsPtr options,
                 MI_SessionCallbacksNative callbacks,
-                [In, Out] MI_InstanceOutPtr extendedError,
-                [In, Out] MI_SessionPtr session
+                [In, Out] MI_Instance.MI_InstanceOutPtr extendedError,
+                [In, Out] MI_Session.MI_SessionPtr session
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -427,7 +427,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string namespaceName,
                 string providerName,
                 IntPtr mi_Main,
-                [In, Out] MI_InstanceOutPtr extendedError,
+                [In, Out] MI_Instance.MI_InstanceOutPtr extendedError,
                 IntPtr provider
                 );
 
@@ -436,7 +436,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 string className,
                 [In, Out] MI_ClassDeclPtr classRTTI,
-                [In, Out] MI_InstanceOutPtr instance
+                [In, Out] MI_Instance.MI_InstanceOutPtr instance
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -449,14 +449,14 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Application_NewOperationOptions(
                 MI_ApplicationPtr application,
                 [MarshalAs(UnmanagedType.U1)] bool customOptionsMustUnderstand,
-                [In, Out] MI_OperationOptionsPtr operationOptions
+                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr operationOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewSubscriptionDeliveryOptions(
                 MI_ApplicationPtr application,
                 MI_SubscriptionDeliveryType deliveryType,
-                [In, Out] MI_SubscriptionDeliveryOptionsPtr deliveryOptions
+                [In, Out] MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsPtr deliveryOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -464,7 +464,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                MI_SerializerPtr serializer
+                MI_Serializer.MI_SerializerPtr serializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -480,7 +480,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 string className,
                 [In, Out] MI_ClassPtr classObject,
-                [In, Out] MI_InstanceOutPtr instance
+                [In, Out] MI_Instance.MI_InstanceOutPtr instance
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

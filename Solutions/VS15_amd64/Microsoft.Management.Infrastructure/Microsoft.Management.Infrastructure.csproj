@@ -361,14 +361,23 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ClassDecl.cs">
       <Link>Native\MI_ClassDecl.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Datetime.cs">
+      <Link>Native\MI_Datetime.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Deserializer.cs">
       <Link>Native\MI_Deserializer.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_DestinationOptions.cs">
       <Link>Native\MI_DestinationOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_ExtendedArray.cs">
+      <Link>Native\MI_ExtendedArray.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Interval.cs">
+      <Link>Native\MI_Interval.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Operation.cs">
       <Link>Native\MI_Operation.cs</Link>
@@ -405,6 +414,12 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_SubscriptionDeliveryOptions.cs">
       <Link>Native\MI_SubscriptionDeliveryOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Timestamp.cs">
+      <Link>Native\MI_Timestamp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_UserCredentials.cs">
+      <Link>Native\MI_UserCredentials.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Value.cs">
       <Link>Native\MI_Value.cs</Link>

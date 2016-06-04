@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ParameterSetPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ParameterSetOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_ParameterSet
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ParameterSetPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ParameterSetOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         internal MI_Result GetParameterAt(
             UInt32 index,
             out string name,
@@ -142,7 +142,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ParameterSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
-        public static explicit operator MI_InstanceOutPtr(MI_ParameterSet instance)
+        public static explicit operator MI_Instance.MI_InstanceOutPtr(MI_ParameterSet instance)
         {
             // We are not currently supporting the ability to get the address
             // of our direct pointer, though it is technically feasible
@@ -151,7 +151,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_Instance.MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
         internal static MI_ParameterSet Null { get { return null; } }
@@ -220,7 +220,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_ParameterSet_GetMethodReturnType(
                 MI_ParameterSetPtr self,
                 out MI_Type returnType,
-                [In, Out] MI_QualifierSetPtr qualifierSet
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -236,7 +236,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_String name,
                 out MI_Type parameterType,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSetPtr qualifierSet
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -245,7 +245,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string name,
                 out MI_Type parameterType,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
                 out UInt32 index
                 );
         }

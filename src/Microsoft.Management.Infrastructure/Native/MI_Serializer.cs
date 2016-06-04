@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_SerializerPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_SerializerOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal partial class MI_Serializer
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_SerializerPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_SerializerOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         // Marshal implements these with Reflection - pay this hit only once
         internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Serializer.MI_SerializerMembers>("reserved2");
 
@@ -261,7 +261,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Serializer_SerializeInstance(
                 MI_SerializerPtr serializer,
                 MI_SerializerFlags flags,
-                [In, Out] MI_InstancePtr instanceObject,
+                [In, Out] MI_Instance.MI_InstancePtr instanceObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded

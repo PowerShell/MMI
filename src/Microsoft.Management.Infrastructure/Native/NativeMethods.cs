@@ -9,21 +9,21 @@
         internal static extern MI_Result MI_Application_InitializeV1(
             UInt32 flags,
             [MarshalAs(MI_PlatformSpecific.AppropriateStringType)] string applicationID,
-            MI_InstanceOutPtr extendedError,
-            [In, Out] MI_ApplicationPtr application
+            MI_Instance.MI_InstanceOutPtr extendedError,
+            [In, Out] MI_Application.MI_ApplicationPtr application
             );
 
         [DllImport(MI_PlatformSpecific.MOFCodecHost, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
         internal static extern MI_Result MI_Application_NewSerializer_Mof(
-            MI_ApplicationPtr application,
+            MI_Application.MI_ApplicationPtr application,
             MI_SerializerFlags flags,
             [MarshalAs(UnmanagedType.LPWStr)]string format,
-            MI_SerializerPtr serializer
+            MI_Serializer.MI_SerializerPtr serializer
             );
 
         [DllImport(MI_PlatformSpecific.MOFCodecHost, CallingConvention = MI_PlatformSpecific.MiMainCallConvention)]
         internal static extern MI_Result MI_Application_NewDeserializer_Mof(
-            MI_ApplicationPtr application,
+            MI_Application.MI_ApplicationPtr application,
             MI_SerializerFlags flags,
             [MarshalAs(UnmanagedType.LPWStr)] string format,
             MI_DeserializerPtr serializer

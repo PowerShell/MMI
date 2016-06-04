@@ -425,7 +425,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
                 out MI_Flags flags,
                 out UInt32 index
                 );
@@ -439,14 +439,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
                 out MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetClassQualifierSet(
                 MI_ClassPtr self,
-                [In, Out] MI_QualifierSetPtr qualifierSet
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -460,16 +460,16 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ClassPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_QualifierSetPtr qualifierSet,
-                [In, Out] MI_ParameterSetPtr parameterSet
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_ParameterSet.MI_ParameterSetPtr parameterSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethod(
                 MI_ClassPtr self,
                 string name,
-                [In, Out] MI_QualifierSetPtr qualifierSet,
-                [In, Out] MI_ParameterSetPtr parameterSet,
+                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_ParameterSet.MI_ParameterSetPtr parameterSet,
                 out UInt32 index
                 );
 

@@ -556,7 +556,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 IntPtr classObjectNeededContext,
                 out UInt32 serializedBufferRead,
                 [In, Out] MI_ClassOutPtr classObject,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -566,7 +566,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32 serializedBufferLength,
                 string className,
                 out UInt32 classNameLength,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -576,7 +576,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32 serializedBufferLength,
                 string parentClassName,
                 out UInt32 parentClassNameLength,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -590,8 +590,8 @@ namespace Microsoft.Management.Infrastructure.Native
                 IntPtr classObjectNeeded,
                 IntPtr classObjectNeededContext,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_InstanceOutPtr instanceObject,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr instanceObject,
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -601,7 +601,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32 serializedBufferLength,
                 string className,
                 out UInt32 classNameLength,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
         }
 
@@ -616,7 +616,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Deserializer_DeserializeClassArray_MOF(
                 MI_DeserializerPtr deserializer,
                 MI_SerializerFlags flags,
-                MI_OperationOptionsPtr options,
+                MI_OperationOptions.MI_OperationOptionsPtr options,
                 IntPtr MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
@@ -624,22 +624,22 @@ namespace Microsoft.Management.Infrastructure.Native
                 string serverName,
                 string namespaceName,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_ExtendedArrayOutPtr resultingArray,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_ExtendedArray.MI_ExtendedArrayOutPtr resultingArray,
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeInstanceArray_MOF(
                 MI_DeserializerPtr deserializer,
                 MI_SerializerFlags flags,
-                MI_OperationOptionsPtr options,
+                MI_OperationOptions.MI_OperationOptionsPtr options,
                 IntPtr MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                MI_ExtendedArrayPtr classes,
+                MI_ExtendedArray.MI_ExtendedArrayPtr classes,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_ExtendedArrayOutPtr resultingArray,
-                [In, Out] MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_ExtendedArray.MI_ExtendedArrayOutPtr resultingArray,
+                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
         }
     }

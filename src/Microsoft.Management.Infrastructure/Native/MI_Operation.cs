@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_OperationPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_OperationOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_Operation
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_OperationPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_OperationOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_OperationMembers
         {
@@ -264,29 +264,29 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetSession(
                 MI_OperationPtr operation,
-                [In, Out] MI_SessionPtr session
+                [In, Out] MI_Session.MI_SessionPtr session
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetInstance(
                 MI_OperationPtr operation,
-                [In, Out] MI_InstanceOutPtr instance,
+                [In, Out] MI_Instance.MI_InstanceOutPtr instance,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetIndication(
                 MI_OperationPtr operation,
-                [In, Out] MI_InstanceOutPtr instance,
+                [In, Out] MI_Instance.MI_InstanceOutPtr instance,
                 [In, Out] MI_String bookmark,
                 [In, Out] MI_String machineID,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -296,7 +296,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
                 );
         }
     }
