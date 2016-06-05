@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.Management.Infrastructure.Native
+﻿namespace Microsoft.Management.Infrastructure.Native
 {
     internal static class MI_SerializationFormat
     {

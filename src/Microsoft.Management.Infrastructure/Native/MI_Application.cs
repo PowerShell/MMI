@@ -267,7 +267,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     format,
                     serializerLocal);
             }
-            else if(MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
+            else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
             {
                 resultLocal = NativeMethods.MI_Application_NewSerializer_Mof(this,
                     flags,
@@ -345,6 +345,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
 #if !_LINUX
+
         internal MI_Result NewClass(
             MI_ClassDecl classDecl,
             string namespaceName,
@@ -363,6 +364,7 @@ namespace Microsoft.Management.Infrastructure.Native
             classObject = classObjectLocal;
             return resultLocal;
         }
+
 #endif
 
         internal MI_Result NewParameterSet(

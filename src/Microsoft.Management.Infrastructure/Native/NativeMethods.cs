@@ -73,7 +73,7 @@
                 *dst++ = val;
             }
         }
-        
+
         internal static unsafe T GetFTAsOffsetFromPtr<T>(IntPtr ptr, int offset) where T : new()
         {
             T res = new T();

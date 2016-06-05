@@ -5,7 +5,7 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_PropertyDecl
     {
-        struct MI_PropertyDeclMembers
+        private struct MI_PropertyDeclMembers
         {
             public MI_Flags flags;
             public UInt32 code;
@@ -67,7 +67,6 @@ namespace Microsoft.Management.Infrastructure.Native
                 propagator,
                 value);
         }
-        
 
         private void AllocateQualifierDecl(MI_Flags flags,
             UInt32 code,

@@ -3,7 +3,7 @@
 namespace Microsoft.Management.Infrastructure.Native
 {
     using System.Runtime.InteropServices;
-    
+
     [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal struct MI_Datetime
     {

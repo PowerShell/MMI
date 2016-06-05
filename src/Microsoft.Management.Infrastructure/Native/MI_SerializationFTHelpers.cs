@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
@@ -33,7 +29,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private static Lazy<SerializationFTPair> XmlSerializationFTs = new Lazy<SerializationFTPair>(() => GetXmlSerializationFTs());
         internal static MI_Serializer.MI_SerializerFT XMLSerializationFT { get { return XmlSerializationFTs.Value.SerializationFT; } }
         internal static MI_Deserializer.MI_DeserializerFT XMLDeserializationFT { get { return XmlSerializationFTs.Value.DeserializationFT; } }
-        
+
         internal static MI_Serializer.MI_SerializerFT GetSerializerFTFromReserved2(MI_Serializer serializer)
         {
             return NativeMethods.GetFTAsOffsetFromPtr<MI_Serializer.MI_SerializerFT>(serializer.Ptr, MI_Serializer.Reserved2Offset);

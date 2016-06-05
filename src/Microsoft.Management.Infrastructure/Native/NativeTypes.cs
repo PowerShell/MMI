@@ -3,7 +3,7 @@
 namespace Microsoft.Management.Infrastructure.Native
 {
     using System.Runtime.InteropServices;
-    
+
     internal class MI_SessionCallbacks
     {
         internal NativeMethods.MI_SessionCallbacks_WriteMessage writeMessage;

@@ -3,11 +3,6 @@
  *============================================================================
  */
 
-using Microsoft.Management.Infrastructure.Native;
-using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Microsoft.Management.Infrastructure
 {
     /// <summary>

@@ -49,7 +49,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
             else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
             {
-                this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetSerializerFTFromReserved2(this) );
+                this.mft = new Lazy<MI_SerializerFT>(() => MI_SerializationFTHelpers.GetSerializerFTFromReserved2(this));
             }
             else
             {
@@ -73,12 +73,12 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             return new MI_Serializer(format, true);
         }
-        
+
         public static implicit operator MI_SerializerPtr(MI_Serializer instance)
         {
             // If the indirect pointer is zero then the object has not
             // been initialized and it is not valid to refer to its data
-            if(instance != null && instance.Ptr == IntPtr.Zero)
+            if (instance != null && instance.Ptr == IntPtr.Zero)
             {
                 throw new InvalidCastException();
             }
@@ -89,8 +89,8 @@ namespace Microsoft.Management.Infrastructure.Native
         public static implicit operator MI_SerializerOutPtr(MI_Serializer instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
-            if(instance != null && instance.isDirect)
+            // of our direct pointer, though it is technically feasible
+            if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
             }
@@ -100,6 +100,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Serializer Null { get { return null; } }
         internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         internal IntPtr Ptr
         {
             get
@@ -232,7 +233,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 out clientBufferNeeded);
             return resultLocal;
         }
-        
+
         private MI_SerializerFT ft { get { return this.mft.Value; } }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -266,7 +267,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded
                 );
-            
+
             internal static Lazy<MI_SerializerFT> XmlSerializerFT = new Lazy<MI_SerializerFT>(() => MI_SerializationFTHelpers.XMLSerializationFT);
         }
     }

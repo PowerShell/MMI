@@ -1,6 +1,3 @@
-using Microsoft.Management.Infrastructure.Options;
-using System.Security;
-
 namespace Microsoft.Management.Infrastructure.Internal
 {
     internal class CimOperationCallbackProcessingContext

@@ -5,7 +5,7 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_QualifierDecl
     {
-        struct MI_QualifierDeclMembers
+        private struct MI_QualifierDeclMembers
         {
             public IntPtr name;
             public MI_Type type;
@@ -19,7 +19,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             unsafe
             {
-                if(this.ptr != IntPtr.Zero)
+                if (this.ptr != IntPtr.Zero)
                 {
                     IntPtr valuePtr = this.ptr + MI_QualifierDeclValueOffset;
                     Marshal.FreeHGlobal(*(IntPtr*)valuePtr);

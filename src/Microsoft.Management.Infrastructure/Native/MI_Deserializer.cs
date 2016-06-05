@@ -45,7 +45,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             this.format = format;
             this.isDirect = isDirect;
-            
+
             this.mft = new Lazy<MI_MOFDeserializerFT>(this.GetStandardizedDeserializerFT);
 
             var necessarySize = this.isDirect ? MI_DeserializerMembersSize : NativeMethods.IntPtrSize;
@@ -61,12 +61,12 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             return new MI_Deserializer(format, true);
         }
-        
+
         public static implicit operator MI_DeserializerPtr(MI_Deserializer instance)
         {
             // If the indirect pointer is zero then the object has not
             // been initialized and it is not valid to refer to its data
-            if(instance != null && instance.Ptr == IntPtr.Zero)
+            if (instance != null && instance.Ptr == IntPtr.Zero)
             {
                 throw new InvalidCastException();
             }
@@ -77,8 +77,8 @@ namespace Microsoft.Management.Infrastructure.Native
         public static implicit operator MI_DeserializerOutPtr(MI_Deserializer instance)
         {
             // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible 
-            if(instance != null && instance.isDirect)
+            // of our direct pointer, though it is technically feasible
+            if (instance != null && instance.isDirect)
             {
                 throw new InvalidCastException();
             }
@@ -88,6 +88,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Deserializer Null { get { return null; } }
         internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+
         internal IntPtr Ptr
         {
             get
@@ -118,7 +119,7 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 return NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_MOFDeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
             }
-            else if(MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
+            else if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
                 MI_MOFDeserializerFT tmp = new MI_MOFDeserializerFT();
 #if !_LINUX
@@ -168,12 +169,12 @@ namespace Microsoft.Management.Infrastructure.Native
                 out serializedBufferRead,
                 classObjectLocal,
                 cimErrorDetailsLocal);
-            
+
             classObject = classObjectLocal;
             cimErrorDetails = cimErrorDetailsLocal;
             return resultLocal;
         }
-        
+
         internal MI_Result DeserializeClass(
             MI_SerializerFlags flags,
             byte[] serializedBuffer,
@@ -272,7 +273,7 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 throw new NotImplementedException();
             }
-            
+
             MI_Instance instanceObjectLocal = MI_Instance.NewIndirectPtr();
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ClassArrayPtr classArrayPtr = (MI_ClassArrayPtr)classObjects;
@@ -288,12 +289,12 @@ namespace Microsoft.Management.Infrastructure.Native
                 out serializedBufferRead,
                 instanceObjectLocal,
                 cimErrorDetailsLocal);
-            
+
             instanceObject = instanceObjectLocal;
             cimErrorDetails = cimErrorDetailsLocal;
             return resultLocal;
         }
-        
+
         internal MI_Result DeserializeInstance(
             MI_SerializerFlags flags,
             byte[] serializedBuffer,
@@ -459,7 +460,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             return resLocal;
         }
-        
+
         internal MI_Result DeserializeInstanceArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
@@ -523,7 +524,7 @@ namespace Microsoft.Management.Infrastructure.Native
             cimErrorDetails = cimErrorDetailsLocal;
             return resultLocal;
         }
-        
+
         private MI_DeserializerFT ft { get { return this.mft.Value.deserializerFT; } }
 
         private MI_MOFDeserializerFT mofFT { get { return this.mft.Value; } }

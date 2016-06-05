@@ -135,6 +135,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 return res;
             }
         }
+
         public void WritePointerArray(IntPtr[] ptrs)
         {
             unsafe
@@ -184,7 +185,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return this.ft.Delete(this);
         }
 
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_ExtendedArrayFT
         {
@@ -195,5 +195,5 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ExtendedArrayPtr self
                 );
         }
-}
+    }
 }
