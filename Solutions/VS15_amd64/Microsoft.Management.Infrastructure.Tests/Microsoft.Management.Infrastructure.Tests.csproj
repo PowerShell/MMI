@@ -63,6 +63,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\AssemblyInfo.cs">
+      <Link>AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimApplication.cs">
       <Link>CimApplication.cs</Link>
     </Compile>
@@ -72,11 +78,53 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
       <Link>MIAssert.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\DeserializerTestsBase.cs">
+      <Link>NativeTests\DeserializerTestsBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\ApplicationFixture.cs">
+      <Link>NativeTests\Fixtures\ApplicationFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\SessionFixture.cs">
+      <Link>NativeTests\Fixtures\SessionFixture.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\Fixtures\StaticFixtures.cs">
+      <Link>NativeTests\Fixtures\StaticFixtures.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MIValueTests.cs">
       <Link>NativeTests\MIValueTests.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MOFDeserializerTests.cs">
+      <Link>NativeTests\MOFDeserializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\MOFSerializerTests.cs">
+      <Link>NativeTests\MOFSerializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\NativeTestsBase.cs">
+      <Link>NativeTests\NativeTestsBase.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SanityTests.cs">
       <Link>NativeTests\SanityTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SerializerTestsBase.cs">
+      <Link>NativeTests\SerializerTestsBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SessionTests.cs">
+      <Link>NativeTests\SessionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\SlowTests.cs">
+      <Link>NativeTests\SlowTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\TestData\AllTypesClass.cs">
+      <Link>NativeTests\TestData\AllTypesClass.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\TestData\SerializationTestData.cs">
+      <Link>NativeTests\TestData\SerializationTestData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\XMLDeserializerTests.cs">
+      <Link>NativeTests\XMLDeserializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\XMLSerializerTests.cs">
+      <Link>NativeTests\XMLSerializerTests.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\TestMIProperty.cs">
       <Link>TestMIProperty.cs</Link>
@@ -87,6 +135,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsFact.cs">
       <Link>WindowsFact.cs</Link>
     </Compile>
+    <Compile Include="MMITest\CimSessionTest.cs" />
+    <Compile Include="MMITest\CimInstanceTest.cs" />
+    <Compile Include="MMITest\CimMofDeserializerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

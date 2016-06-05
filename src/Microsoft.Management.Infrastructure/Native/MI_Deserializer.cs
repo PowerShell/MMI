@@ -44,6 +44,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             this.isDirect = isDirect;
 
+#if !_LINUX
             if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
                 this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.XMLDeserializationFT);
@@ -56,6 +57,9 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 throw new NotImplementedException();
             }
+#else
+            this.mft = new Lazy<MI_DeserializerFT>(() => MI_SerializationFTHelpers.GetMOFDeserializerFT(this));
+#endif
 
             var necessarySize = this.isDirect ? MI_DeserializerMembersSize : NativeMethods.IntPtrSize;
             this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
@@ -260,7 +264,12 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidOperationException();
             }
 
-            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length);
+            IntPtr clientBuffer = Marshal.AllocHGlobal(serializedBuffer.Length+2);
+            unsafe
+            {
+                NativeMethods.memset((byte*)clientBuffer, 0, (uint)(serializedBuffer.Length+2));
+            }
+
             try
             {
                 Marshal.Copy(serializedBuffer, 0, clientBuffer, serializedBuffer.Length);

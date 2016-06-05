@@ -142,6 +142,18 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ParameterSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
+        public static explicit operator MI_InstanceOutPtr(MI_ParameterSet instance)
+        {
+            // We are not currently supporting the ability to get the address
+            // of our direct pointer, though it is technically feasible
+            if (instance != null && instance.isDirect)
+            {
+                throw new InvalidCastException();
+            }
+
+            return new MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+        }
+
         internal static MI_ParameterSet Null { get { return null; } }
         internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 

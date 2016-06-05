@@ -259,6 +259,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Serializer serializerLocal = MI_Serializer.NewDirectPtr(format);
 
             MI_Result resultLocal;
+#if !_LINUX
             if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
                 resultLocal = this.ft.NewSerializer(this,
@@ -277,7 +278,12 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 throw new NotImplementedException();
             }
-
+#else
+            resultLocal = this.ft.NewSerializer(this,
+                flags,
+                format,
+                serializerLocal);
+#endif
             serializer = serializerLocal;
             return resultLocal;
         }
@@ -291,6 +297,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Deserializer deserializerLocal = MI_Deserializer.NewDirectPtr(format);
 
             MI_Result resultLocal;
+#if !_LINUX
             if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
                 resultLocal = this.ft.NewDeserializer(this,
@@ -309,6 +316,12 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 throw new NotImplementedException();
             }
+#else
+            resultLocal = this.ft.NewDeserializer(this,
+                flags,
+                format,
+                deserializerLocal);
+#endif
 
             deserializer = deserializerLocal;
             return resultLocal;
@@ -328,6 +341,43 @@ namespace Microsoft.Management.Infrastructure.Native
                 instanceLocal);
 
             instance = instanceLocal;
+            return resultLocal;
+        }
+
+#if !_LINUX
+        internal MI_Result NewClass(
+            MI_ClassDecl classDecl,
+            string namespaceName,
+            string serverName,
+            out MI_Class classObject
+            )
+        {
+            MI_Class classObjectLocal = MI_Class.NewIndirectPtr();
+
+            MI_Result resultLocal = this.ft.NewClass(this,
+                classDecl,
+                namespaceName,
+                serverName,
+                classObjectLocal);
+
+            classObject = classObjectLocal;
+            return resultLocal;
+        }
+#endif
+
+        internal MI_Result NewParameterSet(
+            MI_ClassDecl classDecl,
+            out MI_ParameterSet parameterSet
+            )
+        {
+            MI_ParameterSet parameterSetLocal = MI_ParameterSet.NewIndirectPtr();
+
+            MI_Result resultLocal = this.ft.NewInstance(this,
+                "Parameters",
+                classDecl,
+                (MI_InstanceOutPtr)parameterSetLocal);
+
+            parameterSet = parameterSetLocal;
             return resultLocal;
         }
 
@@ -351,6 +401,9 @@ namespace Microsoft.Management.Infrastructure.Native
             internal MI_Application_NewSerializer NewSerializer;
             internal MI_Application_NewDeserializer NewDeserializer;
             internal MI_Application_NewInstanceFromClass NewInstanceFromClass;
+#if !_LINUX
+            internal MI_Application_NewClass NewClass;
+#endif
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_Close(
@@ -428,6 +481,15 @@ namespace Microsoft.Management.Infrastructure.Native
                 string className,
                 [In, Out] MI_ClassPtr classObject,
                 [In, Out] MI_InstanceOutPtr instance
+                );
+
+            [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+            internal delegate MI_Result MI_Application_NewClass(
+                MI_ApplicationPtr application,
+                MI_ClassDecl classDecl,
+                string namespaceName,
+                string serverName,
+                [In, Out] MI_ClassOutPtr classObject
                 );
         }
     }

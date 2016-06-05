@@ -134,7 +134,12 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                IntPtr inner = Marshal.ReadIntPtr(this.data);
+                IntPtr inner = IntPtr.Zero;
+                unsafe
+                {
+                    inner = *((IntPtr*)this.data);
+                }
+
                 return inner == IntPtr.Zero ? null : MI_PlatformSpecific.PtrToString(inner);
             }
             set

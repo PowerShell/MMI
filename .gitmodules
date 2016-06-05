@@ -1,3 +1,4 @@
 [submodule "src/omi"]
 	path = src/omi
 	url = https://github.com/PowerShell/omi.git
+	branch = johnkord-MMI_changes

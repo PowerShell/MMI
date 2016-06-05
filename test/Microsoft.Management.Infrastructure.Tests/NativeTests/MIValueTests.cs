@@ -2,24 +2,19 @@
 using System.Collections;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using Xunit;
 using Microsoft.Management.Infrastructure.Native;
+using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MIValueTests : IDisposable
+    public class MIValueTests : NativeTestsBase, IDisposable
     {
-        private MI_Application application = null;
         private MI_Value value = new MI_Value();
         private MI_Instance instance = null;
         
         public MIValueTests()
         {
-            MI_Instance extendedError = null;
-            var res = MI_Application.Initialize("MIValueTests", out extendedError, out this.application);
-            MIAssert.Succeeded(res);
-
-            res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out this.instance);
+            var res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out this.instance);
             MIAssert.Succeeded(res);
         }
         
@@ -31,14 +26,6 @@ namespace MMI.Tests.Native
             }
 
             this.value.Dispose();
-
-            if (this.application != null)
-            {
-                var shutdownTask = Task.Factory.StartNew(() => this.application.Close() );
-                bool completed = shutdownTask.Wait(TimeSpan.FromSeconds(5));
-                Assert.True(completed, "MI_Application did not complete shutdown in the expected time - did you leave an object open?");
-                MIAssert.Succeeded(shutdownTask.Result);
-            }
         }
 
         private void TestValueRoundtrip()
@@ -59,7 +46,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_ValuesNull_Test()
+        public void ValuesNullCanBeUsed()
         {
             foreach (MI_Type type in Enum.GetValues(typeof(MI_Type)))
             {
@@ -79,7 +66,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_BooleanTypes_Test()
+        public void BooleanTypesCanBeUsed()
         {
             this.value.Boolean = true;
             this.TestValueRoundtrip();
@@ -88,7 +75,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_Char16Types_Test()
+        public void Char16TypesCanBeUsed()
         {
             this.value.Char16 = Char.MaxValue;
             this.TestValueRoundtrip();
@@ -97,7 +84,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_DatetimeTypes_Test()
+        public void DatetimeTypesCanBeUsed()
         {
             this.value.Datetime = new MI_Datetime()
             {
@@ -138,7 +125,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_FloatingPointTypes_Test()
+        public void FloatingPointTypesCanBeUsed()
         {
             this.value.Real32 = .99f;
             this.TestValueRoundtrip();
@@ -152,14 +139,14 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_InstanceTypes_Test()
+        public void InstanceTypesCanBeUsed()
         {
             MI_Instance InnerInstance = null;
-            var res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
+            var res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
             MIAssert.Succeeded(res);
 
             MI_Instance InnerInstance2 = null;
-            res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
+            res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
             MIAssert.Succeeded(res);
 
             try
@@ -198,7 +185,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_IntegerTypes_Test()
+        public void IntegerTypesCanBeUsed()
         {
             this.value.Sint8 = 64;
             this.TestValueRoundtrip();
@@ -242,7 +229,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_IntervalTypes_Test()
+        public void IntervalTypesCanBeUsed()
         {
             this.value.Datetime = new MI_Datetime()
             {
@@ -280,14 +267,14 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_ReferenceTypes_Test()
+        public void ReferenceTypesCanBeUsed()
         {
             MI_Instance InnerInstance = null;
-            var res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
+            var res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance);
             MIAssert.Succeeded(res);
 
             MI_Instance InnerInstance2 = null;
-            res = this.application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
+            res = this.Application.NewInstance("TestClass", MI_ClassDecl.Null, out InnerInstance2);
             MIAssert.Succeeded(res);
 
             try
@@ -326,7 +313,7 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_StringTypes_Test()
+        public void StringTypesCanBeUsed()
         {
             const string expectedString = "Foobar";
             string[] expectedStrings = new string[] { "Foobar", "Bazzity" };
@@ -338,39 +325,19 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
-        public void MIValue_PreventsBadCast_Test()
+        public void PreventsBadCastCanBeUsed()
         {
             this.value.String = "Foobar";
             foreach(MI_Type enumValue in Enum.GetValues(typeof(MI_Type)))
             {
                 if(enumValue != MI_Type.MI_STRING)
                 {
-                    InvalidCastException expected = null;
-                    try
-                    {
-                        this.value.GetValue(enumValue);
-                    }
-                    catch(InvalidCastException ex)
-                    {
-                        expected = ex;
-                    }
-
-                    Assert.NotNull(expected);
+                    Assert.Throws<InvalidCastException>(() => this.value.GetValue(enumValue));
                 }
             }
 
             this.value.Uint8 = 5;
-            InvalidCastException outerExpected = null;
-            try
-            {
-                this.value.GetValue(MI_Type.MI_STRING);
-            }
-            catch (InvalidCastException ex)
-            {
-                outerExpected = ex;
-            }
-
-            Assert.NotNull(outerExpected);
+            Assert.Throws<InvalidCastException>(() => this.value.GetValue(MI_Type.MI_STRING));
         }
     }
 }
