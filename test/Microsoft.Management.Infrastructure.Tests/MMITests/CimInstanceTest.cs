@@ -39,7 +39,5 @@ namespace Microsoft.Management.Infrastructure.Tests.MMITest
             MMI.Tests.Assert.Equal(cimInstance.CimSystemProperties.Namespace, @"root\TestNamespace", "imInstance.Namespace should not be null");
             MMI.Tests.Assert.NotNull(cimInstance.CimClass, "dynamicCimInstance.Class should be null");
         }
-
-
     }
 }
