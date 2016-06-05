@@ -37,5 +37,21 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.Equal(cimInstance.CimInstanceProperties.Count(), 0, "emptyCimInstance.CimInstanceProperties should return no items");
             MMI.Tests.Assert.NotNull(cimInstance.CimClass, "dynamicCimInstance.Class should not be null");
         }
+
+        [Fact]
+        public void Constructor_ClassName_Null()
+        {       
+            string className =  (string)null;
+            ArgumentNullException ex =  MMI.Tests.Assert.Throws<ArgumentNullException>(() => { return new CimInstance(className);});
+            MMI.Tests.Assert.Equal(ex.ParamName, "className", "parameter name is not indicated correctly in returned ArgumentNullException");    
+        }
+
+        [Fact]
+        public void Constructor_ClassName_Invalid()
+        {
+            string className = @"  I am an invalid classname according to Common\scx\naming.c: OSC_LegalName  ";
+            ArgumentOutOfRangeException ex = MMI.Tests.Assert.Throws<ArgumentOutOfRangeException>(() => { return new CimInstance(className); });
+            MMI.Tests.Assert.Equal(ex.ParamName, "className", "parameter name is not indicated correctly in returned ArgumentOutOfRangeException");
+        }
     }
 }
