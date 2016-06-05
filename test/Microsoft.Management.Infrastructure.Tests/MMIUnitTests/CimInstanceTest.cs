@@ -1,4 +1,7 @@
-﻿
+﻿/*============================================================================
+ * Copyright (C) Microsoft Corporation, All rights reserved.
+ *============================================================================
+ */
 namespace Microsoft.Management.Infrastructure.UnitTests
 {
     using System;
@@ -16,11 +19,11 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
             MMI.Tests.Assert.Equal(cimInstance.CimSystemProperties.ClassName, "MyClassName", "emptyCimInstance.CimSystemProperties.ClassName should be round-tripped properly");
-            MMI.Tests.Assert.NotNull(cimInstance.CimSystemProperties.ServerName, "emptyCimInstance.CimSystemProperties.ServerName should be null");
-            MMI.Tests.Assert.NotNull(cimInstance.CimSystemProperties.Namespace, "emptyCimInstance.Namespace should be null");
+            MMI.Tests.Assert.Null(cimInstance.CimSystemProperties.ServerName, "emptyCimInstance.CimSystemProperties.ServerName should be null");
+            MMI.Tests.Assert.Null(cimInstance.CimSystemProperties.Namespace, "emptyCimInstance.Namespace should be null");
             MMI.Tests.Assert.Equal(cimInstance.CimInstanceProperties.Count, 0, "emptyCimInstance.CimInstanceProperties.Count should be 0");
             MMI.Tests.Assert.Equal(cimInstance.CimInstanceProperties.Count(), 0, "emptyCimInstance.CimInstanceProperties should return no items");
-            MMI.Tests.Assert.NotNull(cimInstance.CimClass, "dynamicCimInstance.Class should be null");
+            MMI.Tests.Assert.NotNull(cimInstance.CimClass, "dynamicCimInstance.Class should be not null");
         }
 
         [Fact]
@@ -28,12 +31,11 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         {
             CimInstance cimInstance = new CimInstance("MyClassName", @"root\TestNamespace");
             MMI.Tests.Assert.Equal(cimInstance.CimSystemProperties.ClassName, "MyClassName", "emptyCimInstance.CimSystemProperties.ClassName should be round-tripped properly");
-            MMI.Tests.Assert.Equal(cimInstance.CimSystemProperties.ServerName, "emptyCimInstance.CimSystemProperties.ServerName should be null");
+            MMI.Tests.Assert.Null(cimInstance.CimSystemProperties.ServerName, "emptyCimInstance.CimSystemProperties.ServerName should be null");
             MMI.Tests.Assert.Equal(cimInstance.CimSystemProperties.Namespace, @"root\TestNamespace", "imInstance.Namespace should not be null");
             MMI.Tests.Assert.Equal(cimInstance.CimInstanceProperties.Count, 0, "emptyCimInstance.CimInstanceProperties.Count should be 0");
             MMI.Tests.Assert.Equal(cimInstance.CimInstanceProperties.Count(), 0, "emptyCimInstance.CimInstanceProperties should return no items");
-            MMI.Tests.Assert.Equal(cimInstance.CimSystemProperties.Namespace, @"root\TestNamespace", "imInstance.Namespace should not be null");
-            MMI.Tests.Assert.NotNull(cimInstance.CimClass, "dynamicCimInstance.Class should be null");
+            MMI.Tests.Assert.NotNull(cimInstance.CimClass, "dynamicCimInstance.Class should not be null");
         }
     }
 }

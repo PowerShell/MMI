@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
-using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests
 {
+    // Todo: add description for every methods before push
     public partial class Assert
-    {
+    {      
         internal static void Equal<T>(T expected, T actual, string message)
         {
             if ((expected == null && actual != null) ||
@@ -65,6 +65,17 @@ namespace MMI.Tests
         internal static void Null<T>(T actual) where T : class
         {
             Xunit.Assert.Null(actual);
+        }
+
+        /// <summary>
+        /// Verifies that an actual object is null as expected.
+        /// </summary>
+        internal static void Null<T>(T actual, string message) where T : class
+        {
+            if (actual != null) 
+            { 
+                throw new XunitException(message);
+            }
         }
 
         internal static void True(bool? value, string message)
