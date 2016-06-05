@@ -1,9 +1,5 @@
-﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved.
- *============================================================================
- */
-
-namespace Microsoft.Management.Infrastructure.Tests.MMITest
+﻿
+namespace Microsoft.Management.Infrastructure.UnitTests
 {
     using System;
     using System.Linq;

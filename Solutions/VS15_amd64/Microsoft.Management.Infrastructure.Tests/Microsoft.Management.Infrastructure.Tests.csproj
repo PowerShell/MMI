@@ -134,10 +134,16 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsFact.cs">
       <Link>WindowsFact.cs</Link>
+    </Compile>	
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MMIUnitTests\CimSessionTest.cs">
+	  <Link>MMIUnitTests\CimSessionTest.cs</Link>
     </Compile>
-    <Compile Include="MMITest\CimSessionTest.cs" />
-    <Compile Include="MMITest\CimInstanceTest.cs" />
-    <Compile Include="MMITest\CimMofDeserializerTest.cs" />
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MMIUnitTests\CimInstanceTest.cs">
+	  <Link>MMIUnitTests\CimInstanceTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MMIUnitTests\CimMofDeserializerTest.cs">
+	  <Link>MMIUnitTests\CimMofDeserializerTest.c</Link>
+    </Compile>		
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
