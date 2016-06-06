@@ -352,6 +352,8 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_ClassArrayPtr classPtrs = (MI_ClassArrayPtr)classDefinitions;
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray classesLocal = MI_ExtendedArray.NewIndirectPtr();
+            MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
+            classDetailsArray.WritePointerArray(classPtrs.ptr);
             classes = null;
 
             var resLocal = this.mofFT.DeserializeClassArray_MOF(
@@ -361,7 +363,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_DeserializerCallbacks_callbacks,
                 serializedBuffer,
                 serializedBufferLength,
-                classPtrs.ptr,
+                classDetailsArray,
                 serverName,
                 namespaceName,
                 out serializedBufferRead,
@@ -621,7 +623,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 IntPtr MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                IntPtr[] classes,
+                MI_ExtendedArray.MI_ExtendedArrayPtr classes,
                 string serverName,
                 string namespaceName,
                 out UInt32 serializedBufferRead,

@@ -22,5 +22,40 @@ namespace Microsoft.Management.Infrastructure.Internal
             CimException.ThrowIfMiResultFailure(result);
             return clonedHandle;
         }
+
+        public static MI_Instance[] CloneMIArray(this MI_Instance[] arrayToClone)
+        {
+            if (arrayToClone == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            MI_Instance[] result = new MI_Instance[arrayToClone.Length];
+            try
+            {
+                for (int i = 0; i < arrayToClone.Length; i++)
+                {
+                    MI_Instance origInstance = arrayToClone[i];
+                    result[i] = origInstance == null ? null : origInstance.Clone();
+                }
+            }
+            catch
+            {
+                // If we encounter an exception halfway through we need to rollback
+                for (int i = 0; i < arrayToClone.Length; i++)
+                {
+                    if (arrayToClone[i] == null)
+                    {
+                        break;
+                    }
+
+                    arrayToClone[i].Delete();
+                }
+
+                throw;
+            }
+
+            return result;
+        }
     }
 }

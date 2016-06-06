@@ -9,7 +9,7 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class MOFDeserializerTests : DeserializerTestsBase
+    public class MOFDeserializerTests : NativeDeserializerTestsBase
     {
         public MOFDeserializerTests() : base(MI_SerializationFormat.MOF)
         {

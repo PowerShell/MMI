@@ -15,21 +15,6 @@ using System.Linq;
 namespace Microsoft.Management.Infrastructure.Serialization
 {
     /// <summary>
-    /// Schema validation option
-    /// </summary>
-    /// <seealso cref="CimOperationOptions"/>
-    [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "This is a direct representation of the native flags (which doesn't have None)")]
-    internal enum MofDeserializerSchemaValidationOption : int
-    {
-        /* MOF schema validation option's value */
-        Default = 0,
-        Strict = 1,
-        Loose = 2,
-        IgnorePropertyType = 3,
-        Ignore = 4
-    };
-
-    /// <summary>
     /// Represents an CIM deserializer.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Deserializer", Justification = "Deserializer is a valid word?")]
@@ -39,17 +24,10 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
         #region Constructors
 
-        private CimMofDeserializer(string format, uint flags)
+        private CimMofDeserializer()
         {
-            Debug.Assert(!string.IsNullOrEmpty(format), "Caller should verify that format != null");
-
             MI_Deserializer tmpHandle;
-            // TODO: Fix MI_SerializerFlags in next line to come from "flags"
-            MI_Result result = CimApplication.Handle.NewDeserializer(MI_SerializerFlags.None, format, out tmpHandle);
-            if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
-            {
-                throw new ArgumentOutOfRangeException("format");
-            }
+            MI_Result result = CimApplication.Handle.NewDeserializer(MI_SerializerFlags.None, MI_SerializationFormat.MOF, out tmpHandle);
             CimException.ThrowIfMiResultFailure(result);
             this._myHandle = tmpHandle;
             this.SchemaValidationOption = MofDeserializerSchemaValidationOption.Default;
@@ -122,11 +100,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// <summary>
         /// Schema validation option for deserializing instance(s)
         /// </summary>
-        public MofDeserializerSchemaValidationOption SchemaValidationOption
-        {
-            get;
-            set;
-        }
+        public MofDeserializerSchemaValidationOption SchemaValidationOption { get; set; }
 
         private CimOperationOptions GetOperationOptions()
         {
@@ -161,22 +135,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         /// </summary>
         public static CimMofDeserializer Create()
         {
-            return new CimMofDeserializer(format: "MI_MOF_CIMV2_EXTV1", flags: 0);
-        }
-
-        /// <summary>
-        /// Instantiates a custom deserializer
-        /// </summary>
-        /// <param name="format">Serialization format.  Currently only "MI_XML" is supported.</param>
-        /// <param name="flags">Serialization flags.  Has to be zero.</param>
-        public static CimMofDeserializer Create(string format, uint flags)
-        {
-            if (string.IsNullOrEmpty(format))
-            {
-                throw new ArgumentNullException("format");
-            }
-
-            return new CimMofDeserializer(format, flags);
+            return new CimMofDeserializer();
         }
 
         #endregion Constructors
@@ -194,9 +153,20 @@ namespace Microsoft.Management.Infrastructure.Serialization
             {
                 throw new ArgumentNullException("serializedData");
             }
-            if (offset >= serializedData.Length)
+            else if (offset >= serializedData.Length)
             {
                 throw new ArgumentOutOfRangeException("offset");
+            }
+            else if (offset != 0)
+            {
+                // Need to implement this in our layer as it is not
+                // handled by the underlying API
+                throw new NotImplementedException();
+            }
+            else if(onClassNeededCallback != null || getIncludedFileCallback != null)
+            {
+                // Still need to add the native definitions of these callbacks
+                throw new NotImplementedException();
             }
             this.AssertNotDisposed();
 
@@ -205,35 +175,33 @@ namespace Microsoft.Management.Infrastructure.Serialization
             {
                 nativeClassHandles = cimClasses.Select(cimClass => cimClass.ClassHandle).ToArray();
             }
+            
+            UInt32 inputBufferUsed;
+            MI_Instance cimError;
+            MI_ExtendedArray instanceArray;
+            MI_OperationOptions nativeOption = GetOperationOptions().OperationOptionsHandle;
 
-            // TODO: Uncomment lines below after this delegate function has been added to MI API
-            /*
-                UInt32 inputBufferUsed;
-                MI_Instance[] deserializedInstance;
-                MI_Instance cimError;
-                MI_OperationOptions nativeOption = GetOperationOptions().OperationOptionsHandle;
+            // TODO: Add definitions for these callbacks
+            //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
+            //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
+            //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
+            MI_Result result = this._myHandle.DeserializeInstanceArray(
+                MI_SerializerFlags.None,
+                nativeOption,
+                IntPtr.Zero,
+                serializedData,
+                nativeClassHandles,
+                out inputBufferUsed,
+                out instanceArray,
+                out cimError);
+            CimException.ThrowIfMiResultFailure(result, cimError);
 
-                MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
-                if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
-                if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
-                MI_Result result = this._myHandle.DeserializeInstanceArray(
-                    nativeOption,
-                    callbacks,
-                    serializedData,
-                    offset,
-                    nativeClassHandles,
-                    out deserializedInstance,
-                    out inputBufferUsed,
-                    out cimError);
-                CimException.ThrowIfMiResultFailure(result, cimError);
-                offset += inputBufferUsed;
-                return deserializedInstance;
+            MI_Instance[] deserializedInstances = instanceArray.ReadAsManagedPointerArray(MI_Instance.NewFromDirectPtr);
+            MI_Instance[] resultInstances = deserializedInstances.CloneMIArray();
+            instanceArray.Delete();
 
-            */
-
-            // TODO: Remove below once above is complete
-            MI_Instance[] deserializedInstance = new MI_Instance[0];
-            return deserializedInstance;
+            offset += inputBufferUsed;
+            return resultInstances;
         }
 
         /// <summary>
@@ -305,10 +273,22 @@ namespace Microsoft.Management.Infrastructure.Serialization
             {
                 throw new ArgumentNullException("serializedData");
             }
-            if (offset >= serializedData.Length)
+            else if (offset >= serializedData.Length)
             {
                 throw new ArgumentOutOfRangeException("offset");
             }
+            else if (onClassNeededCallback != null || getIncludedFileCallback != null)
+            {
+                // Need the definition for the callbacks
+                throw new NotImplementedException();
+            }
+            else if (offset != 0)
+            {
+                // Need to internally handle the offset as the native calls
+                // have no knowledge of this right now
+                throw new NotImplementedException();
+            }
+
             this.AssertNotDisposed();
 
             MI_Class[] nativeClassHandles = null;
@@ -316,37 +296,35 @@ namespace Microsoft.Management.Infrastructure.Serialization
             {
                 nativeClassHandles = cimClasses.Select(cimClass => cimClass.ClassHandle).ToArray();
             }
+            
+            UInt32 inputBufferUsed;
+            MI_Instance cimError;
+            MI_ExtendedArray classArray;
+            MI_OperationOptions nativeOption = GetOperationOptions().OperationOptionsHandle;
 
-            // TODO: Uncomment lines below after this delegate function has been added to MI API
-            /*
-                UInt32 inputBufferUsed;
-                MI_Class[] deserializedClasses;
-                MI_Instance cimError;
-                MI_OperationOptions nativeOption = GetOperationOptions().OperationOptionsHandle;
+            // TODO: Implement async callbacks
+            //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
+            //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
+            //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
+            MI_Result result = this._myHandle.DeserializeClassArray(
+                MI_SerializerFlags.None,
+                nativeOption,
+                IntPtr.Zero,
+                serializedData,
+                nativeClassHandles,
+                computerName,
+                namespaceName,
+                out inputBufferUsed,
+                out classArray,
+                out cimError);
+            CimException.ThrowIfMiResultFailure(result, cimError);
+            
+            MI_Class[] deserializedClasses = classArray.ReadAsManagedPointerArray(MI_Class.NewFromDirectPtr);
+            MI_Class[] resultClasses = deserializedClasses.CloneMIArray();
+            classArray.Delete();
 
-                MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
-                if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
-                if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
-                MI_Result result = this._myHandle.DeserializeClassArray(
-                    nativeOption,
-                    callbacks,
-                    serializedData,
-                    offset,
-                    nativeClassHandles,
-                    computerName,
-                    namespaceName,
-                    out deserializedClasses,
-                    out inputBufferUsed,
-                    out cimError);
-                CimException.ThrowIfMiResultFailure(result, cimError);
-                offset += inputBufferUsed;
-                return deserializedClasses;
-
-            */
-
-            // TODO: Remove below once above is done
-            MI_Class[] deserializedClasses = new MI_Class[0];
-            return deserializedClasses;
+            offset += inputBufferUsed;
+            return resultClasses;
         }
 
         /// <summary>

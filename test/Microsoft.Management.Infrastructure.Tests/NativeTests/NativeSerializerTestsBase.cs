@@ -9,11 +9,11 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class SerializerTestsBase : NativeTestsBase
+    public class NativeSerializerTestsBase : NativeTestsBase
     {
         internal MI_Serializer Serializer { get; private set; }
 
-        public SerializerTestsBase(string format)
+        public NativeSerializerTestsBase(string format)
         {
             MI_Serializer newSerializer;
             MI_Result res = this.Application.NewSerializer(MI_SerializerFlags.None,

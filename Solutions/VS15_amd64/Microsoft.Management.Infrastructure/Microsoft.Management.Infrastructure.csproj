@@ -493,6 +493,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\CimSerializer.cs">
       <Link>Serialization\CimSerializer.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Serialization\MofDeserializerSchemaValidationOption.cs">
+      <Link>Serialization\MofDeserializerSchemaValidationOption.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Strings.Designer.cs">
       <Link>Strings.Designer.cs</Link>
     </Compile>

@@ -9,13 +9,13 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class DeserializerTestsBase : NativeTestsBase
+    public class NativeDeserializerTestsBase : NativeTestsBase
     {
         internal MI_Deserializer Deserializer;
         
         private string format;
 
-        public DeserializerTestsBase(string format) : base()
+        public NativeDeserializerTestsBase(string format) : base()
         {
             this.format = format;
             var application = StaticFixtures.Application;
@@ -155,13 +155,13 @@ namespace MMI.Tests.Native
 
         internal byte[] GetSerializedSingleton()
         {
-            SerializerTestsBase serializerHelper = new SerializerTestsBase(this.format);
+            NativeSerializerTestsBase serializerHelper = new NativeSerializerTestsBase(this.format);
             return serializerHelper.GetSerializationFromInstanceThunk(this.GetSerializableInstance);
         }
 
         internal byte[] GetSerializedClass()
         {
-            SerializerTestsBase serializerHelper = new SerializerTestsBase(this.format);
+            NativeSerializerTestsBase serializerHelper = new NativeSerializerTestsBase(this.format);
             return serializerHelper.GetSerializationFromClassThunk(SerializationTestData.GetSerializableTestClass);
         }
     }

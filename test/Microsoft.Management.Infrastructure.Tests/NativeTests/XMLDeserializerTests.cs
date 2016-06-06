@@ -9,7 +9,7 @@ using Xunit;
 
 namespace MMI.Tests.Native
 {
-    public class XMLDeserializerTests : DeserializerTestsBase
+    public class XMLDeserializerTests : NativeDeserializerTestsBase
     {
         public XMLDeserializerTests() : base(MI_SerializationFormat.XML)
         {
