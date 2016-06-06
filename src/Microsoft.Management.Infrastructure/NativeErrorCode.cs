@@ -1,10 +1,10 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Native;
 using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -41,16 +41,5 @@ namespace Microsoft.Management.Infrastructure
         ContinuationOnErrorNotSupported = (int)MI_Result.MI_RESULT_CONTINUATION_ON_ERROR_NOT_SUPPORTED,
         ServerLimitsExceeded = (int)MI_Result.MI_RESULT_SERVER_LIMITS_EXCEEDED,
         ServerIsShuttingDown = (int)MI_Result.MI_RESULT_SERVER_IS_SHUTTING_DOWN,
-    }
-}
-
-namespace Microsoft.Management.Infrastructure.Internal
-{
-    internal static class NativeErrorCodeExtensionMethods
-    {
-        public static NativeErrorCode ToNativeErrorCode(this MI_Result miResult)
-        {
-            return (NativeErrorCode)miResult;
-        }
     }
 }

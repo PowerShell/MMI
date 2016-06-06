@@ -1,11 +1,10 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -16,28 +15,33 @@ using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Serialization;
 using System.IO;
+
 #if(!_CORECLR)
+
 using Microsoft.Win32;
+
 #endif
-using NativeObject;
+
+using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure
 {
     /// <summary>
     /// Represents an CIM instance.
     /// </summary>
-#if(!_CORECLR)
+#if (!_CORECLR)
+
     [Serializable]
-#endif 
+#endif
     public sealed class CimInstance : IDisposable
-#if(!_CORECLR)
+#if (!_CORECLR)
         //
         // Only implement these interfaces on FULL CLR and not Core CLR
         //
         , ICloneable, ISerializable
 #endif
     {
-        private readonly SharedInstanceHandle _myHandle;
+        private readonly MI_Instance nativeInstance;
         private CimSystemProperties _systemProperties = null;
 
         internal MI_Instance InstanceHandle
@@ -45,17 +49,20 @@ namespace Microsoft.Management.Infrastructure
             get
             {
                 this.AssertNotDisposed();
-                return this._myHandle.Handle;
+                return this.nativeInstance;
             }
         }
 
         #region Constructors
-
-        internal CimInstance(MI_Instance handle, SharedInstanceHandle parentHandle)
+        
+        internal CimInstance(MI_Instance handle)
         {
-            Debug.Assert(handle != null, "Caller should verify that instanceHandle != null");
-            handle.AssertValidInternalState();
-            this._myHandle = new SharedInstanceHandle(handle, parentHandle);
+            if (handle == null || handle.IsNull)
+            {
+                throw new ArgumentNullException();
+            }
+
+            this.nativeInstance = handle;
         }
 
         /// <summary>
@@ -71,7 +78,7 @@ namespace Microsoft.Management.Infrastructure
             }
 
             MI_Instance clonedHandle = cimInstanceToClone.InstanceHandle.Clone();
-            this._myHandle = new SharedInstanceHandle(clonedHandle);
+            this.nativeInstance = clonedHandle;
         }
 
         /// <summary>
@@ -80,14 +87,14 @@ namespace Microsoft.Management.Infrastructure
         /// <remarks>
         /// This constructor provides a way to create CIM instances, without communicating with a CIM server.
         /// This constructor is typically used when the client knows all the key properties (<see cref="CimFlags.Key"/>)
-        /// of the instance and wants to pass the instance as an argument of a CimSession method 
+        /// of the instance and wants to pass the instance as an argument of a CimSession method
         /// (for example as a "sourceInstance" parameter of <see cref="CimSession.EnumerateAssociatedInstances(string, CimInstance, string, string, string, string)"/>).
         /// <see cref="CimSession.EnumerateInstances(string,string)"/> or <see cref="CimSession.GetInstance(string, CimInstance)"/>.
         /// </remarks>
         /// <param name="className"></param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="className"/> is null or when it doesn't follow the format specified by DSP0004</exception>
         public CimInstance(string className)
-        :this(className, null)
+        : this(className, null)
         {
         }
 
@@ -97,7 +104,7 @@ namespace Microsoft.Management.Infrastructure
         /// <remarks>
         /// This constructor provides a way to create CIM instances, without communicating with a CIM server.
         /// This constructor is typically used when the client knows all the key properties (<see cref="CimFlags.Key"/>)
-        /// of the instance and wants to pass the instance as an argument of a CimSession method 
+        /// of the instance and wants to pass the instance as an argument of a CimSession method
         /// (for example as a "sourceInstance" parameter of <see cref="CimSession.EnumerateAssociatedInstances(string, CimInstance, string, string, string, string)"/>).
         /// <see cref="CimSession.EnumerateInstances(string,string)"/> or <see cref="CimSession.GetInstance(string, CimInstance)"/>.
         /// </remarks>
@@ -112,22 +119,21 @@ namespace Microsoft.Management.Infrastructure
 
             MI_Instance tmpHandle;
             MI_Result result = CimApplication.Handle.NewInstance(className, null, out tmpHandle);
-            switch (result)
+            if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
-                case MI_Result.MI_RESULT_INVALID_PARAMETER:
-                    throw new ArgumentOutOfRangeException("className");
-
-                default:
-                    CimException.ThrowIfMiResultFailure(result);
-                    this._myHandle = new SharedInstanceHandle(tmpHandle);
-                    break; 
+                throw new ArgumentOutOfRangeException("className");
             }
-            if( namespaceName != null)
+            
+            CimException.ThrowIfMiResultFailure(result);
+
+            if (namespaceName != null)
             {
-                result = this._myHandle.Handle.SetNameSpace(namespaceName);
+                result = tmpHandle.SetNameSpace(namespaceName);
                 CimException.ThrowIfMiResultFailure(result);
             }
-        }        
+
+            this.nativeInstance = tmpHandle;
+        }
 
         /// <summary>
         /// Instantiates an empty <see cref="CimInstance"/>.
@@ -148,18 +154,19 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentOutOfRangeException("cimClass");
             }
             CimException.ThrowIfMiResultFailure(result);
-            this._myHandle = new SharedInstanceHandle(tmpHandle);
 
-            result = this._myHandle.Handle.SetNameSpace(cimClass.CimSystemProperties.Namespace);
+            result = tmpHandle.SetNameSpace(cimClass.CimSystemProperties.Namespace);
             CimException.ThrowIfMiResultFailure(result);
-            result = this._myHandle.Handle.SetServerName(cimClass.CimSystemProperties.ServerName);
+            result = tmpHandle.SetServerName(cimClass.CimSystemProperties.ServerName);
             CimException.ThrowIfMiResultFailure(result);
-        }        
+
+            this.nativeInstance = tmpHandle;
+        }
 
         #endregion Constructors
 
         #region Properties
- 
+
         public CimClass CimClass
         {
             get
@@ -172,7 +179,7 @@ namespace Microsoft.Management.Infrastructure
                            ? null
                            : new CimClass(classHandle);
             }
-        }                  
+        }
 
         /// <summary>
         /// Properties of this CimInstance
@@ -182,9 +189,9 @@ namespace Microsoft.Management.Infrastructure
             get
             {
                 this.AssertNotDisposed();
-                return new CimPropertiesCollection(this._myHandle, this);
+                return new CimPropertiesCollection(this);
             }
-        }        
+        }
 
         /// <summary>
         /// System Properties of this CimInstance
@@ -194,10 +201,10 @@ namespace Microsoft.Management.Infrastructure
             get
             {
                 this.AssertNotDisposed();
-                if(_systemProperties == null) 
+                if (_systemProperties == null)
                 {
                     CimSystemProperties tmpSystemProperties = new CimSystemProperties();
-                    
+
                     // ComputerName
                     string tmpComputerName;
                     MI_Result result = this.InstanceHandle.GetServerName(out tmpComputerName);
@@ -208,19 +215,19 @@ namespace Microsoft.Management.Infrastructure
                     result = this.InstanceHandle.GetClassName(out tmpClassName);
                     CimException.ThrowIfMiResultFailure(result);
 
-                    //Namespace 
+                    //Namespace
                     string tmpNamespace;
                     result = this.InstanceHandle.GetNameSpace(out tmpNamespace);
                     CimException.ThrowIfMiResultFailure(result);
                     tmpSystemProperties.UpdateCimSystemProperties(tmpNamespace, tmpComputerName, tmpClassName);
 
                     //Path
-                    tmpSystemProperties.UpdateSystemPath(CimInstance.GetCimSystemPath(tmpSystemProperties, null)); 
+                    tmpSystemProperties.UpdateSystemPath(CimInstance.GetCimSystemPath(tmpSystemProperties, null));
                     _systemProperties = tmpSystemProperties;
                 }
                 return _systemProperties;
             }
-        }        
+        }
 
         #endregion Properties
 
@@ -230,7 +237,7 @@ namespace Microsoft.Management.Infrastructure
         /// Constructs the object path from the CimInstance.
         /// </summary>
 
-        internal static string GetCimSystemPath(CimSystemProperties sysProperties, IEnumerator cimPropertiesEnumerator )
+        internal static string GetCimSystemPath(CimSystemProperties sysProperties, IEnumerator cimPropertiesEnumerator)
         {
             //Path should be supported by MI APIs, it is not currently supported by APIs
             // until that decision is taken we are reporting null for path.
@@ -263,7 +270,7 @@ namespace Microsoft.Management.Infrastructure
                 {
                     if(instProp.Value != null)
                     {
-                        GetPathForProperty((long)instProp.Flags, instProp.Name, instProp.Value, ref bFirst, ref strPath);   
+                        GetPathForProperty((long)instProp.Flags, instProp.Name, instProp.Value, ref bFirst, ref strPath);
                     }
                 }
                 else
@@ -276,211 +283,63 @@ namespace Microsoft.Management.Infrastructure
                     }
                     if( classProp.Value != null )
                     {
-                        GetPathForProperty((long)classProp.Flags, classProp.Name, classProp.Value, ref bFirst, ref strPath); 
+                        GetPathForProperty((long)classProp.Flags, classProp.Name, classProp.Value, ref bFirst, ref strPath);
                     }
                 }
             }
             return strPath.ToString();
             */
-
         }
-/*
-        private static void  GetPathForProperty(long cimflags, string propName, object propValue, ref bool bFirst, ref StringBuilder strPath)
-        {
-            long r = cimflags;
-            long l = (long) CimFlags.Key;
-            
-            if( (r & l) != 0)
-            {
-                if(bFirst)
-                {
-                    bFirst = false;
-                    strPath.Append(".");                          
-                }
-                else
-                {
-                    strPath.Append(",");
-                }
-                strPath.Append(propName);
-                strPath.Append("=");
-                strPath.Append("\"");
-                CimInstance innerInst = propValue as CimInstance;
-                string propValueStr; 
-                if(innerInst == null )
-                {
-                    propValueStr = (propValue).ToString();
-                }
-                else
-                {
-                    propValueStr = GetCimSystemPath(innerInst.SystemProperties, innerInst.Properties.GetEnumerator());
-                }
-                strPath.Append(PutEscapeCharacterBack(propValueStr));
-                strPath.Append("\"");   
-            }
-        }
-        
-        private static string PutEscapeCharacterBack(string propValue)
-        {
-            StringBuilder strPath = new StringBuilder();
-            for(int i = 0 ;i < propValue.Length;i++)
-            {
-                if( propValue[i] == '\"' || propValue[i] == '\\')
-                {
-                    strPath.Append("\\");
-                }
-                strPath.Append(propValue[i]);
-            }
-            return strPath.ToString();
-        }
-        */
-        
-        
 
-        //
-        // TODO: THIS IS UNUSED METHOD. NEED TO REMOVE.
-        //
-#if(!_CORECLR)
-        private static bool bRegistryRead = false;
-        private static bool bNotSupportedAPIBehavior = false;
-        private static string tempFileName = "NotSupportedAPIsCallstack.txt";
-        private static readonly object _logThreadSafetyLock = new object();
-        private static StreamWriter _streamWriter;
-
-        internal static void NotSupportedAPIBehaviorLog(string propertyName)
-        {
-            if( bRegistryRead == false )
-            {
-                lock(_logThreadSafetyLock)
+        /*
+                private static void  GetPathForProperty(long cimflags, string propName, object propValue, ref bool bFirst, ref StringBuilder strPath)
                 {
-                    if(bRegistryRead == false)
+                    long r = cimflags;
+                    long l = (long) CimFlags.Key;
+
+                    if( (r & l) != 0)
                     {
-                        try
+                        if(bFirst)
                         {
-                            object obj = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Management Infrastructure","NotSupportedAPIBehavior",null);
-                            bRegistryRead = true;
-                            if( obj != null)
-                            {
-                                if( obj.ToString() == "1" )
-                                {
-                                    string tempPathDirectory = Path.GetTempPath();
-                                    tempFileName = tempPathDirectory + "\\" + DateTime.Now.Ticks + "-NotSupportedAPIsCallstack.txt";
-                                    _streamWriter = File.AppendText(tempFileName);
-                                    _streamWriter.AutoFlush = true;
-                                    bNotSupportedAPIBehavior = true;                                
-                                }
-                            }
+                            bFirst = false;
+                            strPath.Append(".");
                         }
-                        catch(Exception)
+                        else
                         {
-                            bRegistryRead = true;
+                            strPath.Append(",");
                         }
-                    }
-                }
-            }
-            if(bNotSupportedAPIBehavior)
-            {
-                _streamWriter.WriteLine(propertyName);
-
-            }
-        }
-#endif
-        internal static MI_Value ConvertToNativeLayer(object value, CimType cimType)
-        {
-            var cimInstance = value as CimInstance;
-            if (cimInstance != null)
-            {
-		MI_Value retval = new MI_Value();
-		retval.Instance = cimInstance.InstanceHandle;
-		return retval;
-            }
-
-            var arrayOfCimInstances = value as CimInstance[];
-            if (arrayOfCimInstances != null)
-            {
-                MI_Instance[] arrayOfInstanceHandles = new MI_Instance[arrayOfCimInstances.Length];
-                for (int i = 0; i < arrayOfCimInstances.Length; i++)
-                {
-                    CimInstance inst = arrayOfCimInstances[i];
-                    if (inst == null)
-                    {
-                        arrayOfInstanceHandles[i] = null;
-                    }
-                    else
-                    {
-                        arrayOfInstanceHandles[i] = inst.InstanceHandle;
-                    }
-                }
-
-		MI_Value retval = new MI_Value();
-		retval.InstanceA = arrayOfInstanceHandles;
-                return retval;
-            }
-
-	    // TODO: What to do with Unknown types? Ignore? Uncomment and remove return line immediately below.
-	    return CimProperty.ConvertToNativeLayer(value, cimType);
-	    /*
-	    if (cimType != CimType.Unknown)
-	    {
-		return CimProperty.ConvertToNativeLayer(value, cimType);
-	    }
-	    else
-	    {
-		return value;
-	    }
-	    */
-        }
-
-        internal static MI_Value ConvertToNativeLayer(object value)
-        {
-            return ConvertToNativeLayer(value, CimType.Unknown);
-        }
-
-        internal static object ConvertFromNativeLayer(
-            MI_Value value, 
-            SharedInstanceHandle sharedParentHandle = null, 
-            CimInstance parent = null,
-            bool clone = false)
-        {
-	    if (value.Type == MI_Type.MI_INSTANCE)
-            {
-                CimInstance instance = new CimInstance(
-                    clone ? value.Instance.Clone() : value.Instance, 
-                    sharedParentHandle);
-                if (parent != null)
-                {
-                    instance.SetCimSessionComputerName(parent.GetCimSessionComputerName());
-                    instance.SetCimSessionInstanceId(parent.GetCimSessionInstanceId());
-                }
-                return instance;
-            }
-
-	    if (value.Type == MI_Type.MI_INSTANCEA)
-            {
-                CimInstance[] arrayOfInstances = new CimInstance[value.InstanceA.Length];
-                for (int i = 0; i < value.InstanceA.Length; i++)
-                {
-                    MI_Instance h = value.InstanceA[i];
-                    if (h == null)
-                    {
-                        arrayOfInstances[i] = null;
-                    }
-                    else
-                    {
-                        arrayOfInstances[i] = new CimInstance(
-                            clone ? h.Clone() : h,
-                            sharedParentHandle);
-                        if (parent != null)
+                        strPath.Append(propName);
+                        strPath.Append("=");
+                        strPath.Append("\"");
+                        CimInstance innerInst = propValue as CimInstance;
+                        string propValueStr;
+                        if(innerInst == null )
                         {
-                            arrayOfInstances[i].SetCimSessionComputerName(parent.GetCimSessionComputerName());
-                            arrayOfInstances[i].SetCimSessionInstanceId(parent.GetCimSessionInstanceId());
+                            propValueStr = (propValue).ToString();
                         }
+                        else
+                        {
+                            propValueStr = GetCimSystemPath(innerInst.SystemProperties, innerInst.Properties.GetEnumerator());
+                        }
+                        strPath.Append(PutEscapeCharacterBack(propValueStr));
+                        strPath.Append("\"");
                     }
                 }
-                return arrayOfInstances;
-            }
 
-            return value;
-        }
+                private static string PutEscapeCharacterBack(string propValue)
+                {
+                    StringBuilder strPath = new StringBuilder();
+                    for(int i = 0 ;i < propValue.Length;i++)
+                    {
+                        if( propValue[i] == '\"' || propValue[i] == '\\')
+                        {
+                            strPath.Append("\\");
+                        }
+                        strPath.Append(propValue[i]);
+                    }
+                    return strPath.ToString();
+                }
+                */
 
         #endregion Helpers
 
@@ -491,8 +350,9 @@ namespace Microsoft.Management.Infrastructure
         /// </summary>
         public void Dispose()
         {
+            // Do not supress finalization of the object
+            // since we don't do anything meaningful in the Dispose
             this.Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -500,16 +360,16 @@ namespace Microsoft.Management.Infrastructure
         /// </summary>
         private void Dispose(bool disposing)
         {
+            // This doesn't actually do anything right now
+            // The original implementation relied on explicit disposes
+            // because it was trying to internally ref-count a handle
+            // We now always clone the MI_Instance and rely
+            // on the Finalizer to clean up the actual memory
             if (_disposed)
             {
                 return;
             }
-
-            if (disposing)
-            {
-                this._myHandle.Release();
-            }
-
+            
             _disposed = true;
         }
 
@@ -523,7 +383,7 @@ namespace Microsoft.Management.Infrastructure
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
 
         #region .NET serialization
 
@@ -531,6 +391,7 @@ namespace Microsoft.Management.Infrastructure
         private const string serializationId_CimSessionComputerName = "CSCN";
 
 #if(!_CORECLR)
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
@@ -541,7 +402,7 @@ namespace Microsoft.Management.Infrastructure
             {
                 byte[] serializedBytes = cimSerializer.Serialize(this, InstanceSerializationOptions.IncludeClasses);
                 string serializedString = Encoding.Unicode.GetString(serializedBytes);
-                info.AddValue(serializationId_MiXml, serializedString);                
+                info.AddValue(serializationId_MiXml, serializedString);
             }
             info.AddValue(serializationId_CimSessionComputerName, this.GetCimSessionComputerName());
         }
@@ -552,7 +413,7 @@ namespace Microsoft.Management.Infrastructure
             {
                 throw new ArgumentNullException("info");
             }
-            string serializedString = info.GetString(serializationId_MiXml);     
+            string serializedString = info.GetString(serializationId_MiXml);
             byte[] serializedBytes = Encoding.Unicode.GetBytes(serializedString);
             using (CimDeserializer cimDeserializer = CimDeserializer.Create())
             {
@@ -561,26 +422,30 @@ namespace Microsoft.Management.Infrastructure
                     serializedBytes,
                     ref offset,
                     cimClasses: null);
-                this._myHandle = new SharedInstanceHandle(deserializedInstanceHandle);                
+                this.nativeInstance = deserializedInstanceHandle;
             }
             this.SetCimSessionComputerName(info.GetString(serializationId_CimSessionComputerName));
         }
+
 #endif // !_CORECLR
 
-        #endregion
+        #endregion .NET serialization
 
         #region ICloneable Members
 
 #if(!_CORECLR)
+
         object ICloneable.Clone()
         {
             return new CimInstance(this);
         }
+
 #endif // !_CORECLR
 
-        #endregion
+        #endregion ICloneable Members
 
         #region Utility functions
+
         /// <summary>
         /// get cimsession instance id
         /// </summary>
@@ -589,6 +454,7 @@ namespace Microsoft.Management.Infrastructure
         {
             return this._CimSessionInstanceID;
         }
+
         /// <summary>
         /// set cimsession instance id
         /// </summary>
@@ -597,6 +463,7 @@ namespace Microsoft.Management.Infrastructure
         {
             this._CimSessionInstanceID = instanceID;
         }
+
         /// <summary>
         /// cimsession id that generated the instance,
         /// Guid.Empty means no session generated this instance
@@ -611,6 +478,7 @@ namespace Microsoft.Management.Infrastructure
         {
             return this._CimSessionComputerName;
         }
+
         /// <summary>
         /// set the computername of the session
         /// </summary>
@@ -619,12 +487,14 @@ namespace Microsoft.Management.Infrastructure
         {
             this._CimSessionComputerName = computerName;
         }
+
         /// <summary>
         /// computername of a cimsession, which genereated the instance,
         /// null means no session generated this instance
         /// </summary>
         private string _CimSessionComputerName = null;
-        #endregion
+
+        #endregion Utility functions
 
         public override string ToString()
         {
@@ -668,26 +538,6 @@ namespace Microsoft.Management.Infrastructure
                     captionValue);
             }
             return toStringValue;
-        }
-    }
-}
-
-namespace Microsoft.Management.Infrastructure.Internal
-{
-    internal static class InstanceHandleExtensionMethods
-    {
-        public static MI_Instance Clone(this MI_Instance handleToClone)
-        {
-            if (handleToClone == null)
-            {
-                return null;
-            }
-            handleToClone.AssertValidInternalState();
-
-            MI_Instance clonedHandle;
-            MI_Result result = handleToClone.Clone(out clonedHandle);
-            CimException.ThrowIfMiResultFailure(result);
-            return clonedHandle;
         }
     }
 }

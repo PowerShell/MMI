@@ -1,11 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Generic;
 using System;
 using System.Diagnostics;
-using Microsoft.Management.Infrastructure.Generic;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -82,6 +82,6 @@ namespace Microsoft.Management.Infrastructure
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

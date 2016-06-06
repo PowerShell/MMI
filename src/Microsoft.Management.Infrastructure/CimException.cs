@@ -1,17 +1,18 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Internal;
+using Microsoft.Management.Infrastructure.Native;
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using Microsoft.Management.Infrastructure.Internal;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
 #if(!_CORECLR)
+
     [Serializable]
 #endif
     public class CimException : Exception, IDisposable
@@ -37,7 +38,7 @@ namespace Microsoft.Management.Infrastructure
 
             if (errorDetailsHandle != null)
             {
-                this._errorData = new CimInstance(errorDetailsHandle.Clone(), null);
+                this._errorData = new CimInstance(errorDetailsHandle.Clone());
             }
         }
 
@@ -50,12 +51,12 @@ namespace Microsoft.Management.Infrastructure
 
             return GetExceptionMessage(MI_Result.MI_RESULT_FAILED, null, cimError.InstanceHandle);
         }
-        
+
         static private string GetExceptionMessage(MI_Instance errorDetailsHandle)
         {
             if (errorDetailsHandle != null)
             {
-                var temporaryErrorData = new CimInstance(errorDetailsHandle, parentHandle: null);
+                var temporaryErrorData = new CimInstance(errorDetailsHandle);
                 string cimErrorMessage;
                 if (TryGetErrorDataProperty(temporaryErrorData, "Message", out cimErrorMessage))
                 {
@@ -65,7 +66,7 @@ namespace Microsoft.Management.Infrastructure
 
             return null;
         }
-        
+
         static private string GetExceptionMessage(MI_Result errorCode, string errorMessage, MI_Instance errorDetailsHandle)
         {
             string result;
@@ -79,7 +80,7 @@ namespace Microsoft.Management.Infrastructure
 
             // if the above failed, then use MI_Utilities_CimErrorFromErrorCode to get a good CIM_Error
 
-	    // TODO: Add GetCimErrorFromMiResult to MI API
+            // TODO: Add GetCimErrorFromMiResult to MI API
             //Native.ApplicationMethods.GetCimErrorFromMiResult(errorCode, errorMessage, out errorDetailsHandle);
             try
             {
@@ -101,7 +102,7 @@ namespace Microsoft.Management.Infrastructure
             return errorCode.ToString();
         }
 
-        #endregion
+        #endregion Internal constructors - THESE ARE THE ONES TO USE
 
         #region Public constructor taking CIM_Error instance
 
@@ -116,7 +117,7 @@ namespace Microsoft.Management.Infrastructure
             this._errorData = new CimInstance(cimError);
         }
 
-        #endregion
+        #endregion Public constructor taking CIM_Error instance
 
         #region Standard constructors - do not use
 
@@ -135,12 +136,13 @@ namespace Microsoft.Management.Infrastructure
         {
         }
 
-        #endregion
+        #endregion Standard constructors - do not use
 
         #region Deserializing constructor + other plumbing for .NET serialization
 
         private const string serializationId_ErrorData = "ErrorData";
 #if(!_CORECLR)
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
@@ -160,15 +162,17 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentNullException("info");
             }
 
-            this._errorData = (CimInstance) info.GetValue(serializationId_ErrorData, typeof(CimInstance));
+            this._errorData = (CimInstance)info.GetValue(serializationId_ErrorData, typeof(CimInstance));
         }
+
 #endif
-        #endregion
+
+        #endregion Deserializing constructor + other plumbing for .NET serialization
 
         #region Properties
 
         /// <summary>
-        /// Optional (can be null) error data.  
+        /// Optional (can be null) error data.
         /// This is typically an instance of a standard CIM_Error class or of a class derived from it.
         /// </summary>
         public CimInstance ErrorData
@@ -208,7 +212,7 @@ namespace Microsoft.Management.Infrastructure
                     return false;
                 }
 
-                propertyValue = (T) property.Value;
+                propertyValue = (T)property.Value;
                 return true;
             }
             catch (CimException)
@@ -216,7 +220,7 @@ namespace Microsoft.Management.Infrastructure
                 return false;
             }
         }
-        
+
         // corresponds to CIM_Error.MessageId, related to SMA.ErrorRecord.FullyQualifiedErrorId property (directly mapped to the errorId parameter of ErrorRecord's constructor)
         public string MessageId
         {
@@ -253,7 +257,7 @@ namespace Microsoft.Management.Infrastructure
             }
         }
 
-        // corresponds to CIM_Error.CIMStatusCode 
+        // corresponds to CIM_Error.CIMStatusCode
         public UInt32 StatusCode
         {
             get
@@ -310,7 +314,7 @@ namespace Microsoft.Management.Infrastructure
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
 
         #region Static helper methods for translating an MiResult into an exception
 
@@ -338,6 +342,6 @@ namespace Microsoft.Management.Infrastructure
             return result == MI_Result.MI_RESULT_OK ? null : new CimException(result, errorMessage, errorData);
         }
 
-        #endregion
+        #endregion Static helper methods for translating an MiResult into an exception
     }
 }

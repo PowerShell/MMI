@@ -1,12 +1,10 @@
 /*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using Microsoft.Management.Infrastructure.Internal;
-using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Generic;
+using Microsoft.Management.Infrastructure.Internal;
 
 namespace Microsoft.Management.Infrastructure
 {

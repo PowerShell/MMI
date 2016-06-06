@@ -1,5 +1,5 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
@@ -9,17 +9,21 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+
 #if(!_CORECLR)
+
 using System.Net;
 using System.Net.Sockets;
+
 #endif
+
 using System.Threading;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -59,7 +63,7 @@ namespace Microsoft.Management.Infrastructure
         /// </summary>
         public Guid InstanceId { get; private set; }
 
-        #endregion
+        #endregion Properties
 
         #region Create
 
@@ -119,7 +123,7 @@ namespace Microsoft.Management.Infrastructure
                 //
                 // CoreCLR: Check if its IPV6 address.
                 //
-                // Note: IPAddress.TryParse() basically looks for ':' to check if its a IPv6 
+                // Note: IPAddress.TryParse() basically looks for ':' to check if its a IPv6
                 // address, we are following the same pattern here.
                 //
                 if ( ( normalizedComputerName.IndexOf( ':' ) != -1 ) &&
@@ -137,7 +141,7 @@ namespace Microsoft.Management.Infrastructure
                 sessionOptions == null ? null : sessionOptions.Protocol,
                 normalizedComputerName,
                 sessionOptions == null ? null : sessionOptions.DestinationOptionsHandle,
-		null,
+        null,
                 out extendedErrorHandle,
                 out sessionHandle);
 
@@ -189,7 +193,7 @@ namespace Microsoft.Management.Infrastructure
         {
             // native API doesn't provide async functionality in MI_Application_NewSession
             IObservable<CimSession> observable = new CimAsyncDelegatedObservable<CimSession>(
-                    delegate(IObserver<CimSession> observer)
+                    delegate (IObserver<CimSession> observer)
                     {
                         Debug.Assert(observer != null, "Caller should verify observer != null");
 
@@ -209,13 +213,13 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncResult<CimSession>(observable);
         }
 
-        #endregion
+        #endregion Create
 
         #region Close
 
         /// <summary>
         /// <para>
-        /// Closes the session.  
+        /// Closes the session.
         /// </para>
         /// <para>
         /// This method cancels all active operations of this session and returns when all of them have completed.
@@ -231,15 +235,15 @@ namespace Microsoft.Management.Infrastructure
                 }
                 this._disposed = true;
             }
-            
-	    // TODO: Implement next function
-	    //MI_Result result = this._handle.ReleaseHandleSynchronously();
+
+            // TODO: Implement next function
+            //MI_Result result = this._handle.ReleaseHandleSynchronously();
             //CimException.ThrowIfMiResultFailure(result);
         }
 
         /// <summary>
         /// <para>
-        /// Closes the session.  
+        /// Closes the session.
         /// </para>
         /// <para>
         /// This method cancels all active operations of this session
@@ -249,7 +253,7 @@ namespace Microsoft.Management.Infrastructure
         public CimAsyncStatus CloseAsync()
         {
             IObservable<object> observable = new CimAsyncDelegatedObservable<object>(
-                delegate(IObserver<object> observer)
+                delegate (IObserver<object> observer)
                     {
                         Debug.Assert(observer != null, "Caller should verify observer != null");
 
@@ -265,15 +269,15 @@ namespace Microsoft.Management.Infrastructure
                         }
                         else
                         {
-			    // TODO: Implement
+                            // TODO: Implement
                             //CloseAsyncImpersonationWorker worker = new CloseAsyncImpersonationWorker(observer);
-			    //
+                            //
                             //MI_Result result = this._handle.ReleaseHandleAsynchronously(worker.OnCompleted); // native API only reports completion (i.e. no equivalent to IObserver.OnError)
                             //CimException exception = CimException.GetExceptionIfMiResultFailure(result, null, null);
                             //if (exception != null)
                             //{
-			    //    observer.OnError(exception);
-			    //    worker.Dispose();
+                            //    observer.OnError(exception);
+                            //    worker.Dispose();
                             //}
                         }
                     });
@@ -311,10 +315,12 @@ namespace Microsoft.Management.Infrastructure
             }
 
 #if(!_CORECLR)
+
             private void OnCompletedCore(object state)
             {
                 this._wrappedObserver.OnCompleted();
             }
+
 #endif
 
             public void Dispose()
@@ -334,7 +340,7 @@ namespace Microsoft.Management.Infrastructure
             }
         }
 
-        #endregion
+        #endregion Close
 
         #region IDisposable Members
 
@@ -363,7 +369,7 @@ namespace Microsoft.Management.Infrastructure
 
             if (disposing)
             {
-		// TODO: Implement and Call ReleaseHandleAsynchronously
+                // TODO: Implement and Call ReleaseHandleAsynchronously
                 //this._handle.Dispose();
             }
         }
@@ -382,12 +388,12 @@ namespace Microsoft.Management.Infrastructure
         private readonly object _disposeThreadSafetyLock = new object();
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
 
         #region GetInstance
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="namespaceName"></param>
         /// <param name="instanceId"></param>
@@ -436,21 +442,21 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation GetInstanceCore(
-            string namespaceName, 
-            CimInstance instanceId, 
-            CimOperationOptions options, 
+            string namespaceName,
+            CimInstance instanceId,
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
             Debug.Assert(instanceId != null, "Caller should verify instanceId != null");
 
             MI_Operation operationHandle;
-	    this._handle.GetInstance(
-                options.GetOperationFlags(),
-                options.GetOperationOptionsHandle(),
-                namespaceName,
-                instanceId.InstanceHandle,
-                options.GetOperationCallbacks(asyncCallbacksReceiver),
-                out operationHandle);
+            this._handle.GetInstance(
+                    options.GetOperationFlags(),
+                    options.GetOperationOptionsHandle(),
+                    namespaceName,
+                    instanceId.InstanceHandle,
+                    options.GetOperationCallbacks(asyncCallbacksReceiver),
+                    out operationHandle);
 
             return operationHandle;
         }
@@ -492,7 +498,7 @@ namespace Microsoft.Management.Infrastructure
                 this.ComputerName,
                 asyncCallbacksReceiver => ModifyInstanceCore(namespaceName, instance, options, asyncCallbacksReceiver));
 
-			return enumerable.SingleOrDefault();
+            return enumerable.SingleOrDefault();
         }
 
         public CimAsyncResult<CimInstance> ModifyInstanceAsync(CimInstance instance)
@@ -532,12 +538,12 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation ModifyInstanceCore(
-            string namespaceName, 
-            CimInstance instance, 
-            CimOperationOptions options, 
+            string namespaceName,
+            CimInstance instance,
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
-            Debug.Assert(instance!= null, "Caller should verify instance != null");
+            Debug.Assert(instance != null, "Caller should verify instance != null");
 
             MI_Operation operationHandle;
             this._handle.ModifyInstance(
@@ -551,7 +557,7 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion ModifyInstance
 
         #region CreateInstance
 
@@ -573,7 +579,7 @@ namespace Microsoft.Management.Infrastructure
                 this.InstanceId,
                 this.ComputerName,
                 asyncCallbacksReceiver => CreateInstanceCore(namespaceName, instance, options, asyncCallbacksReceiver));
-            
+
             return enumerable.SingleOrDefault();
         }
 
@@ -600,12 +606,12 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation CreateInstanceCore(
-            string namespaceName, 
-            CimInstance instance, 
-            CimOperationOptions options, 
+            string namespaceName,
+            CimInstance instance,
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
-            Debug.Assert(instance!= null, "Caller should verify instanceId != null");
+            Debug.Assert(instance != null, "Caller should verify instanceId != null");
 
             MI_Operation operationHandle;
             this._handle.CreateInstance(
@@ -619,7 +625,7 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion CreateInstance
 
         #region DeleteInstance
 
@@ -696,12 +702,12 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation DeleteInstanceCore(
-            string namespaceName, 
-            CimInstance instance, 
-            CimOperationOptions options, 
+            string namespaceName,
+            CimInstance instance,
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
-            Debug.Assert(instance!= null, "Caller should verify instance != null");
+            Debug.Assert(instance != null, "Caller should verify instance != null");
 
             MI_Operation operationHandle;
             this._handle.DeleteInstance(
@@ -715,22 +721,26 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion DeleteInstance
 
         #region Subscription
+
         public IEnumerable<CimSubscriptionResult> Subscribe(string namespaceName, string queryDialect, string queryExpression)
         {
-            return this.Subscribe(namespaceName, queryDialect, queryExpression, null , null);
+            return this.Subscribe(namespaceName, queryDialect, queryExpression, null, null);
         }
+
         public IEnumerable<CimSubscriptionResult> Subscribe(string namespaceName, string queryDialect, string queryExpression, CimOperationOptions operationOptions)
         {
-            return this.Subscribe(namespaceName, queryDialect, queryExpression, operationOptions , null);
+            return this.Subscribe(namespaceName, queryDialect, queryExpression, operationOptions, null);
         }
+
         public IEnumerable<CimSubscriptionResult> Subscribe(string namespaceName, string queryDialect, string queryExpression, CimSubscriptionDeliveryOptions options)
         {
-            return this.Subscribe(namespaceName, queryDialect, queryExpression, null , options);
+            return this.Subscribe(namespaceName, queryDialect, queryExpression, null, options);
         }
-        public IEnumerable<CimSubscriptionResult> Subscribe(string namespaceName, string queryDialect, string queryExpression, 
+
+        public IEnumerable<CimSubscriptionResult> Subscribe(string namespaceName, string queryDialect, string queryExpression,
                         CimOperationOptions operationOptions, CimSubscriptionDeliveryOptions options)
         {
             this.AssertNotDisposed();
@@ -745,24 +755,26 @@ namespace Microsoft.Management.Infrastructure
 
             return new CimSyncIndicationEnumerable(operationOptions,
                 asyncCallbacksReceiver => SubscribeCore(namespaceName, queryDialect, queryExpression, operationOptions, options, asyncCallbacksReceiver));
-
-                        
         }
+
         public CimAsyncMultipleResults<CimSubscriptionResult> SubscribeAsync(string namespaceName, string queryDialect, string queryExpression)
         {
-            return this.SubscribeAsync(namespaceName, queryDialect, queryExpression, null, null );
+            return this.SubscribeAsync(namespaceName, queryDialect, queryExpression, null, null);
         }
-        public CimAsyncMultipleResults<CimSubscriptionResult> SubscribeAsync(string namespaceName, string queryDialect, string queryExpression, 
+
+        public CimAsyncMultipleResults<CimSubscriptionResult> SubscribeAsync(string namespaceName, string queryDialect, string queryExpression,
                                                     CimOperationOptions operationOptions)
         {
-            return this.SubscribeAsync(namespaceName, queryDialect, queryExpression, operationOptions, null );
+            return this.SubscribeAsync(namespaceName, queryDialect, queryExpression, operationOptions, null);
         }
+
         public CimAsyncMultipleResults<CimSubscriptionResult> SubscribeAsync(string namespaceName, string queryDialect, string queryExpression,
                                                     CimSubscriptionDeliveryOptions options)
         {
-            return this.SubscribeAsync(namespaceName, queryDialect, queryExpression, null, options );
+            return this.SubscribeAsync(namespaceName, queryDialect, queryExpression, null, options);
         }
-        public CimAsyncMultipleResults<CimSubscriptionResult> SubscribeAsync(string namespaceName, string queryDialect, string queryExpression, 
+
+        public CimAsyncMultipleResults<CimSubscriptionResult> SubscribeAsync(string namespaceName, string queryDialect, string queryExpression,
                             CimOperationOptions operationOptions, CimSubscriptionDeliveryOptions options)
         {
             this.AssertNotDisposed();
@@ -780,19 +792,18 @@ namespace Microsoft.Management.Infrastructure
                 asyncCallbacksReceiver => SubscribeCore(namespaceName, queryDialect, queryExpression, operationOptions, options, asyncCallbacksReceiver));
 
             return new CimAsyncMultipleResults<CimSubscriptionResult>(observable);
-            
         }
 
-            private MI_Operation SubscribeCore(
-            string namespaceName, 
-            string queryDialect, 
-            string queryExpression,
-            CimOperationOptions operationOptions, 
-            CimSubscriptionDeliveryOptions options, 
-            CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
+        private MI_Operation SubscribeCore(
+        string namespaceName,
+        string queryDialect,
+        string queryExpression,
+        CimOperationOptions operationOptions,
+        CimSubscriptionDeliveryOptions options,
+        CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(queryDialect), "Caller should verify !string.IsNullOrWhiteSpace(queryDialect)");
-            Debug.Assert(!string.IsNullOrWhiteSpace(queryExpression), "Caller should verify !string.IsNullOrWhiteSpace(queryExpression)");            
+            Debug.Assert(!string.IsNullOrWhiteSpace(queryExpression), "Caller should verify !string.IsNullOrWhiteSpace(queryExpression)");
 
             MI_Operation operationHandle;
             this._handle.Subscribe(
@@ -807,7 +818,8 @@ namespace Microsoft.Management.Infrastructure
 
             return operationHandle;
         }
-        #endregion
+
+        #endregion Subscription
 
         #region EnumerateInstances
 
@@ -846,12 +858,11 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation EnumerateInstancesCore(
-            string namespaceName, 
-            string className, 
-            CimOperationOptions options, 
+            string namespaceName,
+            string className,
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
-
             MI_Operation operationHandle;
             this._handle.EnumerateInstances(
                 options.GetOperationFlags(),
@@ -865,7 +876,7 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion EnumerateInstances
 
         #region QueryInstances
 
@@ -920,10 +931,10 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation QueryInstancesCore(
-            string namespaceName, 
-            string queryDialect, 
-            string queryExpression, 
-            CimOperationOptions options, 
+            string namespaceName,
+            string queryDialect,
+            string queryExpression,
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
             Debug.Assert(!string.IsNullOrWhiteSpace(queryDialect), "Caller should verify !string.IsNullOrWhiteSpace(queryDialect)");
@@ -943,18 +954,18 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion QueryInstances
 
         #region EnumerateAssociatedInstances (aka AssociatorInstances)
 
         // REVIEW PLEASE: This is a different name from the API straw-man
-        // Need to use a different name (from AssociatorInstances) to follow .NET guidelines: 
-        // 1) method names start with verb, 
+        // Need to use a different name (from AssociatorInstances) to follow .NET guidelines:
+        // 1) method names start with verb,
         // 2) names pass spell checker / google test)
         // So far the name has been reviewed by Wojtek.
 
         public IEnumerable<CimInstance> EnumerateAssociatedInstances(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string resultClassName,
@@ -965,7 +976,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         public IEnumerable<CimInstance> EnumerateAssociatedInstances(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string resultClassName,
@@ -997,7 +1008,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         public CimAsyncMultipleResults<CimInstance> EnumerateAssociatedInstancesAsync(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string resultClassName,
@@ -1021,46 +1032,46 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation EnumerateAssociatedInstancesCore(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string resultClassName,
             string sourceRole,
             string resultRole,
-            CimOperationOptions options, 
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
             Debug.Assert(sourceInstance != null, "Caller should verify sourceInstance != null");
 
             MI_Operation operationHandle;
-	    this._handle.AssociatorInstances(
-                options.GetOperationFlags(),
-                options.GetOperationOptionsHandle(),
-                namespaceName,
-                sourceInstance.InstanceHandle,
-                associationClassName,
-                resultClassName,
-                sourceRole,
-                resultRole,
-                options.GetKeysOnly(),
-                options.GetOperationCallbacks(asyncCallbacksReceiver),
-                out operationHandle);
+            this._handle.AssociatorInstances(
+                    options.GetOperationFlags(),
+                    options.GetOperationOptionsHandle(),
+                    namespaceName,
+                    sourceInstance.InstanceHandle,
+                    associationClassName,
+                    resultClassName,
+                    sourceRole,
+                    resultRole,
+                    options.GetKeysOnly(),
+                    options.GetOperationCallbacks(asyncCallbacksReceiver),
+                    out operationHandle);
 
             return operationHandle;
         }
 
-        #endregion
+        #endregion EnumerateAssociatedInstances (aka AssociatorInstances)
 
         #region EnumerateReferencingInstances (aka ReferenceInstances)
 
         // REVIEW PLEASE: This is a different name from the API straw-man
-        // Need to use a different name (from ReferenceInstances) to follow .NET guidelines: 
-        // 1) method names start with verb, 
+        // Need to use a different name (from ReferenceInstances) to follow .NET guidelines:
+        // 1) method names start with verb,
         // 2) names pass spell checker / google test)
         // So far the name has been reviewed by Wojtek.
 
         public IEnumerable<CimInstance> EnumerateReferencingInstances(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string sourceRole)
@@ -1069,7 +1080,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         public IEnumerable<CimInstance> EnumerateReferencingInstances(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string sourceRole,
@@ -1089,7 +1100,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         public CimAsyncMultipleResults<CimInstance> EnumerateReferencingInstancesAsync(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string sourceRole)
@@ -1098,7 +1109,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         public CimAsyncMultipleResults<CimInstance> EnumerateReferencingInstancesAsync(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string sourceRole,
@@ -1120,11 +1131,11 @@ namespace Microsoft.Management.Infrastructure
         }
 
         private MI_Operation EnumerateReferencingInstancesCore(
-            string namespaceName, 
+            string namespaceName,
             CimInstance sourceInstance,
             string associationClassName,
             string sourceRole,
-            CimOperationOptions options, 
+            CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
             Debug.Assert(sourceInstance != null, "Caller should verify sourceInstance != null");
@@ -1144,7 +1155,7 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion EnumerateReferencingInstances (aka ReferenceInstances)
 
         #region InvokeMethod
 
@@ -1295,7 +1306,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimMethodResultBase>(observable);
         }
 
-        #endregion
+        #endregion InvokeMethod - instance methods
 
         #region InvokeMethod - static methods
 
@@ -1402,7 +1413,7 @@ namespace Microsoft.Management.Infrastructure
             return new CimAsyncMultipleResults<CimMethodResultBase>(observable);
         }
 
-        #endregion
+        #endregion InvokeMethod - static methods
 
         private MI_Operation InvokeMethodCore(
             string namespaceName,
@@ -1431,12 +1442,12 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion
+        #endregion InvokeMethod
 
         #region GetClass
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="namespaceName"></param>
         /// <param name="className"></param>
@@ -1496,7 +1507,7 @@ namespace Microsoft.Management.Infrastructure
 
         #region EnumerateClasses
 
-        public IEnumerable<CimClass> EnumerateClasses(string namespaceName )
+        public IEnumerable<CimClass> EnumerateClasses(string namespaceName)
         {
             return this.EnumerateClasses(namespaceName, null, null);
         }
@@ -1541,7 +1552,6 @@ namespace Microsoft.Management.Infrastructure
             CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
-
             MI_Operation operationHandle;
             this._handle.EnumerateClasses(
                 options.GetOperationFlags(),
@@ -1556,7 +1566,7 @@ namespace Microsoft.Management.Infrastructure
 
         #endregion EnumerateClasses
 
-	#region GetClass
+        #region GetClass
 
         /// <summary>
         /// Tests whether the session can establish a successful connection to the CIM server
@@ -1564,7 +1574,7 @@ namespace Microsoft.Management.Infrastructure
         /// <returns>
         /// <c>true</c> if the connection succeeded; <c>false</c> otherwise
         /// </returns>
-        public  bool TestConnection()
+        public bool TestConnection()
         {
             CimInstance instance;
             CimException exception;
@@ -1579,8 +1589,8 @@ namespace Microsoft.Management.Infrastructure
         /// <returns>
         /// <c>true</c> if the connection succeeded; <c>false</c> otherwise
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId="0#")]
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId="1#")]
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#")]
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "1#")]
         public bool TestConnection(out CimInstance instance, out CimException exception)
         {
             this.AssertNotDisposed();
@@ -1603,7 +1613,7 @@ namespace Microsoft.Management.Infrastructure
                 bGotSuccess = false;
             }
             return bGotSuccess;
-        }           
+        }
 
         public CimAsyncResult<CimInstance> TestConnectionAsync()
         {
@@ -1616,14 +1626,12 @@ namespace Microsoft.Management.Infrastructure
                 asyncCallbacksReceiver => TestConnectionCore(null, asyncCallbacksReceiver));
 
             return new CimAsyncResult<CimInstance>(observable);
-
-        }    
+        }
 
         private MI_Operation TestConnectionCore(
             CimOperationOptions options,
             CimAsyncCallbacksReceiverBase asyncCallbacksReceiver)
         {
-            
             MI_Operation operationHandle;
             this._handle.TestConnection(
                 options.GetOperationFlags(),
@@ -1633,7 +1641,7 @@ namespace Microsoft.Management.Infrastructure
             return operationHandle;
         }
 
-        #endregion GetInstance        
+        #endregion GetClass
 
         public override string ToString()
         {

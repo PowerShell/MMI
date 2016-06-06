@@ -1,11 +1,11 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Native;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -61,24 +61,5 @@ namespace Microsoft.Management.Infrastructure
         None = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Push,
         Push = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Push,
         Pull = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Pull,
-    }
-}
-
-namespace Microsoft.Management.Infrastructure.Options.Internal
-{
-    internal static class CimFlagsExtensionMethods
-    {
-        public static MI_Flags ToMiFlags(this CimFlags cimFlags)
-        {
-            return (MI_Flags)cimFlags;
-        }
-    }
-
-    internal static class MiFlagsExtensionMethods
-    {
-        public static CimFlags ToCimFlags(this MI_Flags miFlags)
-        {
-            return (CimFlags) miFlags;
-        }
     }
 }

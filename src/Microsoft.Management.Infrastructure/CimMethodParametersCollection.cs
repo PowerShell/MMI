@@ -1,16 +1,16 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Generic;
+using Microsoft.Management.Infrastructure.Internal.Data;
+using Microsoft.Management.Infrastructure.Native;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.Management.Infrastructure.Generic;
-using Microsoft.Management.Infrastructure.Internal.Data;
-using NativeObject;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -52,7 +52,7 @@ namespace Microsoft.Management.Infrastructure
         /// Adds a new parameter to the collection
         /// </summary>
         /// <param name="newParameter"></param>
-        [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId="0#", Justification = "newParameter is more specific than newItem")]
+        [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#", Justification = "newParameter is more specific than newItem")]
         public override void Add(CimMethodParameter newParameter)
         {
             this.AssertNotDisposed();
@@ -82,7 +82,7 @@ namespace Microsoft.Management.Infrastructure
         /// </summary>
         /// <param name="parameterName"></param>
         /// <returns></returns>
-        [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId="0#", Justification = "parameterName is more specific than itemName")]
+        [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#", Justification = "parameterName is more specific than itemName")]
         public override CimMethodParameter this[string parameterName]
         {
             get
@@ -149,6 +149,6 @@ namespace Microsoft.Management.Infrastructure
 
         private bool _disposed;
 
-        #endregion
+        #endregion IDisposable Members
     }
 }

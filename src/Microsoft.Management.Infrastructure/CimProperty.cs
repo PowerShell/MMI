@@ -1,13 +1,13 @@
 ﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved. 
+ * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
 
-using System;
-using System.Globalization;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
-using NativeObject;
+using Microsoft.Management.Infrastructure.Native;
+using System;
+using System.Globalization;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -35,7 +35,7 @@ namespace Microsoft.Management.Infrastructure
         /// </para>
         /// </summary>
         /// <exception cref="ArgumentException">Thrown by the property setter, when the value doesn't match <see cref="CimProperty.CimType"/></exception>
-        public abstract object Value { get; set;  }
+        public abstract object Value { get; set; }
 
         /// <summary>
         /// CIM type of the property
@@ -65,7 +65,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         /// <summary>
-        /// Creates a new property. 
+        /// Creates a new property.
         /// This method overload tries to infer <see cref="CimType"/> from the property <paramref name="value"/>
         /// </summary>
         /// <param name="name">Name of the property</param>
@@ -81,7 +81,7 @@ namespace Microsoft.Management.Infrastructure
         }
 
         /// <summary>
-        /// Creates a new property. 
+        /// Creates a new property.
         /// </summary>
         /// <param name="name">Name of the property</param>
         /// <param name="value">Value of the property.  <c>null</c> is the property doesn't have an associated value.</param>
@@ -104,34 +104,42 @@ namespace Microsoft.Management.Infrastructure
         {
             if (value == null) return null;
 
-	    MI_Value miv = new MI_Value();
+            MI_Value miv = new MI_Value();
             var arrayOfObjects = value as object[];
             switch (cimType)
             {
-	        case CimType.Boolean:
+                case CimType.Boolean:
                     miv.Boolean = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.Char16:
                     miv.Char16 = Convert.ToChar(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.Real32:
                     miv.Real32 = Convert.ToSingle(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.Real64:
                     miv.Real64 = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.SInt16:
                     miv.Sint16 = Convert.ToInt16(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.SInt32:
                     miv.Sint32 = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.SInt64:
                     miv.Sint64 = Convert.ToInt64(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.SInt8:
                     miv.Sint8 = Convert.ToSByte(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.String:
                     if (value is Boolean)
                     {
@@ -140,22 +148,27 @@ namespace Microsoft.Management.Infrastructure
 #else
                         miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower();
 #endif
-			return miv;
+                        return miv;
                     }
                     miv.String = Convert.ToString(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.UInt16:
                     miv.Uint16 = Convert.ToUInt16(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.UInt32:
                     miv.Uint32 = Convert.ToUInt32(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.UInt64:
                     miv.Uint64 = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.UInt8:
                     miv.Uint8 = Convert.ToByte(value, CultureInfo.InvariantCulture);
-		    return miv;
+                    return miv;
+
                 case CimType.BooleanArray:
                     if (arrayOfObjects != null)
                     {
@@ -164,10 +177,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToBoolean(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.BooleanA = array;
+                        miv.BooleanA = array;
                         return miv;
                     }
                     break;
+
                 case CimType.Char16Array:
                     if (arrayOfObjects != null)
                     {
@@ -176,10 +190,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToChar(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Char16A = array;
+                        miv.Char16A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.Real32Array:
                     if (arrayOfObjects != null)
                     {
@@ -188,10 +203,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToSingle(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Real32A = array;
+                        miv.Real32A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.Real64Array:
                     if (arrayOfObjects != null)
                     {
@@ -200,10 +216,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToDouble(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Real64A = array;
+                        miv.Real64A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.SInt16Array:
                     if (arrayOfObjects != null)
                     {
@@ -212,10 +229,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToInt16(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Sint16A = array;
+                        miv.Sint16A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.SInt32Array:
                     if (arrayOfObjects != null)
                     {
@@ -224,10 +242,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToInt32(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Sint32A = array;
+                        miv.Sint32A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.SInt64Array:
                     if (arrayOfObjects != null)
                     {
@@ -236,10 +255,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToInt64(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Sint64A = array;
+                        miv.Sint64A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.SInt8Array:
                     if (arrayOfObjects != null)
                     {
@@ -248,10 +268,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToSByte(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Sint8A = array;
+                        miv.Sint8A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.StringArray:
                     if (arrayOfObjects != null)
                     {
@@ -271,10 +292,11 @@ namespace Microsoft.Management.Infrastructure
                                 array[i] = Convert.ToString(arrayOfObjects[i], CultureInfo.InvariantCulture);
                             }
                         }
-			miv.StringA = array;
+                        miv.StringA = array;
                         return miv;
                     }
                     break;
+
                 case CimType.UInt16Array:
                     if (arrayOfObjects != null)
                     {
@@ -283,10 +305,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToUInt16(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Uint16A = array;
+                        miv.Uint16A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.UInt32Array:
                     if (arrayOfObjects != null)
                     {
@@ -295,10 +318,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToUInt32(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Uint32A = array;
+                        miv.Uint32A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.UInt64Array:
                     if (arrayOfObjects != null)
                     {
@@ -307,10 +331,11 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToUInt64(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Uint64A = array;
+                        miv.Uint64A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.UInt8Array:
                     if (arrayOfObjects != null)
                     {
@@ -319,31 +344,32 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = Convert.ToByte(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
-			miv.Uint8A = array;
+                        miv.Uint8A = array;
                         return miv;
                     }
                     break;
+
                 case CimType.DateTime:
                     if (value is TimeSpan)
-		    {
-			TimeSpan ts = (TimeSpan)value;
-			MI_Datetime dt = new MI_Datetime(ts);
-			miv.Datetime = dt;
-			return miv;
-		    }
-		    else if (value is DateTime)
                     {
-			DateTime sdt = (DateTime)value;
-			MI_Datetime dt = new MI_Datetime(sdt);
-			miv.Datetime = dt;
-			return miv;
+                        TimeSpan ts = (TimeSpan)value;
+                        MI_Datetime dt = new MI_Datetime(ts);
+                        miv.Datetime = dt;
+                        return miv;
+                    }
+                    else if (value is DateTime)
+                    {
+                        DateTime sdt = (DateTime)value;
+                        MI_Datetime dt = new MI_Datetime(sdt);
+                        miv.Datetime = dt;
+                        return miv;
                     }
                     else
                     {
-			MI_Datetime dt = new MI_Datetime();
-			miv.Datetime = dt;
-			return miv;
-			// TODO: What case is this? What time object would this be?
+                        MI_Datetime dt = new MI_Datetime();
+                        miv.Datetime = dt;
+                        return miv;
+                        // TODO: What case is this? What time object would this be?
                         //return Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     }
                 case CimType.DateTimeArray:
@@ -352,33 +378,35 @@ namespace Microsoft.Management.Infrastructure
                         MI_Datetime[] array = new MI_Datetime[arrayOfObjects.Length];
                         for (int i = 0; i < arrayOfObjects.Length; i++)
                         {
-			    if (arrayOfObjects[i] is TimeSpan)
-			    {
-				TimeSpan ts = (TimeSpan)arrayOfObjects[i];
-				MI_Datetime dt = new MI_Datetime(ts);
-				array[i] = dt;
-			    }
-			    else if (arrayOfObjects[i] is DateTime)
-			    {
-				DateTime sdt = (DateTime)arrayOfObjects[i];
-				MI_Datetime dt = new MI_Datetime(sdt);
-				array[i] = dt;
-			    }
+                            if (arrayOfObjects[i] is TimeSpan)
+                            {
+                                TimeSpan ts = (TimeSpan)arrayOfObjects[i];
+                                MI_Datetime dt = new MI_Datetime(ts);
+                                array[i] = dt;
+                            }
+                            else if (arrayOfObjects[i] is DateTime)
+                            {
+                                DateTime sdt = (DateTime)arrayOfObjects[i];
+                                MI_Datetime dt = new MI_Datetime(sdt);
+                                array[i] = dt;
+                            }
                             else
                             {
-				MI_Datetime dt = new MI_Datetime();
-				array[i] = dt;
-				// TODO: What case is this? What time object would this be?
+                                MI_Datetime dt = new MI_Datetime();
+                                array[i] = dt;
+                                // TODO: What case is this? What time object would this be?
                                 //array[i] = Convert.ToDateTime(arrayOfObjects[i], CultureInfo.InvariantCulture);
                             }
                         }
-			miv.DatetimeA = array;
+                        miv.DatetimeA = array;
                         return miv;
                     }
                     break;
+
                 case CimType.Unknown:
-		    miv.String = "UnknownType";
-		    return miv;
+                    miv.String = "UnknownType";
+                    return miv;
+
                 case CimType.Reference:
                 case CimType.ReferenceArray:
                 case CimType.Instance:
