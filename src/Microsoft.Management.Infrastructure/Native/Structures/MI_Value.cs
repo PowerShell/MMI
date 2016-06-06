@@ -374,6 +374,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal static MI_Value Null { get { return null; } }
+
         internal MI_Type? Type { get { return this.type; } }
 
         private void Free()

@@ -73,6 +73,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimException.cs">
       <Link>CimException.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimFlags.cs">
+      <Link>CimFlags.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\CimInstance.cs">
       <Link>CimInstance.cs</Link>
     </Compile>
@@ -139,9 +142,6 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimOperationCallbackProcessingContext.cs">
       <Link>Internal\CimOperationCallbackProcessingContext.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\CimTypeExtensionMethods.cs">
-      <Link>Internal\CimTypeExtensionMethods.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\ClassHandleExtensionMethods.cs">
       <Link>Internal\ClassHandleExtensionMethods.cs</Link>
     </Compile>
@@ -204,6 +204,12 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\InstanceHandleExtensionMethods.cs">
       <Link>Internal\InstanceHandleExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\MiFlagsExtensionMethods.cs">
+      <Link>Internal\MiFlagsExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\MiTypeExtensionMethods.cs">
+      <Link>Internal\MiTypeExtensionMethods.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\NativeErrorCodeExtensionMethods.cs">
       <Link>Internal\NativeErrorCodeExtensionMethods.cs</Link>
@@ -283,8 +289,8 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\Operations\EmptyDisposable.cs">
       <Link>Internal\Operations\EmptyDisposable.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\SharedInstanceHandle.cs">
-      <Link>Internal\SharedInstanceHandle.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\SanityHelpers.cs">
+      <Link>Internal\SanityHelpers.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Internal\ValueHelpers.cs">
       <Link>Internal\ValueHelpers.cs</Link>
@@ -453,9 +459,6 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\DComSessionOptions.cs">
       <Link>Options\DComSessionOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\CimFlags.cs">
-      <Link>Options\Internal\CimFlags.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Options\Internal\CimOperationFlags.cs">
       <Link>Options\Internal\CimOperationFlags.cs</Link>

@@ -257,6 +257,11 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Flags flags
             )
         {
+            if (value != null && value.Type.HasValue && value.Type != type)
+            {
+                throw new InvalidCastException();
+            }
+
             MI_Result resultLocal = this.ft.AddElement(this,
                 name,
                 value,
@@ -272,6 +277,11 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Flags flags
             )
         {
+            if (value != null && value.Type.HasValue && value.Type != type)
+            {
+                throw new InvalidCastException();
+            }
+
             MI_Result resultLocal = this.ft.SetElement(this,
                 name,
                 value,
@@ -287,6 +297,11 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Flags flags
             )
         {
+            if (value != null && value.Type.HasValue && value.Type != type)
+            {
+                throw new InvalidCastException();
+            }
+
             MI_Result resultLocal = this.ft.SetElementAt(this,
                 index,
                 value,

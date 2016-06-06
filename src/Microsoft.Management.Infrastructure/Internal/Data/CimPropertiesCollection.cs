@@ -13,12 +13,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
 {
     internal class CimPropertiesCollection : CimKeyedCollection<CimProperty>
     {
-        private readonly SharedInstanceHandle _instanceHandle;
         private readonly CimInstance _instance;
 
-        internal CimPropertiesCollection(SharedInstanceHandle instanceHandle, CimInstance instance)
+        internal CimPropertiesCollection(CimInstance instance)
         {
-            this._instanceHandle = instanceHandle;
             this._instance = instance;
         }
 
@@ -29,11 +27,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 throw new ArgumentNullException("newProperty");
             }
 
-            MI_Result result = this._instanceHandle.Handle.AddElement(
+            MI_Result result = this._instance.InstanceHandle.AddElement(
                 newProperty.Name,
-                CimInstance.ConvertToNativeLayer(newProperty.Value),
-                newProperty.CimType.ToMiType(),
-                newProperty.Flags.ToMiFlags());
+                ValueHelpers.ConvertToNativeLayer(newProperty.Value),
+                newProperty.CimType.FromCimType(),
+                newProperty.Flags.FromCimFlags());
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -42,7 +40,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             get
             {
                 uint count;
-                MI_Result result = this._instanceHandle.Handle.GetElementCount(out count);
+                MI_Result result = this._instance.InstanceHandle.GetElementCount(out count);
                 CimException.ThrowIfMiResultFailure(result);
                 return (int)count;
             }
@@ -61,7 +59,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Type type;
                 MI_Flags flags;
                 UInt32 index;
-                MI_Result result = this._instanceHandle.Handle.GetElement(propertyName,
+                MI_Result result = this._instance.InstanceHandle.GetElement(propertyName,
                                       out value,
                                       out type,
                                       out flags,
@@ -73,7 +71,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
 
                     default:
                         CimException.ThrowIfMiResultFailure(result);
-                        return new CimPropertyOfInstance(this._instanceHandle, this._instance, (int)index);
+                        return new CimPropertyOfInstance(this._instance, (int)index);
                 }
             }
         }
@@ -83,7 +81,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             int count = this.Count;
             for (int i = 0; i < count; i++)
             {
-                yield return new CimPropertyOfInstance(this._instanceHandle, this._instance, i);
+                yield return new CimPropertyOfInstance(this._instance, i);
             }
         }
     }

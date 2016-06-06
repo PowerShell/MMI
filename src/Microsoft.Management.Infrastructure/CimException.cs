@@ -38,7 +38,7 @@ namespace Microsoft.Management.Infrastructure
 
             if (errorDetailsHandle != null)
             {
-                this._errorData = new CimInstance(errorDetailsHandle.Clone(), null);
+                this._errorData = new CimInstance(errorDetailsHandle.Clone());
             }
         }
 
@@ -56,7 +56,7 @@ namespace Microsoft.Management.Infrastructure
         {
             if (errorDetailsHandle != null)
             {
-                var temporaryErrorData = new CimInstance(errorDetailsHandle, parentHandle: null);
+                var temporaryErrorData = new CimInstance(errorDetailsHandle);
                 string cimErrorMessage;
                 if (TryGetErrorDataProperty(temporaryErrorData, "Message", out cimErrorMessage))
                 {

@@ -67,6 +67,14 @@ namespace MMI.Tests
             Xunit.Assert.Null(actual);
         }
 
+        internal static void Null<T>(T actual, string message) where T : class
+        {
+            if (actual != null)
+            {
+                throw new Xunit.Sdk.AssertActualExpectedException(null, actual, message);
+            }
+        }
+
         internal static void True(bool? value, string message)
         {
             if (value != true)

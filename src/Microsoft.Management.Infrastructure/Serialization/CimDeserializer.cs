@@ -134,7 +134,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         public CimInstance DeserializeInstance(byte[] serializedData, ref uint offset, IEnumerable<CimClass> cimClasses)
         {
             MI_Instance instanceHandle = DeserializeInstanceHandle(serializedData, ref offset, cimClasses);
-            return new CimInstance(instanceHandle, parentHandle: null);
+            return new CimInstance(instanceHandle);
         }
 
         /// <summary>

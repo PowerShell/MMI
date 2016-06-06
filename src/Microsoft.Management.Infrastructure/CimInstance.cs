@@ -41,7 +41,7 @@ namespace Microsoft.Management.Infrastructure
         , ICloneable, ISerializable
 #endif
     {
-        private readonly SharedInstanceHandle _myHandle;
+        private readonly MI_Instance nativeInstance;
         private CimSystemProperties _systemProperties = null;
 
         internal MI_Instance InstanceHandle
@@ -49,17 +49,20 @@ namespace Microsoft.Management.Infrastructure
             get
             {
                 this.AssertNotDisposed();
-                return this._myHandle.Handle;
+                return this.nativeInstance;
             }
         }
 
         #region Constructors
-
-        internal CimInstance(MI_Instance handle, SharedInstanceHandle parentHandle)
+        
+        internal CimInstance(MI_Instance handle)
         {
-            Debug.Assert(handle != null, "Caller should verify that instanceHandle != null");
-            handle.AssertValidInternalState();
-            this._myHandle = new SharedInstanceHandle(handle, parentHandle);
+            if (handle == null || handle.IsNull)
+            {
+                throw new ArgumentNullException();
+            }
+
+            this.nativeInstance = handle;
         }
 
         /// <summary>
@@ -75,7 +78,7 @@ namespace Microsoft.Management.Infrastructure
             }
 
             MI_Instance clonedHandle = cimInstanceToClone.InstanceHandle.Clone();
-            this._myHandle = new SharedInstanceHandle(clonedHandle);
+            this.nativeInstance = clonedHandle;
         }
 
         /// <summary>
@@ -116,21 +119,20 @@ namespace Microsoft.Management.Infrastructure
 
             MI_Instance tmpHandle;
             MI_Result result = CimApplication.Handle.NewInstance(className, null, out tmpHandle);
-            switch (result)
+            if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
-                case MI_Result.MI_RESULT_INVALID_PARAMETER:
-                    throw new ArgumentOutOfRangeException("className");
-
-                default:
-                    CimException.ThrowIfMiResultFailure(result);
-                    this._myHandle = new SharedInstanceHandle(tmpHandle);
-                    break;
+                throw new ArgumentOutOfRangeException("className");
             }
+            
+            CimException.ThrowIfMiResultFailure(result);
+
             if (namespaceName != null)
             {
-                result = this._myHandle.Handle.SetNameSpace(namespaceName);
+                result = tmpHandle.SetNameSpace(namespaceName);
                 CimException.ThrowIfMiResultFailure(result);
             }
+
+            this.nativeInstance = tmpHandle;
         }
 
         /// <summary>
@@ -152,12 +154,13 @@ namespace Microsoft.Management.Infrastructure
                 throw new ArgumentOutOfRangeException("cimClass");
             }
             CimException.ThrowIfMiResultFailure(result);
-            this._myHandle = new SharedInstanceHandle(tmpHandle);
 
-            result = this._myHandle.Handle.SetNameSpace(cimClass.CimSystemProperties.Namespace);
+            result = tmpHandle.SetNameSpace(cimClass.CimSystemProperties.Namespace);
             CimException.ThrowIfMiResultFailure(result);
-            result = this._myHandle.Handle.SetServerName(cimClass.CimSystemProperties.ServerName);
+            result = tmpHandle.SetServerName(cimClass.CimSystemProperties.ServerName);
             CimException.ThrowIfMiResultFailure(result);
+
+            this.nativeInstance = tmpHandle;
         }
 
         #endregion Constructors
@@ -186,7 +189,7 @@ namespace Microsoft.Management.Infrastructure
             get
             {
                 this.AssertNotDisposed();
-                return new CimPropertiesCollection(this._myHandle, this);
+                return new CimPropertiesCollection(this);
             }
         }
 
@@ -338,153 +341,6 @@ namespace Microsoft.Management.Infrastructure
                 }
                 */
 
-        //
-        // TODO: THIS IS UNUSED METHOD. NEED TO REMOVE.
-        //
-#if (!_CORECLR)
-        private static bool bRegistryRead = false;
-        private static bool bNotSupportedAPIBehavior = false;
-        private static string tempFileName = "NotSupportedAPIsCallstack.txt";
-        private static readonly object _logThreadSafetyLock = new object();
-        private static StreamWriter _streamWriter;
-
-        internal static void NotSupportedAPIBehaviorLog(string propertyName)
-        {
-            if (bRegistryRead == false)
-            {
-                lock (_logThreadSafetyLock)
-                {
-                    if (bRegistryRead == false)
-                    {
-                        try
-                        {
-                            object obj = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Management Infrastructure", "NotSupportedAPIBehavior", null);
-                            bRegistryRead = true;
-                            if (obj != null)
-                            {
-                                if (obj.ToString() == "1")
-                                {
-                                    string tempPathDirectory = Path.GetTempPath();
-                                    tempFileName = tempPathDirectory + "\\" + DateTime.Now.Ticks + "-NotSupportedAPIsCallstack.txt";
-                                    _streamWriter = File.AppendText(tempFileName);
-                                    _streamWriter.AutoFlush = true;
-                                    bNotSupportedAPIBehavior = true;
-                                }
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            bRegistryRead = true;
-                        }
-                    }
-                }
-            }
-            if (bNotSupportedAPIBehavior)
-            {
-                _streamWriter.WriteLine(propertyName);
-            }
-        }
-
-#endif
-
-        internal static MI_Value ConvertToNativeLayer(object value, CimType cimType)
-        {
-            var cimInstance = value as CimInstance;
-            if (cimInstance != null)
-            {
-                MI_Value retval = new MI_Value();
-                retval.Instance = cimInstance.InstanceHandle;
-                return retval;
-            }
-
-            var arrayOfCimInstances = value as CimInstance[];
-            if (arrayOfCimInstances != null)
-            {
-                MI_Instance[] arrayOfInstanceHandles = new MI_Instance[arrayOfCimInstances.Length];
-                for (int i = 0; i < arrayOfCimInstances.Length; i++)
-                {
-                    CimInstance inst = arrayOfCimInstances[i];
-                    if (inst == null)
-                    {
-                        arrayOfInstanceHandles[i] = null;
-                    }
-                    else
-                    {
-                        arrayOfInstanceHandles[i] = inst.InstanceHandle;
-                    }
-                }
-
-                MI_Value retval = new MI_Value();
-                retval.InstanceA = arrayOfInstanceHandles;
-                return retval;
-            }
-
-            // TODO: What to do with Unknown types? Ignore? Uncomment and remove return line immediately below.
-            return CimProperty.ConvertToNativeLayer(value, cimType);
-            /*
-            if (cimType != CimType.Unknown)
-            {
-            return CimProperty.ConvertToNativeLayer(value, cimType);
-            }
-            else
-            {
-            return value;
-            }
-            */
-        }
-
-        internal static MI_Value ConvertToNativeLayer(object value)
-        {
-            return ConvertToNativeLayer(value, CimType.Unknown);
-        }
-
-        internal static object ConvertFromNativeLayer(
-            MI_Value value,
-            SharedInstanceHandle sharedParentHandle = null,
-            CimInstance parent = null,
-            bool clone = false)
-        {
-            if (value.Type == MI_Type.MI_INSTANCE)
-            {
-                CimInstance instance = new CimInstance(
-                    clone ? value.Instance.Clone() : value.Instance,
-                    sharedParentHandle);
-                if (parent != null)
-                {
-                    instance.SetCimSessionComputerName(parent.GetCimSessionComputerName());
-                    instance.SetCimSessionInstanceId(parent.GetCimSessionInstanceId());
-                }
-                return instance;
-            }
-
-            if (value.Type == MI_Type.MI_INSTANCEA)
-            {
-                CimInstance[] arrayOfInstances = new CimInstance[value.InstanceA.Length];
-                for (int i = 0; i < value.InstanceA.Length; i++)
-                {
-                    MI_Instance h = value.InstanceA[i];
-                    if (h == null)
-                    {
-                        arrayOfInstances[i] = null;
-                    }
-                    else
-                    {
-                        arrayOfInstances[i] = new CimInstance(
-                            clone ? h.Clone() : h,
-                            sharedParentHandle);
-                        if (parent != null)
-                        {
-                            arrayOfInstances[i].SetCimSessionComputerName(parent.GetCimSessionComputerName());
-                            arrayOfInstances[i].SetCimSessionInstanceId(parent.GetCimSessionInstanceId());
-                        }
-                    }
-                }
-                return arrayOfInstances;
-            }
-
-            return value;
-        }
-
         #endregion Helpers
 
         #region IDisposable Members
@@ -494,8 +350,9 @@ namespace Microsoft.Management.Infrastructure
         /// </summary>
         public void Dispose()
         {
+            // Do not supress finalization of the object
+            // since we don't do anything meaningful in the Dispose
             this.Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -503,16 +360,16 @@ namespace Microsoft.Management.Infrastructure
         /// </summary>
         private void Dispose(bool disposing)
         {
+            // This doesn't actually do anything right now
+            // The original implementation relied on explicit disposes
+            // because it was trying to internally ref-count a handle
+            // We now always clone the MI_Instance and rely
+            // on the Finalizer to clean up the actual memory
             if (_disposed)
             {
                 return;
             }
-
-            if (disposing)
-            {
-                this._myHandle.Release();
-            }
-
+            
             _disposed = true;
         }
 
@@ -565,7 +422,7 @@ namespace Microsoft.Management.Infrastructure
                     serializedBytes,
                     ref offset,
                     cimClasses: null);
-                this._myHandle = new SharedInstanceHandle(deserializedInstanceHandle);
+                this.nativeInstance = deserializedInstanceHandle;
             }
             this.SetCimSessionComputerName(info.GetString(serializationId_CimSessionComputerName));
         }

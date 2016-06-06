@@ -362,7 +362,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 {
                     if (!instanceHandle.IsNull)
                     {
-                        cimInstance = new CimInstance(instanceHandle.Clone(), null);
+                        cimInstance = new CimInstance(instanceHandle.Clone());
                         var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
                         CimResponseType userResponse = CimResponseType.None;
                         callbacksReceiverBase.CallIntoUserCallback(
@@ -708,10 +708,10 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            MI_Value nativeLayerValue = CimInstance.ConvertToNativeLayer(optionValue);
+            MI_Value nativeLayerValue = ValueHelpers.ConvertToNativeLayer(optionValue);
             try
             {
-                ValueHelpers.ThrowIfMismatchedType(cimType.ToMiType(), nativeLayerValue);
+                ValueHelpers.ThrowIfMismatchedType(cimType.FromCimType(), nativeLayerValue);
             }
             catch (InvalidCastException e)
             {
@@ -729,7 +729,7 @@ namespace Microsoft.Management.Infrastructure.Options
             MI_OperationOptionsFlags flags = MI_OperationOptionsFlags.Unused;
             MI_Result result = this.OperationOptionsHandleOnDemand.SetCustomOption(
                 optionName,
-                cimType.ToMiType(),
+                cimType.FromCimType(),
         nativeLayerValue,
                 mustComply,
         flags);

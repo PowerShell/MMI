@@ -287,7 +287,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             MI_Instance[] instanceHandles = DeserializeInstanceHandle(serializedData, ref offset, cimClasses, onClassNeededCallback, getIncludedFileCallback);
             foreach (MI_Instance handle in instanceHandles)
             {
-                instancelist.Add(new CimInstance(handle, parentHandle: null));
+                instancelist.Add(new CimInstance(handle));
             }
             return instancelist;
         }

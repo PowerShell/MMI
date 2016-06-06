@@ -44,7 +44,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 {
                     instanceHandle = instanceHandle.Clone();
                 }
-                currentItem = new CimInstance(instanceHandle, null);
+                currentItem = new CimInstance(instanceHandle);
                 currentItem.SetCimSessionComputerName(this._CimSessionComputerName);
                 currentItem.SetCimSessionInstanceId(this._CimSessionInstanceID);
             }

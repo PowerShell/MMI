@@ -3,6 +3,7 @@
  *============================================================================
  */
 
+using System;
 using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure.Internal
@@ -11,11 +12,10 @@ namespace Microsoft.Management.Infrastructure.Internal
     {
         public static MI_Instance Clone(this MI_Instance handleToClone)
         {
-            if (handleToClone == null)
+            if (handleToClone == null || handleToClone.IsNull)
             {
-                return null;
+                throw new ArgumentNullException();
             }
-            handleToClone.AssertValidInternalState();
 
             MI_Instance clonedHandle;
             MI_Result result = handleToClone.Clone(out clonedHandle);

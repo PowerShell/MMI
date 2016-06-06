@@ -21,7 +21,7 @@ namespace Microsoft.Management.Infrastructure
         internal CimSubscriptionResult(MI_Instance handle, string bookmark, string machineId)
         {
             Debug.Assert(handle != null, "Caller should verify backingInstance != null");
-            this._resultInstance = new CimInstance(handle, null);
+            this._resultInstance = new CimInstance(handle);
             this._bookmark = bookmark;
             this._machineId = machineId;
         }

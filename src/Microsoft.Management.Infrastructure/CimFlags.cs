@@ -63,22 +63,3 @@ namespace Microsoft.Management.Infrastructure
         Pull = (int)MI_SubscriptionDeliveryType.MI_SubscriptionDeliveryType_Pull,
     }
 }
-
-namespace Microsoft.Management.Infrastructure.Options.Internal
-{
-    internal static class CimFlagsExtensionMethods
-    {
-        public static MI_Flags ToMiFlags(this CimFlags cimFlags)
-        {
-            return (MI_Flags)cimFlags;
-        }
-    }
-
-    internal static class MiFlagsExtensionMethods
-    {
-        public static CimFlags ToCimFlags(this MI_Flags miFlags)
-        {
-            return (CimFlags)miFlags;
-        }
-    }
-}
