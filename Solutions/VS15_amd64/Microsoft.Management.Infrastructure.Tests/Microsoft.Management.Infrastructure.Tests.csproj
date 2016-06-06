@@ -63,23 +63,29 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Assert.cs">
-      <Link>Assert.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\CimInstanceTests.cs">
       <Link>CimInstanceTests.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers.cs">
-      <Link>Helpers.cs</Link>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\Assert.cs">
+      <Link>Helpers\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\Helpers.cs">
+      <Link>Helpers\Helpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\MIAssert.cs">
+      <Link>Helpers\MIAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\TestMIProperty.cs">
+      <Link>Helpers\TestMIProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\WindowsAssert.cs">
+      <Link>Helpers\WindowsAssert.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\WindowsFact.cs">
+      <Link>Helpers\WindowsFact.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\InternalTests\CimApplicationTests.cs">
       <Link>InternalTests\CimApplicationTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\MIAssert.cs">
-      <Link>MIAssert.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\DeserializerTestsBase.cs">
       <Link>NativeTests\DeserializerTestsBase.cs</Link>
@@ -128,15 +134,6 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\NativeTests\XMLSerializerTests.cs">
       <Link>NativeTests\XMLSerializerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\TestMIProperty.cs">
-      <Link>TestMIProperty.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsAssert.cs">
-      <Link>WindowsAssert.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\WindowsFact.cs">
-      <Link>WindowsFact.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
