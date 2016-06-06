@@ -16,7 +16,7 @@ namespace MMI.Tests
         {
             if ((expected == null && actual != null) ||
                 (expected != null && actual == null) ||
-                (!expected.Equals(actual)))
+                (expected != null && !expected.Equals(actual)))
             {
                 throw new AssertActualExpectedException(expected, actual, message);
             }
