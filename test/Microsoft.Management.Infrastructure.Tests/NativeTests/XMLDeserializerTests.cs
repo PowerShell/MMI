@@ -26,5 +26,11 @@ namespace MMI.Tests.Native
         {
             this.VerifyRoundTripClass();
         }
+
+        [WindowsFact]
+        public void CanDeserializeInstanceWithCallback()
+        {
+            this.VerifyRoundtripWithCallback();
+        }
     }
 }

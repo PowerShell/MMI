@@ -28,6 +28,12 @@ namespace MMI.Tests.Native
         }
 
         [WindowsFact]
+        public void CanDeserializeInstanceWithCallback()
+        {
+            this.VerifyRoundtripWithCallback();
+        }
+
+        [WindowsFact]
         public void CanDeserializeInstanceWithInternalMOFMethod()
         {
             var cimClass = this.GetClassDefinition();

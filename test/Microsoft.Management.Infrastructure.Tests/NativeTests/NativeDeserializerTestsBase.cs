@@ -102,11 +102,72 @@ namespace MMI.Tests.Native
             var res = this.Deserializer.DeserializeInstance(MI_SerializerFlags.None,
                 serializedInstance,
                 new MI_Class[] { cimClass },
-                IntPtr.Zero,
-                IntPtr.Zero,
+                null,
                 out bufferRead,
                 out instance,
                 out cimErrorDetails);
+            MIAssert.Succeeded(res, "Expect to be able to deserialize instance");
+
+            var expectedInstance = this.GetSerializableInstance();
+            MIAssert.InstancesEqual(expectedInstance, instance, "SerializedInstance");
+
+            cimClass.Delete();
+            instance.Delete();
+            expectedInstance.Delete();
+        }
+
+        internal void VerifyRoundtripWithCallback()
+        {
+            var cimClass = this.GetClassDefinition();
+            var serializedInstance = this.GetSerializedSingleton();
+
+            MI_Instance instance;
+            uint bufferRead;
+            MI_Instance cimErrorDetails;
+
+            bool callbackCalled = false;
+            Exception callbackException = null;
+            MI_Deserializer.MI_Deserializer_ClassObjectNeeded callback = delegate (
+                string serverName,
+                string namespaceName,
+                string className,
+                out MI_Class requestedObject
+                )
+            {
+                requestedObject = null;
+                callbackCalled = true;
+                try
+                {
+                    Assert.Null(serverName, "Expect server name to be null because we connected to local host");
+
+                    // TODO: Verify that this being null is expected where the namespace is root/cimv2
+                    //Assert.Equal(SerializationTestData.SingletonClassNamespace, namespaceName, "Expect namespace to be the namespace of the class");
+
+                    Assert.Equal(SerializationTestData.SingletonClassClassname, className, "Expect namespace to be the namespace of the class");
+                }
+                catch (Exception ex)
+                {
+                    callbackException = ex;
+                    return MI_Result.MI_RESULT_FAILED;
+                }
+
+                requestedObject = cimClass;
+                return MI_Result.MI_RESULT_OK;
+            };
+
+            var res = this.Deserializer.DeserializeInstance(MI_SerializerFlags.None,
+                serializedInstance,
+                new MI_Class[0],
+                callback,
+                out bufferRead,
+                out instance,
+                out cimErrorDetails);
+            Assert.True(callbackCalled, "Expect callback to be called");
+            if (callbackException != null)
+            {
+                throw callbackException;
+            }
+
             MIAssert.Succeeded(res, "Expect to be able to deserialize instance");
 
             var expectedInstance = this.GetSerializableInstance();
