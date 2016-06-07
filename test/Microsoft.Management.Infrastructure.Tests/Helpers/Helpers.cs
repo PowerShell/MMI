@@ -31,7 +31,7 @@ namespace MMI.Tests
         /// <returns></returns>
         public static byte[] GetBytesFromString(string str)
         {
-            System.Text.UnicodeEncoding encoding = new UnicodeEncoding();
+            System.Text.UTF8Encoding encoding = new UTF8Encoding();
             return encoding.GetBytes(str);
         }
 
