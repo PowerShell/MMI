@@ -25,6 +25,16 @@ namespace MMI.Tests
             return (Y)typeof(X).GetField(name, PrivateBindingFlags).GetValue(self);
         }
 
+        /// <summary>
+        /// convert string to byte[]
+        /// </summary>
+        /// <returns></returns>
+        public static byte[] GetBytesFromString(string str)
+        {
+            System.Text.UnicodeEncoding encoding = new UnicodeEncoding();
+            return encoding.GetBytes(str);
+        }
+
         public static string GetStringRepresentationOfSerializedData(byte[] data)
         {
 #if !_LINUX
