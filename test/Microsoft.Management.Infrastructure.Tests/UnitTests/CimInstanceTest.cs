@@ -177,7 +177,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             cimInstance.CimInstanceProperties.Add(cimProperty);
 
             CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
-            MMI.Tests.Assert.Equal(addedProperty.Flags, CimFlags.Key, "addedProperty.Flags is not correct");
+            MMI.Tests.Assert.Equal(addedProperty.Flags, CimFlags.Key | CimFlags.NotModified, "addedProperty.Flags is not correct");
         }
         #endregion Test properties
     }
