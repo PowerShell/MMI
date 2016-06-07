@@ -312,7 +312,17 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new NotImplementedException();
             }
 
-            MI_ClassArrayPtr classPtrs = (MI_ClassArrayPtr)classDefinitions;
+            MI_ClassArrayPtr classPtrs = null;
+            if (classDefinitions == null)
+            {
+                MI_Class[] tempClassArray = new MI_Class[0];
+                classPtrs = (MI_ClassArrayPtr)tempClassArray;
+            }
+            else
+            {
+                classPtrs = (MI_ClassArrayPtr)classDefinitions;
+            }
+
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray classesLocal = MI_ExtendedArray.NewIndirectPtr();
             MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
@@ -404,7 +414,10 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray resultingArray = MI_ExtendedArray.NewIndirectPtr();
             MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
-            classDetailsArray.WritePointerArray(classPtrs.ptr);
+            if (classPtrs.ptr != null)
+            {
+                classDetailsArray.WritePointerArray(classPtrs.ptr);
+            }
 
             instances = null;
 
