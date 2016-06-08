@@ -146,6 +146,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal static MI_Instance Null { get { return null; } }
+
         internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
         internal IntPtr Ptr
@@ -192,7 +193,27 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_Result Delete()
         {
-            return this.ft.Delete(this);
+            // Note that we are NOT tolerant of double-delete here
+            // This interface is internal, and if a caller messes
+            // up the memory pattern we really want to know about it
+            MI_Result localResult = this.ft.Delete(this);
+            this.ZeroPtr();
+            return localResult;
+        }
+
+        private void ZeroPtr()
+        {
+            if (this.isDirect)
+            {
+                this.ptr.ptr = IntPtr.Zero;
+            }
+            else if (this.ptr.ptr != IntPtr.Zero)
+            {
+                unsafe
+                {
+                    *(IntPtr*)this.ptr.ptr = IntPtr.Zero;
+                }
+            }
         }
 
         internal MI_Result IsA(
@@ -363,7 +384,18 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_InstanceFT ft { get { return this.mft.Value; } }
+        private MI_InstanceFT ft
+        {
+            get
+            {
+                if (this.IsNull)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                return this.mft.Value;
+            }
+        }
 
         private MI_InstanceFT MarshalFT()
         {
