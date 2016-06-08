@@ -376,6 +376,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_DestinationOptions.cs">
       <Link>Native\MI_DestinationOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_FunctionTableCache.cs">
+      <Link>Native\MI_FunctionTableCache.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
     </Compile>

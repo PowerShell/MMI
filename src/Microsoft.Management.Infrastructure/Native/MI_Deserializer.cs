@@ -117,7 +117,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             if (MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
             {
-                return NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_MOFDeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
+                return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_Deserializer.MI_MOFDeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
             }
             else if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
@@ -125,7 +125,7 @@ namespace Microsoft.Management.Infrastructure.Native
 #if !_LINUX
                 tmp.deserializerFT = MI_SerializationFTHelpers.XMLDeserializationFT;
 #else
-                tmp.deserializerFT = NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
+                tmp.deserializerFT = MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
 #endif
                 return tmp;
             }

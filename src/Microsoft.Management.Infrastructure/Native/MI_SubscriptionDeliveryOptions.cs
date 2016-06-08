@@ -378,7 +378,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_SubscriptionDeliveryOptionsFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_SubscriptionDeliveryOptionsFT>(this.Ptr, MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_SubscriptionDeliveryOptionsFT>(this.Ptr, MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

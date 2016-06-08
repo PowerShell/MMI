@@ -349,7 +349,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_DestinationOptionsFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_DestinationOptionsFT>(this.Ptr, MI_DestinationOptions.MI_DestinationOptionsMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_DestinationOptionsFT>(this.Ptr, MI_DestinationOptions.MI_DestinationOptionsMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

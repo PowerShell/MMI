@@ -73,32 +73,5 @@
                 *dst++ = val;
             }
         }
-
-        internal static unsafe T GetFTAsOffsetFromPtr<T>(IntPtr ptr, int offset) where T : new()
-        {
-            T res = new T();
-            IntPtr ftPtr = IntPtr.Zero;
-            unsafe
-            {
-                // Just as easily could be implemented with Marshal
-                // but that would copy more than the one pointer we need
-                IntPtr structurePtr = ptr;
-                if (structurePtr == IntPtr.Zero)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                ftPtr = *((IntPtr*)((byte*)structurePtr + offset));
-            }
-
-            if (ftPtr == IntPtr.Zero)
-            {
-                throw new InvalidOperationException();
-            }
-
-            // No apparent way to implement this in an unsafe block
-            Marshal.PtrToStructure(ftPtr, res);
-            return res;
-        }
     }
 }

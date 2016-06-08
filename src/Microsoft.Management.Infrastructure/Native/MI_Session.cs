@@ -528,7 +528,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_SessionFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_SessionFT>(this.Ptr, MI_Session.MI_SessionMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_SessionFT>(this.Ptr, MI_Session.MI_SessionMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

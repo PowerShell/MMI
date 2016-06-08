@@ -205,7 +205,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_ParameterSetFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_ParameterSetFT>(this.Ptr, MI_ParameterSet.MI_ParameterSetMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_ParameterSetFT>(this.Ptr, MI_ParameterSet.MI_ParameterSetMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

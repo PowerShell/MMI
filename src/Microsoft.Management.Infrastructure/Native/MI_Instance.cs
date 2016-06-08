@@ -399,7 +399,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_InstanceFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_InstanceFT>(this.Ptr, MI_Instance.MI_InstanceMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_InstanceFT>(this.Ptr, MI_Instance.MI_InstanceMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

@@ -316,7 +316,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_OperationOptionsFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_OperationOptionsFT>(this.Ptr, MI_OperationOptions.MI_OperationOptionsMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_OperationOptionsFT>(this.Ptr, MI_OperationOptions.MI_OperationOptionsMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

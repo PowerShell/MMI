@@ -178,7 +178,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_QualifierSetFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_QualifierSetFT>(this.Ptr, MI_QualifierSet.MI_QualifierSetMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_QualifierSetFT>(this.Ptr, MI_QualifierSet.MI_QualifierSetMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

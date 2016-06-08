@@ -88,7 +88,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         private MI_ExtendedArrayFT MarshalFT()
         {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_ExtendedArrayFT>(this.Ptr, MI_ExtendedArray.MI_ExtendedArrayMembersFTOffset);
+            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_ExtendedArrayFT>(this.Ptr, MI_ExtendedArray.MI_ExtendedArrayMembersFTOffset);
         }
 
         internal void AssertValidInternalState()
