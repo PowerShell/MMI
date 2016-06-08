@@ -35,7 +35,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal UInt32 numMethods;
             internal IntPtr schema;
             internal IntPtr providerFT;
-            internal MI_ClassPtr owningClass;
+            internal IntPtr owningClass;
         }
 
         // Marshal implements these with Reflection - pay this hit only once

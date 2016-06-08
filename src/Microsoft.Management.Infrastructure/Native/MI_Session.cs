@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Session
+    internal class MI_Session : MI_NativeObject<MI_Session.MI_SessionFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_SessionPtr
@@ -405,30 +404,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_SessionMembersFTOffset = (int)Marshal.OffsetOf<MI_SessionMembers>("ft");
-
         private static int MI_SessionMembersSize = Marshal.SizeOf<MI_SessionMembers>();
-
-        private MI_SessionPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_SessionFT> mft;
-
-        ~MI_Session()
+        
+        private MI_Session(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
-
-        private MI_Session(bool isDirect)
+        private MI_Session(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_SessionFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_SessionMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Session NewDirectPtr()
@@ -443,9 +425,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Session NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Session(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Session(ptr);
         }
 
         internal void AssertValidInternalState()
@@ -474,35 +454,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_SessionOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_SessionOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_Session Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_SessionMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_SessionMembersSize; } }
 
         internal MI_Result Close(
             IntPtr completionContext,
@@ -523,8 +482,6 @@ namespace Microsoft.Management.Infrastructure.Native
                 application);
             return resultLocal;
         }
-
-        private MI_SessionFT ft { get { return this.mft.Value; } }
 
         private MI_SessionFT MarshalFT()
         {

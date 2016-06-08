@@ -3,43 +3,42 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassPtr
+    internal class MI_Class : MI_NativeObject<MI_Class.MI_ClassFT>
     {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassArrayPtr
-    {
-        internal IntPtr[] ptr;
-
-        public static implicit operator MI_ClassArrayPtr(MI_Class[] classes)
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ClassPtr
         {
-            if (classes == null)
-            {
-                throw new InvalidCastException();
-            }
-
-            IntPtr[] ptrs = new IntPtr[classes.Length];
-            for (int i = 0; i < classes.Length; i++)
-            {
-                ptrs[i] = classes[i].Ptr;
-            }
-
-            return new MI_ClassArrayPtr() { ptr = ptrs };
+            internal IntPtr ptr;
         }
-    }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Class
-    {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ClassOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ClassArrayPtr
+        {
+            internal IntPtr[] ptr;
+
+            public static implicit operator MI_ClassArrayPtr(MI_Class[] classes)
+            {
+                if (classes == null)
+                {
+                    throw new InvalidCastException();
+                }
+
+                IntPtr[] ptrs = new IntPtr[classes.Length];
+                for (int i = 0; i < classes.Length; i++)
+                {
+                    ptrs[i] = classes[i].Ptr;
+                }
+
+                return new MI_ClassArrayPtr() { ptr = ptrs };
+            }
+        }
+
         internal MI_Result GetElement(
             string name,
             out MI_Value value,
@@ -173,30 +172,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ClassMembersFTOffset = (int)Marshal.OffsetOf<MI_ClassMembers>("ft");
-
         private static int MI_ClassMembersSize = Marshal.SizeOf<MI_ClassMembers>();
-
-        private MI_ClassPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_ClassFT> mft;
-
-        ~MI_Class()
+        
+        private MI_Class(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_Class(bool isDirect)
+        private MI_Class(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_ClassFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_ClassMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Class NewDirectPtr()
@@ -211,9 +194,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Class NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Class(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Class(ptr);
         }
 
         public static implicit operator MI_ClassPtr(MI_Class instance)
@@ -237,35 +218,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_ClassOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_ClassOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_Class Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_ClassMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_ClassMembersSize; } }
 
         internal MI_Result GetClassName(
             out string className
@@ -367,14 +327,7 @@ namespace Microsoft.Management.Infrastructure.Native
             newClass = newClassLocal;
             return resultLocal;
         }
-
-        private MI_ClassFT ft { get { return this.mft.Value; } }
-
-        private MI_ClassFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_ClassFT>(this.Ptr, MI_Class.MI_ClassMembersFTOffset);
-        }
-
+        
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_ClassFT
         {

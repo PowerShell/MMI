@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Operation
+    internal class MI_Operation : MI_NativeObject<MI_Operation.MI_OperationFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_OperationPtr
@@ -28,30 +27,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_OperationMembersFTOffset = (int)Marshal.OffsetOf<MI_OperationMembers>("ft");
-
         private static int MI_OperationMembersSize = Marshal.SizeOf<MI_OperationMembers>();
-
-        private MI_OperationPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_OperationFT> mft;
-
-        ~MI_Operation()
+        
+        private MI_Operation(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
-
-        private MI_Operation(bool isDirect)
+        private MI_Operation(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_OperationFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_OperationMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Operation NewDirectPtr()
@@ -66,9 +48,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Operation NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Operation(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Operation(ptr);
         }
 
         internal void AssertValidInternalState()
@@ -97,35 +77,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_OperationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_OperationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_Operation Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_OperationMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_OperationMembersSize; } }
 
         internal MI_Result Close()
         {
@@ -233,13 +192,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_OperationFT ft { get { return this.mft.Value; } }
-
-        private MI_OperationFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_OperationFT>(this.Ptr, MI_Operation.MI_OperationMembersFTOffset);
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_OperationFT
         {
@@ -292,7 +244,7 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetClass(
                 MI_OperationPtr operation,
-                [In, Out] MI_ClassOutPtr classResult,
+                [In, Out] MI_Class.MI_ClassOutPtr classResult,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,

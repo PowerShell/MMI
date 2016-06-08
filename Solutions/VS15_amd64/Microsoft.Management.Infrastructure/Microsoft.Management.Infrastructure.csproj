@@ -382,6 +382,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_NativeObject.cs">
+      <Link>Native\MI_NativeObject.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Operation.cs">
       <Link>Native\MI_Operation.cs</Link>
     </Compile>

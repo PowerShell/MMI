@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Application
+    internal class MI_Application : MI_NativeObject<MI_Application.MI_ApplicationFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_ApplicationPtr
@@ -70,30 +69,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ApplicationMembersFTOffset = (int)Marshal.OffsetOf<MI_ApplicationMembers>("ft");
-
         private static int MI_ApplicationMembersSize = Marshal.SizeOf<MI_ApplicationMembers>();
-
-        private MI_ApplicationPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_ApplicationFT> mft;
-
-        ~MI_Application()
+        
+        private MI_Application(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
-
-        private MI_Application(bool isDirect)
+        private MI_Application(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_ApplicationFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_ApplicationMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Application NewDirectPtr()
@@ -108,9 +90,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Application NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Application(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Application(ptr);
         }
 
         public static implicit operator MI_ApplicationPtr(MI_Application instance)
@@ -134,35 +114,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_ApplicationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_ApplicationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_Application Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_ApplicationMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_ApplicationMembersSize; } }
 
         internal MI_Result Close()
         {
@@ -383,13 +342,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_ApplicationFT ft { get { return this.mft.Value; } }
-
-        private MI_ApplicationFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_ApplicationFT>(this.Ptr, MI_Application.MI_ApplicationMembersFTOffset);
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_ApplicationFT
         {
@@ -481,7 +433,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Application_NewInstanceFromClass(
                 MI_ApplicationPtr application,
                 string className,
-                [In, Out] MI_ClassPtr classObject,
+                [In, Out] MI_Class.MI_ClassPtr classObject,
                 [In, Out] MI_Instance.MI_InstanceOutPtr instance
                 );
 
@@ -491,7 +443,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ClassDecl classDecl,
                 string namespaceName,
                 string serverName,
-                [In, Out] MI_ClassOutPtr classObject
+                [In, Out] MI_Class.MI_ClassOutPtr classObject
                 );
         }
     }

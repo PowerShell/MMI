@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Instance
+    internal class MI_Instance : MI_NativeObject<MI_Instance.MI_InstanceFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_InstancePtr
@@ -73,30 +72,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_InstanceMembersFTOffset = (int)Marshal.OffsetOf<MI_InstanceMembers>("ft");
-
         private static int MI_InstanceMembersSize = Marshal.SizeOf<MI_InstanceMembers>();
-
-        private MI_InstancePtr ptr;
-        private bool isDirect;
-        private Lazy<MI_InstanceFT> mft;
-
-        ~MI_Instance()
+        
+        private MI_Instance(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_Instance(bool isDirect)
+        private MI_Instance(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_InstanceFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_InstanceMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Instance NewDirectPtr()
@@ -111,9 +94,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Instance NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Instance(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Instance(ptr);
         }
 
         internal void AssertValidInternalState()
@@ -142,36 +123,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_Instance Null { get { return null; } }
 
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        protected override int FunctionTableOffset { get { return MI_InstanceMembersFTOffset; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_InstanceMembersSize; } }
 
         internal MI_Result Clone(
             out MI_Instance newInstance
@@ -205,13 +164,13 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             if (this.isDirect)
             {
-                this.ptr.ptr = IntPtr.Zero;
+                this.allocatedData = IntPtr.Zero;
             }
-            else if (this.ptr.ptr != IntPtr.Zero)
+            else if (this.allocatedData != IntPtr.Zero)
             {
                 unsafe
                 {
-                    *(IntPtr*)this.ptr.ptr = IntPtr.Zero;
+                    *(IntPtr*)this.allocatedData = IntPtr.Zero;
                 }
             }
         }
@@ -384,24 +343,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_InstanceFT ft
-        {
-            get
-            {
-                if (this.IsNull)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                return this.mft.Value;
-            }
-        }
-
-        private MI_InstanceFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_InstanceFT>(this.Ptr, MI_Instance.MI_InstanceMembersFTOffset);
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_InstanceFT
         {
@@ -545,7 +486,7 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetClass(
                 MI_InstancePtr self,
-                [In, Out] MI_ClassOutPtr instanceClass
+                [In, Out] MI_Class.MI_ClassOutPtr instanceClass
                 );
         }
     }

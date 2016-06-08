@@ -252,7 +252,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Serializer_SerializeClass(
                 MI_SerializerPtr serializer,
                 MI_SerializerFlags flags,
-                [In, Out] MI_ClassPtr classObject,
+                [In, Out] MI_Class.MI_ClassPtr classObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded

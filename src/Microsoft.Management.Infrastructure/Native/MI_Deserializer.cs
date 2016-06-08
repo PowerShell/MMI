@@ -312,7 +312,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new NotImplementedException();
             }
 
-            MI_ClassArrayPtr classPtrs = (MI_ClassArrayPtr)classDefinitions;
+            MI_Class.MI_ClassArrayPtr classPtrs = (MI_Class.MI_ClassArrayPtr)classDefinitions;
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray classesLocal = MI_ExtendedArray.NewIndirectPtr();
             MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
@@ -400,7 +400,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new NotImplementedException();
             }
 
-            MI_ClassArrayPtr classPtrs = (MI_ClassArrayPtr)classDefinitions;
+            MI_Class.MI_ClassArrayPtr classPtrs = (MI_Class.MI_ClassArrayPtr)classDefinitions;
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray resultingArray = MI_ExtendedArray.NewIndirectPtr();
             MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
@@ -509,7 +509,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             MI_Instance instanceObjectLocal = MI_Instance.NewIndirectPtr();
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
-            MI_ClassArrayPtr classArrayPtr = (MI_ClassArrayPtr)classObjects;
+            MI_Class.MI_ClassArrayPtr classArrayPtr = (MI_Class.MI_ClassArrayPtr)classObjects;
 
             MI_Result resultLocal = this.ft.DeserializeInstance(this,
                 flags,
@@ -621,13 +621,13 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_SerializerFlags flags,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                [In, Out] MI_ClassPtr parentClass,
+                [In, Out] MI_Class.MI_ClassPtr parentClass,
                 string serverName,
                 string namespaceName,
                 IntPtr classObjectNeeded,
                 IntPtr classObjectNeededContext,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_ClassOutPtr classObject,
+                [In, Out] MI_Class.MI_ClassOutPtr classObject,
                 [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
                 );
 
