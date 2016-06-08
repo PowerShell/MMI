@@ -38,7 +38,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 
         #region Deserialization tests
         [Fact]
-        public void Deserialization_CimClass_Basic()
+        public void Deserialization_CimClass_Basic0()
         {
             string classmof = "class A{string p;}; class B:A{uint8 p1;};";
             uint offset = 0;
@@ -139,6 +139,59 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
+
+        [Fact]
+        public void Deserialization_CimClass_ToolSmallBuffer()
+        {
+            MMI.Tests.Assert.Throws<CimException>(() =>
+            {
+                uint offset = 0;
+                byte[] buffer = new byte[1];
+                buffer[0] = byte.MinValue;
+                return this.deserializer.DeserializeClasses(buffer, ref offset);
+            });
+        }
+
+        [Fact]
+        public void Deserialization_CimClass_ToolLargeBuffer()
+        {
+            MMI.Tests.Assert.Throws<CimException>(() =>
+            {
+                const int size = 50 * 1024 * 1024 + 1;
+                uint offset = 0;
+                byte[] buffer = new byte[size];
+                buffer[0] = byte.MinValue;
+                return this.deserializer.DeserializeClasses(buffer, ref offset);
+            });
+        }
+
+        [Fact]
+        public void Deserialization_CimClass_GarbageBuffer()
+        {
+            MMI.Tests.Assert.Throws<CimException>(() =>
+            {
+                const int size = 50 * 1024 * 1024;
+                uint offset = 0;
+                byte[] buffer = new byte[size];
+                buffer[0] = byte.MinValue;
+                return this.deserializer.DeserializeClasses(buffer, ref offset);
+            });
+        }
+
+        [Fact]
+        public void Deserialization_CimClasse_InvalidMofBuffer()
+        {
+            MMI.Tests.Assert.Throws<CimException>(() =>
+            {
+                const int size = 50 * 1024 * 1024;
+                uint offset = 0;
+                byte[] buffer = new byte[size];
+                byte[] b2 = Helpers.GetBytesFromString("abcd");
+                b2.CopyTo(buffer, 0);
+                return this.deserializer.DeserializeClasses(buffer, ref offset);
+            });
+        }
+
         [Fact]
         public void Deserialization_Instance_NullBuffer()
         {
@@ -158,7 +211,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 uint offset = 0;
                 byte[] buffer = new byte[1];
                 buffer[0] = byte.MinValue;
-                return this.deserializer.DeserializeClasses(buffer, ref offset);
+                return this.deserializer.DeserializeInstances(buffer, ref offset);
             });
         }
 
@@ -171,7 +224,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 uint offset = 0;
                 byte[] buffer = new byte[size];
                 buffer[0] = byte.MinValue;
-                return this.deserializer.DeserializeClasses(buffer, ref offset);
+                return this.deserializer.DeserializeInstances(buffer, ref offset);
             });
         }
 
@@ -184,7 +237,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 uint offset = 0;
                 byte[] buffer = new byte[size];
                 buffer[0] = byte.MinValue;
-                return this.deserializer.DeserializeClasses(buffer, ref offset);
+                return this.deserializer.DeserializeInstances(buffer, ref offset);
             });
         }
 
@@ -198,7 +251,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                byte[] buffer = new byte[size];
                byte[] b2 = Helpers.GetBytesFromString("abcd");
                b2.CopyTo(buffer, 0);
-               return this.deserializer.DeserializeClasses(buffer, ref offset);
+               return this.deserializer.DeserializeInstances(buffer, ref offset);
            });
         }
         #endregion Deserialization tests
