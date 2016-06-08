@@ -26,7 +26,7 @@
             MI_Application.MI_ApplicationPtr application,
             MI_SerializerFlags flags,
             [MarshalAs(UnmanagedType.LPWStr)] string format,
-            MI_DeserializerPtr serializer
+            MI_Deserializer.MI_DeserializerPtr serializer
             );
 
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Unicode)]

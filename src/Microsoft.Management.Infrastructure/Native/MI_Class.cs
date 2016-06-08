@@ -162,7 +162,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private struct MI_ClassMembers
         {
             internal IntPtr ft;
-            internal MI_ClassDeclPtr classDecl;
+            internal MI_ClassDecl.MI_ClassDeclPtr classDecl;
             internal string namespaceName;
             internal string serverName;
 

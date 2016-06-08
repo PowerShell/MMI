@@ -62,7 +62,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private struct MI_InstanceMembers
         {
             internal IntPtr ft;
-            internal MI_ClassDeclPtr classDecl;
+            internal MI_ClassDecl.MI_ClassDeclPtr classDecl;
             internal string serverName;
             internal string nameSpace;
 
@@ -384,7 +384,7 @@ namespace Microsoft.Management.Infrastructure.Native
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_IsA(
                 MI_InstancePtr self,
-                [In, Out] MI_ClassDeclPtr classDecl,
+                [In, Out] MI_ClassDecl.MI_ClassDeclPtr classDecl,
                 [MarshalAs(UnmanagedType.U1)] out bool flag
                 );
 

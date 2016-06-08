@@ -369,7 +369,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 string protocol,
                 string destination,
-                [In, Out] MI_DestinationOptionsPtr options,
+                [In, Out] MI_DestinationOptions.MI_DestinationOptionsPtr options,
                 MI_SessionCallbacksNative callbacks,
                 [In, Out] MI_Instance.MI_InstanceOutPtr extendedError,
                 [In, Out] MI_Session.MI_SessionPtr session
@@ -389,14 +389,14 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Application_NewInstance(
                 MI_ApplicationPtr application,
                 string className,
-                [In, Out] MI_ClassDeclPtr classRTTI,
+                [In, Out] MI_ClassDecl.MI_ClassDeclPtr classRTTI,
                 [In, Out] MI_Instance.MI_InstanceOutPtr instance
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewDestinationOptions(
                 MI_ApplicationPtr application,
-                [In, Out] MI_DestinationOptionsPtr options
+                [In, Out] MI_DestinationOptions.MI_DestinationOptionsPtr options
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -426,7 +426,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_ApplicationPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                MI_DeserializerPtr deserializer
+                MI_Deserializer.MI_DeserializerPtr deserializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

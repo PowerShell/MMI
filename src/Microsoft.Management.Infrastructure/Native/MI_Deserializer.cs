@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_DeserializerPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_DeserializerOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_Deserializer
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_DeserializerPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_DeserializerOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         // Marshal implements these with Reflection - pay this hit only once
         internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Deserializer.MI_DeserializerMembers>("reserved2");
 

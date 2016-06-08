@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassDeclPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassDeclOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_ClassDecl
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ClassDeclPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_ClassDeclOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_ClassDeclMembers
         {

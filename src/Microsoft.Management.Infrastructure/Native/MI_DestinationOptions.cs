@@ -4,20 +4,20 @@ using System.Runtime.InteropServices;
 namespace Microsoft.Management.Infrastructure.Native
 {
     [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_DestinationOptionsPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_DestinationOptionsOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
     internal class MI_DestinationOptions
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_DestinationOptionsPtr
+        {
+            internal IntPtr ptr;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal struct MI_DestinationOptionsOutPtr
+        {
+            internal IntPtr ptr;
+        }
+
         internal MI_Result SetInterval(
             string optionName,
             MI_Interval value,
