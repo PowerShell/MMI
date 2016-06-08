@@ -302,7 +302,6 @@ namespace Microsoft.Management.Infrastructure.Serialization
             MI_ExtendedArray classArray;
             MI_OperationOptions nativeOption = GetOperationOptions().OperationOptionsHandle;
 
-            // TODO: Implement async callbacks
             //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
