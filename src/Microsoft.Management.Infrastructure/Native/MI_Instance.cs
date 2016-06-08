@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal class MI_Instance : MI_NativeObject<MI_Instance.MI_InstanceFT>
+    internal class MI_Instance : MI_NativeObjectWithFT<MI_Instance.MI_InstanceFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_InstancePtr

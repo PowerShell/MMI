@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal class MI_Operation : MI_NativeObject<MI_Operation.MI_OperationFT>
+    internal class MI_Operation : MI_NativeObjectWithFT<MI_Operation.MI_OperationFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_OperationPtr

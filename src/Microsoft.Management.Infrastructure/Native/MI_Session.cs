@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal class MI_Session : MI_NativeObject<MI_Session.MI_SessionFT>
+    internal class MI_Session : MI_NativeObjectWithFT<MI_Session.MI_SessionFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_SessionPtr

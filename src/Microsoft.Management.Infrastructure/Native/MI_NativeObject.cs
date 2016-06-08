@@ -3,11 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal abstract class MI_NativeObject<FunctionTableType> where FunctionTableType : new()
+    internal abstract class MI_NativeObject
     {
         protected IntPtr allocatedData;
         protected bool isDirect;
-        protected Lazy<FunctionTableType> mft;
 
         ~MI_NativeObject()
         {
@@ -17,8 +16,6 @@ namespace Microsoft.Management.Infrastructure.Native
         protected MI_NativeObject(bool isDirect)
         {
             this.isDirect = isDirect;
-            this.mft = new Lazy<FunctionTableType>(this.MarshalFT);
-
             var necessarySize = this.isDirect ? this.MembersSize : NativeMethods.IntPtrSize;
             this.allocatedData = Marshal.AllocHGlobal(necessarySize);
 
@@ -33,27 +30,7 @@ namespace Microsoft.Management.Infrastructure.Native
             Marshal.WriteIntPtr(this.allocatedData, existingPtr);
         }
 
-        private FunctionTableType MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<FunctionTableType>(this.Ptr, this.FunctionTableOffset);
-        }
-
-        protected abstract int FunctionTableOffset { get; }
-
         protected abstract int MembersSize { get; }
-
-        protected FunctionTableType ft
-        {
-            get
-            {
-                if (this.IsNull)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                return this.mft.Value;
-            }
-        }
 
         internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
