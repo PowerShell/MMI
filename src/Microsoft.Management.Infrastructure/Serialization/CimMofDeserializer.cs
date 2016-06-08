@@ -163,7 +163,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 // handled by the underlying API
                 throw new NotImplementedException();
             }
-            else if(onClassNeededCallback != null || getIncludedFileCallback != null)
+            else if (getIncludedFileCallback != null)
             {
                 // Still need to add the native definitions of these callbacks
                 throw new NotImplementedException();
@@ -185,10 +185,33 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
+            MI_Deserializer.MI_DeserializerCallbacksNative callbacks = new MI_Deserializer.MI_DeserializerCallbacksNative();
+
+            MI_Deserializer.MI_Deserializer_ClassObjectNeeded classNeededCallback = delegate (
+                string serverNameDelegateParam,
+                string namespaceNameDelegateParam,
+                string classNameDelegateParam,
+                out MI_Class requestedObject
+                )
+            {
+                CimClass resultCimClass = onClassNeededCallback(serverNameDelegateParam, namespaceNameDelegateParam, classNameDelegateParam);
+                requestedObject = resultCimClass.ClassHandle;
+                return MI_Result.MI_RESULT_OK;
+            };
+
+            if (onClassNeededCallback == null)
+            {
+                callbacks.classObjectNeeded = null;
+            }
+            else
+            {
+                callbacks.classObjectNeeded = classNeededCallback;
+            }
+
             MI_Result result = this._myHandle.DeserializeInstanceArray(
                 MI_SerializerFlags.None,
                 nativeOption,
-                IntPtr.Zero,
+                callbacks,
                 serializedData,
                 nativeClassHandles,
                 out inputBufferUsed,
@@ -277,7 +300,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             {
                 throw new ArgumentOutOfRangeException("offset");
             }
-            else if (onClassNeededCallback != null || getIncludedFileCallback != null)
+            else if (getIncludedFileCallback != null)
             {
                 // Need the definition for the callbacks
                 throw new NotImplementedException();
@@ -305,10 +328,33 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
+            MI_Deserializer.MI_DeserializerCallbacksNative callbacks = new MI_Deserializer.MI_DeserializerCallbacksNative();
+
+            MI_Deserializer.MI_Deserializer_ClassObjectNeeded classNeededCallback = delegate (
+                string serverNameDelegateParam,
+                string namespaceNameDelegateParam,
+                string classNameDelegateParam,
+                out MI_Class requestedObject
+                )
+            {
+                CimClass resultCimClass = onClassNeededCallback(serverNameDelegateParam, namespaceNameDelegateParam, classNameDelegateParam);
+                requestedObject = resultCimClass.ClassHandle;
+                return MI_Result.MI_RESULT_OK;
+            };
+
+            if (onClassNeededCallback == null)
+            {
+                callbacks.classObjectNeeded = null;
+            }
+            else
+            {
+                callbacks.classObjectNeeded = classNeededCallback;
+            }
+
             MI_Result result = this._myHandle.DeserializeClassArray(
                 MI_SerializerFlags.None,
                 nativeOption,
-                IntPtr.Zero,
+                callbacks,
                 serializedData,
                 nativeClassHandles,
                 computerName,

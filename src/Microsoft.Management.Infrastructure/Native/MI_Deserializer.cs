@@ -297,7 +297,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeClassArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                IntPtr MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 MI_Class[] classDefinitions,
@@ -352,7 +352,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeClassArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                IntPtr MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
                 byte[] serializedBuffer,
                 MI_Class[] classDefinitions,
                 string serverName,
@@ -397,7 +397,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeInstanceArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                IntPtr MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 MI_Class[] classDefinitions,
@@ -442,7 +442,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeInstanceArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                IntPtr MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
                 byte[] serializedBuffer,
                 MI_Class[] classDefinitions,
                 out UInt32 serializedBufferRead,
@@ -702,7 +702,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_DeserializerPtr deserializer,
                 MI_SerializerFlags flags,
                 MI_OperationOptions.MI_OperationOptionsPtr options,
-                IntPtr MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 MI_ExtendedArray.MI_ExtendedArrayPtr classes,
@@ -718,7 +718,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_DeserializerPtr deserializer,
                 MI_SerializerFlags flags,
                 MI_OperationOptions.MI_OperationOptionsPtr options,
-                IntPtr MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 MI_ExtendedArray.MI_ExtendedArrayPtr classes,
@@ -729,10 +729,10 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private class MI_DeserializerCallbacksNative
+        internal class MI_DeserializerCallbacksNative
         {
             IntPtr classObjectNeededContext;
-            MI_Deserializer_ClassObjectNeeded classObjectNeeded;
+            internal MI_Deserializer_ClassObjectNeeded classObjectNeeded;
 
             IntPtr includedFileContext;
             IntPtr getIncludedFileContent;
