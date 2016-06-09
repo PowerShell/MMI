@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal class MI_OperationOptions
+    internal class MI_OperationOptions : MI_NativeObjectWithFT<MI_OperationOptions.MI_OperationOptionsFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_OperationOptionsPtr
@@ -58,30 +58,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_OperationOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_OperationOptionsMembers>("ft");
-
         private static int MI_OperationOptionsMembersSize = Marshal.SizeOf<MI_OperationOptionsMembers>();
 
-        private MI_OperationOptionsPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_OperationOptionsFT> mft;
-
-        ~MI_OperationOptions()
+        private MI_OperationOptions(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_OperationOptions(bool isDirect)
+        private MI_OperationOptions(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_OperationOptionsFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_OperationOptionsMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_OperationOptions NewDirectPtr()
@@ -96,9 +80,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_OperationOptions NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_OperationOptions(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_OperationOptions(ptr);
         }
 
         public static implicit operator MI_OperationOptionsPtr(MI_OperationOptions instance)
@@ -122,35 +104,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_OperationOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_OperationOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_OperationOptions Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_OperationOptionsMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_OperationOptionsMembersSize; } }
 
         internal void Delete()
         {
@@ -311,14 +272,7 @@ namespace Microsoft.Management.Infrastructure.Native
             newOperationOptions = newOperationOptionsLocal;
             return resultLocal;
         }
-
-        private MI_OperationOptionsFT ft { get { return this.mft.Value; } }
-
-        private MI_OperationOptionsFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_OperationOptionsFT>(this.Ptr, MI_OperationOptions.MI_OperationOptionsMembersFTOffset);
-        }
-
+        
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_OperationOptionsFT
         {

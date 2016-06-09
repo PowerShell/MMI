@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_DestinationOptions
+    internal class MI_DestinationOptions : MI_NativeObjectWithFT<MI_DestinationOptions.MI_DestinationOptionsFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_DestinationOptionsPtr
@@ -59,30 +58,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_DestinationOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_DestinationOptionsMembers>("ft");
-
         private static int MI_DestinationOptionsMembersSize = Marshal.SizeOf<MI_DestinationOptionsMembers>();
 
-        private MI_DestinationOptionsPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_DestinationOptionsFT> mft;
-
-        ~MI_DestinationOptions()
+        private MI_DestinationOptions(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_DestinationOptions(bool isDirect)
+        private MI_DestinationOptions(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_DestinationOptionsFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_DestinationOptionsMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_DestinationOptions NewDirectPtr()
@@ -97,9 +80,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_DestinationOptions NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_DestinationOptions(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_DestinationOptions(ptr);
         }
 
         public static implicit operator MI_DestinationOptionsPtr(MI_DestinationOptions instance)
@@ -123,35 +104,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_DestinationOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_DestinationOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_DestinationOptions Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_DestinationOptionsMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_DestinationOptionsMembersSize; } }
 
         internal void Delete()
         {
@@ -343,13 +303,6 @@ namespace Microsoft.Management.Infrastructure.Native
 
             newDestinationOptions = newDestinationOptionsLocal;
             return resultLocal;
-        }
-
-        private MI_DestinationOptionsFT ft { get { return this.mft.Value; } }
-
-        private MI_DestinationOptionsFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_DestinationOptionsFT>(this.Ptr, MI_DestinationOptions.MI_DestinationOptionsMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

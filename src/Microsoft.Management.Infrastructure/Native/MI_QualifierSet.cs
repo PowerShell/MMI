@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_QualifierSet
+    internal class MI_QualifierSet : MI_NativeObjectWithFT<MI_QualifierSet.MI_QualifierSetFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_QualifierSetPtr
@@ -71,30 +70,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_QualifierSetMembersFTOffset = (int)Marshal.OffsetOf<MI_QualifierSetMembers>("ft");
-
         private static int MI_QualifierSetMembersSize = Marshal.SizeOf<MI_QualifierSetMembers>();
-
-        private MI_QualifierSetPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_QualifierSetFT> mft;
-
-        ~MI_QualifierSet()
+        
+        private MI_QualifierSet(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_QualifierSet(bool isDirect)
+        private MI_QualifierSet(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_QualifierSetFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_QualifierSetMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_QualifierSet NewDirectPtr()
@@ -109,9 +92,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_QualifierSet NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_QualifierSet(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_QualifierSet(ptr);
         }
 
         public static implicit operator MI_QualifierSetPtr(MI_QualifierSet instance)
@@ -135,35 +116,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_QualifierSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_QualifierSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_QualifierSet Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset {  get { return MI_QualifierSetMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_QualifierSetMembersSize; } }
 
         internal MI_Result GetQualifierCount(
             out UInt32 count
@@ -172,13 +132,6 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Result resultLocal = this.ft.GetQualifierCount(this,
                 out count);
             return resultLocal;
-        }
-
-        private MI_QualifierSetFT ft { get { return this.mft.Value; } }
-
-        private MI_QualifierSetFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_QualifierSetFT>(this.Ptr, MI_QualifierSet.MI_QualifierSetMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

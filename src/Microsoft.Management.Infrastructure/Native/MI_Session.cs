@@ -483,11 +483,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_SessionFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_SessionFT>(this.Ptr, MI_Session.MI_SessionMembersFTOffset);
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_SessionFT
         {

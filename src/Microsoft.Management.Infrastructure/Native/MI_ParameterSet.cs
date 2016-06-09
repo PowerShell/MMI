@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_ParameterSet
+    internal class MI_ParameterSet : MI_NativeObjectWithFT<MI_ParameterSet.MI_ParameterSetFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_ParameterSetPtr
@@ -75,30 +74,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ParameterSetMembersFTOffset = (int)Marshal.OffsetOf<MI_ParameterSetMembers>("ft");
-
         private static int MI_ParameterSetMembersSize = Marshal.SizeOf<MI_ParameterSetMembers>();
-
-        private MI_ParameterSetPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_ParameterSetFT> mft;
-
-        ~MI_ParameterSet()
+        
+        private MI_ParameterSet(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_ParameterSet(bool isDirect)
+        private MI_ParameterSet(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_ParameterSetFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_ParameterSetMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_ParameterSet NewDirectPtr()
@@ -113,9 +96,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_ParameterSet NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_ParameterSet(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_ParameterSet(ptr);
         }
 
         public static implicit operator MI_ParameterSetPtr(MI_ParameterSet instance)
@@ -139,7 +120,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_ParameterSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_ParameterSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         public static explicit operator MI_Instance.MI_InstanceOutPtr(MI_ParameterSet instance)
@@ -151,35 +132,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_Instance.MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_Instance.MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_ParameterSet Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_ParameterSetMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_ParameterSetMembersSize; } }
 
         internal MI_Result GetMethodReturnType(
             out MI_Type returnType,
@@ -199,13 +159,6 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Result resultLocal = this.ft.GetParameterCount(this,
                 out count);
             return resultLocal;
-        }
-
-        private MI_ParameterSetFT ft { get { return this.mft.Value; } }
-
-        private MI_ParameterSetFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_ParameterSetFT>(this.Ptr, MI_ParameterSet.MI_ParameterSetMembersFTOffset);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]

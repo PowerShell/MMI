@@ -3,8 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_SubscriptionDeliveryOptions
+    internal class MI_SubscriptionDeliveryOptions : MI_NativeObjectWithFT<MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct MI_SubscriptionDeliveryOptionsPtr
@@ -90,30 +89,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_SubscriptionDeliveryOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_SubscriptionDeliveryOptionsMembers>("ft");
-
         private static int MI_SubscriptionDeliveryOptionsMembersSize = Marshal.SizeOf<MI_SubscriptionDeliveryOptionsMembers>();
-
-        private MI_SubscriptionDeliveryOptionsPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_SubscriptionDeliveryOptionsFT> mft;
-
-        ~MI_SubscriptionDeliveryOptions()
+        
+        private MI_SubscriptionDeliveryOptions(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_SubscriptionDeliveryOptions(bool isDirect)
+        private MI_SubscriptionDeliveryOptions(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_SubscriptionDeliveryOptionsFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_SubscriptionDeliveryOptionsMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_SubscriptionDeliveryOptions NewDirectPtr()
@@ -128,9 +111,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_SubscriptionDeliveryOptions NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_SubscriptionDeliveryOptions(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_SubscriptionDeliveryOptions(ptr);
         }
 
         public static implicit operator MI_SubscriptionDeliveryOptionsPtr(MI_SubscriptionDeliveryOptions instance)
@@ -154,35 +135,14 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_SubscriptionDeliveryOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new MI_SubscriptionDeliveryOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_SubscriptionDeliveryOptions Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_SubscriptionDeliveryOptionsMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_SubscriptionDeliveryOptionsMembersSize; } }
 
         internal MI_Result SetString(
             string optionName,
@@ -373,14 +333,7 @@ namespace Microsoft.Management.Infrastructure.Native
             newSubscriptionDeliveryOptions = newSubscriptionDeliveryOptionsLocal;
             return resultLocal;
         }
-
-        private MI_SubscriptionDeliveryOptionsFT ft { get { return this.mft.Value; } }
-
-        private MI_SubscriptionDeliveryOptionsFT MarshalFT()
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_SubscriptionDeliveryOptionsFT>(this.Ptr, MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsMembersFTOffset);
-        }
-
+        
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_SubscriptionDeliveryOptionsFT
         {

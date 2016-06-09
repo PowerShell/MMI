@@ -10,7 +10,10 @@ namespace Microsoft.Management.Infrastructure.Native
 
         ~MI_NativeObject()
         {
-            Marshal.FreeHGlobal(this.allocatedData);
+            if (this.allocatedData != IntPtr.Zero)
+            {
+                Marshal.FreeHGlobal(this.allocatedData);
+            }
         }
 
         protected MI_NativeObject(bool isDirect)
