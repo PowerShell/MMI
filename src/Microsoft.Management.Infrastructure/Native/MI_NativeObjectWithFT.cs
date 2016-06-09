@@ -21,12 +21,27 @@ namespace Microsoft.Management.Infrastructure.Native
 
         protected MI_NativeObjectWithFT(bool isDirect) : base(isDirect)
         {
-            this.mft = new Lazy<FunctionTableType>(this.MarshalFT);
+            this.SetupMFT(this.MarshalFT);
         }
 
         protected MI_NativeObjectWithFT(IntPtr existingPtr) : base(existingPtr)
         {
-            this.mft = new Lazy<FunctionTableType>(this.MarshalFT);
+            this.SetupMFT(this.MarshalFT);
+        }
+
+        protected MI_NativeObjectWithFT(bool isDirect, Func<FunctionTableType> mftThunk) : base(isDirect)
+        {
+            this.SetupMFT(mftThunk);
+        }
+
+        protected MI_NativeObjectWithFT(IntPtr existingPtr, Func<FunctionTableType> mftThunk) : base(existingPtr)
+        {
+            this.SetupMFT(mftThunk);
+        }
+
+        private void SetupMFT(Func<FunctionTableType> mftThunk)
+        {
+            this.mft = new Lazy<FunctionTableType>(mftThunk);
         }
 
         private FunctionTableType MarshalFT()

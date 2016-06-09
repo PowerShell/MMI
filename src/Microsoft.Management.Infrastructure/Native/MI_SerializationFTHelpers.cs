@@ -30,11 +30,6 @@ namespace Microsoft.Management.Infrastructure.Native
         internal static MI_Serializer.MI_SerializerFT XMLSerializationFT { get { return XmlSerializationFTs.Value.SerializationFT; } }
         internal static MI_Deserializer.MI_DeserializerFT XMLDeserializationFT { get { return XmlSerializationFTs.Value.DeserializationFT; } }
 
-        internal static MI_Serializer.MI_SerializerFT GetSerializerFTFromReserved2(MI_Serializer serializer)
-        {
-            return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_Serializer.MI_SerializerFT>(serializer.Ptr, MI_Serializer.Reserved2Offset);
-        }
-
         internal static MI_Deserializer.MI_DeserializerFT GetDeserializerFTFromReserved2(MI_Deserializer deserializer)
         {
             return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(deserializer.Ptr, MI_Deserializer.Reserved2Offset);
