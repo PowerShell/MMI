@@ -6,18 +6,6 @@ namespace Microsoft.Management.Infrastructure.Native
     internal class MI_Operation : MI_NativeObjectWithFT<MI_Operation.MI_OperationFT>
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_OperationPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_OperationOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_OperationMembers
         {
             internal UInt64 reserved1;
@@ -55,31 +43,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             throw new NotImplementedException();
         }
-
-        public static implicit operator MI_OperationPtr(MI_Operation instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_OperationPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_OperationOutPtr(MI_Operation instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_OperationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
-        }
-
+        
         internal static MI_Operation Null { get { return null; } }
 
         protected override int FunctionTableOffset { get { return MI_OperationMembersFTOffset; } }
@@ -204,51 +168,51 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_Close(
-                MI_OperationPtr operation
+                DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_Cancel(
-                MI_OperationPtr operation,
+                DirectPtr operation,
                 MI_CancellationReason reason
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetSession(
-                MI_OperationPtr operation,
-                [In, Out] MI_Session.MI_SessionPtr session
+                DirectPtr operation,
+                [In, Out] MI_Session.DirectPtr session
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetInstance(
-                MI_OperationPtr operation,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instance,
+                DirectPtr operation,
+                [In, Out] MI_Instance.IndirectPtr instance,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.IndirectPtr completionDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetIndication(
-                MI_OperationPtr operation,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instance,
+                DirectPtr operation,
+                [In, Out] MI_Instance.IndirectPtr instance,
                 [In, Out] MI_String bookmark,
                 [In, Out] MI_String machineID,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.IndirectPtr completionDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetClass(
-                MI_OperationPtr operation,
-                [In, Out] MI_Class.MI_ClassOutPtr classResult,
+                DirectPtr operation,
+                [In, Out] MI_Class.IndirectPtr classResult,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.IndirectPtr completionDetails
                 );
         }
     }

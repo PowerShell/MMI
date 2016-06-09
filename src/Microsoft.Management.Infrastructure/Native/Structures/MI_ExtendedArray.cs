@@ -5,18 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_ExtendedArray : MI_NativeObjectWithFT<MI_ExtendedArray.MI_ExtendedArrayFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ExtendedArrayPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ExtendedArrayOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal struct MI_ExtendedArrayMembers
         {
             internal MI_Array array;
@@ -77,31 +65,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             throw new NotImplementedException();
         }
-
-        public static implicit operator MI_ExtendedArray.MI_ExtendedArrayPtr(MI_ExtendedArray instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ExtendedArray.MI_ExtendedArrayPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_ExtendedArrayOutPtr(MI_ExtendedArray instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ExtendedArrayOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
-        }
-
+        
         public T[] ReadAsManagedPointerArray<T>(Func<IntPtr, T> conversion)
         {
             unsafe
@@ -152,7 +116,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_ExtendedArray_Delete(
-                MI_ExtendedArrayPtr self
+                DirectPtr self
                 );
         }
     }

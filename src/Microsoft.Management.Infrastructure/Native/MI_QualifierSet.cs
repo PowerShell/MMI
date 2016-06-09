@@ -5,18 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_QualifierSet : MI_NativeObjectWithFT<MI_QualifierSet.MI_QualifierSetFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_QualifierSetPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_QualifierSetOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal MI_Result GetQualifier(
             string name,
             out MI_Type qualifierType,
@@ -94,31 +82,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             return new MI_QualifierSet(ptr);
         }
-
-        public static implicit operator MI_QualifierSetPtr(MI_QualifierSet instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_QualifierSetPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_QualifierSetOutPtr(MI_QualifierSet instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_QualifierSetOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
-        }
-
+        
         internal static MI_QualifierSet Null { get { return null; } }
 
         protected override int FunctionTableOffset {  get { return MI_QualifierSetMembersFTOffset; } }
@@ -143,13 +107,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_QualifierSet_GetQualifierCount(
-                MI_QualifierSetPtr self,
+                DirectPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_QualifierSet_GetQualifierAt(
-                MI_QualifierSetPtr self,
+                DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
                 out MI_Type qualifierType,
@@ -159,7 +123,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_QualifierSet_GetQualifier(
-                MI_QualifierSetPtr self,
+                DirectPtr self,
                 string name,
                 out MI_Type qualifierType,
                 out MI_Flags qualifierFlags,

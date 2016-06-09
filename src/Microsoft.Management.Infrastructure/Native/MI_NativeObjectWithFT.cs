@@ -5,6 +5,18 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal abstract class MI_NativeObjectWithFT<FunctionTableType> : MI_NativeObject where FunctionTableType : new()
     {
+        public static implicit operator DirectPtr(MI_NativeObjectWithFT<FunctionTableType> instance)
+        {
+            // If the indirect pointer is zero then the object has not
+            // been initialized and it is not valid to refer to its data
+            if (instance != null && instance.Ptr == IntPtr.Zero)
+            {
+                throw new InvalidCastException();
+            }
+
+            return new DirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
+        }
+
         protected Lazy<FunctionTableType> mft;
 
         protected MI_NativeObjectWithFT(bool isDirect) : base(isDirect)

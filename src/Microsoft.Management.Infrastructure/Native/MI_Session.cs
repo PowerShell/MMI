@@ -5,18 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Session : MI_NativeObjectWithFT<MI_Session.MI_SessionFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SessionPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SessionOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal void GetInstance(
             MI_OperationFlags flags,
             MI_OperationOptions options,
@@ -433,30 +421,6 @@ namespace Microsoft.Management.Infrastructure.Native
             throw new NotImplementedException();
         }
 
-        public static implicit operator MI_SessionPtr(MI_Session instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_SessionPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_SessionOutPtr(MI_Session instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_SessionOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
-        }
-
         internal static MI_Session Null { get { return null; } }
 
         protected override int FunctionTableOffset { get { return MI_SessionMembersFTOffset; } }
@@ -504,171 +468,171 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Session_Close(
-                MI_SessionPtr session,
+                DirectPtr session,
                 IntPtr completionContext,
                 NativeMethods.MI_Session_Close_CompletionCallback completionCallback
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Session_GetApplication(
-                MI_SessionPtr session,
-                [In, Out] MI_Application.MI_ApplicationPtr application
+                DirectPtr session,
+                [In, Out] MI_Application.DirectPtr application
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_GetInstance(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
-                [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
+                [In, Out] MI_Instance.DirectPtr inboundInstance,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_ModifyInstance(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
-                [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
+                [In, Out] MI_Instance.DirectPtr inboundInstance,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_CreateInstance(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
-                [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
+                [In, Out] MI_Instance.DirectPtr inboundInstance,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_DeleteInstance(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
-                [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
+                [In, Out] MI_Instance.DirectPtr inboundInstance,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_Invoke(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
                 string className,
                 string methodName,
-                [In, Out] MI_Instance.MI_InstancePtr inboundInstance,
-                [In, Out] MI_Instance.MI_InstancePtr inboundProperties,
+                [In, Out] MI_Instance.DirectPtr inboundInstance,
+                [In, Out] MI_Instance.DirectPtr inboundProperties,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_EnumerateInstances(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
                 string className,
                 [MarshalAs(UnmanagedType.U1)] bool keysOnly,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_QueryInstances(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
                 string queryDialect,
                 string queryExpression,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_AssociatorInstances(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
-                [In, Out] MI_Instance.MI_InstancePtr instanceKeys,
+                [In, Out] MI_Instance.DirectPtr instanceKeys,
                 string assocClass,
                 string resultClass,
                 string role,
                 string resultRole,
                 [MarshalAs(UnmanagedType.U1)] bool keysOnly,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_ReferenceInstances(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
-                [In, Out] MI_Instance.MI_InstancePtr instanceKeys,
+                [In, Out] MI_Instance.DirectPtr instanceKeys,
                 string resultClass,
                 string role,
                 [MarshalAs(UnmanagedType.U1)] bool keysOnly,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_Subscribe(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
                 string queryDialect,
                 string queryExpression,
-                [In, Out] MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsPtr deliverOptions,
+                [In, Out] MI_SubscriptionDeliveryOptions.DirectPtr deliverOptions,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_GetClass(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
                 string className,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_EnumerateClasses(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr options,
+                [In, Out] MI_OperationOptions.DirectPtr options,
                 string namespaceName,
                 string className,
                 [MarshalAs(UnmanagedType.U1)] bool classNamesOnly,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_Session_TestConnection(
-                MI_SessionPtr session,
+                DirectPtr session,
                 MI_OperationFlags flags,
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
-                [In, Out] MI_Operation.MI_OperationPtr operation
+                [In, Out] MI_Operation.DirectPtr operation
                 );
         }
     }

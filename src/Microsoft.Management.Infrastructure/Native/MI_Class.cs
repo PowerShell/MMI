@@ -5,40 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Class : MI_NativeObjectWithFT<MI_Class.MI_ClassFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ClassPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ClassOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ClassArrayPtr
-        {
-            internal IntPtr[] ptr;
-
-            public static implicit operator MI_ClassArrayPtr(MI_Class[] classes)
-            {
-                if (classes == null)
-                {
-                    throw new InvalidCastException();
-                }
-
-                IntPtr[] ptrs = new IntPtr[classes.Length];
-                for (int i = 0; i < classes.Length; i++)
-                {
-                    ptrs[i] = classes[i].Ptr;
-                }
-
-                return new MI_ClassArrayPtr() { ptr = ptrs };
-            }
-        }
-
         internal MI_Result GetElement(
             string name,
             out MI_Value value,
@@ -162,7 +128,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private struct MI_ClassMembers
         {
             internal IntPtr ft;
-            internal MI_ClassDecl.MI_ClassDeclPtr classDecl;
+            internal MI_ClassDecl.DirectPtr classDecl;
             internal string namespaceName;
             internal string serverName;
 
@@ -196,31 +162,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             return new MI_Class(ptr);
         }
-
-        public static implicit operator MI_ClassPtr(MI_Class instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ClassPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_ClassOutPtr(MI_Class instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ClassOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
-        }
-
+        
         internal static MI_Class Null { get { return null; } }
 
         protected override int FunctionTableOffset { get { return MI_ClassMembersFTOffset; } }
@@ -348,105 +290,105 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetClassName(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String className
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetNameSpace(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String nameSpace
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetServerName(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String serverName
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetElementCount(
-                MI_ClassPtr self,
+                DirectPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetElement(
-                MI_ClassPtr self,
+                DirectPtr self,
                 string name,
                 [In, Out] MI_Value.MIValueBlock value,
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
                 out MI_Flags flags,
                 out UInt32 index
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetElementAt(
-                MI_ClassPtr self,
+                DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
                 [In, Out] MI_Value.MIValueBlock value,
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
                 out MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetClassQualifierSet(
-                MI_ClassPtr self,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet
+                DirectPtr self,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethodCount(
-                MI_ClassPtr self,
+                DirectPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethodAt(
-                MI_ClassPtr self,
+                DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
-                [In, Out] MI_ParameterSet.MI_ParameterSetPtr parameterSet
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
+                [In, Out] MI_ParameterSet.DirectPtr parameterSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethod(
-                MI_ClassPtr self,
+                DirectPtr self,
                 string name,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
-                [In, Out] MI_ParameterSet.MI_ParameterSetPtr parameterSet,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
+                [In, Out] MI_ParameterSet.DirectPtr parameterSet,
                 out UInt32 index
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetParentClassName(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String name
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetParentClass(
-                MI_ClassPtr self,
-                [In, Out] MI_ClassOutPtr parentClass
+                DirectPtr self,
+                [In, Out] IndirectPtr parentClass
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_Delete(
-                MI_ClassPtr self
+                DirectPtr self
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_Clone(
-                MI_ClassPtr self,
-                [In, Out] MI_ClassOutPtr newClass
+                DirectPtr self,
+                [In, Out] IndirectPtr newClass
                 );
         }
     }

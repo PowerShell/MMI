@@ -5,18 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_OperationOptions : MI_NativeObjectWithFT<MI_OperationOptions.MI_OperationOptionsFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_OperationOptionsPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_OperationOptionsOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal MI_Result SetInterval(
             string optionName,
             MI_Interval value,
@@ -82,31 +70,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             return new MI_OperationOptions(ptr);
         }
-
-        public static implicit operator MI_OperationOptionsPtr(MI_OperationOptions instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_OperationOptionsPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_OperationOptionsOutPtr(MI_OperationOptions instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_OperationOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
-        }
-
+        
         internal static MI_OperationOptions Null { get { return null; } }
 
         protected override int FunctionTableOffset { get { return MI_OperationOptionsMembersFTOffset; } }
@@ -292,12 +256,12 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate void MI_OperationOptions_Delete(
-                MI_OperationOptionsPtr options
+                DirectPtr options
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_SetString(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 string value,
                 MI_OperationOptionsFlags flags
@@ -305,7 +269,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_SetNumber(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 UInt32 value,
                 MI_OperationOptionsFlags flags
@@ -313,7 +277,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_SetCustomOption(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 MI_Type valueType,
                 [In, Out] MI_Value.MIValueBlock value,
@@ -323,7 +287,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetString(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 [In, Out] MI_String value,
                 out UInt32 index,
@@ -332,7 +296,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetNumber(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 out UInt32 value,
                 out UInt32 index,
@@ -341,13 +305,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetOptionCount(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetOptionAt(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
                 [In, Out] MI_Value.MIValueBlock value,
@@ -357,7 +321,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetOption(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 [In, Out] MI_Value.MIValueBlock value,
                 out MI_Type type,
@@ -367,7 +331,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetEnabledChannels(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 out UInt32 channels,
                 UInt32 bufferLength,
@@ -377,13 +341,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_Clone(
-                MI_OperationOptionsPtr self,
-                [In, Out] MI_OperationOptionsPtr newOperationOptions
+                DirectPtr self,
+                [In, Out] DirectPtr newOperationOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_SetInterval(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 ref MI_Interval value,
                 MI_OperationOptionsFlags flags
@@ -391,7 +355,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_OperationOptions_GetInterval(
-                MI_OperationOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 ref MI_Interval value,
                 out UInt32 index,

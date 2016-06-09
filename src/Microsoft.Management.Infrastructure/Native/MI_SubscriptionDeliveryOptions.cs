@@ -5,18 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_SubscriptionDeliveryOptions : MI_NativeObjectWithFT<MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SubscriptionDeliveryOptionsPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SubscriptionDeliveryOptionsOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal MI_Result SetDateTime(
             string optionName,
             MI_Datetime value,
@@ -112,30 +100,6 @@ namespace Microsoft.Management.Infrastructure.Native
         internal static MI_SubscriptionDeliveryOptions NewFromDirectPtr(IntPtr ptr)
         {
             return new MI_SubscriptionDeliveryOptions(ptr);
-        }
-
-        public static implicit operator MI_SubscriptionDeliveryOptionsPtr(MI_SubscriptionDeliveryOptions instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_SubscriptionDeliveryOptionsPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_SubscriptionDeliveryOptionsOutPtr(MI_SubscriptionDeliveryOptions instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_SubscriptionDeliveryOptionsOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_SubscriptionDeliveryOptions Null { get { return null; } }
@@ -357,7 +321,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_SetString(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 string value,
                 UInt32 flags
@@ -365,7 +329,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_SetNumber(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 UInt32 value,
                 UInt32 flags
@@ -373,7 +337,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_SetDateTime(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 ref MI_Datetime value,
                 UInt32 flags
@@ -381,7 +345,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_SetInterval(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 ref MI_Interval value,
                 UInt32 flags
@@ -389,7 +353,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_AddCredentials(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 MI_UserCredentials credentials,
                 UInt32 flags
@@ -397,12 +361,12 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_Delete(
-                MI_SubscriptionDeliveryOptionsPtr self
+                DirectPtr self
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetString(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 [In, Out] MI_String value,
                 out UInt32 index,
@@ -411,7 +375,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetNumber(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 out UInt32 value,
                 out UInt32 index,
@@ -420,7 +384,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetDateTime(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 ref MI_Datetime value,
                 out UInt32 index,
@@ -429,7 +393,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetInterval(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 ref MI_Interval value,
                 out UInt32 index,
@@ -438,13 +402,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetOptionCount(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetOptionAt(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
                 [In, Out] MI_Value.MIValueBlock value,
@@ -454,7 +418,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetOption(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 string optionName,
                 [In, Out] MI_Value.MIValueBlock value,
                 out MI_Type type,
@@ -464,13 +428,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetCredentialsCount(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetCredentialsAt(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
                 MI_UserCredentials credentials,
@@ -479,7 +443,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetCredentialsPasswordAt(
-                MI_SubscriptionDeliveryOptionsPtr options,
+                DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
                 string password,
@@ -490,8 +454,8 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_Clone(
-                MI_SubscriptionDeliveryOptionsPtr self,
-                [In, Out] MI_SubscriptionDeliveryOptionsPtr newSubscriptionDeliveryOptions
+                DirectPtr self,
+                [In, Out] DirectPtr newSubscriptionDeliveryOptions
                 );
         }
     }

@@ -7,13 +7,13 @@ namespace Microsoft.Management.Infrastructure.Native
     internal class MI_Deserializer
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_DeserializerPtr
+        internal struct DirectPtr
         {
             internal IntPtr ptr;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_DeserializerOutPtr
+        internal struct IndirectPtr
         {
             internal IntPtr ptr;
         }
@@ -31,7 +31,7 @@ namespace Microsoft.Management.Infrastructure.Native
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_DeserializerMembersSize = Marshal.SizeOf<MI_DeserializerMembers>();
 
-        private MI_DeserializerPtr ptr;
+        private DirectPtr ptr;
         private bool isDirect;
         private Lazy<MI_MOFDeserializerFT> mft;
         private string format;
@@ -62,7 +62,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_Deserializer(format, true);
         }
 
-        public static implicit operator MI_DeserializerPtr(MI_Deserializer instance)
+        public static implicit operator DirectPtr(MI_Deserializer instance)
         {
             // If the indirect pointer is zero then the object has not
             // been initialized and it is not valid to refer to its data
@@ -71,10 +71,10 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_DeserializerPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
+            return new DirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
         }
 
-        public static implicit operator MI_DeserializerOutPtr(MI_Deserializer instance)
+        public static implicit operator IndirectPtr(MI_Deserializer instance)
         {
             // We are not currently supporting the ability to get the address
             // of our direct pointer, though it is technically feasible
@@ -83,7 +83,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_DeserializerOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new IndirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
         internal static MI_Deserializer Null { get { return null; } }
@@ -312,7 +312,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new NotImplementedException();
             }
 
-            MI_Class.MI_ClassArrayPtr classPtrs = (MI_Class.MI_ClassArrayPtr)classDefinitions;
+            MI_Class.ArrayPtr classPtrs = MI_Class.GetPointerArray(classDefinitions);
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray classesLocal = MI_ExtendedArray.NewIndirectPtr();
             MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
@@ -400,7 +400,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new NotImplementedException();
             }
 
-            MI_Class.MI_ClassArrayPtr classPtrs = (MI_Class.MI_ClassArrayPtr)classDefinitions;
+            MI_Class.ArrayPtr classPtrs = MI_Class.GetPointerArray(classDefinitions);
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray resultingArray = MI_ExtendedArray.NewIndirectPtr();
             MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
@@ -509,7 +509,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             MI_Instance instanceObjectLocal = MI_Instance.NewIndirectPtr();
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
-            MI_Class.MI_ClassArrayPtr classArrayPtr = (MI_Class.MI_ClassArrayPtr)classObjects;
+            MI_Class.ArrayPtr classArrayPtr = MI_Class.GetPointerArray(classObjects);
 
             MI_Result resultLocal = this.ft.DeserializeInstance(this,
                 flags,
@@ -612,48 +612,48 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_Close(
-                MI_DeserializerPtr deserializer
+                DirectPtr deserializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeClass(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 MI_SerializerFlags flags,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                [In, Out] MI_Class.MI_ClassPtr parentClass,
+                [In, Out] MI_Class.DirectPtr parentClass,
                 string serverName,
                 string namespaceName,
                 IntPtr classObjectNeeded,
                 IntPtr classObjectNeededContext,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_Class.MI_ClassOutPtr classObject,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Class.IndirectPtr classObject,
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_Class_GetClassName(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 string className,
                 out UInt32 classNameLength,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_Class_GetParentClassName(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 string parentClassName,
                 out UInt32 parentClassNameLength,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeInstance(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 MI_SerializerFlags flags,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
@@ -662,18 +662,18 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_Deserializer_ClassObjectNeededNative classObjectNeeded,
                 IntPtr classObjectNeededContext,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instanceObject,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.IndirectPtr instanceObject,
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_Instance_GetClassName(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 string className,
                 out UInt32 classNameLength,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
         }
 
@@ -686,32 +686,32 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeClassArray_MOF(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 MI_SerializerFlags flags,
-                MI_OperationOptions.MI_OperationOptionsPtr options,
+                MI_OperationOptions.DirectPtr options,
                 IntPtr MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                MI_ExtendedArray.MI_ExtendedArrayPtr classes,
+                MI_ExtendedArray.DirectPtr classes,
                 string serverName,
                 string namespaceName,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_ExtendedArray.MI_ExtendedArrayOutPtr resultingArray,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_ExtendedArray.IndirectPtr resultingArray,
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Deserializer_DeserializeInstanceArray_MOF(
-                MI_DeserializerPtr deserializer,
+                DirectPtr deserializer,
                 MI_SerializerFlags flags,
-                MI_OperationOptions.MI_OperationOptionsPtr options,
+                MI_OperationOptions.DirectPtr options,
                 IntPtr MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
-                MI_ExtendedArray.MI_ExtendedArrayPtr classes,
+                MI_ExtendedArray.DirectPtr classes,
                 out UInt32 serializedBufferRead,
-                [In, Out] MI_ExtendedArray.MI_ExtendedArrayOutPtr resultingArray,
-                [In, Out] MI_Instance.MI_InstanceOutPtr cimErrorDetails
+                [In, Out] MI_ExtendedArray.IndirectPtr resultingArray,
+                [In, Out] MI_Instance.IndirectPtr cimErrorDetails
                 );
         }
 

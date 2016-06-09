@@ -5,18 +5,6 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Application : MI_NativeObjectWithFT<MI_Application.MI_ApplicationFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ApplicationPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ApplicationOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal static MI_Result Initialize(string applicationId, out MI_Instance extendedError, out MI_Application application)
         {
             MI_Application applicationLocal = MI_Application.NewDirectPtr();
@@ -74,6 +62,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private MI_Application(bool isDirect) : base(isDirect)
         {
         }
+
         private MI_Application(IntPtr existingPtr) : base(existingPtr)
         {
         }
@@ -91,30 +80,6 @@ namespace Microsoft.Management.Infrastructure.Native
         internal static MI_Application NewFromDirectPtr(IntPtr ptr)
         {
             return new MI_Application(ptr);
-        }
-
-        public static implicit operator MI_ApplicationPtr(MI_Application instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ApplicationPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_ApplicationOutPtr(MI_Application instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ApplicationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.allocatedData };
         }
 
         internal static MI_Application Null { get { return null; } }
@@ -336,7 +301,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Result resultLocal = this.ft.NewInstance(this,
                 "Parameters",
                 classDecl,
-                (MI_Instance.MI_InstanceOutPtr)parameterSetLocal);
+                (MI_Instance.IndirectPtr)parameterSetLocal);
 
             parameterSet = parameterSetLocal;
             return resultLocal;
@@ -361,89 +326,89 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_Close(
-                MI_ApplicationPtr application
+                DirectPtr application
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewSession(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 string protocol,
                 string destination,
-                [In, Out] MI_DestinationOptions.MI_DestinationOptionsPtr options,
+                [In, Out] MI_DestinationOptions.DirectPtr options,
                 MI_SessionCallbacksNative callbacks,
-                [In, Out] MI_Instance.MI_InstanceOutPtr extendedError,
-                [In, Out] MI_Session.MI_SessionPtr session
+                [In, Out] MI_Instance.IndirectPtr extendedError,
+                [In, Out] MI_Session.DirectPtr session
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewHostedProvider(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 string namespaceName,
                 string providerName,
                 IntPtr mi_Main,
-                [In, Out] MI_Instance.MI_InstanceOutPtr extendedError,
+                [In, Out] MI_Instance.IndirectPtr extendedError,
                 IntPtr provider
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewInstance(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 string className,
-                [In, Out] MI_ClassDecl.MI_ClassDeclPtr classRTTI,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instance
+                [In, Out] MI_ClassDecl.DirectPtr classRTTI,
+                [In, Out] MI_Instance.IndirectPtr instance
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewDestinationOptions(
-                MI_ApplicationPtr application,
-                [In, Out] MI_DestinationOptions.MI_DestinationOptionsPtr options
+                DirectPtr application,
+                [In, Out] MI_DestinationOptions.DirectPtr options
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewOperationOptions(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 [MarshalAs(UnmanagedType.U1)] bool customOptionsMustUnderstand,
-                [In, Out] MI_OperationOptions.MI_OperationOptionsPtr operationOptions
+                [In, Out] MI_OperationOptions.DirectPtr operationOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewSubscriptionDeliveryOptions(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 MI_SubscriptionDeliveryType deliveryType,
-                [In, Out] MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsPtr deliveryOptions
+                [In, Out] MI_SubscriptionDeliveryOptions.DirectPtr deliveryOptions
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewSerializer(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                MI_Serializer.MI_SerializerPtr serializer
+                MI_Serializer.DirectPtr serializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewDeserializer(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 MI_SerializerFlags flags,
                 string format,
-                MI_Deserializer.MI_DeserializerPtr deserializer
+                MI_Deserializer.DirectPtr deserializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewInstanceFromClass(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 string className,
-                [In, Out] MI_Class.MI_ClassPtr classObject,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instance
+                [In, Out] MI_Class.DirectPtr classObject,
+                [In, Out] MI_Instance.IndirectPtr instance
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Application_NewClass(
-                MI_ApplicationPtr application,
+                DirectPtr application,
                 MI_ClassDecl classDecl,
                 string namespaceName,
                 string serverName,
-                [In, Out] MI_Class.MI_ClassOutPtr classObject
+                [In, Out] MI_Class.IndirectPtr classObject
                 );
         }
     }

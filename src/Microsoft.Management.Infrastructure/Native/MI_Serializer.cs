@@ -7,13 +7,13 @@ namespace Microsoft.Management.Infrastructure.Native
     internal class MI_Serializer
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SerializerPtr
+        internal struct DirectPtr
         {
             internal IntPtr ptr;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SerializerOutPtr
+        internal struct IndirectPtr
         {
             internal IntPtr ptr;
         }
@@ -31,7 +31,7 @@ namespace Microsoft.Management.Infrastructure.Native
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_SerializerMembersSize = Marshal.SizeOf<MI_SerializerMembers>();
 
-        private MI_SerializerPtr ptr;
+        private DirectPtr ptr;
         private bool isDirect;
         private Lazy<MI_SerializerFT> mft;
 
@@ -74,7 +74,7 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_Serializer(format, true);
         }
 
-        public static implicit operator MI_SerializerPtr(MI_Serializer instance)
+        public static implicit operator DirectPtr(MI_Serializer instance)
         {
             // If the indirect pointer is zero then the object has not
             // been initialized and it is not valid to refer to its data
@@ -83,10 +83,10 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_SerializerPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
+            return new DirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
         }
 
-        public static implicit operator MI_SerializerOutPtr(MI_Serializer instance)
+        public static implicit operator IndirectPtr(MI_Serializer instance)
         {
             // We are not currently supporting the ability to get the address
             // of our direct pointer, though it is technically feasible
@@ -95,7 +95,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 throw new InvalidCastException();
             }
 
-            return new MI_SerializerOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
+            return new IndirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
         }
 
         internal static MI_Serializer Null { get { return null; } }
@@ -245,14 +245,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_Close(
-                MI_SerializerPtr serializer
+                DirectPtr serializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_SerializeClass(
-                MI_SerializerPtr serializer,
+                DirectPtr serializer,
                 MI_SerializerFlags flags,
-                [In, Out] MI_Class.MI_ClassPtr classObject,
+                [In, Out] MI_Class.DirectPtr classObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded
@@ -260,9 +260,9 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_SerializeInstance(
-                MI_SerializerPtr serializer,
+                DirectPtr serializer,
                 MI_SerializerFlags flags,
-                [In, Out] MI_Instance.MI_InstancePtr instanceObject,
+                [In, Out] MI_Instance.DirectPtr instanceObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded
