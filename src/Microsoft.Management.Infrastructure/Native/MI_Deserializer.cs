@@ -3,24 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Deserializer
+    internal class MI_Deserializer : MI_NativeObjectWithFT<MI_Deserializer.MI_MOFDeserializerFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct DirectPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct IndirectPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Deserializer.MI_DeserializerMembers>("reserved2");
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_DeserializerMembers
         {
@@ -29,115 +13,51 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         // Marshal implements these with Reflection - pay this hit only once
+        internal static int MI_DeserializerMembersReserved2Offset = (int)Marshal.OffsetOf<MI_Deserializer.MI_DeserializerMembers>("reserved2");
         private static int MI_DeserializerMembersSize = Marshal.SizeOf<MI_DeserializerMembers>();
-
-        private DirectPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_MOFDeserializerFT> mft;
+        
         private string format;
-
-        ~MI_Deserializer()
-        {
-            Marshal.FreeHGlobal(this.ptr.ptr);
-        }
-
-        private MI_Deserializer(string format, bool isDirect)
+        private MI_Deserializer(string format) : base(true)
         {
             this.format = format;
-            this.isDirect = isDirect;
+        }
 
-            this.mft = new Lazy<MI_MOFDeserializerFT>(this.GetStandardizedDeserializerFT);
-
-            var necessarySize = this.isDirect ? MI_DeserializerMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
+        private MI_Deserializer(string format, Func<MI_MOFDeserializerFT> mftThunk) : base(true, mftThunk)
+        {
+            this.format = format;
         }
 
         internal static MI_Deserializer NewDirectPtr(string format)
         {
-            return new MI_Deserializer(format, true);
-        }
-
-        public static implicit operator DirectPtr(MI_Deserializer instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
+            if (MI_SerializationFormat.MOF.Equals(format, StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidCastException();
-            }
-
-            return new DirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator IndirectPtr(MI_Deserializer instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new IndirectPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
-        }
-
-        internal static MI_Deserializer Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
-
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
-
-        private MI_MOFDeserializerFT GetStandardizedDeserializerFT()
-        {
-            if (MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
-            {
-                return MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_Deserializer.MI_MOFDeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
+                // Nothing, see fallthrough later
             }
             else if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
-                MI_MOFDeserializerFT tmp = new MI_MOFDeserializerFT();
 #if !_LINUX
+                MI_MOFDeserializerFT tmp = new MI_MOFDeserializerFT();
                 tmp.deserializerFT = MI_SerializationFTHelpers.XMLDeserializationFT;
-#else
-                tmp.deserializerFT = MI_FunctionTableCache.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(this.Ptr, MI_Deserializer.Reserved2Offset);
+                return new MI_Deserializer(format, () => tmp);
 #endif
-                return tmp;
             }
             else
             {
                 throw new NotImplementedException();
             }
+
+            return new MI_Deserializer(format);
         }
+
+        internal static MI_Deserializer Null { get { return null; } }
+
+        protected override int FunctionTableOffset { get { return MI_DeserializerMembersReserved2Offset; } }
+
+        protected override int MembersSize { get { return MI_DeserializerMembersSize; } }
 
         internal MI_Result Close()
         {
-            return this.ft.Close(this);
+            return this.commonFT.Close(this);
         }
 
         internal MI_Result DeserializeClass(
@@ -157,7 +77,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Class classObjectLocal = MI_Class.NewIndirectPtr();
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
 
-            MI_Result resultLocal = this.ft.DeserializeClass(this,
+            MI_Result resultLocal = this.commonFT.DeserializeClass(this,
                 flags,
                 serializedBuffer,
                 serializedBufferLength,
@@ -225,7 +145,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
 
-            MI_Result resultLocal = this.ft.Class_GetClassName(this,
+            MI_Result resultLocal = this.commonFT.Class_GetClassName(this,
                 serializedBuffer,
                 serializedBufferLength,
                 className,
@@ -246,7 +166,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
 
-            MI_Result resultLocal = this.ft.Class_GetParentClassName(this,
+            MI_Result resultLocal = this.commonFT.Class_GetParentClassName(this,
                 serializedBuffer,
                 serializedBufferLength,
                 parentClassName,
@@ -319,7 +239,7 @@ namespace Microsoft.Management.Infrastructure.Native
             classDetailsArray.WritePointerArray(classPtrs.ptr);
             classes = null;
 
-            var resLocal = this.mofFT.DeserializeClassArray_MOF(
+            var resLocal = this.ft.DeserializeClassArray_MOF(
                 this,
                 flags,
                 options,
@@ -408,7 +328,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             instances = null;
 
-            var resLocal = this.mofFT.DeserializeInstanceArray_MOF(
+            var resLocal = this.ft.DeserializeInstanceArray_MOF(
                 this,
                 flags,
                 options,
@@ -479,7 +399,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
 
-            MI_Result resultLocal = this.ft.Instance_GetClassName(this,
+            MI_Result resultLocal = this.commonFT.Instance_GetClassName(this,
                 serializedBuffer,
                 serializedBufferLength,
                 className,
@@ -511,7 +431,7 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_Class.ArrayPtr classArrayPtr = MI_Class.GetPointerArray(classObjects);
 
-            MI_Result resultLocal = this.ft.DeserializeInstance(this,
+            MI_Result resultLocal = this.commonFT.DeserializeInstance(this,
                 flags,
                 serializedBuffer,
                 serializedBufferLength,
@@ -596,9 +516,7 @@ namespace Microsoft.Management.Infrastructure.Native
             IntPtr requestedClassObject
             );
 
-        private MI_DeserializerFT ft { get { return this.mft.Value.deserializerFT; } }
-
-        private MI_MOFDeserializerFT mofFT { get { return this.mft.Value; } }
+        private MI_DeserializerFT commonFT { get { return this.mft.Value.deserializerFT; } }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_DeserializerFT
@@ -678,7 +596,7 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private class MI_MOFDeserializerFT
+        internal class MI_MOFDeserializerFT
         {
             internal MI_DeserializerFT deserializerFT;
             internal MI_Deserializer_DeserializeClassArray_MOF DeserializeClassArray_MOF;
