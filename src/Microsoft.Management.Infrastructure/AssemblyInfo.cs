@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 [assembly:InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests")]
 [assembly:AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly:AssemblyVersion("1.0.0.0")]
+[assembly: InternalsVisibleTo("Microsoft.Windows.DSC.CoreConfProviders")]
+[assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.CimCmdlets")]
 #else
 [assembly: NeutralResourcesLanguage("en")]
 [assembly: ComVisible(false)]
