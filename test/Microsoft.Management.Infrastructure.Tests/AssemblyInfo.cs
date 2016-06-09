@@ -9,9 +9,7 @@ using Xunit;
 
 // VS2015 xUnit test runner has a bug in which tests are not discovered in signed test assemblies
 // Disable signing the test assembly if compiled under VS
-#if VS2015
-[assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests")]
-#else
+#if !(VS2015 || _CORECLR)
 [assembly: AssemblyKeyFileAttribute(@"..\..\signing\visualstudiopublic.snk")]
 [assembly: AssemblyDelaySign(true)]
 #endif
