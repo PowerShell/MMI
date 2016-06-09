@@ -126,6 +126,9 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 case MofDeserializerSchemaValidationOption.Strict:
                     options.SetOption("SchemaValidation", "Strict");
                     break;
+                default:
+                    options.SetOption("SchemaValidation", "Default");
+                    break;
             }
             return options;
         }
@@ -338,7 +341,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
         [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Have to return 2 things.  Wrapping those 2 things in a class will result in a more, not less complexity")]
         public IEnumerable<CimClass> DeserializeClasses(byte[] serializedData, ref uint offset)
         {
-            return this.DeserializeClasses(serializedData, ref offset, null);
+            return DeserializeClasses(serializedData, ref offset, null, null, null, null, null);
         }
 
         /// <summary>
