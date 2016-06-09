@@ -185,7 +185,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
-            MI_Deserializer.MI_DeserializerCallbacksNative callbacks = new MI_Deserializer.MI_DeserializerCallbacksNative();
+            MI_Deserializer.MI_DeserializerCallbacks callbacks = new MI_Deserializer.MI_DeserializerCallbacks();
 
             MI_Deserializer.MI_Deserializer_ClassObjectNeeded classNeededCallback = delegate (
                 string serverNameDelegateParam,
@@ -217,6 +217,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 out inputBufferUsed,
                 out instanceArray,
                 out cimError);
+
             CimException.ThrowIfMiResultFailure(result, cimError);
 
             MI_Instance[] deserializedInstances = instanceArray.ReadAsManagedPointerArray(MI_Instance.NewFromDirectPtr);
@@ -328,7 +329,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
-            MI_Deserializer.MI_DeserializerCallbacksNative callbacks = new MI_Deserializer.MI_DeserializerCallbacksNative();
+            MI_Deserializer.MI_DeserializerCallbacks callbacks = new MI_Deserializer.MI_DeserializerCallbacks();
 
             MI_Deserializer.MI_Deserializer_ClassObjectNeeded classNeededCallback = delegate (
                 string serverNameDelegateParam,

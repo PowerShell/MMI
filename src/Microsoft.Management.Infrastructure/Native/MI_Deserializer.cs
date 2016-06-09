@@ -297,7 +297,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeClassArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacks MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 MI_Class[] classDefinitions,
@@ -329,11 +329,13 @@ namespace Microsoft.Management.Infrastructure.Native
             classDetailsArray.WritePointerArray(classPtrs.ptr);
             classes = null;
 
+            MI_DeserializerCallbacksNative nativeCallbacks = this.GetNativeClassObjectNeededCallbacks(MI_DeserializerCallbacks_callbacks);
+
             var resLocal = this.mofFT.DeserializeClassArray_MOF(
                 this,
                 flags,
                 options,
-                MI_DeserializerCallbacks_callbacks,
+                nativeCallbacks,
                 serializedBuffer,
                 serializedBufferLength,
                 classDetailsArray,
@@ -352,7 +354,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeClassArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacks MI_DeserializerCallbacks_callbacks,
                 byte[] serializedBuffer,
                 MI_Class[] classDefinitions,
                 string serverName,
@@ -397,7 +399,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeInstanceArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacks MI_DeserializerCallbacks_callbacks,
                 IntPtr serializedBuffer,
                 UInt32 serializedBufferLength,
                 MI_Class[] classDefinitions,
@@ -421,11 +423,13 @@ namespace Microsoft.Management.Infrastructure.Native
 
             instances = null;
 
+            MI_DeserializerCallbacksNative nativeCallbacks = this.GetNativeClassObjectNeededCallbacks(MI_DeserializerCallbacks_callbacks);
+
             var resLocal = this.mofFT.DeserializeInstanceArray_MOF(
                 this,
                 flags,
                 options,
-                MI_DeserializerCallbacks_callbacks,
+                nativeCallbacks,
                 serializedBuffer,
                 serializedBufferLength,
                 classDetailsArray,
@@ -442,7 +446,7 @@ namespace Microsoft.Management.Infrastructure.Native
         internal MI_Result DeserializeInstanceArray(
                 MI_SerializerFlags flags,
                 MI_OperationOptions options,
-                MI_DeserializerCallbacksNative MI_DeserializerCallbacks_callbacks,
+                MI_DeserializerCallbacks MI_DeserializerCallbacks_callbacks,
                 byte[] serializedBuffer,
                 MI_Class[] classDefinitions,
                 out UInt32 serializedBufferRead,
@@ -592,6 +596,63 @@ namespace Microsoft.Management.Infrastructure.Native
             };
         }
 
+
+        private MI_DeserializerCallbacksNative GetNativeClassObjectNeededCallbacks(MI_DeserializerCallbacks managedCallbacks)
+        {
+            MI_DeserializerCallbacksNative callbacksNative = new MI_DeserializerCallbacksNative();
+
+            callbacksNative.classObjectNeeded = delegate (
+                IntPtr context,
+                IntPtr serverNamePtr,
+                IntPtr namespaceNamePtr,
+                IntPtr classNamePtr,
+                IntPtr requestedClassObject)
+            {
+                MI_String serverName = new MI_String(serverNamePtr);
+                MI_String namespaceName = new MI_String(namespaceNamePtr);
+                MI_String className = new MI_String(classNamePtr);
+
+                MI_Class classObject;
+
+                try
+                {
+                    var localResult = managedCallbacks.classObjectNeeded(serverName.Value, namespaceName.Value, className.Value, out classObject);
+                    if (localResult == MI_Result.MI_RESULT_OK)
+                    {
+                        IntPtr outPtr;
+                        if (MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // The MOF deserializer helpfully tries to manage the class objects returned by the
+                            // callback and will cheerfully delete them without warning. Return a copy instead.
+                            MI_Class tmp;
+                            localResult = classObject.Clone(out tmp);
+                            if (localResult != MI_Result.MI_RESULT_OK)
+                            {
+                                return localResult;
+                            }
+
+                            outPtr = tmp.Ptr;
+                        }
+                        else
+                        {
+                            outPtr = classObject.Ptr;
+                        }
+
+                        Marshal.WriteIntPtr(requestedClassObject, outPtr);
+                    }
+
+                    return localResult;
+                }
+                catch
+                {
+                    return MI_Result.MI_RESULT_FAILED;
+                }
+            };
+
+            return callbacksNative;
+        }
+
+
         [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal delegate MI_Result MI_Deserializer_ClassObjectNeeded(
             string serverName,
@@ -729,10 +790,36 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal class MI_DeserializerCallbacksNative
+        internal class MI_DeserializerCallbacks
         {
             IntPtr classObjectNeededContext;
             internal MI_Deserializer_ClassObjectNeeded classObjectNeeded;
+
+            IntPtr includedFileContext;
+            IntPtr getIncludedFileContent;
+            IntPtr freeIncludedFileContent;
+
+            IntPtr reserved_instanceResultContext;
+            IntPtr reserved_instanceResult;
+
+            IntPtr reserved_classResultcontext;
+            IntPtr reserved_classResult;
+
+            IntPtr classObjectNeededOnIdContext;
+            IntPtr classObjectNeededOnId;
+
+            IntPtr classObjectAndIdContext;
+            IntPtr classObjectAndId;
+
+            IntPtr qualifierDeclNeededContext;
+            IntPtr qualifierDeclNeeded;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        internal class MI_DeserializerCallbacksNative
+        {
+            IntPtr classObjectNeededContext;
+            internal MI_Deserializer_ClassObjectNeededNative classObjectNeeded;
 
             IntPtr includedFileContext;
             IntPtr getIncludedFileContent;

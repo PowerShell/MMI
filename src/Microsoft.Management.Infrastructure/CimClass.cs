@@ -222,7 +222,7 @@ namespace Microsoft.Management.Infrastructure
         {
             return string.Format(
                     CultureInfo.InvariantCulture,
-                    Strings.CimClassToString,
+                    "{0}:{1}",
                     this.CimSystemProperties.Namespace,
                     this.CimSystemProperties.ClassName);
         }
