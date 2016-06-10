@@ -6,6 +6,16 @@ namespace Microsoft.Management.Infrastructure.Native
     internal abstract class MI_NativeObject
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        protected struct MI_NativeObjectNormalMembersLayout
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        protected static readonly int MI_NativeObjectNormalMembersLayoutSize = Marshal.SizeOf<MI_NativeObjectNormalMembersLayout>();
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct DirectPtr
         {
             internal IntPtr ptr;
@@ -75,7 +85,7 @@ namespace Microsoft.Management.Infrastructure.Native
             Marshal.WriteIntPtr(this.allocatedData, existingPtr);
         }
 
-        protected abstract int MembersSize { get; }
+        protected virtual int MembersSize { get { return MI_NativeObjectNormalMembersLayoutSize; } }
 
         internal static ArrayPtr GetPointerArray(MI_NativeObject[] objects)
         {

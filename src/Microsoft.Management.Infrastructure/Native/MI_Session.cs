@@ -5,6 +5,19 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Session : MI_NativeObjectWithFT<MI_Session.MI_SessionFT>
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        private struct MI_SessionMembers
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        static MI_Session()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_SessionMembers>("ft");
+        }
+
         internal void GetInstance(
             MI_OperationFlags flags,
             MI_OperationOptions options,
@@ -381,18 +394,6 @@ namespace Microsoft.Management.Infrastructure.Native
 
             operation = operationLocal;
         }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_SessionMembers
-        {
-            internal UInt64 reserved1;
-            internal IntPtr reserved2;
-            internal IntPtr ft;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_SessionMembersFTOffset = (int)Marshal.OffsetOf<MI_SessionMembers>("ft");
-        private static int MI_SessionMembersSize = Marshal.SizeOf<MI_SessionMembers>();
         
         private MI_Session(bool isDirect) : base(isDirect)
         {
@@ -422,10 +423,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal static MI_Session Null { get { return null; } }
-
-        protected override int FunctionTableOffset { get { return MI_SessionMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_SessionMembersSize; } }
 
         internal MI_Result Close(
             IntPtr completionContext,

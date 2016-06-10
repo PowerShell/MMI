@@ -5,6 +5,9 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal abstract class MI_NativeObjectWithFT<FunctionTableType> : MI_NativeObject where FunctionTableType : new()
     {
+        // Marshal implements these with Reflection - pay this hit only once
+        protected static readonly int MI_NativeObjectNormalMembersLayoutFTOffset = (int)Marshal.OffsetOf<MI_NativeObject.MI_NativeObjectNormalMembersLayout>("ft");
+
         public static implicit operator DirectPtr(MI_NativeObjectWithFT<FunctionTableType> instance)
         {
             // If the indirect pointer is zero then the object has not
@@ -49,7 +52,19 @@ namespace Microsoft.Management.Infrastructure.Native
             return MI_FunctionTableCache.GetFTAsOffsetFromPtr<FunctionTableType>(this.Ptr, this.FunctionTableOffset);
         }
 
-        protected abstract int FunctionTableOffset { get; }
+        protected static void CheckMembersTableMatchesNormalLayout<T>(string ftMember)
+        {
+            int actualFTOffSet = (int)Marshal.OffsetOf<T>(ftMember);
+            int actualMembersSize = Marshal.SizeOf<T>();
+
+            if (actualFTOffSet != MI_NativeObjectNormalMembersLayoutFTOffset ||
+                actualMembersSize != MI_NativeObjectNormalMembersLayoutSize)
+            {
+                throw new InvalidCastException();
+            }
+        }
+
+        protected virtual int FunctionTableOffset { get { return MI_NativeObjectNormalMembersLayoutFTOffset; } }
 
         protected FunctionTableType ft
         {

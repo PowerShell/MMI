@@ -5,6 +5,19 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_DestinationOptions : MI_NativeObjectWithFT<MI_DestinationOptions.MI_DestinationOptionsFT>
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        private struct MI_DestinationOptionsMembers
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        static MI_DestinationOptions()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_DestinationOptionsMembers>("ft");
+        }
+
         internal MI_Result SetInterval(
             string optionName,
             MI_Interval value,
@@ -36,18 +49,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_DestinationOptionsMembers
-        {
-            internal UInt64 reserved1;
-            internal IntPtr reserved2;
-            internal IntPtr ft;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_DestinationOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_DestinationOptionsMembers>("ft");
-        private static int MI_DestinationOptionsMembersSize = Marshal.SizeOf<MI_DestinationOptionsMembers>();
-
         private MI_DestinationOptions(bool isDirect) : base(isDirect)
         {
         }
@@ -72,10 +73,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
         
         internal static MI_DestinationOptions Null { get { return null; } }
-
-        protected override int FunctionTableOffset { get { return MI_DestinationOptionsMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_DestinationOptionsMembersSize; } }
 
         internal void Delete()
         {

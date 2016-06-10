@@ -5,6 +5,19 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_SubscriptionDeliveryOptions : MI_NativeObjectWithFT<MI_SubscriptionDeliveryOptions.MI_SubscriptionDeliveryOptionsFT>
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        private struct MI_SubscriptionDeliveryOptionsMembers
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        static MI_SubscriptionDeliveryOptions()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_SubscriptionDeliveryOptionsMembers>("ft");
+        }
+
         internal MI_Result SetDateTime(
             string optionName,
             MI_Datetime value,
@@ -66,18 +79,6 @@ namespace Microsoft.Management.Infrastructure.Native
             value = valueLocal;
             return resultLocal;
         }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_SubscriptionDeliveryOptionsMembers
-        {
-            internal UInt64 reserved1;
-            internal IntPtr reserved2;
-            internal IntPtr ft;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_SubscriptionDeliveryOptionsMembersFTOffset = (int)Marshal.OffsetOf<MI_SubscriptionDeliveryOptionsMembers>("ft");
-        private static int MI_SubscriptionDeliveryOptionsMembersSize = Marshal.SizeOf<MI_SubscriptionDeliveryOptionsMembers>();
         
         private MI_SubscriptionDeliveryOptions(bool isDirect) : base(isDirect)
         {
@@ -103,10 +104,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal static MI_SubscriptionDeliveryOptions Null { get { return null; } }
-
-        protected override int FunctionTableOffset { get { return MI_SubscriptionDeliveryOptionsMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_SubscriptionDeliveryOptionsMembersSize; } }
 
         internal MI_Result SetString(
             string optionName,

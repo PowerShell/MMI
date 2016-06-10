@@ -13,9 +13,10 @@ namespace Microsoft.Management.Infrastructure.Native
             internal IntPtr ft;
         }
 
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_OperationMembersFTOffset = (int)Marshal.OffsetOf<MI_OperationMembers>("ft");
-        private static int MI_OperationMembersSize = Marshal.SizeOf<MI_OperationMembers>();
+        static MI_Operation()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_OperationMembers>("ft");
+        }
         
         private MI_Operation(bool isDirect) : base(isDirect)
         {
@@ -45,10 +46,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
         
         internal static MI_Operation Null { get { return null; } }
-
-        protected override int FunctionTableOffset { get { return MI_OperationMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_OperationMembersSize; } }
 
         internal MI_Result Close()
         {

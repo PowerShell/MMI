@@ -5,6 +5,19 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_QualifierSet : MI_NativeObjectWithFT<MI_QualifierSet.MI_QualifierSetFT>
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        private struct MI_QualifierSetMembers
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        static MI_QualifierSet()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_QualifierSetMembers>("ft");
+        }
+
         internal MI_Result GetQualifier(
             string name,
             out MI_Type qualifierType,
@@ -47,18 +60,6 @@ namespace Microsoft.Management.Infrastructure.Native
             qualifierValue = qualifierValueLocal;
             return resultLocal;
         }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_QualifierSetMembers
-        {
-            internal UInt64 reserved1;
-            internal IntPtr reserved2;
-            internal IntPtr ft;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_QualifierSetMembersFTOffset = (int)Marshal.OffsetOf<MI_QualifierSetMembers>("ft");
-        private static int MI_QualifierSetMembersSize = Marshal.SizeOf<MI_QualifierSetMembers>();
         
         private MI_QualifierSet(bool isDirect) : base(isDirect)
         {
@@ -84,10 +85,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
         
         internal static MI_QualifierSet Null { get { return null; } }
-
-        protected override int FunctionTableOffset {  get { return MI_QualifierSetMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_QualifierSetMembersSize; } }
 
         internal MI_Result GetQualifierCount(
             out UInt32 count

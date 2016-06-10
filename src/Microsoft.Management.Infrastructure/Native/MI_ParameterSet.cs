@@ -5,6 +5,20 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_ParameterSet : MI_NativeObjectWithFT<MI_ParameterSet.MI_ParameterSetFT>
     {
+
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        private struct MI_ParameterSetMembers
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        static MI_ParameterSet()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_ParameterSetMembers>("ft");
+        }
+
         internal MI_Result GetParameterAt(
             UInt32 index,
             out string name,
@@ -51,18 +65,6 @@ namespace Microsoft.Management.Infrastructure.Native
             qualifierSet = qualifierSetLocal;
             return resultLocal;
         }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_ParameterSetMembers
-        {
-            internal UInt64 reserved1;
-            internal IntPtr reserved2;
-            internal IntPtr ft;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_ParameterSetMembersFTOffset = (int)Marshal.OffsetOf<MI_ParameterSetMembers>("ft");
-        private static int MI_ParameterSetMembersSize = Marshal.SizeOf<MI_ParameterSetMembers>();
         
         private MI_ParameterSet(bool isDirect) : base(isDirect)
         {
@@ -88,10 +90,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
         
         internal static MI_ParameterSet Null { get { return null; } }
-
-        protected override int FunctionTableOffset { get { return MI_ParameterSetMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_ParameterSetMembersSize; } }
 
         internal MI_Result GetMethodReturnType(
             out MI_Type returnType,

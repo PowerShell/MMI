@@ -5,6 +5,19 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Application : MI_NativeObjectWithFT<MI_Application.MI_ApplicationFT>
     {
+        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
+        private struct MI_ApplicationMembers
+        {
+            internal UInt64 reserved1;
+            internal IntPtr reserved2;
+            internal IntPtr ft;
+        }
+
+        static MI_Application()
+        {
+            CheckMembersTableMatchesNormalLayout<MI_ApplicationMembers>("ft");
+        }
+
         internal static MI_Result Initialize(string applicationId, out MI_Instance extendedError, out MI_Application application)
         {
             MI_Application applicationLocal = MI_Application.NewDirectPtr();
@@ -46,18 +59,6 @@ namespace Microsoft.Management.Infrastructure.Native
             session = sessionLocal;
             return resultLocal;
         }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_ApplicationMembers
-        {
-            internal UInt64 reserved1;
-            internal IntPtr reserved2;
-            internal IntPtr ft;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_ApplicationMembersFTOffset = (int)Marshal.OffsetOf<MI_ApplicationMembers>("ft");
-        private static int MI_ApplicationMembersSize = Marshal.SizeOf<MI_ApplicationMembers>();
         
         private MI_Application(bool isDirect) : base(isDirect)
         {
@@ -83,10 +84,6 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         internal static MI_Application Null { get { return null; } }
-
-        protected override int FunctionTableOffset { get { return MI_ApplicationMembersFTOffset; } }
-
-        protected override int MembersSize { get { return MI_ApplicationMembersSize; } }
 
         internal MI_Result Close()
         {
