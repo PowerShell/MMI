@@ -29,7 +29,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
 
             MI_Result result = this._instance.InstanceHandle.AddElement(
                 newProperty.Name,
-                ValueHelpers.ConvertToNativeLayer(newProperty.Value),
+                ValueHelpers.ConvertToNativeLayer(newProperty.Value, newProperty.CimType),
                 newProperty.CimType.FromCimType(),
                 newProperty.Flags.FromCimFlags());
             CimException.ThrowIfMiResultFailure(result);

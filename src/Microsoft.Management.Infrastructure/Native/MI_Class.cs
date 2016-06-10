@@ -22,17 +22,19 @@ namespace Microsoft.Management.Infrastructure.Native
 
         public static implicit operator MI_ClassArrayPtr(MI_Class[] classes)
         {
-            if (classes == null)
+            int length = 0;
+            IntPtr[] ptrs = null;
+            if (classes != null)
             {
-                throw new InvalidCastException();
+                length = classes.Length;
+                ptrs = new IntPtr[classes.Length];
             }
-
-            IntPtr[] ptrs = new IntPtr[classes.Length];
-            for (int i = 0; i < classes.Length; i++)
+            
+            for (int i = 0; i < length; i++)
             {
                 ptrs[i] = classes[i].Ptr;
             }
-
+            
             return new MI_ClassArrayPtr() { ptr = ptrs };
         }
     }
