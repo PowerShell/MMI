@@ -20,6 +20,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
             this._flags = flags;
 
             this.Value = value;
+            this.IsValueModified = false;
         }
 
         private readonly string _name;

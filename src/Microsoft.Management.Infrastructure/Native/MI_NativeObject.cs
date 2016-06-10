@@ -85,18 +85,20 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static ArrayPtr GetPointerArray(MI_NativeObject[] objects)
         {
-            if (objects == null)
+            var res = new ArrayPtr() { ptr = null };
+
+            if (objects != null)
             {
-                throw new InvalidCastException();
+                IntPtr[] ptrs = new IntPtr[objects.Length];
+                for (int i = 0; i < objects.Length; i++)
+                {
+                    ptrs[i] = objects[i].Ptr;
+                }
+
+                res.ptr = ptrs;
             }
 
-            IntPtr[] ptrs = new IntPtr[objects.Length];
-            for (int i = 0; i < objects.Length; i++)
-            {
-                ptrs[i] = objects[i].Ptr;
-            }
-
-            return new ArrayPtr() { ptr = ptrs };
+            return res;
         }
 
         internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }

@@ -304,7 +304,6 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-
                 return MI_Array.ReadAsManagedPointerArray(this.allocatedData, MI_Instance.NewFromDirectPtr);
             }
             set
