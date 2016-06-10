@@ -53,7 +53,15 @@
             }
         }
 
-        internal static unsafe void memset(byte* dst, byte val, uint byteCount)
+        internal static unsafe void memset(IntPtr dst, byte val, int byteCount)
+        {
+            unsafe
+            {
+                memset((byte*)dst, val, (uint)byteCount);
+            }
+        }
+
+        private static unsafe void memset(byte* dst, byte val, uint byteCount)
         {
             for (long i = 0; i < byteCount; i++)
             {

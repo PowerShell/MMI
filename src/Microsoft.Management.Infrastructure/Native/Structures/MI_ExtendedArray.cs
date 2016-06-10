@@ -68,18 +68,7 @@ namespace Microsoft.Management.Infrastructure.Native
         
         public T[] ReadAsManagedPointerArray<T>(Func<IntPtr, T> conversion)
         {
-            unsafe
-            {
-                MI_Array* arrayPtr = (MI_Array*)this.Ptr;
-                uint arraySize = arrayPtr->size;
-                T[] res = new T[arraySize];
-                for (int i = 0; i < arraySize; i++)
-                {
-                    res[i] = conversion(((IntPtr*)(arrayPtr->data))[i]);
-                }
-
-                return res;
-            }
+            return MI_Array.ReadAsManagedPointerArray(this.Ptr, conversion);
         }
 
         public void WritePointerArray(IntPtr[] ptrs)

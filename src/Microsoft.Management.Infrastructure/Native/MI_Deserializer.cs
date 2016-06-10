@@ -457,9 +457,9 @@ namespace Microsoft.Management.Infrastructure.Native
                 IntPtr classNamePtr,
                 IntPtr requestedClassObject)
             {
-                MI_String serverName = new MI_String(serverNamePtr);
-                MI_String namespaceName = new MI_String(namespaceNamePtr);
-                MI_String className = new MI_String(classNamePtr);
+                MI_String serverName = MI_String.NewFromDirectPtr(serverNamePtr);
+                MI_String namespaceName = MI_String.NewFromDirectPtr(namespaceNamePtr);
+                MI_String className = MI_String.NewFromDirectPtr(classNamePtr);
 
                 MI_Class classObject;
 

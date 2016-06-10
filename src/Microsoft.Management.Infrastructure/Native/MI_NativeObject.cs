@@ -73,11 +73,7 @@ namespace Microsoft.Management.Infrastructure.Native
             this.isDirect = isDirect;
             var necessarySize = this.isDirect ? this.MembersSize : NativeMethods.IntPtrSize;
             this.allocatedData = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.allocatedData, 0, (uint)necessarySize);
-            }
+            NativeMethods.memset(this.allocatedData, 0, necessarySize);
         }
 
         protected MI_NativeObject(IntPtr existingPtr) : this(false)

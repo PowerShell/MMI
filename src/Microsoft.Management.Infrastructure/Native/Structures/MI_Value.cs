@@ -200,14 +200,11 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
-                var size = array.size;
-                IntPtr[] ptrs = new IntPtr[size];
-                Marshal.Copy(array.data, ptrs, 0, (int)size);
-                string[] res = new string[size];
-                for (int i = 0; i < size; i++)
+                var nativeStrings = MI_Array.ReadAsManagedPointerArray(this.allocatedData, MI_String.NewFromDirectPtr);
+                var res = new string[nativeStrings.Length];
+                for (int i = 0; i < nativeStrings.Length; i++)
                 {
-                    res[i] = new MI_String(ptrs[i]).Value;
+                    res[i] = nativeStrings[i].Value;
                 }
 
                 return res;
@@ -224,11 +221,8 @@ namespace Microsoft.Management.Infrastructure.Native
                     ptrs[i] = MI_PlatformSpecific.StringToPtr(value[i]);
                 }
 
-                MI_Array array = new MI_Array();
-                array.data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * size);
-                array.size = (uint)size;
-                Marshal.Copy(ptrs, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.allocatedData, false);
+                NativeMethods.memset(this.allocatedData, 0, MI_Array.MI_ArraySize);
+                MI_Array.WritePointerArray(this.allocatedData, ptrs);
             }
         }
 
@@ -282,17 +276,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
-                var size = array.size;
-                IntPtr[] ptrs = new IntPtr[size];
-                Marshal.Copy(array.data, ptrs, 0, (int)size);
-                MI_Instance[] res = new MI_Instance[size];
-                for (int i = 0; i < size; i++)
-                {
-                    res[i] = MI_Instance.NewFromDirectPtr(ptrs[i]);
-                }
-
-                return res;
+                return MI_Array.ReadAsManagedPointerArray(this.allocatedData, MI_Instance.NewFromDirectPtr);
             }
             set
             {
@@ -306,11 +290,8 @@ namespace Microsoft.Management.Infrastructure.Native
                     ptrs[i] = value[i].Ptr;
                 }
 
-                MI_Array array = new MI_Array();
-                array.data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * size);
-                array.size = (uint)size;
-                Marshal.Copy(ptrs, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.allocatedData, false);
+                NativeMethods.memset(this.allocatedData, 0, MI_Array.MI_ArraySize);
+                MI_Array.WritePointerArray(this.allocatedData, ptrs);
             }
         }
 
@@ -323,17 +304,8 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
-                var size = array.size;
-                IntPtr[] ptrs = new IntPtr[size];
-                Marshal.Copy(array.data, ptrs, 0, (int)size);
-                MI_Instance[] res = new MI_Instance[size];
-                for (int i = 0; i < size; i++)
-                {
-                    res[i] = MI_Instance.NewFromDirectPtr(ptrs[i]);
-                }
 
-                return res;
+                return MI_Array.ReadAsManagedPointerArray(this.allocatedData, MI_Instance.NewFromDirectPtr);
             }
             set
             {
@@ -347,11 +319,8 @@ namespace Microsoft.Management.Infrastructure.Native
                     ptrs[i] = value[i].Ptr;
                 }
 
-                MI_Array array = new MI_Array();
-                array.data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * size);
-                array.size = (uint)size;
-                Marshal.Copy(ptrs, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.allocatedData, false);
+                NativeMethods.memset(this.allocatedData, 0, MI_Array.MI_ArraySize);
+                MI_Array.WritePointerArray(this.allocatedData, ptrs);
             }
         }
 

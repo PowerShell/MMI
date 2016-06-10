@@ -13,7 +13,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
         }
 
-        internal MI_String(IntPtr ptr)
+        private MI_String(IntPtr ptr)
         {
             this.ptr = ptr;
         }
@@ -26,6 +26,11 @@ namespace Microsoft.Management.Infrastructure.Native
         internal static MI_String NewIndirectPtr()
         {
             return new MI_String();
+        }
+
+        internal static MI_String NewFromDirectPtr(IntPtr existingPtr)
+        {
+            return new MI_String(existingPtr);
         }
 
         internal string Value
