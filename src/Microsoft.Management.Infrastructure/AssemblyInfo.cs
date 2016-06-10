@@ -4,10 +4,10 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #if _CORECLR
-[assembly:InternalsVisibleTo("System.Management.Automation")]
-[assembly:InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests")]
-[assembly:AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly:AssemblyVersion("1.0.0.0")]
+[assembly: InternalsVisibleTo("System.Management.Automation")]
+[assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests")]
+[assembly: AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: InternalsVisibleTo("Microsoft.Windows.DSC.CoreConfProviders")]
 [assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.CimCmdlets")]
 #else
@@ -25,11 +25,15 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("Microsoft.Windows.DSC.CoreConfProviders,PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9")]
 [assembly: InternalsVisibleTo("Microsoft.Monitoring.Commands,PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9")]
 [assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.CimCmdlets,PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9")]
-// NOTE: MMI.Tests is not currently being built for FullCLR. If this  changes,
-// uncomment the following line and also add assembly signing attributes to MMI.Tests's AssemblyInfo.cs
-// [assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests,PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9")]
-#if !UNSIGNED
-[assembly:AssemblyKeyFileAttribute(@"..\..\signing\visualstudiopublic.snk")]
-[assembly:AssemblyDelaySign(true)]
+
+// VS2015 xUnit test runner has a bug in which tests are not discovered in signed test assemblies
+// Since a signed product assembly requires signing the associated test assembly we disable
+// signing either assembly when compiled in FullCLR + VS2015
+#if VS2015
+[assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests")]
+#else
+[assembly: InternalsVisibleTo("Microsoft.Management.Infrastructure.Tests,PublicKey=0024000004800000940000000602000000240000525341310004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021672d9718ea31a8aebd0da0072f25d87dba6fc90ffd598ed4da35e44c398c454307e8e33b8426143daec9f596836f97c8f74750e5975c64e2189f45def46b2a2b1247adc3652bf5c308055da9")]
+[assembly: AssemblyKeyFileAttribute(@"..\..\signing\visualstudiopublic.snk")]
+[assembly: AssemblyDelaySign(true)]
 #endif
 #endif

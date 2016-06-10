@@ -22,6 +22,9 @@
                 "Microsoft.NETCore.App": "1.0.0-rc2*",
                 "xunit": "2.1.0",
                 "dotnet-test-xunit": "1.0.0-rc2-192208-24"
+            },
+            "buildOptions": {
+                "define": [ "_CORECLR" ]
             }
         }
     },
