@@ -601,53 +601,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             MI_DeserializerCallbacksNative callbacksNative = new MI_DeserializerCallbacksNative();
 
-            callbacksNative.classObjectNeeded = delegate (
-                IntPtr context,
-                IntPtr serverNamePtr,
-                IntPtr namespaceNamePtr,
-                IntPtr classNamePtr,
-                IntPtr requestedClassObject)
-            {
-                MI_String serverName = new MI_String(serverNamePtr);
-                MI_String namespaceName = new MI_String(namespaceNamePtr);
-                MI_String className = new MI_String(classNamePtr);
-
-                MI_Class classObject;
-
-                try
-                {
-                    var localResult = managedCallbacks.classObjectNeeded(serverName.Value, namespaceName.Value, className.Value, out classObject);
-                    if (localResult == MI_Result.MI_RESULT_OK)
-                    {
-                        IntPtr outPtr;
-                        if (MI_SerializationFormat.MOF.Equals(this.format, StringComparison.OrdinalIgnoreCase))
-                        {
-                            // The MOF deserializer helpfully tries to manage the class objects returned by the
-                            // callback and will cheerfully delete them without warning. Return a copy instead.
-                            MI_Class tmp;
-                            localResult = classObject.Clone(out tmp);
-                            if (localResult != MI_Result.MI_RESULT_OK)
-                            {
-                                return localResult;
-                            }
-
-                            outPtr = tmp.Ptr;
-                        }
-                        else
-                        {
-                            outPtr = classObject.Ptr;
-                        }
-
-                        Marshal.WriteIntPtr(requestedClassObject, outPtr);
-                    }
-
-                    return localResult;
-                }
-                catch
-                {
-                    return MI_Result.MI_RESULT_FAILED;
-                }
-            };
+            callbacksNative.classObjectNeeded = GetNativeClassObjectNeededCallback(managedCallbacks.classObjectNeeded);
 
             return callbacksNative;
         }
