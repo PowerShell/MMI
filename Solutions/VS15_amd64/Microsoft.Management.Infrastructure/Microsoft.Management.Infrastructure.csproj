@@ -433,6 +433,9 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Datetime.cs">
       <Link>Native\Structures\MI_Datetime.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_DeserializerCallbacks.cs">
+      <Link>Native\Structures\MI_DeserializerCallbacks.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_ExtendedArray.cs">
       <Link>Native\Structures\MI_ExtendedArray.cs</Link>
     </Compile>

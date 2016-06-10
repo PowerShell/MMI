@@ -178,7 +178,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             // TODO: Add definitions for these callbacks
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
-            MI_Deserializer.MI_DeserializerCallbacks callbacks = new MI_Deserializer.MI_DeserializerCallbacks();
+            MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
 
             if (onClassNeededCallback != null)
             {
@@ -306,7 +306,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
-            MI_Deserializer.MI_DeserializerCallbacks callbacks = new MI_Deserializer.MI_DeserializerCallbacks();
+            MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
 
             if (onClassNeededCallback != null)
             {
