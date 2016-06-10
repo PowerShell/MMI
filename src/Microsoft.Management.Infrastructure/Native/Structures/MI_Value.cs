@@ -3,17 +3,10 @@
 namespace Microsoft.Management.Infrastructure.Native
 {
     using System.Runtime.InteropServices;
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Value
+    
+    internal class MI_Value : MI_NativeObject
     {
         private static readonly int ByteSize = Marshal.SizeOf<byte>();
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MIValueBlock
-        {
-            internal IntPtr data;
-        }
 
         [StructLayout(LayoutKind.Explicit, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private class MI_ValueLayout
@@ -70,19 +63,14 @@ namespace Microsoft.Management.Infrastructure.Native
             [FieldOffset(0)]
             private char char16;
         }
-
-        private IntPtr data;
+        
         private MI_Type? type;
 
-        public static implicit operator MIValueBlock(MI_Value value)
+        internal MI_Value() : base(true)
         {
-            return new MIValueBlock { data = value == null ? IntPtr.Zero : value.data };
         }
 
-        internal MI_Value()
-        {
-            this.data = Marshal.AllocHGlobal(MI_ValueSize);
-        }
+        protected override int MembersSize { get { return MI_ValueSize; } }
 
         ~MI_Value()
         {
@@ -106,16 +94,17 @@ namespace Microsoft.Management.Infrastructure.Native
             if (this.type.HasValue)
             {
                 this.Free();
-                Marshal.FreeHGlobal(this.data);
-                this.data = IntPtr.Zero;
-            }
-        }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        private struct MI_Array
-        {
-            internal IntPtr data;
-            internal UInt32 size;
+                // If we get an explicit dispose we should wipe
+                // the allocated pointer while we're in here
+                // but otherwise we should let the finalizer chain
+                // handle that as needed
+                if (disposing)
+                {
+                    Marshal.FreeHGlobal(this.allocatedData);
+                    this.allocatedData = IntPtr.Zero;
+                }
+            }
         }
 
         internal string String
@@ -130,7 +119,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 IntPtr inner = IntPtr.Zero;
                 unsafe
                 {
-                    inner = *((IntPtr*)this.data);
+                    inner = *((IntPtr*)this.allocatedData);
                 }
 
                 return inner == IntPtr.Zero ? null : MI_PlatformSpecific.PtrToString(inner);
@@ -140,7 +129,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.Free();
                 this.type = MI_Type.MI_STRING;
                 IntPtr inner = MI_PlatformSpecific.StringToPtr(value);
-                Marshal.WriteIntPtr(this.data, inner);
+                Marshal.WriteIntPtr(this.allocatedData, inner);
             }
         }
 
@@ -153,14 +142,14 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                byte nativeBool = Marshal.ReadByte(this.data);
+                byte nativeBool = Marshal.ReadByte(this.allocatedData);
                 return nativeBool != 0;
             }
             set
             {
                 this.Free();
                 this.type = MI_Type.MI_BOOLEAN;
-                Marshal.WriteByte(this.data, (byte)(value ? 1 : 0));
+                Marshal.WriteByte(this.allocatedData, (byte)(value ? 1 : 0));
             }
         }
 
@@ -173,13 +162,13 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                return MI_Instance.NewFromDirectPtr(Marshal.ReadIntPtr(this.data));
+                return MI_Instance.NewFromDirectPtr(Marshal.ReadIntPtr(this.allocatedData));
             }
             set
             {
                 this.Free();
                 this.type = MI_Type.MI_INSTANCE;
-                Marshal.WriteIntPtr(this.data, value.Ptr);
+                Marshal.WriteIntPtr(this.allocatedData, value.Ptr);
             }
         }
 
@@ -192,13 +181,13 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                return MI_Instance.NewFromDirectPtr(Marshal.ReadIntPtr(this.data));
+                return MI_Instance.NewFromDirectPtr(Marshal.ReadIntPtr(this.allocatedData));
             }
             set
             {
                 this.Free();
                 this.type = MI_Type.MI_REFERENCE;
-                Marshal.WriteIntPtr(this.data, value.Ptr);
+                Marshal.WriteIntPtr(this.allocatedData, value.Ptr);
             }
         }
 
@@ -211,7 +200,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.data);
+                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
                 var size = array.size;
                 IntPtr[] ptrs = new IntPtr[size];
                 Marshal.Copy(array.data, ptrs, 0, (int)size);
@@ -239,7 +228,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 array.data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * size);
                 array.size = (uint)size;
                 Marshal.Copy(ptrs, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.data, false);
+                Marshal.StructureToPtr(array, this.allocatedData, false);
             }
         }
 
@@ -252,7 +241,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.data);
+                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
                 var size = array.size;
                 byte[] bytes = new byte[size];
                 Marshal.Copy(array.data, bytes, 0, (int)size);
@@ -280,7 +269,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 array.data = Marshal.AllocHGlobal(ByteSize * size);
                 array.size = (uint)size;
                 Marshal.Copy(bytes, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.data, false);
+                Marshal.StructureToPtr(array, this.allocatedData, false);
             }
         }
 
@@ -293,7 +282,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.data);
+                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
                 var size = array.size;
                 IntPtr[] ptrs = new IntPtr[size];
                 Marshal.Copy(array.data, ptrs, 0, (int)size);
@@ -321,7 +310,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 array.data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * size);
                 array.size = (uint)size;
                 Marshal.Copy(ptrs, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.data, false);
+                Marshal.StructureToPtr(array, this.allocatedData, false);
             }
         }
 
@@ -334,7 +323,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     throw new InvalidCastException();
                 }
 
-                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.data);
+                MI_Array array = (MI_Array)Marshal.PtrToStructure<MI_Array>(this.allocatedData);
                 var size = array.size;
                 IntPtr[] ptrs = new IntPtr[size];
                 Marshal.Copy(array.data, ptrs, 0, (int)size);
@@ -362,7 +351,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 array.data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * size);
                 array.size = (uint)size;
                 Marshal.Copy(ptrs, 0, array.data, (int)size);
-                Marshal.StructureToPtr(array, this.data, false);
+                Marshal.StructureToPtr(array, this.allocatedData, false);
             }
         }
 
@@ -383,7 +372,7 @@ namespace Microsoft.Management.Infrastructure.Native
             {
                 unsafe
                 {
-                    Marshal.FreeHGlobal(((MI_Array*)this.data)->data);
+                    Marshal.FreeHGlobal(((MI_Array*)this.allocatedData)->data);
                 }
 
                 this.type = null;
@@ -402,7 +391,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 byte res;
                 unsafe
                 {
-                    res = *(byte*)this.data;
+                    res = *(byte*)this.allocatedData;
                 }
 
                 return res;
@@ -414,7 +403,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_UINT8;
                 unsafe
                 {
-                    *(byte*)this.data = value;
+                    *(byte*)this.allocatedData = value;
                 }
             }
         }
@@ -431,7 +420,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 sbyte res;
                 unsafe
                 {
-                    res = *(sbyte*)this.data;
+                    res = *(sbyte*)this.allocatedData;
                 }
 
                 return res;
@@ -443,7 +432,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_SINT8;
                 unsafe
                 {
-                    *(sbyte*)this.data = value;
+                    *(sbyte*)this.allocatedData = value;
                 }
             }
         }
@@ -460,7 +449,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt16 res;
                 unsafe
                 {
-                    res = *(UInt16*)this.data;
+                    res = *(UInt16*)this.allocatedData;
                 }
 
                 return res;
@@ -472,7 +461,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_UINT16;
                 unsafe
                 {
-                    *(UInt16*)this.data = value;
+                    *(UInt16*)this.allocatedData = value;
                 }
             }
         }
@@ -489,7 +478,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 Int16 res;
                 unsafe
                 {
-                    res = *(Int16*)this.data;
+                    res = *(Int16*)this.allocatedData;
                 }
 
                 return res;
@@ -501,7 +490,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_SINT16;
                 unsafe
                 {
-                    *(Int16*)this.data = value;
+                    *(Int16*)this.allocatedData = value;
                 }
             }
         }
@@ -518,7 +507,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32 res;
                 unsafe
                 {
-                    res = *(UInt32*)this.data;
+                    res = *(UInt32*)this.allocatedData;
                 }
 
                 return res;
@@ -530,7 +519,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_UINT32;
                 unsafe
                 {
-                    *(UInt32*)this.data = value;
+                    *(UInt32*)this.allocatedData = value;
                 }
             }
         }
@@ -547,7 +536,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 Int32 res;
                 unsafe
                 {
-                    res = *(Int32*)this.data;
+                    res = *(Int32*)this.allocatedData;
                 }
 
                 return res;
@@ -559,7 +548,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_SINT32;
                 unsafe
                 {
-                    *(Int32*)this.data = value;
+                    *(Int32*)this.allocatedData = value;
                 }
             }
         }
@@ -576,7 +565,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt64 res;
                 unsafe
                 {
-                    res = *(UInt64*)this.data;
+                    res = *(UInt64*)this.allocatedData;
                 }
 
                 return res;
@@ -588,7 +577,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_UINT64;
                 unsafe
                 {
-                    *(UInt64*)this.data = value;
+                    *(UInt64*)this.allocatedData = value;
                 }
             }
         }
@@ -605,7 +594,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 Int64 res;
                 unsafe
                 {
-                    res = *(Int64*)this.data;
+                    res = *(Int64*)this.allocatedData;
                 }
 
                 return res;
@@ -617,7 +606,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_SINT64;
                 unsafe
                 {
-                    *(Int64*)this.data = value;
+                    *(Int64*)this.allocatedData = value;
                 }
             }
         }
@@ -634,7 +623,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 float res;
                 unsafe
                 {
-                    res = *(float*)this.data;
+                    res = *(float*)this.allocatedData;
                 }
 
                 return res;
@@ -646,7 +635,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_REAL32;
                 unsafe
                 {
-                    *(float*)this.data = value;
+                    *(float*)this.allocatedData = value;
                 }
             }
         }
@@ -663,7 +652,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 double res;
                 unsafe
                 {
-                    res = *(double*)this.data;
+                    res = *(double*)this.allocatedData;
                 }
 
                 return res;
@@ -675,7 +664,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_REAL64;
                 unsafe
                 {
-                    *(double*)this.data = value;
+                    *(double*)this.allocatedData = value;
                 }
             }
         }
@@ -692,7 +681,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 char res;
                 unsafe
                 {
-                    res = *(char*)this.data;
+                    res = *(char*)this.allocatedData;
                 }
 
                 return res;
@@ -704,7 +693,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_CHAR16;
                 unsafe
                 {
-                    *(char*)this.data = value;
+                    *(char*)this.allocatedData = value;
                 }
             }
         }
@@ -721,7 +710,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_Datetime res;
                 unsafe
                 {
-                    res = *(MI_Datetime*)this.data;
+                    res = *(MI_Datetime*)this.allocatedData;
                 }
 
                 return res;
@@ -733,7 +722,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 this.type = MI_Type.MI_DATETIME;
                 unsafe
                 {
-                    *(MI_Datetime*)this.data = value;
+                    *(MI_Datetime*)this.allocatedData = value;
                 }
             }
         }
@@ -750,7 +739,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 byte[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new byte[count];
 
@@ -770,7 +759,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(byte) * (int)count);
                     fixed (byte* src = value)
@@ -793,7 +782,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 sbyte[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new sbyte[count];
 
@@ -813,7 +802,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(sbyte) * (int)count);
                     fixed (sbyte* src = value)
@@ -836,7 +825,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt16[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new UInt16[count];
 
@@ -856,7 +845,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(UInt16) * (int)count);
                     fixed (UInt16* src = value)
@@ -879,7 +868,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 Int16[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new Int16[count];
 
@@ -899,7 +888,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(Int16) * (int)count);
                     fixed (Int16* src = value)
@@ -922,7 +911,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt32[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new UInt32[count];
 
@@ -942,7 +931,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(UInt32) * (int)count);
                     fixed (UInt32* src = value)
@@ -965,7 +954,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 Int32[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new Int32[count];
 
@@ -985,7 +974,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(Int32) * (int)count);
                     fixed (Int32* src = value)
@@ -1008,7 +997,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 UInt64[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new UInt64[count];
 
@@ -1028,7 +1017,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(UInt64) * (int)count);
                     fixed (UInt64* src = value)
@@ -1051,7 +1040,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 Int64[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new Int64[count];
 
@@ -1071,7 +1060,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(Int64) * (int)count);
                     fixed (Int64* src = value)
@@ -1094,7 +1083,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 float[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new float[count];
 
@@ -1114,7 +1103,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(float) * (int)count);
                     fixed (float* src = value)
@@ -1137,7 +1126,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 double[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new double[count];
 
@@ -1157,7 +1146,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(double) * (int)count);
                     fixed (double* src = value)
@@ -1180,7 +1169,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 char[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new char[count];
 
@@ -1200,7 +1189,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(char) * (int)count);
                     fixed (char* src = value)
@@ -1223,7 +1212,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_Datetime[] res = null;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     uint count = arrayPtr->size;
                     res = new MI_Datetime[count];
 
@@ -1243,7 +1232,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 uint count = (uint)value.Length;
                 unsafe
                 {
-                    MI_Array* arrayPtr = (MI_Array*)this.data;
+                    MI_Array* arrayPtr = (MI_Array*)this.allocatedData;
                     arrayPtr->size = count;
                     arrayPtr->data = Marshal.AllocHGlobal(sizeof(MI_Datetime) * (int)count);
                     fixed (MI_Datetime* src = value)

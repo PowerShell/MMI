@@ -408,7 +408,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out UInt32 flags
                 );
@@ -417,7 +417,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_SubscriptionDeliveryOptions_GetOption(
                 DirectPtr options,
                 string optionName,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out UInt32 index,
                 out UInt32 flags

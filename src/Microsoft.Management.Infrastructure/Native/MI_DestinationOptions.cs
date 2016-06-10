@@ -343,7 +343,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out MI_DestinationOptionsFlags flags
                 );
@@ -352,7 +352,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_DestinationOptions_GetOption(
                 DirectPtr options,
                 string optionName,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out UInt32 index,
                 out MI_DestinationOptionsFlags flags

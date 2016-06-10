@@ -277,7 +277,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 DirectPtr options,
                 string optionName,
                 MI_Type valueType,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 [MarshalAs(UnmanagedType.U1)] bool mustComply,
                 MI_OperationOptionsFlags flags
                 );
@@ -311,7 +311,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 DirectPtr options,
                 UInt32 index,
                 [In, Out] MI_String optionName,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out MI_OperationOptionsFlags flags
                 );
@@ -320,7 +320,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_OperationOptions_GetOption(
                 DirectPtr options,
                 string optionName,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out UInt32 index,
                 out MI_OperationOptionsFlags flags

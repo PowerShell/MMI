@@ -316,7 +316,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Class_GetElement(
                 DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
@@ -330,7 +330,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,

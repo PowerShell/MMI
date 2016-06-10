@@ -380,7 +380,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Instance_AddElement(
                 DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 MI_Type type,
                 MI_Flags flags
                 );
@@ -389,7 +389,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Instance_SetElement(
                 DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 MI_Type type,
                 MI_Flags flags
                 );
@@ -398,7 +398,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Instance_SetElementAt(
                 DirectPtr self,
                 UInt32 index,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 MI_Type type,
                 MI_Flags flags
                 );
@@ -407,7 +407,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Instance_GetElement(
                 DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out MI_Flags flags,
                 out UInt32 index
@@ -418,7 +418,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out MI_Flags flags
                 );

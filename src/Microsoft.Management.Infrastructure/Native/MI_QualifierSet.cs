@@ -115,7 +115,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 [In, Out] MI_String name,
                 out MI_Type qualifierType,
                 out MI_Flags qualifierFlags,
-                [In, Out] MI_Value.MIValueBlock qualifierValue
+                [In, Out] MI_Value.DirectPtr qualifierValue
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -124,7 +124,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string name,
                 out MI_Type qualifierType,
                 out MI_Flags qualifierFlags,
-                [In, Out] MI_Value.MIValueBlock qualifierValue,
+                [In, Out] MI_Value.DirectPtr qualifierValue,
                 out UInt32 index
                 );
         }
