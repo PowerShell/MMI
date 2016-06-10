@@ -78,6 +78,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\MIAssert.cs">
       <Link>Helpers\MIAssert.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\TDDFact.cs">
+      <Link>Helpers\TDDFact.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\Helpers\TestMIProperty.cs">
       <Link>Helpers\TestMIProperty.cs</Link>
     </Compile>
