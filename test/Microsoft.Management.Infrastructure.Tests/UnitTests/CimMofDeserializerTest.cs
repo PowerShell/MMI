@@ -178,7 +178,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_CimClasse_InvalidMofBuffer()
         {
             MMI.Tests.Assert.Throws<CimException>(() =>
@@ -241,7 +241,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_Instance_InvalidMofBuffer()
         {
             MMI.Tests.Assert.Throws<CimException>(() =>

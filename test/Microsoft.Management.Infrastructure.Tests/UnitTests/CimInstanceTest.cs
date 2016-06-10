@@ -97,7 +97,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.Throws<ArgumentNullException>(() => { return new CimInstance((CimInstance)null); });
         }
 
-        [Fact]
+        [TDDFact]
         public void Constructor_ClassDecl()
         {
             CimInstance x;
@@ -125,7 +125,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         #endregion Test constructor
 
         #region Test properties   
-        [Fact]
+        [TDDFact]
         public void Properties_CimClass()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
