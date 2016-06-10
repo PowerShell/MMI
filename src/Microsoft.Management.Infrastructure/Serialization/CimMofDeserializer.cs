@@ -43,33 +43,28 @@ namespace Microsoft.Management.Infrastructure.Serialization
             string namespaceName,
             string className);
 
-        // TODO: Missing MI_Deserializer_ClassObjectNeeded from C# MI API. Commented out section below (and references)
         /// <summary>
         /// Create an internal delegate on demand
         /// </summary>
         /// <param name="wrappedcallback"></param>
         /// <returns></returns>
-
-        /*
-            internal static MI_DeserializerCallbacks.ClassObjectNeededCallbackDelegate CreateClassObjectNeededCallbackDelegate(
-                OnClassNeeded wrappedcallback)
+        internal static MI_Deserializer.MI_Deserializer_ClassObjectNeeded CreateClassObjectNeededCallbackDelegate(OnClassNeeded wrappedcallback)
+        {
+            return delegate(string serverName,
+                string namespaceName,
+                string className,
+                out MI_Class classHandle)
             {
-                return delegate(string serverName,
-                    string namespaceName,
-                    string className,
-                    out MI_Class classHandle)
+                CimClass cimClass = null;
+                classHandle = null;
+                cimClass = wrappedcallback(serverName, namespaceName, className);
+                if (cimClass != null)
                 {
-                    CimClass cimClass = null;
-                    classHandle = null;
-                    cimClass = wrappedcallback(serverName, namespaceName, className);
-                    if (cimClass != null)
-                    {
-                        classHandle = cimClass.ClassHandle;
-                    }
-                    return (classHandle != null);
-                };
-            }
-        */
+                    classHandle = cimClass.ClassHandle;
+                }
+                return (classHandle != null) ? MI_Result.MI_RESULT_OK : MI_Result.MI_RESULT_FAILED;
+            };
+        }
 
         /// <summary>
         /// delegate to get and free included file content
@@ -182,30 +177,12 @@ namespace Microsoft.Management.Infrastructure.Serialization
             MI_OperationOptions nativeOption = GetOperationOptions().OperationOptionsHandle;
 
             // TODO: Add definitions for these callbacks
-            //MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
-            //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
             MI_Deserializer.MI_DeserializerCallbacks callbacks = new MI_Deserializer.MI_DeserializerCallbacks();
 
-            MI_Deserializer.MI_Deserializer_ClassObjectNeeded classNeededCallback = delegate (
-                string serverNameDelegateParam,
-                string namespaceNameDelegateParam,
-                string classNameDelegateParam,
-                out MI_Class requestedObject
-                )
+            if (onClassNeededCallback != null)
             {
-                CimClass resultCimClass = onClassNeededCallback(serverNameDelegateParam, namespaceNameDelegateParam, classNameDelegateParam);
-                requestedObject = resultCimClass.ClassHandle;
-                return MI_Result.MI_RESULT_OK;
-            };
-
-            if (onClassNeededCallback == null)
-            {
-                callbacks.classObjectNeeded = null;
-            }
-            else
-            {
-                callbacks.classObjectNeeded = classNeededCallback;
+                callbacks.classObjectNeeded = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             }
 
             MI_Result result = this._myHandle.DeserializeInstanceArray(
@@ -331,25 +308,9 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
             MI_Deserializer.MI_DeserializerCallbacks callbacks = new MI_Deserializer.MI_DeserializerCallbacks();
 
-            MI_Deserializer.MI_Deserializer_ClassObjectNeeded classNeededCallback = delegate (
-                string serverNameDelegateParam,
-                string namespaceNameDelegateParam,
-                string classNameDelegateParam,
-                out MI_Class requestedObject
-                )
+            if (onClassNeededCallback != null)
             {
-                CimClass resultCimClass = onClassNeededCallback(serverNameDelegateParam, namespaceNameDelegateParam, classNameDelegateParam);
-                requestedObject = resultCimClass.ClassHandle;
-                return MI_Result.MI_RESULT_OK;
-            };
-
-            if (onClassNeededCallback == null)
-            {
-                callbacks.classObjectNeeded = null;
-            }
-            else
-            {
-                callbacks.classObjectNeeded = classNeededCallback;
+                callbacks.classObjectNeeded = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             }
 
             MI_Result result = this._myHandle.DeserializeClassArray(
