@@ -235,12 +235,8 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Class.ArrayPtr classPtrs = MI_Class.GetPointerArray(classDefinitions);
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray classesLocal = MI_ExtendedArray.NewIndirectPtr();
-            MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
+            MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr(classPtrs.Ptrs);
             MI_DeserializerCallbacksNative nativeCallbacks = this.GetNativeClassObjectNeededCallbacks(MI_DeserializerCallbacks_callbacks);
-            if (classPtrs.ptr != null)
-            {
-                classDetailsArray.WritePointerArray(classPtrs.ptr);
-            }
 
             classes = null;
 
@@ -328,12 +324,8 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Class.ArrayPtr classPtrs = MI_Class.GetPointerArray(classDefinitions);
             MI_Instance cimErrorDetailsLocal = MI_Instance.NewIndirectPtr();
             MI_ExtendedArray resultingArray = MI_ExtendedArray.NewIndirectPtr();
-            MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr();
+            MI_ExtendedArray classDetailsArray = MI_ExtendedArray.NewDirectPtr(classPtrs.Ptrs);
             MI_DeserializerCallbacksNative nativeCallbacks = this.GetNativeClassObjectNeededCallbacks(MI_DeserializerCallbacks_callbacks);
-            if (classPtrs.ptr != null)
-            {
-                classDetailsArray.WritePointerArray(classPtrs.ptr);
-            }
 
             instances = null;
             
@@ -444,7 +436,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 flags,
                 serializedBuffer,
                 serializedBufferLength,
-                classArrayPtr.ptr,
+                classArrayPtr.Ptrs,
                 (uint)classObjects.Length,
                 classObjectNeeded,
                 IntPtr.Zero,

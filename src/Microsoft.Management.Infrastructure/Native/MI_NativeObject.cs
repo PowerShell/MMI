@@ -54,7 +54,7 @@ namespace Microsoft.Management.Infrastructure.Native
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal struct ArrayPtr
         {
-            internal IntPtr[] ptr;
+            internal IntPtr[] Ptrs;
         }
 
         protected IntPtr allocatedData;
@@ -85,7 +85,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static ArrayPtr GetPointerArray(MI_NativeObject[] objects)
         {
-            var res = new ArrayPtr() { ptr = null };
+            var res = new ArrayPtr() { Ptrs = null };
 
             if (objects != null)
             {
@@ -95,7 +95,7 @@ namespace Microsoft.Management.Infrastructure.Native
                     ptrs[i] = objects[i].Ptr;
                 }
 
-                res.ptr = ptrs;
+                res.Ptrs = ptrs;
             }
 
             return res;

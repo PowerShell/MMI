@@ -51,6 +51,13 @@ namespace Microsoft.Management.Infrastructure.Native
             return new MI_ExtendedArray(true);
         }
 
+        internal static MI_ExtendedArray NewDirectPtr(IntPtr[] ptrs)
+        {
+            var res = new MI_ExtendedArray(true);
+            res.WritePointerArray(ptrs);
+            return res;
+        }
+
         internal static MI_ExtendedArray NewIndirectPtr()
         {
             return new MI_ExtendedArray(false);
@@ -73,18 +80,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         public void WritePointerArray(IntPtr[] ptrs)
         {
-            unsafe
-            {
-                MI_Array* arrayPtr = (MI_Array*)this.Ptr;
-                if (arrayPtr->data != IntPtr.Zero)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                arrayPtr->data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * ptrs.Length);
-                Marshal.Copy(ptrs, 0, arrayPtr->data, ptrs.Length);
-                arrayPtr->size = (uint)ptrs.Length;
-            }
+            MI_Array.WritePointerArray(this.Ptr, ptrs);
         }
 
         internal static MI_ExtendedArray Null { get { return null; } }

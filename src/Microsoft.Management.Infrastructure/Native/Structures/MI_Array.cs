@@ -32,14 +32,22 @@ namespace Microsoft.Management.Infrastructure.Native
             unsafe
             {
                 MI_Array* arrayPtr = (MI_Array*)miArrayPtr;
-                if (arrayPtr->data != IntPtr.Zero)
+
+                // Reuse of an MI_Array without freeing is unsupported
+                if (arrayPtr->data != IntPtr.Zero || arrayPtr->size != 0)
                 {
                     throw new InvalidOperationException();
                 }
 
-                arrayPtr->data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * ptrs.Length);
-                Marshal.Copy(ptrs, 0, arrayPtr->data, ptrs.Length);
-                arrayPtr->size = (uint)ptrs.Length;
+                // No special case for null since previous reuse check forces
+                // the entire MI_Array structure to be zeroed, which
+                // is what we wanted anyway
+                if (ptrs != null)
+                {
+                    arrayPtr->data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * ptrs.Length);
+                    Marshal.Copy(ptrs, 0, arrayPtr->data, ptrs.Length);
+                    arrayPtr->size = (uint)ptrs.Length;
+                }
             }
         }
     }
