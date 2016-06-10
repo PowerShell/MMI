@@ -139,7 +139,6 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-
         [Fact]
         public void Deserialization_CimClass_ToolSmallBuffer()
         {
@@ -152,6 +151,18 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
+        [Fact]
+        public void Deserialization_CimClass_JustLittleLargeBuffer()
+        {
+            MMI.Tests.Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                byte[] buffer = new byte[82];
+                uint offset = (uint)buffer.Length;
+                return this.deserializer.DeserializeClasses(buffer, ref offset);
+            });
+        }
+
+        // This test case maybe is invalid, will confirm with John and Ben
         [Fact]
         public void Deserialization_CimClass_ToolLargeBuffer()
         {
@@ -193,6 +204,32 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         }
 
         [Fact]
+        public void Deserialization_CimClasse_NotNullOnClassNeededCallback()
+        {
+            MMI.Tests.Assert.Throws<NotImplementedException>(() =>
+            {
+                uint offset = 0;
+                byte[] buffer = new byte[82];
+                CimMofDeserializer.OnClassNeeded onClassNeede = this.GetClass;
+                onClassNeede("Servername", @"root\TestNamespace", "MyClassName");
+                return this.deserializer.DeserializeClasses(buffer, ref offset, null, onClassNeede, null);
+            });
+        }
+
+        [Fact]
+        public void Deserialization_CimClasse_NotNullGetIncludedFileContent()
+        {
+            MMI.Tests.Assert.Throws<NotImplementedException>(() =>
+            {
+                uint offset = 0;
+                byte[] buffer = new byte[82];
+                CimMofDeserializer.GetIncludedFileContent getIncludedFileContent = this.GetFileContent;
+                getIncludedFileContent("I am a faked file");
+                return this.deserializer.DeserializeClasses(buffer, ref offset, null, null, getIncludedFileContent);
+            });
+        }
+
+        [Fact]
         public void Deserialization_Instance_NullBuffer()
         {
             MMI.Tests.Assert.Throws<ArgumentNullException>(() =>
@@ -215,6 +252,18 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
+        [Fact]
+        public void Deserialization_Instance_JustLittleLargeBuffer()
+        {
+            MMI.Tests.Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                byte[] buffer = new byte[82];
+                uint offset = (uint)buffer.Length;
+                return this.deserializer.DeserializeInstances(buffer, ref offset);
+            });
+        }
+
+        // This test case maybe is invalid, will confirm with John and Ben
         [Fact]
         public void Deserialization_Instance_ToolLargeBuffer()
         {
@@ -254,6 +303,45 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                return this.deserializer.DeserializeInstances(buffer, ref offset);
            });
         }
+
+        [Fact]
+        public void Deserialization_Instance_NotNullOnClassNeededCallback()
+        {
+            MMI.Tests.Assert.Throws<NotImplementedException>(() =>
+            {
+                uint offset = 0;
+                byte[] buffer = new byte[82];
+                CimMofDeserializer.OnClassNeeded onClassNeede = this.GetClass;
+                onClassNeede("Servername", @"root\TestNamespace", "MyClassName");
+                return this.deserializer.DeserializeInstances(buffer, ref offset, null, onClassNeede, null);
+            });
+        }
+
+        [Fact]
+        public void Deserialization_Instance_NotNullGetIncludedFileContent()
+        {
+            MMI.Tests.Assert.Throws<NotImplementedException>(() =>
+            {
+                uint offset = 0;
+                byte[] buffer = new byte[82];
+                CimMofDeserializer.GetIncludedFileContent getIncludedFileContent = this.GetFileContent;
+                getIncludedFileContent("I am a faked file");
+                return this.deserializer.DeserializeInstances(buffer, ref offset, null, null, getIncludedFileContent);
+            });
+        }
         #endregion Deserialization tests
+
+        #region Fake 
+        private CimClass GetClass(string serverName, string namespaceName, string className)
+        {
+            CimInstance cimInstance = new CimInstance(className, namespaceName);
+            return cimInstance.CimClass;
+        }
+
+        private byte[] GetFileContent(string fileName)
+        {
+            return Helpers.GetBytesFromString(fileName);
+        }
+        #endregion Fake
     }
 }
