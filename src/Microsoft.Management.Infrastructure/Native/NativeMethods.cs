@@ -41,21 +41,8 @@
 
         internal static readonly int IntPtrSize = Marshal.SizeOf<IntPtr>();
 
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention)]
-        internal delegate void MI_Session_Close_CompletionCallback(IntPtr callbackContext);
-
         [UnmanagedFunctionPointer(MI_PlatformSpecific.MiMainCallConvention)]
         internal delegate IntPtr MI_MainFunction(IntPtr callbackContext);
-
-        internal delegate void MI_SessionCallbacks_WriteError(MI_Application application, object callbackContext, MI_Instance instance);
-
-        internal delegate void MI_SessionCallbacks_WriteMessage(MI_Application application, object callbackContext, MI_WriteMessageChannel channel, string message);
-
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal delegate void MI_SessionCallbacks_WriteErrorNative(IntPtr application, IntPtr callbackContext, IntPtr instance);
-
-        [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal delegate void MI_SessionCallbacks_WriteMessageNative(IntPtr application, IntPtr callbackContext, MI_WriteMessageChannel channel, IntPtr message);
 
         internal static unsafe void memcpy(byte* dst, byte* src, int size, uint count)
         {

@@ -426,7 +426,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_Result Close(
             IntPtr completionContext,
-            NativeMethods.MI_Session_Close_CompletionCallback completionCallback
+            MI_SessionFT.MI_Session_Close_CompletionCallback completionCallback
             )
         {
             MI_Result resultLocal = this.ft.Close(this,
@@ -467,7 +467,7 @@ namespace Microsoft.Management.Infrastructure.Native
             internal delegate MI_Result MI_Session_Close(
                 DirectPtr session,
                 IntPtr completionContext,
-                NativeMethods.MI_Session_Close_CompletionCallback completionCallback
+                MI_SessionFT.MI_Session_Close_CompletionCallback completionCallback
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
@@ -631,6 +631,9 @@ namespace Microsoft.Management.Infrastructure.Native
                 MI_OperationCallbacks.MI_OperationCallbacksNative callbacks,
                 [In, Out] MI_Operation.DirectPtr operation
                 );
+
+            [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention)]
+            internal delegate void MI_Session_Close_CompletionCallback(IntPtr callbackContext);
         }
     }
 }

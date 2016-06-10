@@ -34,7 +34,7 @@ namespace Microsoft.Management.Infrastructure.Native
             string protocol,
             string destination,
             MI_DestinationOptions options,
-            MI_SessionCallbacks callbacks,
+            MI_SessionCreationCallbacks callbacks,
             out MI_Instance extendedError,
             out MI_Session session
             )
@@ -332,7 +332,7 @@ namespace Microsoft.Management.Infrastructure.Native
                 string protocol,
                 string destination,
                 [In, Out] MI_DestinationOptions.DirectPtr options,
-                MI_SessionCallbacksNative callbacks,
+                MI_SessionCreationCallbacks.MI_SessionCreationCallbacksNative callbacks,
                 [In, Out] MI_Instance.IndirectPtr extendedError,
                 [In, Out] MI_Session.DirectPtr session
                 );

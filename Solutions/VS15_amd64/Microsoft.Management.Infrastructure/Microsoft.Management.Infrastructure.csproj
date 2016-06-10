@@ -427,9 +427,6 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeMethods.cs">
       <Link>Native\NativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeTypes.cs">
-      <Link>Native\NativeTypes.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Array.cs">
       <Link>Native\Structures\MI_Array.cs</Link>
     </Compile>
@@ -444,6 +441,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_OperationCallbacks.cs">
       <Link>Native\Structures\MI_OperationCallbacks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_SessionCreationCallbacks.cs">
+      <Link>Native\Structures\MI_SessionCreationCallbacks.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_String.cs">
       <Link>Native\Structures\MI_String.cs</Link>
