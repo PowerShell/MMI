@@ -13,9 +13,19 @@ namespace Microsoft.Management.Infrastructure.Native
         
         public static T[] ReadAsManagedPointerArray<T>(IntPtr miArrayPtr, Func<IntPtr, T> conversion)
         {
+            if (miArrayPtr == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             unsafe
             {
                 MI_Array* arrayPtr = (MI_Array*)miArrayPtr;
+                if (arrayPtr->data == IntPtr.Zero)
+                {
+                    return null;
+                }
+
                 uint arraySize = arrayPtr->size;
                 T[] res = new T[arraySize];
                 for (int i = 0; i < arraySize; i++)
@@ -49,6 +59,18 @@ namespace Microsoft.Management.Infrastructure.Native
                     arrayPtr->size = (uint)ptrs.Length;
                 }
             }
+        }
+
+        public static void WriteNativeObjectPointers(IntPtr miArrayPtr, MI_NativeObject[] objects)
+        {
+            var size = objects.Length;
+            IntPtr[] ptrs = new IntPtr[size];
+            for (int i = 0; i < size; i++)
+            {
+                ptrs[i] = objects[i].Ptr;
+            }
+
+            WritePointerArray(miArrayPtr, ptrs);
         }
     }
 }
