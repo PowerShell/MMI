@@ -5,15 +5,15 @@
 
 namespace Microsoft.Management.Infrastructure.UnitTests
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Microsoft.Management.Infrastructure;
     using Microsoft.Management.Infrastructure.Native;
     using Microsoft.Management.Infrastructure.Serialization;
     using MMI.Tests;
-    using Xunit;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
+    using Xunit;
 
     public class CimMofDeserializerTest: IDisposable
     {
@@ -54,7 +54,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 MMI.Tests.Assert.Equal("A", ce.Current.CimSystemProperties.ClassName, "first class should be 'A'");
                 MMI.Tests.Assert.Equal(1, ce.Current.CimClassProperties.Count, "A class should have 1 property");
                 CimPropertyDeclaration p = ce.Current.CimClassProperties["p"];
-                MMI.Tests.Assert.NotNull(p, "A class property p is not null");
+                MMI.Tests.Assert.NotNull(p, "A class property p should not be null");
                 MMI.Tests.Assert.Equal("p", p.Name, "property name should be p");
                 MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property should be String type");
             }
@@ -63,7 +63,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 MMI.Tests.Assert.Equal("B", ce.Current.CimSystemProperties.ClassName, "first class should be 'B'");
                 MMI.Tests.Assert.Equal(2, ce.Current.CimClassProperties.Count, "B class should have 2 properties");
                 CimPropertyDeclaration p1 = ce.Current.CimClassProperties["p1"];
-                MMI.Tests.Assert.NotNull(p1, "B class property p1 is not null");
+                MMI.Tests.Assert.NotNull(p1, "B class property p1 should not be null");
                 MMI.Tests.Assert.Equal("p1", p1.Name, "property name should be p");
                 MMI.Tests.Assert.Equal(CimType.UInt8, p1.CimType, "property should be Uint8 type");
                 MMI.Tests.Assert.Equal("A", ce.Current.CimSuperClass.CimSystemProperties.ClassName, "B should have parent class A");
@@ -88,7 +88,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 MMI.Tests.Assert.Equal("A", ce.Current.CimSystemProperties.ClassName, "first class should be 'A'");
                 MMI.Tests.Assert.Equal(1, ce.Current.CimInstanceProperties.Count, "instance should have 1 property");
                 CimProperty p = ce.Current.CimInstanceProperties["p"];
-                MMI.Tests.Assert.NotNull(p, "property p is not null");
+                MMI.Tests.Assert.NotNull(p, "property p should not be null");
                 MMI.Tests.Assert.Equal("p", p.Name, "property name is not p");
                 MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property should be String type");
                 MMI.Tests.Assert.Equal("a", p.Value.ToString(), "property value should be a");
@@ -98,7 +98,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 MMI.Tests.Assert.Equal("A", ce.Current.CimSystemProperties.ClassName, "first class should be 'A'");
                 MMI.Tests.Assert.Equal(1, ce.Current.CimInstanceProperties.Count, "instance should have 1 property");
                 CimProperty p = ce.Current.CimInstanceProperties["p"];
-                MMI.Tests.Assert.NotNull(p, "property p is not null");
+                MMI.Tests.Assert.NotNull(p, "property p should not be null");
                 MMI.Tests.Assert.Equal("p", p.Name, "property name is p");
                 MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property should be String type");
                 MMI.Tests.Assert.Equal("b", p.Value.ToString(), "property value should be b");
@@ -108,7 +108,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 MMI.Tests.Assert.Equal("A", ce.Current.CimSystemProperties.ClassName, "first class should be 'A'");
                 MMI.Tests.Assert.Equal(1, ce.Current.CimInstanceProperties.Count, "instance should have 1 property");
                 CimProperty p = ce.Current.CimInstanceProperties["p"];
-                MMI.Tests.Assert.NotNull(p, "property p is not null");
+                MMI.Tests.Assert.NotNull(p, "property p should not be null");
                 MMI.Tests.Assert.Equal("p", p.Name, "property name should be p");
                 MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property should be String type");
                 MMI.Tests.Assert.Equal("c", p.Value.ToString(), "property value should be  c");
@@ -118,7 +118,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 MMI.Tests.Assert.Equal("A", ce.Current.CimSystemProperties.ClassName, "first class should be 'A'");
                 MMI.Tests.Assert.Equal(1, ce.Current.CimInstanceProperties.Count, "instance sould have 1 property");
                 CimProperty p = ce.Current.CimInstanceProperties["p"];
-                MMI.Tests.Assert.NotNull(p, "property p is not null");
+                MMI.Tests.Assert.NotNull(p, "property p should not be null");
                 MMI.Tests.Assert.Equal("p", p.Name, "property name is p");
                 MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property should be String type");
                 MMI.Tests.Assert.Equal("d", p.Value.ToString(), "property value should be d");
@@ -162,7 +162,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-        // This test case maybe is invalid, will confirm with John and Ben
+        // This test case maybe is invalid, will confirm with John and Ben, what is max size of Mof file we support
         [Fact]
         public void Deserialization_CimClass_ToolLargeBuffer()
         {
@@ -263,7 +263,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-        // This test case maybe is invalid, will confirm with John and Ben
+        // This test case maybe is invalid, will confirm with John and Ben, what is max size of Mof file we support
         [Fact]
         public void Deserialization_Instance_ToolLargeBuffer()
         {
@@ -329,6 +329,8 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 return this.deserializer.DeserializeInstances(buffer, ref offset, null, null, getIncludedFileContent);
             });
         }
+
+        //TODO: Fake different kinds of Mof file to deserialize
         #endregion Deserialization tests
 
         #region Fake 

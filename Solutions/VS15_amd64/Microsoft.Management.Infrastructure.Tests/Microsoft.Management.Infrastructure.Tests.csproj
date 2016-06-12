@@ -141,14 +141,17 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\SerializationTests\CimMofDeserializerTests.cs">
       <Link>SerializationTests\CimMofDeserializerTests.cs</Link>
     </Compile>
-	<Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimInstanceTest.cs">
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimInstanceTest.cs">
       <Link>UnitTests\CimInstanceTest.cs</Link>
     </Compile>
-   <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimMofDeserializerTest.cs">
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimMofDeserializerTest.cs">
       <Link>UnitTests\CimMofDeserializerTest.cs</Link>
     </Compile>
-	<Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionTest.cs">
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionTest.cs">
       <Link>UnitTests\CimSessionTest.cs</Link>
+    </Compile>
+	<Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimClassTest.cs">
+      <Link>UnitTests\CimClassTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

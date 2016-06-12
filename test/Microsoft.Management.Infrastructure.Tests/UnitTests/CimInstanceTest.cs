@@ -4,13 +4,13 @@
  */
 namespace Microsoft.Management.Infrastructure.UnitTests
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Microsoft.Management.Infrastructure;
-    using Microsoft.Management.Infrastructure.Options;
     using Microsoft.Management.Infrastructure.Native;
+    using Microsoft.Management.Infrastructure.Options;
     using MMI.Tests;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class CimInstanceTest
