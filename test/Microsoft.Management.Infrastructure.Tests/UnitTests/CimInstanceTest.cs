@@ -305,7 +305,6 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.Equal(CimType.SInt32, addedProperty.CimType, "addedProperty.CimType should be SInt32");
         }
 
-
         [Fact]
         public void Properties_Add_ValueAndType_UInt32()
         {
@@ -470,7 +469,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         public void Properties_Add_ValueAndType_DateTime_DateTime_AlmostMaxValue()
         {
             DateTime maxValidCimTimestampUtc = new DateTime(3155378975999999990, DateTimeKind.Utc);
-            DateTime maxValidCimTimestampLocal = TimeZoneInfo.ConvertTimeFromUtc(maxValidCimTimestampUtc, TimeZoneInfo.Local);
+            DateTime maxValidCimTimestampLocal = TimeZoneInfo.ConvertTime(maxValidCimTimestampUtc, TimeZoneInfo.Local);
 
             DateTime myDate = DateTime.MaxValue.Subtract(TimeSpan.FromSeconds(1));
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -906,7 +905,6 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.Equal((UInt64)456, value[1], "addedProperty.Value[1] is not correct");
             MMI.Tests.Assert.Equal(CimType.UInt64Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
-
         #endregion Test properties
     }
 }

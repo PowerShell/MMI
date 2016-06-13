@@ -17,8 +17,6 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 
     public class CimMofDeserializerTest: IDisposable
     {
-
-
         # region pre-test
         CimMofDeserializer deserializer;
 

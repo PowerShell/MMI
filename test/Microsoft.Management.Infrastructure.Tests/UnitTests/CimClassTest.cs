@@ -16,7 +16,6 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         [Fact]
         public void TODO()
         {
-            MI_Class classHandle;
         }
     }
 }
