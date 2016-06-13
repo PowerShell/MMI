@@ -179,6 +179,132 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
             MMI.Tests.Assert.Equal(addedProperty.Flags, CimFlags.Key | CimFlags.NotModified, "addedProperty.Flags is not correct");
         }
+
+        [Fact]
+        public void Properties_Add_MismatchedValueAndType()
+        {
+            MMI.Tests.Assert.Throws<ArgumentException>(() => {
+                CimInstance cimInstance = new CimInstance("MyClassName");
+                CimProperty cimProperty = CimProperty.Create("MyPropertyName", "IamnotSInt32", CimType.SInt32, CimFlags.None);
+                cimInstance.CimInstanceProperties.Add(cimProperty);
+                return null;
+            });
+        }     
+
+        [Fact]
+        public void Properties_Add_ValueAndType_Boolean()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", true, CimType.Boolean, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value should not be null");
+            MMI.Tests.Assert.True(addedProperty.Value is Boolean, "addedProperty.Value.GetType() is correct");
+            MMI.Tests.Assert.Equal(true, (Boolean)(addedProperty.Value), "addedProperty.Value should be true");
+            MMI.Tests.Assert.Equal(CimType.Boolean, addedProperty.CimType, "addedProperty.CimType shoulbe be boolean");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_SInt8()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.SInt8, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value should not be null");
+            MMI.Tests.Assert.True(addedProperty.Value is SByte, "addedProperty.Value.GetType() should be SByte");
+            MMI.Tests.Assert.Equal(123, (SByte)(addedProperty.Value), "addedProperty.Value should be 123");
+            MMI.Tests.Assert.Equal(CimType.SInt8, addedProperty.CimType, "addedProperty.CimType should be SInt8");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_SInt8_NegativeNumber()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", -123, CimType.SInt8, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value should not be null");
+            MMI.Tests.Assert.True(addedProperty.Value is SByte, "addedProperty.Value.GetType() should be SByte");
+            MMI.Tests.Assert.Equal((SByte)(-123), addedProperty.Value, "addedProperty.Value should be -123");
+            MMI.Tests.Assert.Equal(CimType.SInt8, addedProperty.CimType, "addedProperty.CimType should be SInt8");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_SInt8_Null()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", null, CimType.SInt8, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.Equal(addedProperty.CimType, CimType.SInt8, "addedProperty.CimType should be SInt8");
+            MMI.Tests.Assert.Null(addedProperty.Value, "addedProperty.Value should be null");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_UInt8()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.UInt8, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value should not be null");
+            MMI.Tests.Assert.True(addedProperty.Value is Byte, "addedProperty.Value.GetType() should be true");
+            MMI.Tests.Assert.Equal(123, (Byte)(addedProperty.Value), "addedProperty.Value should be 123");
+            MMI.Tests.Assert.Equal(CimType.UInt8, addedProperty.CimType, "addedProperty.CimType should be UInt8");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_SInt16()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.SInt16, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value should not be null");
+            MMI.Tests.Assert.True(addedProperty.Value is Int16, "addedProperty.Value.GetType() should be true");
+            MMI.Tests.Assert.Equal(123, (Int16)(addedProperty.Value), "addedProperty.Value should be Int16");
+            MMI.Tests.Assert.Equal(CimType.SInt16, addedProperty.CimType, "addedProperty.CimType should be SInt16");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_UInt16()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.UInt16, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value should not be null");
+            MMI.Tests.Assert.True(addedProperty.Value is UInt16, "addedProperty.Value.GetType() should be UInt16");
+            MMI.Tests.Assert.Equal(123, (UInt16)(addedProperty.Value), "addedProperty.Value should be 123");
+            MMI.Tests.Assert.Equal(CimType.UInt16, addedProperty.CimType, "addedProperty.CimType should be UInt16");
+        }
+
+        [Fact]
+        public void Properties_Add_ValueAndType_SInt32()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.SInt32, CimFlags.None);
+            MMI.Tests.Assert.Equal("MyPropertyName", cimProperty.Name, "CimProperty.Create correctly round-trips CimProperty.Name");
+            MMI.Tests.Assert.True(cimProperty.Value is Int32, "CimProperty.Create preserves the type of the value");
+            MMI.Tests.Assert.Equal(CimType.SInt32, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
+            MMI.Tests.Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is not null");
+            MMI.Tests.Assert.True(addedProperty.Value is Int32, "addedProperty.Value.GetType() should be Int32");
+            MMI.Tests.Assert.Equal(123, (Int32)(addedProperty.Value), "addedProperty.Value should be 123");
+            MMI.Tests.Assert.Equal(CimType.SInt32, addedProperty.CimType, "addedProperty.CimType should be SInt32");
+        }
+
         #endregion Test properties
     }
 }
