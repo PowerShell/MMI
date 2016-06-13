@@ -27,18 +27,10 @@ namespace Microsoft.Management.Infrastructure.Native
         }
 
         private static Lazy<SerializationFTPair> XmlSerializationFTs = new Lazy<SerializationFTPair>(() => GetXmlSerializationFTs());
+
         internal static MI_Serializer.MI_SerializerFT XMLSerializationFT { get { return XmlSerializationFTs.Value.SerializationFT; } }
+
         internal static MI_Deserializer.MI_DeserializerFT XMLDeserializationFT { get { return XmlSerializationFTs.Value.DeserializationFT; } }
-
-        internal static MI_Serializer.MI_SerializerFT GetSerializerFTFromReserved2(MI_Serializer serializer)
-        {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_Serializer.MI_SerializerFT>(serializer.Ptr, MI_Serializer.Reserved2Offset);
-        }
-
-        internal static MI_Deserializer.MI_DeserializerFT GetDeserializerFTFromReserved2(MI_Deserializer deserializer)
-        {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_Deserializer.MI_DeserializerFT>(deserializer.Ptr, MI_Deserializer.Reserved2Offset);
-        }
 
         private static SerializationFTPair GetXmlSerializationFTs()
         {

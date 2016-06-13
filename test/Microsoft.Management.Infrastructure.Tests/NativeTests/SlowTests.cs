@@ -21,7 +21,7 @@ namespace MMI.Tests.Native
                 MI_Result res = StaticFixtures.Application.NewSession(null,
                         "badhost",
                         MI_DestinationOptions.Null,
-                        MI_SessionCallbacks.Null,
+                        MI_SessionCreationCallbacks.Null,
                         out extendedError,
                         out badSession);
                 MIAssert.Succeeded(res, "Expect simple NewSession to succeed");

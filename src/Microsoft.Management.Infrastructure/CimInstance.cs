@@ -54,6 +54,11 @@ namespace Microsoft.Management.Infrastructure
         }
 
         #region Constructors
+
+        ~CimInstance()
+        {
+            this.Dispose(false);
+        }
         
         internal CimInstance(MI_Instance handle)
         {
@@ -369,8 +374,19 @@ namespace Microsoft.Management.Infrastructure
             {
                 return;
             }
-            
-            _disposed = true;
+
+            if (disposing)
+            {
+                // Still prevent the caller from double-Disposing the object
+                _disposed = true;
+            }
+            else
+            {
+                if (this.InstanceHandle != null && !this.InstanceHandle.IsNull)
+                {
+                    this.InstanceHandle.Delete();
+                }
+            }
         }
 
         internal void AssertNotDisposed()

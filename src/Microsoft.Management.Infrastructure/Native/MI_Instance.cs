@@ -3,21 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Instance
+    internal class MI_Instance : MI_NativeObjectWithFT<MI_Instance.MI_InstanceFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_InstancePtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_InstanceOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal MI_Result GetElement(
             string name,
             out MI_Value value,
@@ -63,7 +50,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private struct MI_InstanceMembers
         {
             internal IntPtr ft;
-            internal MI_ClassDeclPtr classDecl;
+            internal MI_ClassDecl.DirectPtr classDecl;
             internal string serverName;
             internal string nameSpace;
 
@@ -73,30 +60,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_InstanceMembersFTOffset = (int)Marshal.OffsetOf<MI_InstanceMembers>("ft");
-
         private static int MI_InstanceMembersSize = Marshal.SizeOf<MI_InstanceMembers>();
-
-        private MI_InstancePtr ptr;
-        private bool isDirect;
-        private Lazy<MI_InstanceFT> mft;
-
-        ~MI_Instance()
+        
+        private MI_Instance(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_Instance(bool isDirect)
+        private MI_Instance(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_InstanceFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_InstanceMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Instance NewDirectPtr()
@@ -111,9 +82,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Instance NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Instance(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Instance(ptr);
         }
 
         internal void AssertValidInternalState()
@@ -121,56 +90,11 @@ namespace Microsoft.Management.Infrastructure.Native
             throw new NotImplementedException();
         }
 
-        public static implicit operator MI_InstancePtr(MI_Instance instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_InstancePtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_InstanceOutPtr(MI_Instance instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_InstanceOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
-        }
-
         internal static MI_Instance Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_InstanceMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_InstanceMembersSize; } }
 
         internal MI_Result Clone(
             out MI_Instance newInstance
@@ -192,7 +116,27 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_Result Delete()
         {
-            return this.ft.Delete(this);
+            // Note that we are NOT tolerant of double-delete here
+            // This interface is internal, and if a caller messes
+            // up the memory pattern we really want to know about it
+            MI_Result localResult = this.ft.Delete(this);
+            this.ZeroPtr();
+            return localResult;
+        }
+
+        private void ZeroPtr()
+        {
+            if (this.isDirect)
+            {
+                this.allocatedData = IntPtr.Zero;
+            }
+            else if (this.allocatedData != IntPtr.Zero)
+            {
+                unsafe
+                {
+                    *(IntPtr*)this.allocatedData = IntPtr.Zero;
+                }
+            }
         }
 
         internal MI_Result IsA(
@@ -363,13 +307,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_InstanceFT ft { get { return this.mft.Value; } }
-
-        private MI_InstanceFT MarshalFT()
-        {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_InstanceFT>(this.Ptr, MI_Instance.MI_InstanceMembersFTOffset);
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_InstanceFT
         {
@@ -394,83 +331,83 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_Clone(
-                MI_InstancePtr self,
-                [In, Out] MI_InstanceOutPtr newInstance
+                DirectPtr self,
+                [In, Out] IndirectPtr newInstance
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_Destruct(
-                MI_InstancePtr self
+                DirectPtr self
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_Delete(
-                MI_InstancePtr self
+                DirectPtr self
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_IsA(
-                MI_InstancePtr self,
-                [In, Out] MI_ClassDeclPtr classDecl,
+                DirectPtr self,
+                [In, Out] MI_ClassDecl.DirectPtr classDecl,
                 [MarshalAs(UnmanagedType.U1)] out bool flag
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetClassName(
-                MI_InstancePtr self,
+                DirectPtr self,
                 [In, Out] MI_String className
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_SetNameSpace(
-                MI_InstancePtr self,
+                DirectPtr self,
                 string nameSpace
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetNameSpace(
-                MI_InstancePtr self,
+                DirectPtr self,
                 [In, Out] MI_String nameSpace
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetElementCount(
-                MI_InstancePtr self,
+                DirectPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_AddElement(
-                MI_InstancePtr self,
+                DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 MI_Type type,
                 MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_SetElement(
-                MI_InstancePtr self,
+                DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 MI_Type type,
                 MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_SetElementAt(
-                MI_InstancePtr self,
+                DirectPtr self,
                 UInt32 index,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 MI_Type type,
                 MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetElement(
-                MI_InstancePtr self,
+                DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out MI_Flags flags,
                 out UInt32 index
@@ -478,42 +415,42 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetElementAt(
-                MI_InstancePtr self,
+                DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 out MI_Type type,
                 out MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_ClearElement(
-                MI_InstancePtr self,
+                DirectPtr self,
                 string name
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_ClearElementAt(
-                MI_InstancePtr self,
+                DirectPtr self,
                 UInt32 index
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetServerName(
-                MI_InstancePtr self,
+                DirectPtr self,
                 [In, Out] MI_String name
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_SetServerName(
-                MI_InstancePtr self,
+                DirectPtr self,
                 string name
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Instance_GetClass(
-                MI_InstancePtr self,
-                [In, Out] MI_ClassOutPtr instanceClass
+                DirectPtr self,
+                [In, Out] MI_Class.IndirectPtr instanceClass
                 );
         }
     }

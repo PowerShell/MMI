@@ -3,44 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassOutPtr
-    {
-        internal IntPtr ptr;
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal struct MI_ClassArrayPtr
-    {
-        internal IntPtr[] ptr;
-
-        public static implicit operator MI_ClassArrayPtr(MI_Class[] classes)
-        {
-            int length = 0;
-            IntPtr[] ptrs = null;
-            if (classes != null)
-            {
-                length = classes.Length;
-                ptrs = new IntPtr[classes.Length];
-            }
-            
-            for (int i = 0; i < length; i++)
-            {
-                ptrs[i] = classes[i].Ptr;
-            }
-            
-            return new MI_ClassArrayPtr() { ptr = ptrs };
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Class
+    internal class MI_Class : MI_NativeObjectWithFT<MI_Class.MI_ClassFT>
     {
         internal MI_Result GetElement(
             string name,
@@ -165,7 +128,7 @@ namespace Microsoft.Management.Infrastructure.Native
         private struct MI_ClassMembers
         {
             internal IntPtr ft;
-            internal MI_ClassDeclPtr classDecl;
+            internal MI_ClassDecl.DirectPtr classDecl;
             internal string namespaceName;
             internal string serverName;
 
@@ -175,30 +138,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ClassMembersFTOffset = (int)Marshal.OffsetOf<MI_ClassMembers>("ft");
-
         private static int MI_ClassMembersSize = Marshal.SizeOf<MI_ClassMembers>();
-
-        private MI_ClassPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_ClassFT> mft;
-
-        ~MI_Class()
+        
+        private MI_Class(bool isDirect) : base(isDirect)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_Class(bool isDirect)
+        private MI_Class(IntPtr existingPtr) : base(existingPtr)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_ClassFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_ClassMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
         }
 
         internal static MI_Class NewDirectPtr()
@@ -213,61 +160,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Class NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Class(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Class(ptr);
         }
-
-        public static implicit operator MI_ClassPtr(MI_Class instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ClassPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_ClassOutPtr(MI_Class instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ClassOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
-        }
-
+        
         internal static MI_Class Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_ClassMembersFTOffset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_ClassMembersSize; } }
 
         internal MI_Result GetClassName(
             out string className
@@ -369,14 +269,7 @@ namespace Microsoft.Management.Infrastructure.Native
             newClass = newClassLocal;
             return resultLocal;
         }
-
-        private MI_ClassFT ft { get { return this.mft.Value; } }
-
-        private MI_ClassFT MarshalFT()
-        {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_ClassFT>(this.Ptr, MI_Class.MI_ClassMembersFTOffset);
-        }
-
+        
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_ClassFT
         {
@@ -397,105 +290,105 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetClassName(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String className
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetNameSpace(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String nameSpace
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetServerName(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String serverName
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetElementCount(
-                MI_ClassPtr self,
+                DirectPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetElement(
-                MI_ClassPtr self,
+                DirectPtr self,
                 string name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
                 out MI_Flags flags,
                 out UInt32 index
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetElementAt(
-                MI_ClassPtr self,
+                DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_Value.MIValueBlock value,
+                [In, Out] MI_Value.DirectPtr value,
                 [MarshalAs(UnmanagedType.U1)] out bool valueExists,
                 out MI_Type type,
                 [In, Out] MI_String referenceClass,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
                 out MI_Flags flags
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetClassQualifierSet(
-                MI_ClassPtr self,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet
+                DirectPtr self,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethodCount(
-                MI_ClassPtr self,
+                DirectPtr self,
                 out UInt32 count
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethodAt(
-                MI_ClassPtr self,
+                DirectPtr self,
                 UInt32 index,
                 [In, Out] MI_String name,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
-                [In, Out] MI_ParameterSet.MI_ParameterSetPtr parameterSet
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
+                [In, Out] MI_ParameterSet.DirectPtr parameterSet
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetMethod(
-                MI_ClassPtr self,
+                DirectPtr self,
                 string name,
-                [In, Out] MI_QualifierSet.MI_QualifierSetPtr qualifierSet,
-                [In, Out] MI_ParameterSet.MI_ParameterSetPtr parameterSet,
+                [In, Out] MI_QualifierSet.DirectPtr qualifierSet,
+                [In, Out] MI_ParameterSet.DirectPtr parameterSet,
                 out UInt32 index
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetParentClassName(
-                MI_ClassPtr self,
+                DirectPtr self,
                 [In, Out] MI_String name
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_GetParentClass(
-                MI_ClassPtr self,
-                [In, Out] MI_ClassOutPtr parentClass
+                DirectPtr self,
+                [In, Out] IndirectPtr parentClass
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_Delete(
-                MI_ClassPtr self
+                DirectPtr self
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Class_Clone(
-                MI_ClassPtr self,
-                [In, Out] MI_ClassOutPtr newClass
+                DirectPtr self,
+                [In, Out] IndirectPtr newClass
                 );
         }
     }

@@ -66,6 +66,168 @@ namespace MMI.Tests.Native
         }
 
         [Fact]
+        public void BooleanArrayIsNullable()
+        {
+            this.value.BooleanA = new bool[] { };
+            Assert.NotNull(this.value.BooleanA);
+            this.value.BooleanA = null;
+            Assert.Null(this.value.BooleanA);
+        }
+
+        [Fact]
+        public void Char16ArrayIsNullable()
+        {
+            this.value.Char16A = new char[] { };
+            Assert.NotNull(this.value.Char16A);
+            this.value.Char16A = null;
+            Assert.Null(this.value.Char16A);
+        }
+
+        [Fact]
+        public void DatetimeArrayIsNullable()
+        {
+            this.value.DatetimeA = new MI_Datetime[] { };
+            Assert.NotNull(this.value.DatetimeA);
+            this.value.DatetimeA = null;
+            Assert.Null(this.value.DatetimeA);
+        }
+
+        [Fact]
+        public void InstanceArrayIsNullable()
+        {
+            this.value.InstanceA = new MI_Instance[] { };
+            Assert.NotNull(this.value.InstanceA);
+            this.value.InstanceA = null;
+            Assert.Null(this.value.InstanceA);
+        }
+
+        [Fact]
+        public void Real32ArrayIsNullable()
+        {
+            this.value.Real32A = new float[] { };
+            Assert.NotNull(this.value.Real32A);
+            this.value.Real32A = null;
+            Assert.Null(this.value.Real32A);
+        }
+
+        [Fact]
+        public void Real64ArrayIsNullable()
+        {
+            this.value.Real64A = new double[] { };
+            Assert.NotNull(this.value.Real64A);
+            this.value.Real64A = null;
+            Assert.Null(this.value.Real64A);
+        }
+
+        [Fact]
+        public void ReferenceArrayIsNullable()
+        {
+            this.value.ReferenceA = new MI_Instance[] { };
+            Assert.NotNull(this.value.ReferenceA);
+            this.value.ReferenceA = null;
+            Assert.Null(this.value.ReferenceA);
+        }
+
+        [Fact]
+        public void Sint32ArrayIsNullable()
+        {
+            this.value.Sint32A = new int[] { };
+            Assert.NotNull(this.value.Sint32A);
+            this.value.Sint32A = null;
+            Assert.Null(this.value.Sint32A);
+        }
+
+        [Fact]
+        public void Sint16ArrayIsNullable()
+        {
+            this.value.Sint64A = new long[] { };
+            Assert.NotNull(this.value.Sint64A);
+            this.value.Sint64A = null;
+            Assert.Null(this.value.Sint64A);
+        }
+
+        [Fact]
+        public void Sint8ArrayIsNullable()
+        {
+            this.value.Sint8A = new sbyte[] { };
+            Assert.NotNull(this.value.Sint8A);
+            this.value.Sint8A = null;
+            Assert.Null(this.value.Sint8A);
+        }
+
+        [Fact]
+        public void StringArrayIsNullable()
+        {
+            this.value.StringA = new string[] { };
+            Assert.NotNull(this.value.StringA);
+            this.value.StringA = null;
+            Assert.Null(this.value.StringA);
+        }
+
+        [Fact]
+        public void Uint16ArrayIsNullable()
+        {
+            this.value.Uint16A = new ushort[] { };
+            Assert.NotNull(this.value.Uint16A);
+            this.value.Uint16A = null;
+            Assert.Null(this.value.Uint16A);
+        }
+
+        [Fact]
+        public void Uint32ArrayIsNullable()
+        {
+            this.value.Uint32A = new uint[] { };
+            Assert.NotNull(this.value.Uint32A);
+            this.value.Uint32A = null;
+            Assert.Null(this.value.Uint32A);
+        }
+
+        [Fact]
+        public void Uint64ArrayIsNullable()
+        {
+            this.value.Uint64A = new ulong[] { };
+            Assert.NotNull(this.value.Uint64A);
+            this.value.Uint64A = null;
+            Assert.Null(this.value.Uint64A);
+        }
+
+        [Fact]
+        public void Uint8ArrayIsNullable()
+        {
+            this.value.Uint8A = new byte[] { };
+            Assert.NotNull(this.value.Uint8A);
+            this.value.Uint8A = null;
+            Assert.Null(this.value.Uint8A);
+        }
+
+        [Fact]
+        public void ReferenceIsNullable()
+        {
+            this.value.Reference = MI_Instance.NewDirectPtr();
+            Assert.NotNull(this.value.Reference);
+            this.value.Reference = null;
+            Assert.Null(this.value.Reference);
+        }
+
+        [Fact]
+        public void InstanceIsNullable()
+        {
+            this.value.Instance = MI_Instance.NewDirectPtr();
+            Assert.NotNull(this.value.Instance);
+            this.value.Instance = null;
+            Assert.Null(this.value.Instance);
+        }
+
+        [Fact]
+        public void StringIsNullable()
+        {
+            this.value.String = "";
+            Assert.NotNull(this.value.String);
+            this.value.String = null;
+            Assert.Null(this.value.String);
+        }
+
+        [Fact]
         public void BooleanTypesCanBeUsed()
         {
             this.value.Boolean = true;

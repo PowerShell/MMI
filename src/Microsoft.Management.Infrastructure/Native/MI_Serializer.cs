@@ -3,24 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Serializer
+    internal class MI_Serializer : MI_NativeObjectWithFT<MI_Serializer.MI_SerializerFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SerializerPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_SerializerOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        // Marshal implements these with Reflection - pay this hit only once
-        internal static int Reserved2Offset = (int)Marshal.OffsetOf<MI_Serializer.MI_SerializerMembers>("reserved2");
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_SerializerMembers
         {
@@ -30,100 +14,43 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_SerializerMembersSize = Marshal.SizeOf<MI_SerializerMembers>();
-
-        private MI_SerializerPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_SerializerFT> mft;
-
-        ~MI_Serializer()
+        internal static int MI_SerializerMembersReserved2Offset = (int)Marshal.OffsetOf<MI_Serializer.MI_SerializerMembers>("reserved2");
+        
+        private MI_Serializer() : base(true)
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
         }
 
-        private MI_Serializer(string format, bool isDirect)
+        private MI_Serializer(Func<MI_SerializerFT> mftThunk) : base(true, mftThunk)
         {
-#if !_LINUX
+        }
+
+        internal static MI_Serializer NewDirectPtr(string format)
+        {
             if (MI_SerializationFormat.XML.Equals(format, StringComparison.Ordinal))
             {
-                this.mft = MI_SerializerFT.XmlSerializerFT;
+#if !_LINUX
+                return new MI_Serializer(() => MI_SerializerFT.XmlSerializerFT.Value);
+#endif
             }
             else if (MI_SerializationFormat.MOF.Equals(format, StringComparison.Ordinal))
             {
-                this.mft = new Lazy<MI_SerializerFT>(() => MI_SerializationFTHelpers.GetSerializerFTFromReserved2(this));
+                // Nothing, see continuation after the conditional
             }
             else
             {
                 throw new NotImplementedException();
             }
-#else
-            this.mft = new Lazy<MI_SerializerFT>( () => MI_SerializationFTHelpers.GetSerializerFTFromReserved2(this) );
-#endif
-            this.isDirect = isDirect;
 
-            var necessarySize = this.isDirect ? MI_SerializerMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
+            // This will end up using the default behavior for the base class
+            // which is to use the offset to pull the FT pointer from the object
+            return new MI_Serializer();
         }
-
-        internal static MI_Serializer NewDirectPtr(string format)
-        {
-            return new MI_Serializer(format, true);
-        }
-
-        public static implicit operator MI_SerializerPtr(MI_Serializer instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_SerializerPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_SerializerOutPtr(MI_Serializer instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_SerializerOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
-        }
-
+        
         internal static MI_Serializer Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
+        protected override int FunctionTableOffset { get { return MI_SerializerMembersReserved2Offset; } }
 
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_SerializerMembersSize; } }
 
         internal MI_Result Close()
         {
@@ -234,8 +161,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_SerializerFT ft { get { return this.mft.Value; } }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_SerializerFT
         {
@@ -245,14 +170,14 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_Close(
-                MI_SerializerPtr serializer
+                DirectPtr serializer
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_SerializeClass(
-                MI_SerializerPtr serializer,
+                DirectPtr serializer,
                 MI_SerializerFlags flags,
-                [In, Out] MI_ClassPtr classObject,
+                [In, Out] MI_Class.DirectPtr classObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded
@@ -260,9 +185,9 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Serializer_SerializeInstance(
-                MI_SerializerPtr serializer,
+                DirectPtr serializer,
                 MI_SerializerFlags flags,
-                [In, Out] MI_Instance.MI_InstancePtr instanceObject,
+                [In, Out] MI_Instance.DirectPtr instanceObject,
                 IntPtr clientBuffer,
                 UInt32 clientBufferLength,
                 out UInt32 clientBufferNeeded

@@ -81,12 +81,13 @@ namespace MMI.Tests.Native
             bool moreResults = true;
             MI_Instance clonedInstance = null;
 
-            MI_Result result;
+            MI_Result secondaryResult;
             string errorMessage = null;
             MI_Instance instanceOut = null;
             MI_Instance errorDetails = null;
-            var res = operation.GetInstance(out instanceOut, out moreResults, out result, out errorMessage, out errorDetails);
+            var res = operation.GetInstance(out instanceOut, out moreResults, out secondaryResult, out errorMessage, out errorDetails);
             MIAssert.Succeeded(res, "Expect the first GetInstance call to succeed");
+            MIAssert.Succeeded(secondaryResult, "Expect the logical result of the GetInstance call to succeed");
 
             if (!instanceOut.IsNull)
             {
@@ -96,9 +97,9 @@ namespace MMI.Tests.Native
 
             while (moreResults)
             {
-                MI_Result secondaryResult = MI_Result.MI_RESULT_OK;
                 res = operation.GetInstance(out instanceOut, out moreResults, out secondaryResult, out errorMessage, out errorDetails);
                 MIAssert.Succeeded(res, "Expect GetInstance to succeed even if we don't want the result");
+                MIAssert.Succeeded(secondaryResult, "Expect the logical result of the GetInstance call to succeed even if we don't want the result");
             }
 
             res = operation.Close();
