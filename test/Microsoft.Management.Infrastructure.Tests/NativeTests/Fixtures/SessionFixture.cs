@@ -22,7 +22,7 @@ namespace MMI.Tests.Native
             MI_Result res = application.NewSession(null,
                     null,
                     MI_DestinationOptions.Null,
-                    MI_SessionCallbacks.Null,
+                    MI_SessionCreationCallbacks.Null,
                     out extendedError,
                     out newSession);
             MIAssert.Succeeded(res, "Expect simple NewSession to succeed");

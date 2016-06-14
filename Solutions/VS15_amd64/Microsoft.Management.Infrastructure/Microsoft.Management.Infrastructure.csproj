@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNSIGNED VS2015</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;VS2015</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -376,8 +376,17 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_DestinationOptions.cs">
       <Link>Native\MI_DestinationOptions.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_FunctionTableCache.cs">
+      <Link>Native\MI_FunctionTableCache.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Instance.cs">
       <Link>Native\MI_Instance.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_NativeObject.cs">
+      <Link>Native\MI_NativeObject.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_NativeObjectWithFT.cs">
+      <Link>Native\MI_NativeObjectWithFT.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\MI_Operation.cs">
       <Link>Native\MI_Operation.cs</Link>
@@ -418,14 +427,14 @@
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeMethods.cs">
       <Link>Native\NativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\NativeTypes.cs">
-      <Link>Native\NativeTypes.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Array.cs">
       <Link>Native\Structures\MI_Array.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_Datetime.cs">
       <Link>Native\Structures\MI_Datetime.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_DeserializerCallbacks.cs">
+      <Link>Native\Structures\MI_DeserializerCallbacks.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_ExtendedArray.cs">
       <Link>Native\Structures\MI_ExtendedArray.cs</Link>
@@ -435,6 +444,9 @@
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_OperationCallbacks.cs">
       <Link>Native\Structures\MI_OperationCallbacks.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_SessionCreationCallbacks.cs">
+      <Link>Native\Structures\MI_SessionCreationCallbacks.cs</Link>
     </Compile>
     <Compile Include="..\..\..\src\Microsoft.Management.Infrastructure\Native\Structures\MI_String.cs">
       <Link>Native\Structures\MI_String.cs</Link>

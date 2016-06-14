@@ -47,7 +47,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Type qualifierType;
                 MI_Flags qualifierFlags;
                 MI_Value qualifierValue;
-                result = qualifierSet.GetQualifierAt(index,
+                result = qualifierSet.GetQualifierAt((uint)this.index,
                                      out name,
                                      out qualifierType,
                                      out qualifierFlags,
@@ -82,13 +82,13 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Type qualifierType;
                 MI_Flags qualifierFlags;
                 MI_Value qualifierValue;
-                result = qualifierSet.GetQualifierAt(index,
+                result = qualifierSet.GetQualifierAt((uint)this.index,
                                      out name,
                                      out qualifierType,
                                      out qualifierFlags,
                                      out qualifierValue);
                 CimException.ThrowIfMiResultFailure(result);
-                return (object)qualifierValue;
+                return ValueHelpers.ConvertFromNativeLayer(qualifierValue, qualifierType, qualifierFlags);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Type qualifierType;
                 MI_Flags qualifierFlags;
                 MI_Value qualifierValue;
-                result = qualifierSet.GetQualifierAt(index,
+                result = qualifierSet.GetQualifierAt((uint)this.index,
                                      out name,
                                      out qualifierType,
                                      out qualifierFlags,
@@ -152,7 +152,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Type qualifierType;
                 MI_Flags qualifierFlags;
                 MI_Value qualifierValue;
-                result = qualifierSet.GetQualifierAt(index,
+                result = qualifierSet.GetQualifierAt((uint)this.index,
                                      out name,
                                      out qualifierType,
                                      out qualifierFlags,

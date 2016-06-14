@@ -44,9 +44,11 @@ namespace MMI.Tests.Native
             uint bufferRead;
             MI_Instance cimErrorDetails;
 
+            MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
+
             var res = this.Deserializer.DeserializeInstanceArray(MI_SerializerFlags.None,
                 MI_OperationOptions.Null,
-                IntPtr.Zero,
+                callbacks,
                 serializedInstance,
                 new MI_Class[] { cimClass },
                 out bufferRead,
@@ -74,9 +76,11 @@ namespace MMI.Tests.Native
             uint bufferRead;
             MI_Instance cimErrorDetails;
 
+            MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
+
             var res = this.Deserializer.DeserializeClassArray(MI_SerializerFlags.None,
                 MI_OperationOptions.Null,
-                IntPtr.Zero,
+                callbacks,
                 serializedClass,
                 new MI_Class[] {},
                 null,

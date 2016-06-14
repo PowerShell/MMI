@@ -3,21 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_ExtendedArray
+    internal class MI_ExtendedArray : MI_NativeObjectWithFT<MI_ExtendedArray.MI_ExtendedArrayFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ExtendedArrayPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_ExtendedArrayOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         internal struct MI_ExtendedArrayMembers
         {
             internal MI_Array array;
@@ -29,13 +16,8 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ExtendedArrayMembersFTOffset = (int)Marshal.OffsetOf<MI_ExtendedArrayMembers>("reserved2");
-
         private static int MI_ExtendedArrayMembersSize = Marshal.SizeOf<MI_ExtendedArrayMembers>();
-
-        private MI_ExtendedArray.MI_ExtendedArrayPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_ExtendedArrayFT> mft;
-
+        
         ~MI_ExtendedArray()
         {
             if (this.isDirect)
@@ -43,33 +25,37 @@ namespace Microsoft.Management.Infrastructure.Native
                 unsafe
                 {
                     MI_Array* arrayPtr = (MI_Array*)this.Ptr;
-                    if (arrayPtr->data != IntPtr.Zero)
+                    if (arrayPtr != null && arrayPtr->data != IntPtr.Zero)
                     {
                         Marshal.FreeHGlobal(arrayPtr->data);
+                        arrayPtr->data = IntPtr.Zero;
                     }
                 }
             }
 
-            Marshal.FreeHGlobal(this.ptr.ptr);
+            // Note that we don't free the actual pointer
+            // Finalizers run from most derived to least derived,
+            // so the base class finalizer will free the memory as required
         }
 
-        private MI_ExtendedArray(bool isDirect)
+        private MI_ExtendedArray(bool isDirect) : base(isDirect)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_ExtendedArrayFT>(this.MarshalFT);
+        }
 
-            var necessarySize = this.isDirect ? MI_ExtendedArrayMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
+        private MI_ExtendedArray(IntPtr existingPtr) : base(existingPtr)
+        {
         }
 
         internal static MI_ExtendedArray NewDirectPtr()
         {
             return new MI_ExtendedArray(true);
+        }
+
+        internal static MI_ExtendedArray NewDirectPtr(IntPtr[] ptrs)
+        {
+            var res = new MI_ExtendedArray(true);
+            res.WritePointerArray(ptrs);
+            return res;
         }
 
         internal static MI_ExtendedArray NewIndirectPtr()
@@ -79,106 +65,29 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_ExtendedArray NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_ExtendedArray(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
-        }
-
-        private MI_ExtendedArrayFT ft { get { return this.mft.Value; } }
-
-        private MI_ExtendedArrayFT MarshalFT()
-        {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_ExtendedArrayFT>(this.Ptr, MI_ExtendedArray.MI_ExtendedArrayMembersFTOffset);
+            return new MI_ExtendedArray(ptr);
         }
 
         internal void AssertValidInternalState()
         {
             throw new NotImplementedException();
         }
-
-        public static implicit operator MI_ExtendedArray.MI_ExtendedArrayPtr(MI_ExtendedArray instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ExtendedArray.MI_ExtendedArrayPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_ExtendedArrayOutPtr(MI_ExtendedArray instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_ExtendedArrayOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
-        }
-
+        
         public T[] ReadAsManagedPointerArray<T>(Func<IntPtr, T> conversion)
         {
-            unsafe
-            {
-                MI_Array* arrayPtr = (MI_Array*)this.Ptr;
-                uint arraySize = arrayPtr->size;
-                T[] res = new T[arraySize];
-                for (int i = 0; i < arraySize; i++)
-                {
-                    res[i] = conversion(((IntPtr*)(arrayPtr->data))[i]);
-                }
-
-                return res;
-            }
+            return MI_Array.ReadAsManagedPointerArray(this.Ptr, conversion);
         }
 
         public void WritePointerArray(IntPtr[] ptrs)
         {
-            unsafe
-            {
-                MI_Array* arrayPtr = (MI_Array*)this.Ptr;
-                if (arrayPtr->data != IntPtr.Zero)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                arrayPtr->data = Marshal.AllocHGlobal(NativeMethods.IntPtrSize * ptrs.Length);
-                Marshal.Copy(ptrs, 0, arrayPtr->data, ptrs.Length);
-                arrayPtr->size = (uint)ptrs.Length;
-            }
+            MI_Array.WritePointerArray(this.Ptr, ptrs);
         }
 
         internal static MI_ExtendedArray Null { get { return null; } }
 
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
+        protected override int FunctionTableOffset { get { return MI_ExtendedArrayMembersFTOffset; } }
 
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
+        protected override int MembersSize { get { return MI_ExtendedArrayMembersSize; } }
 
         internal MI_Result Delete()
         {
@@ -192,7 +101,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_ExtendedArray_Delete(
-                MI_ExtendedArrayPtr self
+                DirectPtr self
                 );
         }
     }

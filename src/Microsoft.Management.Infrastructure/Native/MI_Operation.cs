@@ -3,21 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-    internal class MI_Operation
+    internal class MI_Operation : MI_NativeObjectWithFT<MI_Operation.MI_OperationFT>
     {
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_OperationPtr
-        {
-            internal IntPtr ptr;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
-        internal struct MI_OperationOutPtr
-        {
-            internal IntPtr ptr;
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         private struct MI_OperationMembers
         {
@@ -26,32 +13,16 @@ namespace Microsoft.Management.Infrastructure.Native
             internal IntPtr ft;
         }
 
-        // Marshal implements these with Reflection - pay this hit only once
-        private static int MI_OperationMembersFTOffset = (int)Marshal.OffsetOf<MI_OperationMembers>("ft");
-
-        private static int MI_OperationMembersSize = Marshal.SizeOf<MI_OperationMembers>();
-
-        private MI_OperationPtr ptr;
-        private bool isDirect;
-        private Lazy<MI_OperationFT> mft;
-
-        ~MI_Operation()
+        static MI_Operation()
         {
-            Marshal.FreeHGlobal(this.ptr.ptr);
+            CheckMembersTableMatchesNormalLayout<MI_OperationMembers>("ft");
         }
-
-        private MI_Operation(bool isDirect)
+        
+        private MI_Operation(bool isDirect) : base(isDirect)
         {
-            this.isDirect = isDirect;
-            this.mft = new Lazy<MI_OperationFT>(this.MarshalFT);
-
-            var necessarySize = this.isDirect ? MI_OperationMembersSize : NativeMethods.IntPtrSize;
-            this.ptr.ptr = Marshal.AllocHGlobal(necessarySize);
-
-            unsafe
-            {
-                NativeMethods.memset((byte*)this.ptr.ptr, 0, (uint)necessarySize);
-            }
+        }
+        private MI_Operation(IntPtr existingPtr) : base(existingPtr)
+        {
         }
 
         internal static MI_Operation NewDirectPtr()
@@ -66,66 +37,15 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static MI_Operation NewFromDirectPtr(IntPtr ptr)
         {
-            var res = new MI_Operation(false);
-            Marshal.WriteIntPtr(res.ptr.ptr, ptr);
-            return res;
+            return new MI_Operation(ptr);
         }
 
         internal void AssertValidInternalState()
         {
             throw new NotImplementedException();
         }
-
-        public static implicit operator MI_OperationPtr(MI_Operation instance)
-        {
-            // If the indirect pointer is zero then the object has not
-            // been initialized and it is not valid to refer to its data
-            if (instance != null && instance.Ptr == IntPtr.Zero)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_OperationPtr() { ptr = instance == null ? IntPtr.Zero : instance.Ptr };
-        }
-
-        public static implicit operator MI_OperationOutPtr(MI_Operation instance)
-        {
-            // We are not currently supporting the ability to get the address
-            // of our direct pointer, though it is technically feasible
-            if (instance != null && instance.isDirect)
-            {
-                throw new InvalidCastException();
-            }
-
-            return new MI_OperationOutPtr() { ptr = instance == null ? IntPtr.Zero : instance.ptr.ptr };
-        }
-
+        
         internal static MI_Operation Null { get { return null; } }
-        internal bool IsNull { get { return this.Ptr == IntPtr.Zero; } }
-
-        internal IntPtr Ptr
-        {
-            get
-            {
-                IntPtr structurePtr = this.ptr.ptr;
-                if (!this.isDirect)
-                {
-                    if (structurePtr == IntPtr.Zero)
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    // This can be easily implemented with Marshal.ReadIntPtr
-                    // but that has function call overhead
-                    unsafe
-                    {
-                        structurePtr = *(IntPtr*)structurePtr;
-                    }
-                }
-
-                return structurePtr;
-            }
-        }
 
         internal MI_Result Close()
         {
@@ -233,13 +153,6 @@ namespace Microsoft.Management.Infrastructure.Native
             return resultLocal;
         }
 
-        private MI_OperationFT ft { get { return this.mft.Value; } }
-
-        private MI_OperationFT MarshalFT()
-        {
-            return NativeMethods.GetFTAsOffsetFromPtr<MI_OperationFT>(this.Ptr, MI_Operation.MI_OperationMembersFTOffset);
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         internal class MI_OperationFT
         {
@@ -252,51 +165,51 @@ namespace Microsoft.Management.Infrastructure.Native
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_Close(
-                MI_OperationPtr operation
+                DirectPtr operation
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_Cancel(
-                MI_OperationPtr operation,
+                DirectPtr operation,
                 MI_CancellationReason reason
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetSession(
-                MI_OperationPtr operation,
-                [In, Out] MI_Session.MI_SessionPtr session
+                DirectPtr operation,
+                [In, Out] MI_Session.DirectPtr session
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetInstance(
-                MI_OperationPtr operation,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instance,
+                DirectPtr operation,
+                [In, Out] MI_Instance.IndirectPtr instance,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.IndirectPtr completionDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetIndication(
-                MI_OperationPtr operation,
-                [In, Out] MI_Instance.MI_InstanceOutPtr instance,
+                DirectPtr operation,
+                [In, Out] MI_Instance.IndirectPtr instance,
                 [In, Out] MI_String bookmark,
                 [In, Out] MI_String machineID,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.IndirectPtr completionDetails
                 );
 
             [UnmanagedFunctionPointer(MI_PlatformSpecific.MiCallConvention, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
             internal delegate MI_Result MI_Operation_GetClass(
-                MI_OperationPtr operation,
-                [In, Out] MI_ClassOutPtr classResult,
+                DirectPtr operation,
+                [In, Out] MI_Class.IndirectPtr classResult,
                 [MarshalAs(UnmanagedType.U1)] out bool moreResults,
                 out MI_Result result,
                 [In, Out] MI_String errorMessage,
-                [In, Out] MI_Instance.MI_InstanceOutPtr completionDetails
+                [In, Out] MI_Instance.IndirectPtr completionDetails
                 );
         }
     }
