@@ -190,7 +190,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         [Fact]
         public void Deserialization_CimClasse_InvalidMofBuffer()
         {
-            MMI.Tests.Assert.Throws<CimException>(() =>
+            MMI.Tests.Assert.Throws<ArgumentNullException>(() =>
             {
                 const int size = 50 * 1024 * 1024;
                 uint offset = 0;
@@ -305,14 +305,13 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         [Fact]
         public void Deserialization_Instance_NotNullOnClassNeededCallback()
         {
-            MMI.Tests.Assert.Throws<NotImplementedException>(() =>
-            {
-                uint offset = 0;
-                byte[] buffer = new byte[82];
-                CimMofDeserializer.OnClassNeeded onClassNeede = this.GetClass;
-                onClassNeede("Servername", @"root\TestNamespace", "MyClassName");
-                return this.deserializer.DeserializeInstances(buffer, ref offset, null, onClassNeede, null);
-            });
+            string instancemof = "class A{string p;}; instance of A{p=\"a\";};instance of A{p=\"b\";};instance of A{p=\"c\";};instance of A{p=\"d\";};";
+            uint offset = 0;
+            byte[] buffer = Helpers.GetBytesFromString(instancemof);
+            CimMofDeserializer.OnClassNeeded onClassNeede = this.GetClass;
+            onClassNeede("Servername", @"root\TestNamespace", "MyClassName");
+            IEnumerable<CimInstance> instances = this.deserializer.DeserializeInstances(buffer, ref offset, null, onClassNeede, null);
+            MMI.Tests.Assert.NotNull(instances, "Instance got deserialized");
         }
 
         [Fact]
