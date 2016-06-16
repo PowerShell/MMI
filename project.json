@@ -3,7 +3,10 @@
     "version": "1.0.0-*",
     "authors": [ "garretts", "andschwa" ],
 
-    "compilationOptions": {
+    "buildOptions": {
+        "keyFile": "../signing/visualstudiopublic.snk",
+        "delaySign": true,
+        "publicSign": false,
         "allowUnsafe": true
     },
 
@@ -14,11 +17,12 @@
     "frameworks": {
         "netstandard1.5": {
             "imports": [ "dnxcore50" ],
-            "compilationOptions": {
+            "buildOptions": {
                 "warningsAsErrors": true,
                 "define": [ "_CORECLR" ]
             },
             "dependencies": {
+                "System.Runtime.CompilerServices.VisualC": "4.0.0-rc2-24027",
                 "System.Runtime.Serialization.Xml": "4.1.1-rc2-24027",
                 "System.Threading.ThreadPool": "4.0.10-rc2-24027"
             }
