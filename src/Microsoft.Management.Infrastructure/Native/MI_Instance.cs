@@ -203,7 +203,7 @@ namespace Microsoft.Management.Infrastructure.Native
         {
             if (value != null && value.Type.HasValue && value.Type != type)
             {
-                throw new InvalidCastException();
+                throw new InvalidCastException("value.Type = " + value.Type.ToString() + ", type = " + type.ToString());
             }
 
             MI_Result resultLocal = this.ft.AddElement(this,
