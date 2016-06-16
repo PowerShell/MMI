@@ -18,7 +18,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
     public class CimSessionTest
     {
         #region Test create
-        [Fact]
+        [TDDFact]
         public void Create_ComputerName_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -28,7 +28,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void Create_ComputerName_Localhost()
         {
             using (CimSession cimSession = CimSession.Create("localhost"))

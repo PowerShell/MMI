@@ -15,7 +15,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
     using System.Text;
     using Xunit;
 
-    public class CimMofDeserializerTest: IDisposable
+    public class CimMofDeserializerTest : IDisposable
     {
         # region pre-test
         CimMofDeserializer deserializer;
@@ -201,7 +201,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_CimClasse_NotNullOnClassNeededCallback()
         {
             MMI.Tests.Assert.Throws<NotImplementedException>(() =>
@@ -288,21 +288,21 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_Instance_InvalidMofBuffer()
         {
             MMI.Tests.Assert.Throws<CimException>(() =>
-           {
-               const int size = 50 * 1024 * 1024;
-               uint offset = 0;
-               byte[] buffer = new byte[size];
-               byte[] b2 = Helpers.GetBytesFromString("abcd");
-               b2.CopyTo(buffer, 0);
-               return this.deserializer.DeserializeInstances(buffer, ref offset);
-           });
+            {
+                const int size = 50 * 1024 * 1024;
+                uint offset = 0;
+                byte[] buffer = new byte[size];
+                byte[] b2 = Helpers.GetBytesFromString("abcd");
+                b2.CopyTo(buffer, 0);
+                return this.deserializer.DeserializeInstances(buffer, ref offset);
+            });
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_Instance_NotNullOnClassNeededCallback()
         {
             string instancemof = "class A{string p;}; instance of A{p=\"a\";};instance of A{p=\"b\";};instance of A{p=\"c\";};instance of A{p=\"d\";};";
@@ -330,7 +330,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         //TODO: Fake different kinds of Mof file to deserialize
         #endregion Deserialization tests
 
-        #region Fake 
+        #region Fake
         private CimClass GetClass(string serverName, string namespaceName, string className)
         {
             CimInstance cimInstance = new CimInstance(className, namespaceName);
