@@ -43,12 +43,50 @@ namespace Microsoft.Management.Infrastructure.Serialization
             string namespaceName,
             string className);
 
+        internal static class RootedCimClasses
+        {
+            private static Dictionary<int, CimClass> cimClassDict = new Dictionary<int, CimClass>();
+
+            private static Random indexGenerator = new Random();
+
+            internal static Object lockObject = new Object();
+            
+            internal static void SaveCimClass(CimClass c, int cimClassIndex)
+            {
+                cimClassDict[cimClassIndex] = c;
+            }
+
+            internal static bool RemoveCimClass(int index)
+            {
+                if (cimClassDict.ContainsKey(index))
+                {
+                    return cimClassDict.Remove(index);
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            internal static int GetNewIndex()
+            {
+                int index = 0;
+
+                do
+                {
+                    index = indexGenerator.Next(int.MinValue, int.MaxValue);
+                } while (cimClassDict.ContainsKey(index));
+
+                return index;
+            }
+        }
+
         /// <summary>
         /// Create an internal delegate on demand
         /// </summary>
         /// <param name="wrappedcallback"></param>
         /// <returns></returns>
-        internal static MI_Deserializer.MI_Deserializer_ClassObjectNeeded CreateClassObjectNeededCallbackDelegate(OnClassNeeded wrappedcallback)
+        internal static MI_Deserializer.MI_Deserializer_ClassObjectNeeded CreateClassObjectNeededCallbackDelegate(OnClassNeeded wrappedcallback, int cimClassIndex)
         {
             return delegate(string serverName,
                 string namespaceName,
@@ -58,6 +96,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
                 CimClass cimClass = null;
                 classHandle = null;
                 cimClass = wrappedcallback(serverName, namespaceName, className);
+                RootedCimClasses.SaveCimClass(cimClass, cimClassIndex);
                 if (cimClass != null)
                 {
                     classHandle = cimClass.ClassHandle;
@@ -179,21 +218,33 @@ namespace Microsoft.Management.Infrastructure.Serialization
             // TODO: Add definitions for these callbacks
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
             MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
-
-            if (onClassNeededCallback != null)
+            MI_Result result = MI_Result.MI_RESULT_FAILED;
+            
+            lock(RootedCimClasses.lockObject)
             {
-                callbacks.classObjectNeeded = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
+                int cimClassIndex = RootedCimClasses.GetNewIndex();
+                try
+                {
+                    if (onClassNeededCallback != null)
+                    {
+                        callbacks.classObjectNeeded = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback, cimClassIndex);
+                    }
+                
+                    result = this._myHandle.DeserializeInstanceArray(
+                        MI_SerializerFlags.None,
+                        nativeOption,
+                        callbacks,
+                        serializedData,
+                        nativeClassHandles,
+                        out inputBufferUsed,
+                        out instanceArray,
+                        out cimError);
+                }
+                finally
+                {
+                    RootedCimClasses.RemoveCimClass(cimClassIndex);
+                }
             }
-
-            MI_Result result = this._myHandle.DeserializeInstanceArray(
-                MI_SerializerFlags.None,
-                nativeOption,
-                callbacks,
-                serializedData,
-                nativeClassHandles,
-                out inputBufferUsed,
-                out instanceArray,
-                out cimError);
 
             CimException.ThrowIfMiResultFailure(result, cimError);
 
@@ -307,23 +358,36 @@ namespace Microsoft.Management.Infrastructure.Serialization
             //if (onClassNeededCallback != null) callbacks.ClassObjectNeededCallback = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
             //if (getIncludedFileCallback != null) callbacks.GetIncludedFileBufferCallback = CreateGetIncludedFileBufferCallback(getIncludedFileCallback);
             MI_DeserializerCallbacks callbacks = new MI_DeserializerCallbacks();
-
-            if (onClassNeededCallback != null)
+            MI_Result result = MI_Result.MI_RESULT_FAILED;
+            
+            lock(RootedCimClasses.lockObject)
             {
-                callbacks.classObjectNeeded = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback);
+                int cimClassIndex = RootedCimClasses.GetNewIndex();
+                try
+                {
+                    if (onClassNeededCallback != null)
+                    {
+                        callbacks.classObjectNeeded = CreateClassObjectNeededCallbackDelegate(onClassNeededCallback, cimClassIndex);
+                    }
+                
+                    result = this._myHandle.DeserializeClassArray(
+                        MI_SerializerFlags.None,
+                        nativeOption,
+                        callbacks,
+                        serializedData,
+                        nativeClassHandles,
+                        computerName,
+                        namespaceName,
+                        out inputBufferUsed,
+                        out classArray,
+                        out cimError);
+                }
+                finally
+                {
+                    RootedCimClasses.RemoveCimClass(cimClassIndex);
+                }
             }
 
-            MI_Result result = this._myHandle.DeserializeClassArray(
-                MI_SerializerFlags.None,
-                nativeOption,
-                callbacks,
-                serializedData,
-                nativeClassHandles,
-                computerName,
-                namespaceName,
-                out inputBufferUsed,
-                out classArray,
-                out cimError);
             CimException.ThrowIfMiResultFailure(result, cimError);
             
             MI_Class[] deserializedClasses = classArray.ReadAsManagedPointerArray(MI_Class.NewFromDirectPtr);
