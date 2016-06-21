@@ -387,11 +387,6 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         [Fact]
         public void Deserialization_CimInstance_DSCMof()
         {
-            string c1 = "MSFT_BaseCredential";
-            string c2 = "MSFT_WindowsCredential";
-            string c3 = "MSFT_BaseResourceConfiguration";
-            string c4 = "MSFT_FileDirectoryConfiguration";
-            string c5 = "MSFT_ConfigurationDocument";
             uint offset = 0;
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\TestData\dscinstance.mof");
