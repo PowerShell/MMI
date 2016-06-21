@@ -2,8 +2,10 @@
  * Copyright (C) Microsoft Corporation, All rights reserved.
  *============================================================================
  */
+
 namespace Microsoft.Management.Infrastructure.UnitTests
 {
+    using System.Collections;
     using Microsoft.Management.Infrastructure;
     using Microsoft.Management.Infrastructure.Native;
     using Microsoft.Management.Infrastructure.Options;
@@ -42,10 +44,10 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 
         [Fact]
         public void Constructor_ClassName_Null()
-        {       
-            string className =  (string)null;
-            ArgumentNullException ex =  MMI.Tests.Assert.Throws<ArgumentNullException>(() => { return new CimInstance(className);});
-            MMI.Tests.Assert.Equal("className", ex.ParamName, "parameter name is not indicated correctly in returned ArgumentNullException");    
+        {
+            string className = (string)null;
+            ArgumentNullException ex = MMI.Tests.Assert.Throws<ArgumentNullException>(() => { return new CimInstance(className); });
+            MMI.Tests.Assert.Equal("className", ex.ParamName, "parameter name is not indicated correctly in returned ArgumentNullException");
         }
 
         [Fact]
@@ -124,7 +126,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         }
         #endregion Test constructor
 
-        #region Test properties   
+        #region Test properties
         [TDDFact]
         public void Properties_CimClass()
         {
@@ -183,13 +185,14 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         [Fact]
         public void Properties_Add_MismatchedValueAndType()
         {
-            MMI.Tests.Assert.Throws<ArgumentException>(() => {
+            MMI.Tests.Assert.Throws<ArgumentException>(() =>
+            {
                 CimInstance cimInstance = new CimInstance("MyClassName");
                 CimProperty cimProperty = CimProperty.Create("MyPropertyName", "IamnotSInt32", CimType.SInt32, CimFlags.None);
                 cimInstance.CimInstanceProperties.Add(cimProperty);
                 return null;
             });
-        }     
+        }
 
         [Fact]
         public void Properties_Add_ValueAndType_Boolean()
@@ -296,7 +299,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.True(cimProperty.Value is Int32, "CimProperty.Create preserves the type of the value");
             MMI.Tests.Assert.Equal(CimType.SInt32, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
             MMI.Tests.Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
-            
+
             cimInstance.CimInstanceProperties.Add(cimProperty);
             CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
             MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
@@ -623,7 +626,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 
             using (CimInstance embeddedInstance2 = (CimInstance)cimInstance.CimInstanceProperties["MyEmbeddedObject"].Value)
             {
-                MMI.Tests.Assert.Equal("MyInnerClass", embeddedInstance2.CimSystemProperties.ClassName, "addedProperty.Value is correct");
+                MMI.Tests.Assert.Equal("MyInnerClass", embeddedInstance2.CimSystemProperties.ClassName, "addedProperty.Value is not correct");
                 MMI.Tests.Assert.Equal(123, (int)(embeddedInstance2.CimInstanceProperties["MyInnerProperty"].Value), "Initial value of $x.embeddedObject.innerProperty is not correct");
 
                 embeddedInstance2.CimInstanceProperties["MyInnerProperty"].Value = 456;
@@ -904,6 +907,211 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.Equal((UInt64)123, value[0], "addedProperty.Value[0] is not correct");
             MMI.Tests.Assert.Equal((UInt64)456, value[1], "addedProperty.Value[1] is not correct");
             MMI.Tests.Assert.Equal(CimType.UInt64Array, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_Real32Array()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new Single[] { 1.23f, 4.56f }, CimType.Real32Array, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is Single[], "addedProperty.Value.GetType() is not correct");
+            Single[] value = (Single[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Length, "addedProperty.Value.Length is not correct");
+            MMI.Tests.Assert.True(value[0] > 1.22, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[0] < 1.24, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[1] > 4.55, "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.True(value[1] < 4.57, "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.Real32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_Real64Array()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new Double[] { 1.23, 4.56 }, CimType.Real64Array, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is Double[], "addedProperty.Value.GetType() is not correct");
+            Double[] value = (Double[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Length, "addedProperty.Value.Length is not correct");
+            MMI.Tests.Assert.True(value[0] > 1.22, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[0] < 1.24, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[1] > 4.55, "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.True(value[1] < 4.57, "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(addedProperty.CimType, CimType.Real64Array, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_Char16Array()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new Char[] { 'x', 'y' }, CimType.Char16Array, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is Char[], "addedProperty.Value.GetType() is not correct");
+            Char[] value = (Char[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Length, "addedProperty.Value.Length is not correct");
+            MMI.Tests.Assert.Equal('x', value[0], "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.Equal('y', value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.Char16Array, addedProperty.CimType, "addedProperty.CimType is  not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_DateTimeArray_DateTime()
+        {
+            DateTime myDate1 = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);
+            DateTime myDate2 = new DateTime(2010, 09, 23, 7, 30, 0, DateTimeKind.Local);
+
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new DateTime[] { myDate1, myDate2 }, CimType.DateTimeArray, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            IList value = (IList)addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Count, "addedProperty.Value.Count is not correct");
+            MMI.Tests.Assert.True(value[0] is DateTime, "addedProperty.Value[0].GetType() is not correct");
+            MMI.Tests.Assert.Equal((DateTime)value[0], myDate1, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[1] is DateTime, "addedProperty.Value[1].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myDate2, (DateTime)value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_DateTimeArray_TimeSpan()
+        {
+            TimeSpan myInterval1 = TimeSpan.FromSeconds(123);
+            TimeSpan myInterval2 = TimeSpan.FromSeconds(456);
+
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new TimeSpan[] { myInterval1, myInterval2 }, CimType.DateTimeArray, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            IList value = (IList)addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Count, "addedProperty.Value.Count is not correct");
+            MMI.Tests.Assert.True(value[0] is TimeSpan, "addedProperty.Value[0].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myInterval1, (TimeSpan)value[0], "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[1] is TimeSpan, "addedProperty.Value[1].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myInterval2, (TimeSpan)value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_DateTimeArray_Mixed()
+        {
+            DateTime myDate1 = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);
+            TimeSpan myInterval2 = TimeSpan.FromSeconds(456);
+
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new Object[] { myDate1, myInterval2 }, CimType.DateTimeArray, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            IList value = (IList)addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Count, "addedProperty.Value.Count is not correct");
+            MMI.Tests.Assert.True(value[0] is DateTime, "addedProperty.Value[0].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myDate1, (DateTime)value[0], "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[1] is TimeSpan, "addedProperty.Value[1].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myInterval2, (TimeSpan)value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_DateTimeArray_Mixed_InferredType()
+        {
+            DateTime myDate1 = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);
+            TimeSpan myInterval2 = TimeSpan.FromSeconds(456);
+
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new Object[] { myDate1, myInterval2 }, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            IList value = (IList)addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Count, "addedProperty.Value.Count is not correct");
+            MMI.Tests.Assert.True(value[0] is DateTime, "addedProperty.Value[0].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myDate1, (DateTime)value[0], "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.True(value[1] is TimeSpan, "addedProperty.Value[1].GetType() is not correct");
+            MMI.Tests.Assert.Equal(myInterval2, (TimeSpan)value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_StringArray()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new String[] { "foo", "bar" }, CimType.StringArray, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is String[], "addedProperty.Value.GetType() is not correct");
+            String[] value = (String[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Length, "addedProperty.Value.Length is not correct");
+            MMI.Tests.Assert.Equal("foo", value[0], "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.Equal("bar", value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.StringArray, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_InstanceArray()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+
+            CimInstance nestedInstance1 = new CimInstance("MyNestedInstance1");
+            CimInstance nestedInstance2 = new CimInstance("MyNestedInstance2");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new CimInstance[] { nestedInstance1, nestedInstance2 }, CimType.InstanceArray, CimFlags.None);
+            MMI.Tests.Assert.Equal("MyPropertyName", cimProperty.Name, "CimProperty.Create correctly round-trips CimProperty.Name");
+            MMI.Tests.Assert.True(cimProperty.Value is CimInstance[], "CimProperty.Create preserves the type of the value");
+            MMI.Tests.Assert.True(((CimInstance[])(cimProperty.Value))[0] != null, "CimProperty.Create preserves the nullness of the value");
+            MMI.Tests.Assert.Equal(CimType.InstanceArray, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
+            MMI.Tests.Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is CimInstance[], "addedProperty.Value.GetType() is not correct");
+            CimInstance[] value = (CimInstance[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Length, "addedProperty.Value.Length is not correct");
+            MMI.Tests.Assert.Equal("MyNestedInstance1", value[0].CimSystemProperties.ClassName, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.Equal("MyNestedInstance2", value[1].CimSystemProperties.ClassName, "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.InstanceArray, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Add_ValueAndType_ReferenceArray()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+
+            CimInstance nestedInstance1 = new CimInstance("MyNestedInstance1");
+            CimInstance nestedInstance2 = new CimInstance("MyNestedInstance2");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new CimInstance[] { nestedInstance1, nestedInstance2 }, CimType.ReferenceArray, CimFlags.None);
+            MMI.Tests.Assert.Equal("MyPropertyName", cimProperty.Name, "CimProperty.Create correctly round-trips CimProperty.Name");
+            MMI.Tests.Assert.True(cimProperty.Value is CimInstance[], "CimProperty.Create preserves the type of the value");
+            MMI.Tests.Assert.True(((CimInstance[])(cimProperty.Value))[0] != null, "CimProperty.Create preserves the nullness of the value");
+            MMI.Tests.Assert.Equal(CimType.ReferenceArray, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
+            MMI.Tests.Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is CimInstance[], "addedProperty.Value.GetType() is not correct");
+            CimInstance[] value = (CimInstance[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(2, value.Length, "addedProperty.Value.Length is not correct");
+            MMI.Tests.Assert.Equal("MyNestedInstance1", value[0].CimSystemProperties.ClassName, "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.Equal("MyNestedInstance2", value[1].CimSystemProperties.ClassName, "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.ReferenceArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
         #endregion Test properties
     }
