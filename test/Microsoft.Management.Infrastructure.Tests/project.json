@@ -3,6 +3,12 @@
     "version": "1.0.0-*",
     "authors": [ "cbnilrem", "andschwa" ],
 
+    "buildOptions": {
+        "keyFile": "../signing/visualstudiopublic.snk",
+        "delaySign": true,
+        "publicSign": false
+    },
+
     "dependencies": {
         "Microsoft.Management.Infrastructure": "1.0.0-*"
     },
