@@ -3,6 +3,7 @@
 *=============================================================================
 */
 
+
 namespace Microsoft.Management.Infrastructure.UnitTests
 {
     using Microsoft.Management.Infrastructure;
@@ -10,6 +11,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
     using Microsoft.Management.Infrastructure.Serialization;
     using MMI.Tests;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -326,10 +328,247 @@ namespace Microsoft.Management.Infrastructure.UnitTests
                 return this.deserializer.DeserializeInstances(buffer, ref offset, null, null, getIncludedFileContent);
             });
         }
-
-        //TODO: Fake different kinds of Mof file to deserialize
         #endregion Deserialization tests
 
+        #region Deserialization an exteranl MOF file tests
+        [Fact]
+        public void Deserialization_CimClass_DSCMof()
+        {
+            string c1 = "MSFT_BaseCredential";
+            string c2 = "MSFT_WindowsCredential";
+            string c3 = "MSFT_BaseResourceConfiguration";
+            string c4 = "MSFT_FileDirectoryConfiguration";
+            string c5 = "MSFT_ConfigurationDocument";
+            uint offset = 0;
+            byte[] buffer = Helpers.GetBytesFromFile(@"'..\..\TestData\dscschema.mof");    
+            
+            IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
+            MMI.Tests.Assert.NotNull(classes, "class is null and is not deserialized.");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset is not correct");
+            MMI.Tests.Assert.Equal(5, classes.Count(), "class count is not 5");
+            
+            IEnumerator<CimClass> ce = classes.GetEnumerator();
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal(ce.Current.CimSystemProperties.ClassName, c1,
+                    "first class is MSFT_BaseCredential");
+                MMI.Tests.Assert.Equal(2, ce.Current.CimClassProperties.Count, "class has 2 property");
+            }
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal(ce.Current.CimSystemProperties.ClassName, c2,
+                    "first class is MSFT_WindowsCredential");
+                MMI.Tests.Assert.Equal(3, ce.Current.CimClassProperties.Count, "class has 3 property");
+            }
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal(c3, ce.Current.CimSystemProperties.ClassName,
+                    "first class is MSFT_BaseResourceConfiguration");
+                MMI.Tests.Assert.Equal(4, ce.Current.CimClassProperties.Count, "class has 4 property");
+            }
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal(c4, ce.Current.CimSystemProperties.ClassName, 
+                    "first class is MSFT_FileDirectoryConfiguration");
+                MMI.Tests.Assert.Equal(17, ce.Current.CimClassProperties.Count, "class has 17 property");
+            }
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal(c5, ce.Current.CimSystemProperties.ClassName, 
+                    "first class is MSFT_ConfigurationDocument");
+                MMI.Tests.Assert.Equal(4, ce.Current.CimClassProperties.Count, "class has 4 property");
+            }
+            MMI.Tests.Assert.True(!ce.MoveNext());
+        }
+
+        [Fact]
+        public void Deserialization_CimInstance_DSCMof()
+        {
+            string c1 = "MSFT_BaseCredential";
+            string c2 = "MSFT_WindowsCredential";
+            string c3 = "MSFT_BaseResourceConfiguration";
+            string c4 = "MSFT_FileDirectoryConfiguration";
+            string c5 = "MSFT_ConfigurationDocument";
+            uint offset = 0;
+            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\TestData\dscinstance.mof");
+            
+            deserializer.SchemaValidationOption = MofDeserializerSchemaValidationOption.Strict;
+            IEnumerable<CimInstance> instances = deserializer.DeserializeInstances(buffer, ref offset);
+            MMI.Tests.Assert.NotNull(instances, "Instance is null, it is not deserialized");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset got increased");
+            MMI.Tests.Assert.Equal(2, instances.Count(), "instance count is 2");
+            IEnumerator<CimInstance> ie = instances.GetEnumerator();
+            MMI.Tests.Assert.True(ie.MoveNext());
+            {
+                MMI.Tests.Assert.Equal("MSFT_FileDirectoryConfiguration", ie.Current.CimSystemProperties.ClassName, 
+                    "second instance is of class 'MSFT_FileDirectoryConfiguration'");
+                CimProperty p = ie.Current.CimInstanceProperties["ResourceId"];
+                MMI.Tests.Assert.NotNull(p, "property ResourceId is null");
+                MMI.Tests.Assert.Equal("ResourceId", p.Name, "property name is ResourceId");
+                MMI.Tests.Assert.Equal(p.CimType, CimType.String, "property ResourceId is of String type");
+                MMI.Tests.Assert.Equal("R1", p.Value.ToString(), "property value is AAA");
+
+                p = ie.Current.CimInstanceProperties["DestinationPath"];
+                MMI.Tests.Assert.NotNull(p, "property DestinationPath is null");
+                MMI.Tests.Assert.Equal("DestinationPath", p.Name, "property name is not DestinationPath");
+                MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property DestinationPath is of String type");
+                MMI.Tests.Assert.Equal(@"C:\Test", p.Value.ToString(), @"property value is C:\Test");
+
+                p = ie.Current.CimInstanceProperties["credential"];
+                MMI.Tests.Assert.NotNull(p, "property credential is not null");
+                MMI.Tests.Assert.Equal("credential", p.Name, "property name is credential");
+                MMI.Tests.Assert.Equal(CimType.Instance, p.CimType, "property credential is of String Instance");
+                CimInstance credentialvalue = p.Value as CimInstance;
+                MMI.Tests.Assert.NotNull(credentialvalue, "property credential value is not null");
+                MMI.Tests.Assert.Equal("MSFT_WindowsCredential", credentialvalue.CimSystemProperties.ClassName, 
+                    "property credential is of type 'MSFT_WindowsCredential'");
+
+                p = credentialvalue.CimInstanceProperties["Password"];
+                MMI.Tests.Assert.NotNull(p, "property Password is null");
+                MMI.Tests.Assert.Equal("Password", p.Name, "property name is Password");
+                MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property Password is of String type");
+                MMI.Tests.Assert.Equal("BBB", p.Value.ToString(), "property value is BBB");
+            }
+            MMI.Tests.Assert.True(ie.MoveNext());
+            {
+                MMI.Tests.Assert.Equal("MSFT_ConfigurationDocument", ie.Current.CimSystemProperties.ClassName, 
+                    "third instance is of class 'MSFT_ConfigurationDocument'");
+                CimProperty p = ie.Current.CimInstanceProperties["version"];
+                MMI.Tests.Assert.NotNull(p, "property version is null");
+                MMI.Tests.Assert.Equal("Version", p.Name, "property name is Version");
+                MMI.Tests.Assert.Equal(CimType.String, p.CimType, "property version is of String type");
+                MMI.Tests.Assert.Equal("1.0.0", p.Value.ToString(), "property value is 1.0.0");
+            }
+            MMI.Tests.Assert.True(!ie.MoveNext());
+        }
+
+        [Fact]
+        public void Deserialization_DMTFMof()
+        {
+            uint offset = 0;
+            byte[] buffer = GetFileContent(@"..\..\TestDataq\dmtftypes.mof");
+            
+            IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
+            MMI.Tests.Assert.NotNull(classes, "class got deserialized");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset got increased");
+            MMI.Tests.Assert.Equal(3, classes.Count(), "class count is 3");
+       
+            IEnumerator<CimClass> ce = classes.GetEnumerator();
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal("TestClass_PropertyValues", ce.Current.CimSystemProperties.ClassName, 
+                    "1st class is TestClass_PropertyValues");
+                MMI.Tests.Assert.Equal(1, ce.Current.CimClassProperties.Count, "class has 1 property");
+                MMI.Tests.Assert.Equal(CimType.UInt64, ce.Current.CimClassProperties["v_Key"].CimType);
+            }
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal(ce.Current.CimSystemProperties.ClassName, "TestClass_ForEmbedded",
+                    "2nd class is TestClass_ForEmbedded ");
+                MMI.Tests.Assert.Equal(ce.Current.CimClassProperties.Count, 1, "class has 1 property");
+                MMI.Tests.Assert.Equal(ce.Current.CimClassProperties["embeddedStringValue"].CimType, CimType.String);
+            }
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                var messag = "property type is not correct";
+                MMI.Tests.Assert.Equal("TestClass_AllDMTFTypes", ce.Current.CimSystemProperties.ClassName, 
+                    "class name should be TestClass_AllDMTFTypes");
+                MMI.Tests.Assert.Equal(34, ce.Current.CimClassProperties.Count, "class has 34 properties");
+                MMI.Tests.Assert.Equal(CimType.Boolean, ce.Current.CimClassProperties["sbool"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt8, ce.Current.CimClassProperties["suint8"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt8, ce.Current.CimClassProperties["ssint8"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt16, ce.Current.CimClassProperties["sUINT16"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt16, ce.Current.CimClassProperties["ssint16"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt32, ce.Current.CimClassProperties["suint32"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt32, ce.Current.CimClassProperties["ssint32"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt64, ce.Current.CimClassProperties["suint64"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt64, ce.Current.CimClassProperties["ssint64"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Real32, ce.Current.CimClassProperties["srEal32"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Real64, ce.Current.CimClassProperties["sREAL64"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Char16, ce.Current.CimClassProperties["schar16"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.String, ce.Current.CimClassProperties["sstring"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.DateTime, ce.Current.CimClassProperties["sDATETIME"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.BooleanArray, ce.Current.CimClassProperties["a_bool"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt8Array, ce.Current.CimClassProperties["a_uint8"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt8Array, ce.Current.CimClassProperties["a_sint8"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt16Array, ce.Current.CimClassProperties["a_UINT16"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt16Array, ce.Current.CimClassProperties["a_sint16"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt32Array, ce.Current.CimClassProperties["a_uint32"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt32Array, ce.Current.CimClassProperties["a_sint32"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.UInt64Array, ce.Current.CimClassProperties["a_uint64"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.SInt64Array, ce.Current.CimClassProperties["a_sint64"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Real32Array, ce.Current.CimClassProperties["a_rEal32"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Real64Array, ce.Current.CimClassProperties["a_REAL64"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Char16Array, ce.Current.CimClassProperties["a_char16"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.StringArray, ce.Current.CimClassProperties["a_string"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.DateTimeArray, ce.Current.CimClassProperties["a_DATETIME"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Reference, ce.Current.CimClassProperties["embeddedReference"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Instance, ce.Current.CimClassProperties["embeddedinstance"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.InstanceArray, ce.Current.CimClassProperties["embeddedinstancearray"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.Instance, ce.Current.CimClassProperties["embeddedobject"].CimType, messag);
+                MMI.Tests.Assert.Equal(CimType.InstanceArray, ce.Current.CimClassProperties["embeddedobjectarray"].CimType, messag);
+                MMI.Tests.Assert.Equal(17, ce.Current.CimClassMethods.Count, "class has 17 methods");
+                CimMethodDeclaration decl = ce.Current.CimClassMethods[@"Win32ShutdownTracker"];
+                MMI.Tests.Assert.NotNull(decl, "CimClassMethods return a null.");
+                MMI.Tests.Assert.Null(decl.Parameters["MIReturn"]);
+                MMI.Tests.Assert.NotNull(decl.Parameters["Comment"]);
+                MMI.Tests.Assert.NotNull(decl.Parameters["Comment"].Qualifiers["in"]);
+                MMI.Tests.Assert.NotNull(decl.Parameters["Comment"].Qualifiers["MappingStrings"]);
+                MMI.Tests.Assert.Equal(decl.Parameters["Comment"].Qualifiers.Count, 2);
+                Console.WriteLine(@"decl name: {0}", decl.Name);
+                foreach (CimMethodDeclaration d in ce.Current.CimClassMethods)
+                {
+                    Console.WriteLine(@"method name {0}, qualifer count {1}", d.Name, d.Qualifiers.Count);
+                    Console.WriteLine(@"return type is {0}", d.ReturnType.ToString());
+                    foreach (CimQualifier cq in d.Qualifiers)
+                    {
+                        Console.WriteLine(@"q name {0}, q flag {1}, q type {2}", cq.Name, cq.Flags, cq.CimType.ToString());
+                    }
+                }
+            }
+            MMI.Tests.Assert.True(!ce.MoveNext());
+        }
+
+        [Fact]
+        public void Deserialization_CimClass_MintMof()
+        {
+            uint offset = 0;
+            byte[] buffer = GetFileContent(@"..\..\TestData\mintschema.mof");
+            
+            IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
+            MMI.Tests.Assert.NotNull(classes, "class is null and is not deserialized");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset got increased");
+            MMI.Tests.Assert.Equal(40, classes.Count(), "class count is 40");
+            IEnumerator<CimClass> ce = classes.GetEnumerator();
+            MMI.Tests.Assert.True(ce.MoveNext());
+            {
+                MMI.Tests.Assert.Equal("MSFT_Expression", ce.Current.CimSystemProperties.ClassName, 
+                    "first class is not MSFT_BaseCredential");
+            }
+        }
+
+        [Fact]
+        public void Deserialization_CimInstance_MintMof()
+        {
+            uint offset = 0;
+            byte[] buffer = GetFileContent(@"..\..\TestData\mintinstance.mof");
+            deserializer.SchemaValidationOption = MofDeserializerSchemaValidationOption.Ignore;
+            
+            IEnumerable<CimInstance> instances = deserializer.DeserializeInstances(buffer, ref offset);
+            MMI.Tests.Assert.NotNull(instances, "Instance is null and is not deserialized");
+            MMI.Tests.Assert.Equal(offset, (uint)buffer.Length, "Offset got increased");
+            MMI.Tests.Assert.Equal(instances.Count(), 1, "instance count is 1");
+            
+            IEnumerator<CimInstance> ie = instances.GetEnumerator();
+            MMI.Tests.Assert.True(ie.MoveNext());
+            {
+                MMI.Tests.Assert.Equal("MSFT_ExpressionLambda", ie.Current.CimSystemProperties.ClassName, 
+                    "first instance class is 'MSFT_ExpressionLambda'");
+            }
+            MMI.Tests.Assert.False(ie.MoveNext());
+        }
+        #endregion Deserialization an exteranl MOF file tests
+        
         #region Fake
         private CimClass GetClass(string serverName, string namespaceName, string className)
         {

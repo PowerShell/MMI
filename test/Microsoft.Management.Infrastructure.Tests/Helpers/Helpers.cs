@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,22 @@ namespace MMI.Tests
             return encoding.GetBytes(str);
         }
 
+        /// <summary>
+        /// Read file content to byte array
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static byte[] GetBytesFromFile(string filePath)
+        {
+            using (FileStream fs = File.OpenRead(filePath))
+            {
+                byte[] bytes = new byte[fs.Length];
+                fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
+                fs.Close();
+                return bytes;
+            }
+        }
+
         public static string GetStringRepresentationOfSerializedData(byte[] data)
         {
 #if !_LINUX
@@ -43,5 +60,8 @@ namespace MMI.Tests
             return Encoding.ASCII.GetString(data);
 #endif
         }
+
+
+
     }
 }
