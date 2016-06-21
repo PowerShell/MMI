@@ -396,7 +396,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             deserializer.SchemaValidationOption = MofDeserializerSchemaValidationOption.Strict;
             IEnumerable<CimInstance> instances = deserializer.DeserializeInstances(buffer, ref offset);
             MMI.Tests.Assert.NotNull(instances, "Instance is null, it is not deserialized");
-            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset got increased");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset is not correct");
             MMI.Tests.Assert.Equal(2, instances.Count(), "instance count is 2");
             IEnumerator<CimInstance> ie = instances.GetEnumerator();
             MMI.Tests.Assert.True(ie.MoveNext());
@@ -454,7 +454,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 #endif
             IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
             MMI.Tests.Assert.NotNull(classes, "class got deserialized");
-            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset got increased");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset is not correct");
             MMI.Tests.Assert.Equal(3, classes.Count(), "class count is 3");
        
             IEnumerator<CimClass> ce = classes.GetEnumerator();
@@ -544,7 +544,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 #endif
             IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
             MMI.Tests.Assert.NotNull(classes, "class is null and is not deserialized");
-            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset got increased");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset is not currect");
             MMI.Tests.Assert.Equal(40, classes.Count(), "class count is 40");
             IEnumerator<CimClass> ce = classes.GetEnumerator();
             MMI.Tests.Assert.True(ce.MoveNext());
@@ -567,8 +567,8 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             
             IEnumerable<CimInstance> instances = deserializer.DeserializeInstances(buffer, ref offset);
             MMI.Tests.Assert.NotNull(instances, "Instance is null and is not deserialized");
-            MMI.Tests.Assert.Equal(offset, (uint)buffer.Length, "Offset got increased");
-            MMI.Tests.Assert.Equal(instances.Count(), 1, "instance count is 1");
+            MMI.Tests.Assert.Equal((uint)buffer.Length, offset, "Offset is not currect");
+            MMI.Tests.Assert.Equal(1, instances.Count(), "instance count is 1");
             
             IEnumerator<CimInstance> ie = instances.GetEnumerator();
             MMI.Tests.Assert.True(ie.MoveNext());
