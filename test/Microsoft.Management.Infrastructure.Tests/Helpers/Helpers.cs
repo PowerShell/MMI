@@ -47,7 +47,11 @@ namespace MMI.Tests
             {
                 byte[] bytes = new byte[fs.Length];
                 fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
+                // FileStream.close method is not supported in .net core currently.
+#if !_LINUX
                 fs.Close();
+#else            
+#endif
                 return bytes;
             }
         }
@@ -60,8 +64,5 @@ namespace MMI.Tests
             return Encoding.ASCII.GetString(data);
 #endif
         }
-
-
-
     }
 }
