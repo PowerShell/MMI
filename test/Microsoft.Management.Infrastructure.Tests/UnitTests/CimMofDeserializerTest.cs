@@ -343,7 +343,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\TestData\dscschema.mof");
 #else
-            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestDatadscschema.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dscschema.mof");
 #endif
             IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
             MMI.Tests.Assert.NotNull(classes, "class is null and is not deserialized.");
@@ -384,7 +384,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.True(!ce.MoveNext());
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_CimInstance_DSCMof()
         {
             uint offset = 0;
@@ -443,7 +443,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.True(!ie.MoveNext());
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_DMTFMof()
         {
             uint offset = 0;
@@ -554,7 +554,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_CimInstance_MintMof()
         {
             uint offset = 0;
