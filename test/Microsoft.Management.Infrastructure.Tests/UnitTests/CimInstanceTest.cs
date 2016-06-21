@@ -1113,6 +1113,158 @@ namespace Microsoft.Management.Infrastructure.UnitTests
             MMI.Tests.Assert.Equal("MyNestedInstance2", value[1].CimSystemProperties.ClassName, "addedProperty.Value[1] is not correct");
             MMI.Tests.Assert.Equal(CimType.ReferenceArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
+
+        [Fact]
+        public void Properties_Set_ValueAndType_SInt32()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.SInt32, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            addedProperty.Value = 456;
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is Int32, "addedProperty.Value.GetType() is not correct");
+            MMI.Tests.Assert.Equal(456, (Int32)(addedProperty.Value), "addedProperty.Value is not correct");
+            MMI.Tests.Assert.Equal(CimType.SInt32, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [TDDFact]
+        public void Properties_Set_ValueAndType_SInt32Array()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", null, CimType.SInt32Array, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            addedProperty.Value = new Int32[] { 123, 456 };
+            MMI.Tests.Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
+            MMI.Tests.Assert.True(addedProperty.Value is Int32[], "addedProperty.Value.GetType() is not correct");
+            Int32[] value = (Int32[])addedProperty.Value;
+            MMI.Tests.Assert.Equal(123, value[0], "addedProperty.Value[0] is not correct");
+            MMI.Tests.Assert.Equal(456, value[1], "addedProperty.Value[1] is not correct");
+            MMI.Tests.Assert.Equal(CimType.SInt32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [Fact]
+        public void Properties_Set_NullValue_SInt32()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", 123, CimType.SInt32, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            addedProperty.Value = null;
+            MMI.Tests.Assert.Null(addedProperty.Value, "addedProperty.Value is not null");
+            MMI.Tests.Assert.Equal(CimType.SInt32, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [Fact]
+        public void Properties_Set_NullValue_SInt32Array()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty cimProperty = CimProperty.Create("MyPropertyName", new Int32[] { 123, 456 }, CimType.SInt32Array, CimFlags.None);
+            cimInstance.CimInstanceProperties.Add(cimProperty);
+
+            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
+            addedProperty.Value = null;
+            MMI.Tests.Assert.Null(addedProperty.Value, "addedProperty.Value is not null");
+            MMI.Tests.Assert.Equal(CimType.SInt32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
+        }
+
+        [Fact]
+        public void Properties_Indexer()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            cimInstance.CimInstanceProperties.Add(CimProperty.Create("My123property", 123, CimType.SInt32, CimFlags.None));
+            cimInstance.CimInstanceProperties.Add(CimProperty.Create("My456property", 456, CimType.SInt32, CimFlags.None));
+
+            CimProperty my123property = cimInstance.CimInstanceProperties["My123property"];
+            MMI.Tests.Assert.Equal("My123property", my123property.Name, "my123property.Name is not correct");
+            MMI.Tests.Assert.Equal(123, (Int32)my123property.Value, "my123property.Value is not correct");
+
+            CimProperty my456property = cimInstance.CimInstanceProperties["My456property"];
+            MMI.Tests.Assert.Equal("My456property", my456property.Name, "my456property.Name is not correct");
+            MMI.Tests.Assert.Equal(456, (Int32)my456property.Value, "my456property.Value is not correct");
+        }
+
+        [Fact]
+        public void Properties_Indexer_NotExistantName()
+        {
+            CimInstance cimInstance = new CimInstance("MyClassName");
+            CimProperty notExistantProperty = cimInstance.CimInstanceProperties["NotExistantPropertyName"];
+            MMI.Tests.Assert.Null(notExistantProperty, "notExistantProperty is not null");
+        }
+
+        [Fact]
+        public void GetCimType_FromDotNetType_Int32()
+        {
+            CimType cimType = CimConverter.GetCimType(typeof(Int32));
+            MMI.Tests.Assert.Equal(cimType, CimType.SInt32, "Got the right CimType back");
+        }
+
+        [Fact]
+        public void GetCimType_FromDotNetType_DateTime()
+        {
+            CimType cimType = CimConverter.GetCimType(typeof(DateTime));
+            MMI.Tests.Assert.Equal(CimType.DateTime, cimType, "Got the right CimType back");
+        }
+
+        [Fact]
+        public void GetCimType_FromDotNetType_CimInstance()
+        {
+            CimType cimType = CimConverter.GetCimType(typeof(CimInstance));
+            MMI.Tests.Assert.Equal(CimType.Instance, cimType, "Got the right CimType back");
+        }
+
+        [Fact]
+        public void GetCimType_FromDotNetType_Int32Array()
+        {
+            CimType cimType = CimConverter.GetCimType(typeof(Int32[]));
+            MMI.Tests.Assert.Equal(CimType.SInt32Array, cimType, "Got the right CimType back");
+        }
+
+        [Fact]
+        public void GetCimType_FromDotNetType_Int32List()
+        {
+            CimType cimType = CimConverter.GetCimType(typeof(List<Int32>));
+            MMI.Tests.Assert.Equal(CimType.SInt32Array, cimType, "Got the right CimType back");
+        }
+
+        [Fact]
+        public void GetDotNetType_FromCimType_SInt32()
+        {
+            Type dotNetType = CimConverter.GetDotNetType(CimType.SInt32);
+            MMI.Tests.Assert.Equal(typeof(Int32), dotNetType, "Got the right .NET type back");
+        }
+
+        [Fact]
+        public void GetDotNetType_FromCimType_SInt32Array()
+        {
+            Type dotNetType = CimConverter.GetDotNetType(CimType.SInt32Array);
+            MMI.Tests.Assert.Equal(typeof(Int32[]), dotNetType, "Got the right .NET type back");
+        }
+
+        [Fact]
+        public void GetDotNetType_FromCimType_Unknown()
+        {
+            Type dotNetType = CimConverter.GetDotNetType(CimType.Unknown);
+            MMI.Tests.Assert.Null(dotNetType, "should be null as expected");
+        }
+
+        [Fact]
+        public void GetDotNetType_FromCimType_DateTime()
+        {
+            Type dotNetType = CimConverter.GetDotNetType(CimType.DateTime);
+            MMI.Tests.Assert.Null(dotNetType, "should be null as expected");
+        }
+
+        [Fact]
+        public void GetDotNetType_FromCimType_DateTimeArray()
+        {
+            Type dotNetType = CimConverter.GetDotNetType(CimType.DateTimeArray);
+            MMI.Tests.Assert.Null(dotNetType, "should be null as expected");
+        }
         #endregion Test properties
     }
 }
