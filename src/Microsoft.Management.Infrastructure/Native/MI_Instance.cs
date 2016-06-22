@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal class MI_Instance : MI_NativeObjectWithFT<MI_Instance.MI_InstanceFT>
+    internal class MI_Instance : MI_NativeObjectWithFT<MI_Instance.MI_InstanceFT>, IDisposable
     {
         internal MI_Result GetElement(
             string name,
@@ -122,21 +122,6 @@ namespace Microsoft.Management.Infrastructure.Native
             MI_Result localResult = this.ft.Delete(this);
             this.ZeroPtr();
             return localResult;
-        }
-
-        private void ZeroPtr()
-        {
-            if (this.isDirect)
-            {
-                this.allocatedData = IntPtr.Zero;
-            }
-            else if (this.allocatedData != IntPtr.Zero)
-            {
-                unsafe
-                {
-                    *(IntPtr*)this.allocatedData = IntPtr.Zero;
-                }
-            }
         }
 
         internal MI_Result IsA(

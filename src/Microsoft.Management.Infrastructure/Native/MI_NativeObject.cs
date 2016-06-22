@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
-    internal abstract class MI_NativeObject
+    internal abstract class MI_NativeObject : IDisposable
     {
         [StructLayout(LayoutKind.Sequential, CharSet = MI_PlatformSpecific.AppropriateCharSet)]
         protected struct MI_NativeObjectNormalMembersLayout
@@ -60,11 +60,13 @@ namespace Microsoft.Management.Infrastructure.Native
         protected IntPtr allocatedData;
         protected bool isDirect;
 
-        ~MI_NativeObject()
+        public virtual void Dispose()
         {
             if (this.allocatedData != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(this.allocatedData);
+                IntPtr tmp = this.allocatedData;
+                this.ZeroPtr();
+                Marshal.FreeHGlobal(tmp);
             }
         }
 
@@ -124,6 +126,21 @@ namespace Microsoft.Management.Infrastructure.Native
                 }
 
                 return structurePtr;
+            }
+        }
+
+        protected void ZeroPtr()
+        {
+            if (this.isDirect)
+            {
+                this.allocatedData = IntPtr.Zero;
+            }
+            else if (this.allocatedData != IntPtr.Zero)
+            {
+                unsafe
+                {
+                    *(IntPtr*)this.allocatedData = IntPtr.Zero;
+                }
             }
         }
     }
