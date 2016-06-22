@@ -10,5 +10,5 @@ before_install:
   - curl -s "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh" -o dotnet-install.sh
   - bash ./dotnet-install.sh -c preview -v latest
 script:
-  - PATH=$PATH:~/.dotnet ./build.sh
-  - PATH=$PATH:~/.dotnet ./test.sh
+  - ./build.sh
+  - ./test.sh
