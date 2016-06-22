@@ -4,7 +4,7 @@
     "authors": [ "cbnilrem", "andschwa" ],
 
     "buildOptions": {
-        "keyFile": "../signing/visualstudiopublic.snk",
+        "keyFile": "../../src/signing/visualstudiopublic.snk",
         "delaySign": true,
         "publicSign": false
     },
@@ -25,7 +25,7 @@
         "netcoreapp1.0": {
             "imports": [ "dnxcore50", "portable-net45+win8" ],
             "dependencies": {
-                "Microsoft.NETCore.App": "1.0.0-rc2-3002702",
+                "Microsoft.NETCore.App": "1.0.0-rc2-*",
                 "xunit": "2.1.0",
                 "dotnet-test-xunit": "1.0.0-rc2-192208-24"
             },

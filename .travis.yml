@@ -3,21 +3,12 @@ sudo: required
 dist: trusty
 git:
   submodules: false
-addons:
-  apt:
-    packages:
-      - libpam0g-dev
-      - libssl-dev
-      - libcurl4-openssl-dev
-      - libboost-filesystem-dev
-before_script:
+before_install:
   - git config --global url.git@github.com:.insteadOf https://github.com/
   - git submodule update --init
-before_install:
-  - sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
-  - sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq dotnet-dev-1.0.0-preview1-002702
+  - sudo apt-get install -y -qq curl make g++ cmake libc6 libgcc1 libstdc++6 libcurl3 libgssapi-krb5-2 libicu52 liblldb-3.6 liblttng-ust0 libssl1.0.0 libunwind8 libuuid1 zlib1g clang-3.5
+  - curl -s "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh" -o dotnet-install.sh
+  - bash ./dotnet-install.sh -c preview -v latest
 script:
-  - ./build.sh
-  - ./test.sh
+  - PATH=$PATH:~/.dotnet ./build.sh
+  - PATH=$PATH:~/.dotnet ./test.sh
