@@ -64,7 +64,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                                  out qualifierSet,
                                  out flags);
                 CimException.ThrowIfMiResultFailure(result);
-                return (object)value;
+                return ValueHelpers.ConvertFromNativeLayer(value, type, flags);
             }
         }
 

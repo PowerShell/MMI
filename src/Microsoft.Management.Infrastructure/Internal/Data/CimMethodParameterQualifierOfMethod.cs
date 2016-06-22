@@ -91,7 +91,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                                      out qualifierValue);
                 CimException.ThrowIfMiResultFailure(result);
 
-                return (object)qualifierValue;
+                return ValueHelpers.ConvertFromNativeLayer(qualifierValue, qualifierType, qualifierFlags);
             }
         }
 
