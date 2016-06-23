@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 using Xunit.Sdk;
-using Microsoft.Management.Infrastructure.Native;
 
 namespace MMI.Tests
 {
@@ -61,7 +55,7 @@ namespace MMI.Tests
         {
             Xunit.Assert.NotNull(actual);
         }
-        
+
         internal static void Null<T>(T actual) where T : class
         {
             Xunit.Assert.Null(actual);
