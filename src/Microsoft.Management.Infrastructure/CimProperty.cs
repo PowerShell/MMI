@@ -352,25 +352,18 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.DateTime:
                     if (value is TimeSpan)
                     {
-                        TimeSpan ts = (TimeSpan)value;
-                        MI_Datetime dt = new MI_Datetime(ts);
-                        miv.Datetime = dt;
+                        miv.Datetime = new MI_Datetime((TimeSpan)value);
                         return miv;
                     }
                     else if (value is DateTime)
                     {
-                        DateTime sdt = (DateTime)value;
-                        MI_Datetime dt = new MI_Datetime(sdt);
-                        miv.Datetime = dt;
+                        miv.Datetime = new MI_Datetime((DateTime)value);
                         return miv;
                     }
                     else
                     {
-                        MI_Datetime dt = new MI_Datetime();
-                        miv.Datetime = dt;
+                        miv.Datetime = new MI_Datetime((DateTime)Convert.ToDateTime(value, CultureInfo.InvariantCulture));
                         return miv;
-                        // TODO: What case is this? What time object would this be?
-                        //return Convert.ToDateTime(value, CultureInfo.InvariantCulture);
                     }
                 case CimType.DateTimeArray:
                     if (arrayOfObjects != null)
@@ -380,22 +373,15 @@ namespace Microsoft.Management.Infrastructure
                         {
                             if (arrayOfObjects[i] is TimeSpan)
                             {
-                                TimeSpan ts = (TimeSpan)arrayOfObjects[i];
-                                MI_Datetime dt = new MI_Datetime(ts);
-                                array[i] = dt;
+                                array[i] = new MI_Datetime((TimeSpan)arrayOfObjects[i]);
                             }
                             else if (arrayOfObjects[i] is DateTime)
                             {
-                                DateTime sdt = (DateTime)arrayOfObjects[i];
-                                MI_Datetime dt = new MI_Datetime(sdt);
-                                array[i] = dt;
+                                array[i] = new MI_Datetime((DateTime)arrayOfObjects[i]);
                             }
                             else
                             {
-                                MI_Datetime dt = new MI_Datetime();
-                                array[i] = dt;
-                                // TODO: What case is this? What time object would this be?
-                                //array[i] = Convert.ToDateTime(arrayOfObjects[i], CultureInfo.InvariantCulture);
+                                array[i] = new MI_Datetime((DateTime)Convert.ToDateTime(arrayOfObjects[i], CultureInfo.InvariantCulture));
                             }
                         }
                         miv.DatetimeA = array;

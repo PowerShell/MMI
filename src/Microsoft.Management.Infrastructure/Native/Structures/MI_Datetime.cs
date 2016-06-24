@@ -18,12 +18,93 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_Datetime(TimeSpan interval)
         {
-            throw new NotImplementedException();
+            this.timestamp.utc = 0;
+            this.timestamp.year = this.timestamp.month = this.timestamp.day = this.timestamp.hour = this.timestamp.minute = this.timestamp.second = this.timestamp.microseconds = 0;
+            this.interval.days = this.interval.hours = this.interval.minutes = this.interval.seconds = this.interval.microseconds = 0;
+            this.interval.__padding1 = this.interval.__padding2 = this.interval.__padding3 = 0;
+
+            if (interval.Equals(TimeSpan.MaxValue))
+            {
+                this.interval.days = 99999999;
+                this.interval.hours = 23;
+                this.interval.minutes = 59;
+                this.interval.seconds = 59;
+                this.interval.microseconds = 0;
+            }
+            else
+            {
+                long ticksUnaccounted = interval.Ticks % 10000; // since 10000 ticks == 1 millisecond
+                this.interval.days = (uint)interval.Days;
+                this.interval.hours = (uint)interval.Hours;
+                this.interval.minutes = (uint)interval.Minutes;
+                this.interval.seconds = (uint)interval.Seconds;
+                this.interval.microseconds = (uint)(interval.Milliseconds * 1000 + ticksUnaccounted / 10);
+            }
+            this.isTimestamp = false;
         }
+
+        static DateTime maxValidCimTimestamp = new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Utc);
 
         internal MI_Datetime(DateTime datetime)
         {
-            throw new NotImplementedException();
+            this.timestamp.utc = 0;
+            this.timestamp.year = this.timestamp.month = this.timestamp.day = this.timestamp.hour = this.timestamp.minute = this.timestamp.second = this.timestamp.microseconds = 0;
+            this.interval.days = this.interval.hours = this.interval.minutes = this.interval.seconds = this.interval.microseconds = 0;
+            this.interval.__padding1 = this.interval.__padding2 = this.interval.__padding3 = 0;
+
+            if (datetime.Equals(DateTime.MaxValue))
+            {
+                // "Infinite future" value defined in line 1936, page 54 of DSP0004, version 2.6.0
+                this.timestamp.year = 9999;
+                this.timestamp.month = 12;
+                this.timestamp.day = 31;
+                this.timestamp.hour = 11;
+                this.timestamp.minute = 59;
+                this.timestamp.second = 59;
+                this.timestamp.microseconds = 999999;
+                this.timestamp.utc = (-720);
+            }
+            else if (datetime.Equals(DateTime.MinValue))
+            {
+                // "Infinite past" value defined in line 1935, page 54 of DSP0004, version 2.6.0
+                this.timestamp.year = 0;
+                this.timestamp.month = 1;
+                this.timestamp.day = 1;
+                this.timestamp.hour = 0;
+                this.timestamp.minute = 0;
+                this.timestamp.second = 0;
+                this.timestamp.microseconds = 999999;
+                this.timestamp.utc = 720;
+            }
+            else if (DateTime.Compare(maxValidCimTimestamp, datetime) <= 0)
+            {
+                // "Youngest useable timestamp" value defined in line 1930, page 53 of DSP0004, version 2.6.0
+                this.timestamp.year = 9999;
+                this.timestamp.month = 12;
+                this.timestamp.day = 31;
+                this.timestamp.hour = 11;
+                this.timestamp.minute = 59;
+                this.timestamp.second = 59;
+                this.timestamp.microseconds = 999998;
+                this.timestamp.utc = (-720);
+            }
+            else
+            {
+
+                datetime = TimeZoneInfo.ConvertTime(datetime, TimeZoneInfo.Utc);
+                long ticksUnaccounted = datetime.Ticks % 10000; // since 10000 ticks == 1 millisecond
+
+                this.timestamp.year = (uint)datetime.Year;
+                this.timestamp.month = (uint)datetime.Month;
+                this.timestamp.day = (uint)datetime.Day;
+                this.timestamp.hour = (uint)datetime.Hour;
+                this.timestamp.minute = (uint)datetime.Minute;
+                this.timestamp.second = (uint)datetime.Second;
+                this.timestamp.microseconds = (uint)(datetime.Millisecond * 1000 + ticksUnaccounted / 10); // since 1 tick == 0.1 microsecond
+                this.timestamp.utc = 0;
+            }
+
+            this.isTimestamp = true;
         }
     }
 }
