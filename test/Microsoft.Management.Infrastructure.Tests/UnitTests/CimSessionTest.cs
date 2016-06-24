@@ -2,11 +2,13 @@
 * Copyright (C) Microsoft Corporation, All rights reserved.
 *=============================================================================
 */
+using Microsoft.Management.Infrastructure;
+using Xunit;
 
-namespace Microsoft.Management.Infrastructure.UnitTests
+namespace MMI.Tests.UnitTests
 {
-    using Microsoft.Management.Infrastructure;
-    using MMI.Tests;
+    
+
 
     public class CimSessionTest
     {
@@ -16,8 +18,8 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         {
             using (CimSession cimSession = CimSession.Create(null))
             {
-                MMI.Tests.Assert.NotNull(cimSession, "cimSession should not be null");
-                MMI.Tests.Assert.Null(cimSession.ComputerName, "cimSession.ComputerName should not be the same as the value passed to Create method");
+                Assert.NotNull(cimSession, "cimSession should not be null");
+                Assert.Null(cimSession.ComputerName, "cimSession.ComputerName should not be the same as the value passed to Create method");
             }
         }
 
@@ -26,9 +28,9 @@ namespace Microsoft.Management.Infrastructure.UnitTests
         {
             using (CimSession cimSession = CimSession.Create("localhost"))
             {
-                MMI.Tests.Assert.NotNull(cimSession, "cimSession should not be null");
-                MMI.Tests.Assert.Equal("localhost", cimSession.ComputerName, "cimSession.ComputerName should not be the same as the value passed to Create method");
-                MMI.Tests.Assert.True(cimSession.ToString().Contains("localhost"), "cimSession.ToString should contain computer name");
+                Assert.NotNull(cimSession, "cimSession should not be null");
+                Assert.Equal("localhost", cimSession.ComputerName, "cimSession.ComputerName should not be the same as the value passed to Create method");
+                Assert.True(cimSession.ToString().Contains("localhost"), "cimSession.ToString should contain computer name");
             }
         }
         // Todo: will add more test cases

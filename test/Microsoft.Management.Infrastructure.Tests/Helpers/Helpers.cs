@@ -25,7 +25,7 @@ namespace MMI.Tests
 
         public static string GetStringRepresentationOfSerializedData(byte[] data)
         {
-#if !_LINUX
+#if !_CORECLR
             return Encoding.Unicode.GetString(data);
 #else
             return Encoding.ASCII.GetString(data);

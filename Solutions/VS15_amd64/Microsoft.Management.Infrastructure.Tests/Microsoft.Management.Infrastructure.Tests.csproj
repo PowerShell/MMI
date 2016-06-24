@@ -158,9 +158,6 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionTest.cs">
       <Link>UnitTests\CimSessionTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimClassTest.cs">
-      <Link>UnitTests\CimClassTest.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
