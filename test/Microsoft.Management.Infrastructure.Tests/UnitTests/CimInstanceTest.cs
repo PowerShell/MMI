@@ -391,7 +391,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.Char16, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_DateTime_InTicks()
         {
             DateTime myDate = new DateTime(9990, DateTimeKind.Local);
@@ -406,7 +406,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_DateTime()
         {
             DateTime myDate = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);
@@ -421,7 +421,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_DateTime_MinValue()
         {
             DateTime myDate = DateTime.MinValue;
@@ -436,7 +436,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_DateTime_AlmostMinValue()
         {
             DateTime myDate = DateTime.MinValue.Add(TimeSpan.FromSeconds(1));
@@ -451,7 +451,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_DateTime_MaxValue()
         {
             DateTime myDate = DateTime.MaxValue;
@@ -466,7 +466,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_DateTime_AlmostMaxValue()
         {
             DateTime maxValidCimTimestampUtc = new DateTime(3155378975999999990, DateTimeKind.Utc);
@@ -485,7 +485,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_TimeSpan_InTicks()
         {
             TimeSpan myInterval = TimeSpan.FromTicks(9990);
@@ -500,7 +500,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_TimeSpan()
         {
             TimeSpan myInterval = TimeSpan.FromSeconds(123);
@@ -515,7 +515,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_TimeSpan_MaxValue()
         {
             TimeSpan myInterval = TimeSpan.MaxValue;
@@ -530,7 +530,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTime_TimeSpan_AlmostMaxValue()
         {
             TimeSpan almostMaxValue = TimeSpan.MaxValue.Subtract(TimeSpan.FromSeconds(1));

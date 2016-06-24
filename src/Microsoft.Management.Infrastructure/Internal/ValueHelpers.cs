@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.Management.Infrastructure.Native;
+using System.Globalization;
 
 namespace Microsoft.Management.Infrastructure.Internal
 {
@@ -137,7 +138,11 @@ namespace Microsoft.Management.Infrastructure.Internal
                 }
                 return arrayOfInstances;
             }
-            else if (type == MI_Type.MI_DATETIME || type == MI_Type.MI_DATETIMEA)
+            else if (type == MI_Type.MI_DATETIME)
+            {
+                return value.Datetime.ConvertToNativeLayer();
+            }
+            else if (type == MI_Type.MI_DATETIMEA)
             {
                 throw new NotImplementedException();
             }

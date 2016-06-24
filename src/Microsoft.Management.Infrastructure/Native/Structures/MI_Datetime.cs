@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
@@ -15,6 +16,120 @@ namespace Microsoft.Management.Infrastructure.Native
 
         [FieldOffset(4)]
         internal MI_Interval interval;
+
+        internal object ConvertToNativeLayer()
+        {
+            MI_Datetime datetime = this;
+            if (datetime.isTimestamp)
+            {
+                // "Now" value defined in line 1934, page 53 of DSP0004, version 2.6.0
+                if ((datetime.timestamp.year == 0) &&
+                    (datetime.timestamp.month == 1) &&
+                    (datetime.timestamp.day == 1) &&
+                    (datetime.timestamp.hour == 0) &&
+                    (datetime.timestamp.minute == 0) &&
+                    (datetime.timestamp.second == 0) &&
+                    (datetime.timestamp.microseconds == 0) &&
+                    (datetime.timestamp.utc == 720))
+                {
+                    return DateTime.Now;
+                }
+                // "Infinite past" value defined in line 1935, page 54 of DSP0004, version 2.6.0
+                else if ((datetime.timestamp.year == 0) &&
+                    (datetime.timestamp.month == 1) &&
+                    (datetime.timestamp.day == 1) &&
+                    (datetime.timestamp.hour == 0) &&
+                    (datetime.timestamp.minute == 0) &&
+                    (datetime.timestamp.second == 0) &&
+                    (datetime.timestamp.microseconds == 999999) &&
+                    (datetime.timestamp.utc == 720))
+                {
+                    return DateTime.MinValue;
+                }
+                // "Infinite future" value defined in line 1936, page 54 of DSP0004, version 2.6.0
+                else if ((datetime.timestamp.year == 9999) &&
+                    (datetime.timestamp.month == 12) &&
+                    (datetime.timestamp.day == 31) &&
+                    (datetime.timestamp.hour == 11) &&
+                    (datetime.timestamp.minute == 59) &&
+                    (datetime.timestamp.second == 59) &&
+                    (datetime.timestamp.microseconds == 999999) &&
+                    (datetime.timestamp.utc == (-720)))
+                {
+                    return DateTime.MaxValue;
+                }
+                else
+                {
+#if !_CORECLR
+                    DateTime managedUtcDateTime = new DateTime(
+                                             (int)datetime.timestamp.year,
+                                             (int)datetime.timestamp.month,
+                                             (int)datetime.timestamp.day,
+                                             (int)datetime.timestamp.hour,
+                                             (int)datetime.timestamp.minute,
+                                             (int)datetime.timestamp.second,
+                                             (int)datetime.timestamp.microseconds / 1000,
+                                             CultureInfo.InvariantCulture.Calendar,
+                                             DateTimeKind.Utc);
+#else
+                        Calendar myCalendar = CultureInfo.InvariantCulture.Calendar;
+                        DateTime myDateTime = new DateTime();
+                        DateTime managedDateTime = myCalendar.ToDateTime(
+                                                (int)datetime.timestamp.year,
+                                                (int)datetime.timestamp.month,
+                                                (int)datetime.timestamp.day,
+                                                (int)datetime.timestamp.hour,
+                                                (int)datetime.timestamp.minute,
+                                                (int)datetime.timestamp.second,
+                                                (int)datetime.timestamp.microseconds / 1000);
+                        DateTime managedUtcDateTime = myDateTime.SpecifyKind(managedDateTime, DateTimeKind.Utc);
+
+#endif
+                    long microsecondsUnaccounted = datetime.timestamp.microseconds % 1000;
+                    managedUtcDateTime = managedUtcDateTime.AddTicks(microsecondsUnaccounted * 10); // since 1 microsecond == 10 ticks
+                    managedUtcDateTime = managedUtcDateTime.AddMinutes(-(datetime.timestamp.utc));
+
+
+#if !_CORECLR
+                    DateTime managedLocalDateTime = TimeZoneInfo.ConvertTimeFromUtc(managedUtcDateTime, TimeZoneInfo.Local);
+#else
+                        //
+                        // TODO: USE THIS FOR BOTH CORECLR AND FULLOS
+                        //
+                        DateTime managedLocalDateTime = TimeZoneInfo::ConvertTime(*managedUtcDateTime, TimeZoneInfo::Local);
+#endif
+
+                    return managedLocalDateTime;
+                }
+            }
+            else
+            {
+#pragma warning (suppress: 4395) // ok that member function will be invoked on a copy of the initonly data member 'System::TimeSpan::MaxValue'
+                if (TimeSpan.MaxValue.TotalDays < datetime.interval.days)
+                {
+                    return TimeSpan.MaxValue;
+                }
+
+                try
+                {
+                    TimeSpan managedTimeSpan = new TimeSpan(
+                                             (int)datetime.interval.days,
+                                             (int)datetime.interval.hours,
+                                             (int)datetime.interval.minutes,
+                                             (int)datetime.interval.seconds,
+                                             (int)datetime.interval.microseconds / 1000);
+                    long microsecondsUnaccounted = datetime.interval.microseconds % 1000;
+                    TimeSpan ticksUnaccountedTimeSpan = new TimeSpan(microsecondsUnaccounted * 10); // since 1 microsecond == 10 ticks
+
+                    return managedTimeSpan.Add(ticksUnaccountedTimeSpan);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    return TimeSpan.MaxValue;
+                }
+            }
+            
+        }
 
         internal MI_Datetime(TimeSpan interval)
         {
