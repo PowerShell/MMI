@@ -72,17 +72,16 @@ namespace Microsoft.Management.Infrastructure.Native
                                              CultureInfo.InvariantCulture.Calendar,
                                              DateTimeKind.Utc);
 #else
-                        Calendar myCalendar = CultureInfo.InvariantCulture.Calendar;
-                        DateTime myDateTime = new DateTime();
-                        DateTime managedDateTime = myCalendar.ToDateTime(
-                                                (int)datetime.timestamp.year,
-                                                (int)datetime.timestamp.month,
-                                                (int)datetime.timestamp.day,
-                                                (int)datetime.timestamp.hour,
-                                                (int)datetime.timestamp.minute,
-                                                (int)datetime.timestamp.second,
-                                                (int)datetime.timestamp.microseconds / 1000);
-                        DateTime managedUtcDateTime = myDateTime.SpecifyKind(managedDateTime, DateTimeKind.Utc);
+                    Calendar myCalendar = CultureInfo.InvariantCulture.Calendar;
+                    DateTime managedDateTime = myCalendar.ToDateTime(
+                                             (int)datetime.timestamp.year,
+                                             (int)datetime.timestamp.month,
+                                             (int)datetime.timestamp.day,
+                                             (int)datetime.timestamp.hour,
+                                             (int)datetime.timestamp.minute,
+                                             (int)datetime.timestamp.second,
+                                             (int)datetime.timestamp.microseconds / 1000);
+                    DateTime managedUtcDateTime = DateTime.SpecifyKind(managedDateTime, DateTimeKind.Utc);
 
 #endif
                     long microsecondsUnaccounted = datetime.timestamp.microseconds % 1000;
@@ -93,10 +92,10 @@ namespace Microsoft.Management.Infrastructure.Native
 #if !_CORECLR
                     DateTime managedLocalDateTime = TimeZoneInfo.ConvertTimeFromUtc(managedUtcDateTime, TimeZoneInfo.Local);
 #else
-                        //
-                        // TODO: USE THIS FOR BOTH CORECLR AND FULLOS
-                        //
-                        DateTime managedLocalDateTime = TimeZoneInfo::ConvertTime(*managedUtcDateTime, TimeZoneInfo::Local);
+                    //
+                    // TODO: USE THIS FOR BOTH CORECLR AND FULLOS
+                    //
+                    DateTime managedLocalDateTime = TimeZoneInfo.ConvertTime(managedUtcDateTime, TimeZoneInfo.Local);
 #endif
 
                     return managedLocalDateTime;
@@ -104,7 +103,6 @@ namespace Microsoft.Management.Infrastructure.Native
             }
             else
             {
-#pragma warning (suppress: 4395) // ok that member function will be invoked on a copy of the initonly data member 'System::TimeSpan::MaxValue'
                 if (TimeSpan.MaxValue.TotalDays < datetime.interval.days)
                 {
                     return TimeSpan.MaxValue;
