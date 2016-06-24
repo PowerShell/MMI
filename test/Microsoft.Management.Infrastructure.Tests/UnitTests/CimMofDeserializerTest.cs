@@ -184,10 +184,10 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_CimClasse_InvalidMofBuffer()
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<CimException>(() =>
             {
                 const int size = 1024;
                 uint offset = 0;
@@ -336,7 +336,7 @@ namespace MMI.Tests.UnitTests
             string c5 = "MSFT_ConfigurationDocument";
             uint offset = 0;
 #if !_LINUX
-            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\TestData\dscschema.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\dscschema.mof");
 #else
             byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dscschema.mof");
 #endif
@@ -534,7 +534,7 @@ namespace MMI.Tests.UnitTests
         {
             uint offset = 0;
 #if !_LINUX
-            byte[] buffer = GetFileContent(@"..\..\TestDataq\mintschema.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\mintschema.mof");
 #else
             byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/mintschema.mof");
 #endif
