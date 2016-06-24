@@ -187,7 +187,7 @@ namespace MMI.Tests.UnitTests
         [Fact]
         public void Deserialization_CimClasse_InvalidMofBuffer()
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            Assert.Throws<CimException>(() =>
             {
                 const int size = 1024;
                 uint offset = 0;

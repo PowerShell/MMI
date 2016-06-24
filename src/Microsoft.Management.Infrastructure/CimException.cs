@@ -36,7 +36,7 @@ namespace Microsoft.Management.Infrastructure
         {
             this.NativeErrorCode = errorCode.ToNativeErrorCode();
 
-            if (errorDetailsHandle != null)
+            if (errorDetailsHandle != null && !errorDetailsHandle.IsNull)
             {
                 this._errorData = new CimInstance(errorDetailsHandle.Clone());
             }
@@ -54,7 +54,7 @@ namespace Microsoft.Management.Infrastructure
 
         static private string GetExceptionMessage(MI_Instance errorDetailsHandle)
         {
-            if (errorDetailsHandle != null)
+            if (errorDetailsHandle != null && !errorDetailsHandle.IsNull)
             {
                 var temporaryErrorData = new CimInstance(errorDetailsHandle);
                 string cimErrorMessage;
@@ -92,7 +92,7 @@ namespace Microsoft.Management.Infrastructure
             }
             finally
             {
-                if (errorDetailsHandle != null)
+                if (errorDetailsHandle != null && !errorDetailsHandle.IsNull)
                 {
                     errorDetailsHandle.Delete();
                 }
