@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MMI.Tests
 {
@@ -27,11 +25,41 @@ namespace MMI.Tests
 
         public static string GetStringRepresentationOfSerializedData(byte[] data)
         {
-#if !_LINUX
+#if !_CORECLR
             return Encoding.Unicode.GetString(data);
 #else
             return Encoding.ASCII.GetString(data);
 #endif
+        }
+
+        /// <summary>
+        /// convert string to byte[]
+        /// </summary>
+        /// <returns></returns>
+        public static byte[] GetBytesFromString(string str)
+        {
+            System.Text.UTF8Encoding encoding = new UTF8Encoding();
+            return encoding.GetBytes(str);
+        }
+
+        /// <summary>
+        /// Read file content to byte[]
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static byte[] GetBytesFromFile(string filePath)
+        {
+            using (FileStream fs = File.OpenRead(filePath))
+            {
+                byte[] bytes = new byte[fs.Length];
+                fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
+                // FileStream.close method is not supported in .net core currently.
+#if !_LINUX
+                fs.Close();
+#else
+#endif
+                return bytes;
+            }
         }
     }
 }

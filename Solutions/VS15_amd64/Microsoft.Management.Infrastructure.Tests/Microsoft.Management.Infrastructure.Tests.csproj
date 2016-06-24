@@ -61,6 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="UnitTests\TestData\dmtftypes.mof" />
+    <None Include="UnitTests\TestData\dscinstance.mof" />
+    <None Include="UnitTests\TestData\dscschema.mof" />
+    <None Include="UnitTests\TestData\mintinstance.mof" />
+    <None Include="UnitTests\TestData\mintschema.mof" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\AssemblyInfo.cs">
@@ -143,6 +148,15 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\SerializationTests\CimMofDeserializerTests.cs">
       <Link>SerializationTests\CimMofDeserializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimInstanceTest.cs">
+      <Link>UnitTests\CimInstanceTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimMofDeserializerTest.cs">
+      <Link>UnitTests\CimMofDeserializerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionTest.cs">
+      <Link>UnitTests\CimSessionTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
