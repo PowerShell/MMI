@@ -115,7 +115,7 @@ namespace Microsoft.Management.Infrastructure.Native
                                              (int)this.interval.minutes,
                                              (int)this.interval.seconds,
                                              (int)this.interval.microseconds / 1000);
-                    long microsecondsUnaccounted = datetime.interval.microseconds % 1000;
+                    long microsecondsUnaccounted = this.interval.microseconds % 1000;
                     TimeSpan ticksUnaccountedTimeSpan = new TimeSpan(microsecondsUnaccounted * 10); // since 1 microsecond == 10 ticks
 
                     return managedTimeSpan.Add(ticksUnaccountedTimeSpan);
