@@ -384,7 +384,10 @@ namespace Microsoft.Management.Infrastructure
             {
                 if (this.InstanceHandle != null && !this.InstanceHandle.IsNull)
                 {
-                    this.InstanceHandle.Delete();
+                    using (this.InstanceHandle)
+                    {
+                        this.InstanceHandle.Delete();
+                    }
                 }
             }
         }

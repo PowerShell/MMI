@@ -77,7 +77,7 @@ namespace Microsoft.Management.Infrastructure.Native
             this.Dispose(false);
         }
 
-        internal void Dispose()
+        public override void Dispose()
         {
             this.Dispose(true);
             GC.SuppressFinalize(this);
@@ -105,6 +105,8 @@ namespace Microsoft.Management.Infrastructure.Native
                     this.allocatedData = IntPtr.Zero;
                 }
             }
+
+            base.Dispose();
         }
 
         internal string String
