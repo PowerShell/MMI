@@ -19,42 +19,41 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal object ConvertToNativeLayer()
         {
-            MI_Datetime datetime = this;
-            if (datetime.isTimestamp)
+            if (this.isTimestamp)
             {
                 // "Now" value defined in line 1934, page 53 of DSP0004, version 2.6.0
-                if ((datetime.timestamp.year == 0) &&
-                    (datetime.timestamp.month == 1) &&
-                    (datetime.timestamp.day == 1) &&
-                    (datetime.timestamp.hour == 0) &&
-                    (datetime.timestamp.minute == 0) &&
-                    (datetime.timestamp.second == 0) &&
-                    (datetime.timestamp.microseconds == 0) &&
-                    (datetime.timestamp.utc == 720))
+                if ((this.timestamp.year == 0) &&
+                    (this.timestamp.month == 1) &&
+                    (this.timestamp.day == 1) &&
+                    (this.timestamp.hour == 0) &&
+                    (this.timestamp.minute == 0) &&
+                    (this.timestamp.second == 0) &&
+                    (this.timestamp.microseconds == 0) &&
+                    (this.timestamp.utc == 720))
                 {
                     return DateTime.Now;
                 }
                 // "Infinite past" value defined in line 1935, page 54 of DSP0004, version 2.6.0
-                else if ((datetime.timestamp.year == 0) &&
-                    (datetime.timestamp.month == 1) &&
-                    (datetime.timestamp.day == 1) &&
-                    (datetime.timestamp.hour == 0) &&
-                    (datetime.timestamp.minute == 0) &&
-                    (datetime.timestamp.second == 0) &&
-                    (datetime.timestamp.microseconds == 999999) &&
-                    (datetime.timestamp.utc == 720))
+                else if ((this.timestamp.year == 0) &&
+                    (this.timestamp.month == 1) &&
+                    (this.timestamp.day == 1) &&
+                    (this.timestamp.hour == 0) &&
+                    (this.timestamp.minute == 0) &&
+                    (this.timestamp.second == 0) &&
+                    (this.timestamp.microseconds == 999999) &&
+                    (this.timestamp.utc == 720))
                 {
                     return DateTime.MinValue;
                 }
                 // "Infinite future" value defined in line 1936, page 54 of DSP0004, version 2.6.0
-                else if ((datetime.timestamp.year == 9999) &&
-                    (datetime.timestamp.month == 12) &&
-                    (datetime.timestamp.day == 31) &&
-                    (datetime.timestamp.hour == 11) &&
-                    (datetime.timestamp.minute == 59) &&
-                    (datetime.timestamp.second == 59) &&
-                    (datetime.timestamp.microseconds == 999999) &&
-                    (datetime.timestamp.utc == (-720)))
+                else if ((this.timestamp.year == 9999) &&
+                    (this.timestamp.month == 12) &&
+                    (this.timestamp.day == 31) &&
+                    (this.timestamp.hour == 11) &&
+                    (this.timestamp.minute == 59) &&
+                    (this.timestamp.second == 59) &&
+                    (this.timestamp.microseconds == 999999) &&
+                    (this.timestamp.utc == (-720)))
                 {
                     return DateTime.MaxValue;
                 }
@@ -62,31 +61,31 @@ namespace Microsoft.Management.Infrastructure.Native
                 {
 #if !_CORECLR
                     DateTime managedUtcDateTime = new DateTime(
-                                             (int)datetime.timestamp.year,
-                                             (int)datetime.timestamp.month,
-                                             (int)datetime.timestamp.day,
-                                             (int)datetime.timestamp.hour,
-                                             (int)datetime.timestamp.minute,
-                                             (int)datetime.timestamp.second,
-                                             (int)datetime.timestamp.microseconds / 1000,
+                                             (int)this.timestamp.year,
+                                             (int)this.timestamp.month,
+                                             (int)this.timestamp.day,
+                                             (int)this.timestamp.hour,
+                                             (int)this.timestamp.minute,
+                                             (int)this.timestamp.second,
+                                             (int)this.timestamp.microseconds / 1000,
                                              CultureInfo.InvariantCulture.Calendar,
                                              DateTimeKind.Utc);
 #else
                     Calendar myCalendar = CultureInfo.InvariantCulture.Calendar;
                     DateTime managedDateTime = myCalendar.ToDateTime(
-                                             (int)datetime.timestamp.year,
-                                             (int)datetime.timestamp.month,
-                                             (int)datetime.timestamp.day,
-                                             (int)datetime.timestamp.hour,
-                                             (int)datetime.timestamp.minute,
-                                             (int)datetime.timestamp.second,
-                                             (int)datetime.timestamp.microseconds / 1000);
+                                             (int)this.timestamp.year,
+                                             (int)this.timestamp.month,
+                                             (int)this.timestamp.day,
+                                             (int)this.timestamp.hour,
+                                             (int)this.timestamp.minute,
+                                             (int)this.timestamp.second,
+                                             (int)this.timestamp.microseconds / 1000);
                     DateTime managedUtcDateTime = DateTime.SpecifyKind(managedDateTime, DateTimeKind.Utc);
 
 #endif
-                    long microsecondsUnaccounted = datetime.timestamp.microseconds % 1000;
+                    long microsecondsUnaccounted = this.timestamp.microseconds % 1000;
                     managedUtcDateTime = managedUtcDateTime.AddTicks(microsecondsUnaccounted * 10); // since 1 microsecond == 10 ticks
-                    managedUtcDateTime = managedUtcDateTime.AddMinutes(-(datetime.timestamp.utc));
+                    managedUtcDateTime = managedUtcDateTime.AddMinutes(-(this.timestamp.utc));
 
 
 #if !_CORECLR
@@ -103,7 +102,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
             else
             {
-                if (TimeSpan.MaxValue.TotalDays < datetime.interval.days)
+                if (TimeSpan.MaxValue.TotalDays < this.interval.days)
                 {
                     return TimeSpan.MaxValue;
                 }
@@ -111,11 +110,11 @@ namespace Microsoft.Management.Infrastructure.Native
                 try
                 {
                     TimeSpan managedTimeSpan = new TimeSpan(
-                                             (int)datetime.interval.days,
-                                             (int)datetime.interval.hours,
-                                             (int)datetime.interval.minutes,
-                                             (int)datetime.interval.seconds,
-                                             (int)datetime.interval.microseconds / 1000);
+                                             (int)this.interval.days,
+                                             (int)this.interval.hours,
+                                             (int)this.interval.minutes,
+                                             (int)this.interval.seconds,
+                                             (int)this.interval.microseconds / 1000);
                     long microsecondsUnaccounted = datetime.interval.microseconds % 1000;
                     TimeSpan ticksUnaccountedTimeSpan = new TimeSpan(microsecondsUnaccounted * 10); // since 1 microsecond == 10 ticks
 
@@ -131,10 +130,8 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_Datetime(TimeSpan interval)
         {
-            this.timestamp.utc = 0;
-            this.timestamp.year = this.timestamp.month = this.timestamp.day = this.timestamp.hour = this.timestamp.minute = this.timestamp.second = this.timestamp.microseconds = 0;
-            this.interval.days = this.interval.hours = this.interval.minutes = this.interval.seconds = this.interval.microseconds = 0;
-            this.interval.__padding1 = this.interval.__padding2 = this.interval.__padding3 = 0;
+            this.timestamp = new MI_Timestamp();
+            this.interval = new MI_Interval();
 
             if (interval.Equals(TimeSpan.MaxValue))
             {
@@ -160,10 +157,8 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_Datetime(DateTime datetime)
         {
-            this.timestamp.utc = 0;
-            this.timestamp.year = this.timestamp.month = this.timestamp.day = this.timestamp.hour = this.timestamp.minute = this.timestamp.second = this.timestamp.microseconds = 0;
-            this.interval.days = this.interval.hours = this.interval.minutes = this.interval.seconds = this.interval.microseconds = 0;
-            this.interval.__padding1 = this.interval.__padding2 = this.interval.__padding3 = 0;
+            this.timestamp = new MI_Timestamp();
+            this.interval = new MI_Interval();
 
             if (datetime.Equals(DateTime.MaxValue))
             {
