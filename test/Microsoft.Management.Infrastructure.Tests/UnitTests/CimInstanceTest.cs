@@ -467,25 +467,6 @@ namespace MMI.Tests.UnitTests
         }
 
         [Fact]
-        public void Properties_Add_ValueAndType_DateTime_DateTime_AlmostMaxValue()
-        {
-            DateTime maxValidCimTimestampUtc = new DateTime(3155378975999999990, DateTimeKind.Utc);
-            DateTime maxValidCimTimestampLocal = TimeZoneInfo.ConvertTime(maxValidCimTimestampUtc, TimeZoneInfo.Local);
-
-            DateTime myDate = DateTime.MaxValue.Subtract(TimeSpan.FromSeconds(1));
-            CimInstance cimInstance = new CimInstance("MyClassName");
-            CimProperty cimProperty = CimProperty.Create("MyPropertyName", myDate, CimType.DateTime, CimFlags.None);
-            cimInstance.CimInstanceProperties.Add(cimProperty);
-
-            CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
-            Assert.NotNull(addedProperty.Value, "addedProperty.Value is null");
-            Assert.True(addedProperty.Value is DateTime, "addedProperty.Value.GetType() is not correct");
-            DateTime value = (DateTime)addedProperty.Value;
-            Assert.Equal(maxValidCimTimestampLocal.Ticks, value.Ticks, "addedProperty.Value is not correct");
-            Assert.Equal(CimType.DateTime, addedProperty.CimType, "addedProperty.CimType is not correct");
-        }
-
-        [Fact]
         public void Properties_Add_ValueAndType_DateTime_TimeSpan_InTicks()
         {
             TimeSpan myInterval = TimeSpan.FromTicks(9990);
