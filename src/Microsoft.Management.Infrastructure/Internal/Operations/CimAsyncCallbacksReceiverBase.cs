@@ -171,7 +171,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
         internal abstract void ReportInternalError(CimOperationCallbackProcessingContext callbackProcessingContext, Exception internalError);
 
-        private void ReportInternalErrorCore(CimOperationCallbackProcessingContext callbackProcessingContext, Exception internalError)
+        private void ReportInternalErrorCore(object callbackProcessingContext, Exception internalError)
         {
             Debug.Assert(internalError != null, "Caller should make sure internalError != null");
 
@@ -191,7 +191,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                                                                    internalErrorWhileCancellingOperation);
                         }
 
-                        this.ReportInternalError(callbackProcessingContext, internalError);
+                        this.ReportInternalError((CimOperationCallbackProcessingContext)callbackProcessingContext, internalError);
 
                         this._suppressFurtherUserCallbacks = true;
                     }
@@ -200,9 +200,8 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
         public virtual void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
-            // TODO: Uncomment and fix two lines below
-            //operationCallbacks.InternalErrorCallback = this.ReportInternalErrorCore;
-            //operationCallbacks.ManagedOperationContext = this;
+            operationCallbacks.InternalErrorCallback = this.ReportInternalErrorCore;
+            operationCallbacks.ManagedOperationContext = this;
         }
 
         #endregion Dealing with async callbacks

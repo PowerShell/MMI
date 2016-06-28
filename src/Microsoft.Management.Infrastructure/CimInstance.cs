@@ -346,6 +346,52 @@ namespace Microsoft.Management.Infrastructure
                 }
                 */
 
+        internal static object ConvertFromNativeLayer(
+            MI_Type type,
+            MI_Value value,
+            CimInstance parent = null,
+            bool clone = false)
+        {
+            if (type == MI_Type.MI_INSTANCE)
+            {
+                CimInstance instance = new CimInstance(
+                    clone ? value.Instance.Clone() : value.Instance);
+                if (parent != null)
+                {
+                    instance.SetCimSessionComputerName(parent.GetCimSessionComputerName());
+                    instance.SetCimSessionInstanceId(parent.GetCimSessionInstanceId());
+                }
+                return instance;
+            }
+
+            if (type == MI_Type.MI_INSTANCEA)
+            {
+                CimInstance[] arrayOfInstances = new CimInstance[value.InstanceA.Length];
+                for (int i = 0; i < value.InstanceA.Length; i++)
+                {
+                    MI_Instance h = value.InstanceA[i];
+                    if (h == null)
+                    {
+                        arrayOfInstances[i] = null;
+                    }
+                    else
+                    {
+                        arrayOfInstances[i] = new CimInstance(
+                            clone ? h.Clone() : h);
+                        if (parent != null)
+                        {
+                            arrayOfInstances[i].SetCimSessionComputerName(parent.GetCimSessionComputerName());
+                            arrayOfInstances[i].SetCimSessionInstanceId(parent.GetCimSessionInstanceId());
+                        }
+                    }
+                }
+                return arrayOfInstances;
+            }
+
+            return value;
+        }
+
+
         #endregion Helpers
 
         #region IDisposable Members

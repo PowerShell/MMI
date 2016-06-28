@@ -1,5 +1,6 @@
 using Microsoft.Management.Infrastructure.Options;
 using System.Security;
+using System;
 
 namespace Microsoft.Management.Infrastructure.Native
 {
@@ -7,6 +8,7 @@ namespace Microsoft.Management.Infrastructure.Native
     {
         private SecureString passwordSecureStr;
         private bool credentialIsCertificate;
+        private MI_UserCredentials cred;
 
         internal NativeCimCredential(bool bIsCertificate, SecureString secureStr)
         {
@@ -30,38 +32,36 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal static void CreateCimCredential(string authenticationMechanism, string certificateThumbprint, out NativeCimCredential credential)
         {
-            // TODO: Implement
-            credential = new NativeCimCredential(true, new SecureString());
+            credential = new NativeCimCredential(true, null);
+            
+            credential.cred.usernamePassword.domain = null;
+            credential.cred.usernamePassword.username = null;
+            credential.cred.usernamePassword.password = null;
+
+            credential.cred.authenticationType = System.Runtime.InteropServices.Marshal.StringToHGlobalUni(authenticationMechanism);
+            credential.cred.certificateThumbprint = System.Runtime.InteropServices.Marshal.StringToHGlobalUni(certificateThumbprint);
         }
 
         internal static void CreateCimCredential(string authenticationMechanism, string domain, string userName, SecureString password, out NativeCimCredential credential)
         {
-            // TODO: Implement
-            credential = new NativeCimCredential(true, new SecureString());
+            credential = new NativeCimCredential(false, password);
+            credential.cred.certificateThumbprint = IntPtr.Zero;
+            credential.cred.usernamePassword.password = null;
+
+            credential.cred.authenticationType = System.Runtime.InteropServices.Marshal.StringToHGlobalUni(authenticationMechanism);
+            credential.cred.usernamePassword.domain = domain;
+            credential.cred.usernamePassword.username = userName;
         }
 
         internal static void CreateCimCredential(string authenticationMechanism, out NativeCimCredential credential)
         {
-            // TODO: Implement
-            credential = new NativeCimCredential(true, new SecureString());
-        }
+            credential = new NativeCimCredential(false, null);
+            credential.cred.certificateThumbprint = IntPtr.Zero;
+            credential.cred.usernamePassword.domain = null;
+            credential.cred.usernamePassword.username = null;
+            credential.cred.usernamePassword.password = null;
 
-        internal static void CreateCimCredential(CertificateAuthenticationMechanism authenticationMechanism, string certificateThumbprint, out NativeCimCredential credential)
-        {
-            // TODO: Implement
-            credential = new NativeCimCredential(true, new SecureString());
-        }
-
-        internal static void CreateCimCredential(PasswordAuthenticationMechanism authenticationMechanism, string domain, string userName, SecureString password, out NativeCimCredential credential)
-        {
-            // TODO: Implement
-            credential = new NativeCimCredential(true, new SecureString());
-        }
-
-        internal static void CreateCimCredential(ImpersonatedAuthenticationMechanism authenticationMechanism, out NativeCimCredential credential)
-        {
-            // TODO: Implement
-            credential = new NativeCimCredential(true, new SecureString());
+            credential.cred.authenticationType = System.Runtime.InteropServices.Marshal.StringToHGlobalUni(authenticationMechanism);
         }
     }
 }

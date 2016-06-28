@@ -5,6 +5,11 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Class : MI_NativeObjectWithFT<MI_Class.MI_ClassFT>
     {
+        internal void AssertValidInternalState()
+        {
+            System.Diagnostics.Debug.Assert(this.Ptr != IntPtr.Zero);
+        }
+
         internal MI_Result GetElement(
             string name,
             out MI_Value value,
