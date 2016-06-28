@@ -17,6 +17,22 @@ namespace Microsoft.Management.Infrastructure.Native
         [FieldOffset(4)]
         internal MI_Interval interval;
 
+        internal static MI_Datetime ConvertToDateTime(object value)
+        {
+            if (value is TimeSpan)
+            {
+                return new MI_Datetime((TimeSpan)value);
+            }
+            else if (value is DateTime)
+            {
+                return new MI_Datetime((DateTime)value);
+            }
+            else
+            {
+                return new MI_Datetime((DateTime)Convert.ToDateTime(value, CultureInfo.InvariantCulture));
+            }
+        }
+
         internal object ConvertToNativeLayer()
         {
             if (this.isTimestamp)

@@ -350,39 +350,16 @@ namespace Microsoft.Management.Infrastructure
                     break;
 
                 case CimType.DateTime:
-                    if (value is TimeSpan)
-                    {
-                        miv.Datetime = new MI_Datetime((TimeSpan)value);
-                        return miv;
-                    }
-                    else if (value is DateTime)
-                    {
-                        miv.Datetime = new MI_Datetime((DateTime)value);
-                        return miv;
-                    }
-                    else
-                    {
-                        miv.Datetime = new MI_Datetime((DateTime)Convert.ToDateTime(value, CultureInfo.InvariantCulture));
-                        return miv;
-                    }
+                    miv.Datetime = MI_Datetime.ConvertToDateTime(value);
+                    return miv;
+
                 case CimType.DateTimeArray:
                     if (arrayOfObjects != null)
                     {
                         MI_Datetime[] array = new MI_Datetime[arrayOfObjects.Length];
                         for (int i = 0; i < arrayOfObjects.Length; i++)
                         {
-                            if (arrayOfObjects[i] is TimeSpan)
-                            {
-                                array[i] = new MI_Datetime((TimeSpan)arrayOfObjects[i]);
-                            }
-                            else if (arrayOfObjects[i] is DateTime)
-                            {
-                                array[i] = new MI_Datetime((DateTime)arrayOfObjects[i]);
-                            }
-                            else
-                            {
-                                array[i] = new MI_Datetime((DateTime)Convert.ToDateTime(arrayOfObjects[i], CultureInfo.InvariantCulture));
-                            }
+                            array[i] = MI_Datetime.ConvertToDateTime(arrayOfObjects[i]);
                         }
                         miv.DatetimeA = array;
                         return miv;
