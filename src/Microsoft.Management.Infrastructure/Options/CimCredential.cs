@@ -154,7 +154,6 @@ namespace Microsoft.Management.Infrastructure.Options
             NativeCimCredential.CreateCimCredential(strAuthenticationMechanism, out credential);
         }
 
-        // TODO: return proper credential type here
-        //internal NativeCimCredentialHandle GetCredential(){ return credential; }
+        internal NativeCimCredential GetCredential(){ return credential; }
     }
 }

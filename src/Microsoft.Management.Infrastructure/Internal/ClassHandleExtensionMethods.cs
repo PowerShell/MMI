@@ -15,7 +15,7 @@ namespace Microsoft.Management.Infrastructure.Internal
             {
                 return null;
             }
-            // TODO: handleToClone.AssertValidInternalState();
+            handleToClone.AssertValidInternalState();
 
             MI_Class clonedHandle;
             MI_Result result = handleToClone.Clone(out clonedHandle);

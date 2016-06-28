@@ -33,6 +33,12 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal MI_OperationCallback_StreamedParameter streamedParameterResult;
 
+        internal InternalErrorCallbackDelegate InternalErrorCallback;
+
+        internal System.Object ManagedOperationContext;
+
+        internal delegate void InternalErrorCallbackDelegate(object callbackContextWhereInternalErrorOccurred, System.Exception exception);
+
         internal delegate void MI_OperationCallback_PromptUserResult(MI_Operation operation, MI_OperationCallback_ResponseType responseType);
 
         internal delegate void MI_OperationCallback_ResultAcknowledgement(MI_Operation operation);

@@ -73,16 +73,18 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                                            out qualifierSet,
                                            out flags,
                                            out index);
-                CimException.ThrowIfMiResultFailure(result);
 
-                MI_Type qualifierType;
-                MI_Flags qualifierFlags;
-                MI_Value qualifierValue;
-                result = qualifierSet.GetQualifier(qualifierName,
-                                   out qualifierType,
-                                   out qualifierFlags,
-                                   out qualifierValue,
-                                   out index);
+                if (result == MI_Result.MI_RESULT_OK)
+                {
+                    MI_Type qualifierType;
+                    MI_Flags qualifierFlags;
+                    MI_Value qualifierValue;
+                    result = qualifierSet.GetQualifier(qualifierName,
+                                       out qualifierType,
+                                       out qualifierFlags,
+                                       out qualifierValue,
+                                       out index);
+                }
 
                 switch (result)
                 {

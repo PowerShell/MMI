@@ -20,13 +20,14 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         }
 
         internal void ClassCallback(
-            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
+            object callbackProcessingContext,
             MI_Class ClassHandle,
             bool moreResults,
             MI_Result operationResult,
             String errorMessage,
-            MI_Instance errorDetailsHandle)
+            MI_Instance errorDetailsHandle,
+            MI_OperationCallbacks.MI_OperationCallback_ResultAcknowledgement resultAcknowledgement)
         {
             CimClass currentItem = null;
             if ((ClassHandle != null) && (!ClassHandle.IsNull))
@@ -40,7 +41,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
             try
             {
-                this.ProcessNativeCallback(callbackProcessingContext, currentItem, moreResults, operationResult, errorMessage, errorDetailsHandle);
+                this.ProcessNativeCallback((CimOperationCallbackProcessingContext)callbackProcessingContext, currentItem, moreResults, operationResult, errorMessage, errorDetailsHandle);
             }
             finally
             {
@@ -57,8 +58,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         public override void RegisterAcceptedAsyncCallbacks(MI_OperationCallbacks operationCallbacks, CimOperationOptions operationOptions)
         {
             base.RegisterAcceptedAsyncCallbacks(operationCallbacks, operationOptions);
-            // TODO: Uncomment and fix below
-            //operationCallbacks.classResult = this.ClassCallback;
+            operationCallbacks.classResult = this.ClassCallback;
         }
     }
 }
