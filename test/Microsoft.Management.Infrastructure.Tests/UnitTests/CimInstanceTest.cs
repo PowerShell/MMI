@@ -943,7 +943,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.Char16Array, addedProperty.CimType, "addedProperty.CimType is  not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTimeArray_DateTime()
         {
             DateTime myDate1 = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);
@@ -964,7 +964,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTimeArray_TimeSpan()
         {
             TimeSpan myInterval1 = TimeSpan.FromSeconds(123);
@@ -985,7 +985,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTimeArray_Mixed()
         {
             DateTime myDate1 = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);
@@ -1006,7 +1006,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_DateTimeArray_Mixed_InferredType()
         {
             DateTime myDate1 = new DateTime(2010, 09, 22, 7, 30, 0, DateTimeKind.Local);

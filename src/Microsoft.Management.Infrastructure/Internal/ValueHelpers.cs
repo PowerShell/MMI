@@ -32,8 +32,7 @@ namespace Microsoft.Management.Infrastructure.Internal
         internal static object CloneManagedObject(object managedValue, CimType type)
         {
             if (managedValue != null &&
-                ((type.FromCimType() & MI_TypeFlags.MI_ARRAY) == MI_TypeFlags.MI_ARRAY ||
-                type == CimType.Reference || type == CimType.Instance))
+                (type == CimType.Reference || type == CimType.Instance))
             {
                 throw new NotImplementedException();
             }
@@ -140,11 +139,17 @@ namespace Microsoft.Management.Infrastructure.Internal
             }
             else if (type == MI_Type.MI_DATETIME)
             {
-                return value.Datetime.ConvertToNativeLayer();
+                return value.Datetime.ConvertFromNativeLayer();
             }
             else if (type == MI_Type.MI_DATETIMEA)
             {
-                throw new NotImplementedException();
+                int length = value.DatetimeA.Length;
+                object[] arrayOfDatetimes = new object[length];
+                for (int i = 0; i < length; i++)
+                {
+                    arrayOfDatetimes[i] = value.DatetimeA[i].ConvertFromNativeLayer();
+                }
+                return arrayOfDatetimes;
             }
             else
             {

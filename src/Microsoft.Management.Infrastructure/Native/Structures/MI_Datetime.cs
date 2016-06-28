@@ -33,7 +33,7 @@ namespace Microsoft.Management.Infrastructure.Native
             }
         }
 
-        internal object ConvertToNativeLayer()
+        internal object ConvertFromNativeLayer()
         {
             if (this.isTimestamp)
             {

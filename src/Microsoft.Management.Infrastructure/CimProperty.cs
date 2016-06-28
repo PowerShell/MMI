@@ -361,10 +361,37 @@ namespace Microsoft.Management.Infrastructure
                         {
                             array[i] = MI_Datetime.ConvertToDateTime(arrayOfObjects[i]);
                         }
+
                         miv.DatetimeA = array;
                         return miv;
                     }
-                    break;
+
+                    var arrayOfDateTime = value as DateTime[];
+                    if (arrayOfDateTime != null)
+                    {
+                        MI_Datetime[] array = new MI_Datetime[arrayOfDateTime.Length];
+                        for (int i = 0; i < arrayOfDateTime.Length; i++)
+                        {
+                            array[i] = MI_Datetime.ConvertToDateTime(arrayOfDateTime[i]);
+                        }
+
+                        miv.DatetimeA = array;
+                        return miv;
+                    }
+
+                    var arrayOfTimeSpan = value as TimeSpan[];
+                    if (arrayOfTimeSpan != null)
+                    {
+                        MI_Datetime[] array = new MI_Datetime[arrayOfTimeSpan.Length];
+                        for (int i = 0; i < arrayOfTimeSpan.Length; i++)
+                        {
+                            array[i] = MI_Datetime.ConvertToDateTime(arrayOfTimeSpan[i]);
+                        }
+
+                        miv.DatetimeA = array;
+                        return miv;
+                    }
+                    return miv;
 
                 case CimType.Unknown:
                     miv.String = "UnknownType";
