@@ -28,8 +28,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
             Debug.Assert(!string.IsNullOrEmpty(format), "Caller should verify that format != null");
 
             MI_Deserializer tmpHandle;
-            // TODO: Fix MI_SerializerFlags in next line to come from "flags"
-            MI_Result result = CimApplication.Handle.NewDeserializer(MI_SerializerFlags.None, format, out tmpHandle);
+            MI_Result result = CimApplication.Handle.NewDeserializer((MI_SerializerFlags)flags, format, out tmpHandle);
             if (result == MI_Result.MI_RESULT_INVALID_PARAMETER)
             {
                 throw new ArgumentOutOfRangeException("format");

@@ -730,9 +730,9 @@ namespace Microsoft.Management.Infrastructure.Options
             MI_Result result = this.OperationOptionsHandleOnDemand.SetCustomOption(
                 optionName,
                 cimType.FromCimType(),
-        nativeLayerValue,
+                nativeLayerValue,
                 mustComply,
-        flags);
+                flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
