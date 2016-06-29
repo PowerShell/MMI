@@ -185,7 +185,7 @@ namespace MMI.Tests.UnitTests
         }
 
         [TDDFact]
-        public void Deserialization_CimClasse_InvalidMofBuffer()
+        public void Deserialization_CimClass_InvalidMofBuffer()
         {
             Assert.Throws<CimException>(() =>
             {
@@ -198,21 +198,20 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [TDDFact]
-        public void Deserialization_CimClasse_NotNullOnClassNeededCallback()
+        [Fact]
+        public void Deserialization_CimClass_NotNullOnClassNeededCallback()
         {
-            Assert.Throws<NotImplementedException>(() =>
-            {
-                uint offset = 0;
-                byte[] buffer = new byte[82];
-                CimMofDeserializer.OnClassNeeded onClassNeede = this.GetClass;
-                onClassNeede("Servername", @"root\TestNamespace", "MyClassName");
-                return this.deserializer.DeserializeClasses(buffer, ref offset, null, onClassNeede, null);
-            });
+            string classmof = "class A{string p;}; class B:A{uint8 p1;};";
+            uint offset = 0;
+            byte[] buffer = Helpers.GetBytesFromString(classmof);
+            CimMofDeserializer.OnClassNeeded onClassNeeded = this.GetClass;
+            onClassNeeded("Servername", @"root\TestNamespace", "MyClassName");
+            IEnumerable<CimClass> classes = this.deserializer.DeserializeClasses(buffer, ref offset, null, onClassNeeded, null);
+            Assert.NotNull(classes, "Instance got deserialized");
         }
 
         [Fact]
-        public void Deserialization_CimClasse_NotNullGetIncludedFileContent()
+        public void Deserialization_CimClass_NotNullGetIncludedFileContent()
         {
             Assert.Throws<NotImplementedException>(() =>
             {
@@ -277,7 +276,7 @@ namespace MMI.Tests.UnitTests
         {
             Assert.Throws<CimException>(() =>
             {
-                const int size = 50 * 1024 * 1024;
+                const int size = 1024;
                 uint offset = 0;
                 byte[] buffer = new byte[size];
                 buffer[0] = byte.MinValue;
@@ -290,7 +289,7 @@ namespace MMI.Tests.UnitTests
         {
             Assert.Throws<CimException>(() =>
             {
-                const int size = 50 * 1024 * 1024;
+                const int size = 1024;
                 uint offset = 0;
                 byte[] buffer = new byte[size];
                 byte[] b2 = Helpers.GetBytesFromString("abcd");
@@ -299,15 +298,15 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_Instance_NotNullOnClassNeededCallback()
         {
             string instancemof = "class A{string p;}; instance of A{p=\"a\";};instance of A{p=\"b\";};instance of A{p=\"c\";};instance of A{p=\"d\";};";
             uint offset = 0;
             byte[] buffer = Helpers.GetBytesFromString(instancemof);
-            CimMofDeserializer.OnClassNeeded onClassNeede = this.GetClass;
-            onClassNeede("Servername", @"root\TestNamespace", "MyClassName");
-            IEnumerable<CimInstance> instances = this.deserializer.DeserializeInstances(buffer, ref offset, null, onClassNeede, null);
+            CimMofDeserializer.OnClassNeeded onClassNeeded = this.GetClass;
+            onClassNeeded("Servername", @"root\TestNamespace", "MyClassName");
+            IEnumerable<CimInstance> instances = this.deserializer.DeserializeInstances(buffer, ref offset, null, onClassNeeded, null);
             Assert.NotNull(instances, "Instance got deserialized");
         }
 
@@ -384,7 +383,7 @@ namespace MMI.Tests.UnitTests
         {
             uint offset = 0;
 #if !_LINUX
-            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\TestData\dscinstance.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\dscinstance.mof");
 #else
             byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dscinstance.mof");
 #endif
@@ -438,12 +437,12 @@ namespace MMI.Tests.UnitTests
             Assert.True(!ie.MoveNext());
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_DMTFMof()
         {
             uint offset = 0;
 #if !_LINUX
-            byte[] buffer = GetFileContent(@"..\..\TestDataq\dmtftypes.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\dmtftypes.mof");
 #else
             byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dmtftypes.mof");
 #endif
@@ -529,7 +528,7 @@ namespace MMI.Tests.UnitTests
             Assert.True(!ce.MoveNext());
         }
 
-        [Fact]
+        [TDDFact]
         public void Deserialization_CimClass_MintMof()
         {
             uint offset = 0;
@@ -555,7 +554,7 @@ namespace MMI.Tests.UnitTests
         {
             uint offset = 0;
 #if !_LINUX
-            byte[] buffer = GetFileContent(@"..\..\TestDataq\mintinstance.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\mintinstance.mof");
 #else
             byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/mintinstance.mof");
 #endif
