@@ -201,7 +201,7 @@ namespace MMI.Tests.Native
             Assert.Equal(TestGetClassParameterIndex, parameterIndex, "Expect the power state to be the first parameter");
         }
 
-        [Fact]
+        [WindowsFact]
         public void ClassHashCode_Sanity()
         {
             MI_Operation cimClassOperation1;

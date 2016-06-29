@@ -185,7 +185,11 @@ namespace Microsoft.Management.Infrastructure.Options
             IntPtr unmanagedString = IntPtr.Zero;
             try
             {
+#if (!_CORECLR)
                 unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+#else
+                unmanagedString = SecureStringMarshal.SecureStringToCoTaskMemUnicode(securePassword);
+#endif
                 return Marshal.PtrToStringUni(unmanagedString);
             }
             finally
