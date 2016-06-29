@@ -208,9 +208,7 @@ namespace Microsoft.Management.Infrastructure
 
         public override int GetHashCode()
         {
-            // TODO: implement this function?
-            //return this.ClassHandle.GetClassHashCode();
-            return 0;
+            return this.ClassHandle.GetClassHashCode();
         }
 
         public override bool Equals(object obj)

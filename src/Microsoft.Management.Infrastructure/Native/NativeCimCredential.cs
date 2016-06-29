@@ -8,7 +8,7 @@ namespace Microsoft.Management.Infrastructure.Native
     {
         private SecureString passwordSecureStr;
         private bool credentialIsCertificate;
-        private MI_UserCredentials cred;
+        internal MI_UserCredentials cred;
 
         internal NativeCimCredential(bool bIsCertificate, SecureString secureStr)
         {

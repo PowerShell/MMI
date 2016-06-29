@@ -8,6 +8,8 @@ using Microsoft.Management.Infrastructure.Native;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Security;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -173,6 +175,25 @@ namespace Microsoft.Management.Infrastructure.Options
             CimException.ThrowIfMiResultFailure(result);
         }
 
+        public static string ConvertToUnsecureString(SecureString securePassword)
+        {
+            if (securePassword == null)
+            {
+                throw new ArgumentNullException("securePassword");
+            }
+
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
+
         /// <summary>
         /// Sets a Destination Credential
         /// </summary>
@@ -180,45 +201,27 @@ namespace Microsoft.Management.Infrastructure.Options
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="credential"/> is <c>null</c></exception>
         public void AddDestinationCredentials(CimCredential credential)
         {
-            // TODO: Once credentials are working, uncomment and fix
-            /*
-                if (credential == null)
-                {
-                    throw new ArgumentNullException("credential");
-                }
-                this.AssertNotDisposed();
+            if (credential == null)
+            {
+                throw new ArgumentNullException("credential");
+            }
+            this.AssertNotDisposed();
 
-            MI_UserCredentials nativeCredential;
-            SecureString securePassword = credential.GetSecureString();
-            IntPtr passwordPtr = IntPtr.Zero;
+            MI_Result result = MI_Result.MI_RESULT_OK;
+
+            //Additional processing for securePasswords
+            SecureString securePassword = credential.GetCredential().GetSecureString();;
             if( securePassword != null && securePassword.Length > 0)
             {
-    #if(!_CORECLR)
-            passwordPtr = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-    #else
-            passwordPtr = SecureStringMarshal.SecureStringToCoTaskMemUnicode(securePassword);
-    #endif
-            nativeCredential.usernamePassword.password = passwordPtr;
+                credential.GetCredential().cred.usernamePassword.password = ConvertToUnsecureString(securePassword);
             }
             else
             {
-            nativeCredential.usernamePassword.password = null;
+                credential.GetCredential().cred.usernamePassword.password = null;
             }
 
-            MI_Result result = this.DestinationOptionsHandleOnDemand.AddCredentials("__MI_DESTINATIONOPTIONS_DESTINATION_CREDENTIALS",
-                nativeCredential,
-                MI_DestinationOptionFlags.Unused);
-
-            if ( passwordPtr != IntPtr.Zero )
-            {
-    #if(!_CORECLR)
-            Marshal.FreeHGlobal(passwordPtr);
-    #else
-            SecureStringMarshal.ZeroFreeCoTaskMemUnicode(passwordPtr);
-    #endif
-            }
-                CimException.ThrowIfMiResultFailure(result);
-            */
+            result = this.DestinationOptionsHandle.AddCredentials("__MI_DESTINATIONOPTIONS_DESTINATION_CREDENTIALS", credential.GetCredential().cred, 0);
+            CimException.ThrowIfMiResultFailure(result);
         }
 
         /// <summary>
@@ -389,3 +392,4 @@ namespace Microsoft.Management.Infrastructure.Options
         #endregion ICloneable Members
     }
 }
+ 

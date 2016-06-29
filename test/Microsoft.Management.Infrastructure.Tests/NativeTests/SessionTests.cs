@@ -200,5 +200,42 @@ namespace MMI.Tests.Native
             Assert.Equal(TestGetClassParameterType, parameterType, "Expect parameter type to be the documented type");
             Assert.Equal(TestGetClassParameterIndex, parameterIndex, "Expect the power state to be the first parameter");
         }
+
+        [Fact]
+        public void ClassHashCode_Sanity()
+        {
+            MI_Operation cimClassOperation1;
+            MMI.Tests.Native.StaticFixtures.Session.GetClass(MI_OperationFlags.Default, null, TestGetClassNamespace, TestGetClassClassName, null, out cimClassOperation1);
+            MI_Class cimClass1;
+            bool moreResults1;
+            MI_Result operationRes1;
+            MI_Instance completionDetails1;
+            string errorMessage1;
+            var res1 = cimClassOperation1.GetClass(out cimClass1, out moreResults1, out operationRes1, out errorMessage1, out completionDetails1);
+            MIAssert.Succeeded(res1);
+            MIAssert.Succeeded(operationRes1);
+            Assert.False(moreResults1, "Expect no more results after getting named class");
+
+            MI_Operation cimClassOperation2;
+            MMI.Tests.Native.StaticFixtures.Session.GetClass(MI_OperationFlags.Default, null, TestGetClassNamespace, TestGetClassClassName, null, out cimClassOperation2);
+            MI_Class cimClass2;
+            bool moreResults2;
+            MI_Result operationRes2;
+            MI_Instance completionDetails2;
+            string errorMessage2;
+            var res2 = cimClassOperation2.GetClass(out cimClass2, out moreResults2, out operationRes2, out errorMessage2, out completionDetails2);
+            MIAssert.Succeeded(res2);
+            MIAssert.Succeeded(operationRes2);
+            Assert.False(moreResults2, "Expect no more results after getting named class");
+
+            int hash1 = cimClass1.GetClassHashCode();
+            int hash2 = cimClass2.GetClassHashCode();
+
+            Assert.NotEqual(0, hash1, "MI_Class HashCodes are equal to 0, which should only happen 1 in 4 billion times this test is run.");
+            Assert.Equal(hash1, hash2, "MI_Class HashCodes are not identical for two objects of the same class.");
+
+            cimClassOperation1.Close();
+            cimClassOperation2.Close();
+        }
     }
 }

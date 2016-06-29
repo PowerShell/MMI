@@ -195,9 +195,8 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            // TODO: Implement this
-            //MI_Result result = this._subscriptionDeliveryOptionsHandle.SubscriptionDeliveryOptionsMethods.AddCredentials(optionName, optionValue.GetCredential(), flags);
-            //CimException.ThrowIfMiResultFailure(result);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.AddCredentials(optionName, optionValue.GetCredential().cred, flags);
+            CimException.ThrowIfMiResultFailure(result);
         }
 
         #endregion Options
