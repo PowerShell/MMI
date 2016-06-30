@@ -231,7 +231,6 @@ namespace MMI.Tests.Native
             int hash1 = cimClass1.GetClassHashCode();
             int hash2 = cimClass2.GetClassHashCode();
 
-            Assert.NotEqual(0, hash1, "MI_Class HashCodes are equal to 0, which should only happen 1 in 4 billion times this test is run.");
             Assert.Equal(hash1, hash2, "MI_Class HashCodes are not identical for two objects of the same class.");
 
             cimClassOperation1.Close();
