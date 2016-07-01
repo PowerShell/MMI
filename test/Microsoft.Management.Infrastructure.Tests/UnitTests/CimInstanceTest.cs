@@ -718,7 +718,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.Reference, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_BooleanArray()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -735,7 +735,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.BooleanArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_SInt8Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -752,7 +752,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.SInt8Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_UInt8Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -769,7 +769,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.UInt8Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_SInt16Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -786,7 +786,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.SInt16Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_UInt16Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -803,7 +803,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.UInt16Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_SInt32Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -837,7 +837,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.SInt32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_UInt32Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -854,7 +854,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.UInt32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_SInt64Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -871,7 +871,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.SInt64Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_UInt64Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -888,7 +888,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.UInt64Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Real32Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -907,7 +907,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.Real32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Real64Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -926,7 +926,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(addedProperty.CimType, CimType.Real64Array, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Char16Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -1027,7 +1027,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.DateTimeArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_StringArray()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -1108,7 +1108,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.SInt32, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Set_ValueAndType_SInt32Array()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
