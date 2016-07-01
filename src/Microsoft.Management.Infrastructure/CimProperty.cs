@@ -7,6 +7,7 @@ using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Native;
 using System;
+using System.Collections;
 using System.Globalization;
 
 namespace Microsoft.Management.Infrastructure
@@ -105,7 +106,13 @@ namespace Microsoft.Management.Infrastructure
             if (value == null) return null;
 
             MI_Value miv = new MI_Value();
-            var arrayOfObjects = value as object[];
+            var count = 0;
+            IList arrayOfObjects = null;
+            if (value.GetType().IsArray)
+            {
+                arrayOfObjects = (IList)value;
+                count = arrayOfObjects.Count;
+            }
             switch (cimType)
             {
                 case CimType.Boolean:
@@ -172,8 +179,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.BooleanArray:
                     if (arrayOfObjects != null)
                     {
-                        Boolean[] array = new Boolean[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Boolean[] array = new Boolean[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToBoolean(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -185,8 +192,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.Char16Array:
                     if (arrayOfObjects != null)
                     {
-                        Char[] array = new Char[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Char[] array = new Char[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToChar(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -198,8 +205,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.Real32Array:
                     if (arrayOfObjects != null)
                     {
-                        Single[] array = new Single[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Single[] array = new Single[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToSingle(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -211,8 +218,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.Real64Array:
                     if (arrayOfObjects != null)
                     {
-                        Double[] array = new Double[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Double[] array = new Double[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToDouble(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -224,8 +231,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.SInt16Array:
                     if (arrayOfObjects != null)
                     {
-                        Int16[] array = new Int16[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Int16[] array = new Int16[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToInt16(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -237,8 +244,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.SInt32Array:
                     if (arrayOfObjects != null)
                     {
-                        Int32[] array = new Int32[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Int32[] array = new Int32[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToInt32(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -250,8 +257,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.SInt64Array:
                     if (arrayOfObjects != null)
                     {
-                        Int64[] array = new Int64[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Int64[] array = new Int64[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToInt64(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -263,8 +270,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.SInt8Array:
                     if (arrayOfObjects != null)
                     {
-                        SByte[] array = new SByte[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        SByte[] array = new SByte[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToSByte(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -276,8 +283,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.StringArray:
                     if (arrayOfObjects != null)
                     {
-                        String[] array = new String[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        String[] array = new String[count];
+                        for (int i = 0; i < count; i++)
                         {
                             if (arrayOfObjects[i] is Boolean)
                             {
@@ -300,8 +307,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.UInt16Array:
                     if (arrayOfObjects != null)
                     {
-                        UInt16[] array = new UInt16[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        UInt16[] array = new UInt16[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToUInt16(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -313,8 +320,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.UInt32Array:
                     if (arrayOfObjects != null)
                     {
-                        UInt32[] array = new UInt32[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        UInt32[] array = new UInt32[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToUInt32(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -326,8 +333,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.UInt64Array:
                     if (arrayOfObjects != null)
                     {
-                        UInt64[] array = new UInt64[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        UInt64[] array = new UInt64[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToUInt64(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -339,8 +346,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.UInt8Array:
                     if (arrayOfObjects != null)
                     {
-                        Byte[] array = new Byte[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        Byte[] array = new Byte[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = Convert.ToByte(arrayOfObjects[i], CultureInfo.InvariantCulture);
                         }
@@ -356,8 +363,8 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.DateTimeArray:
                     if (arrayOfObjects != null)
                     {
-                        MI_Datetime[] array = new MI_Datetime[arrayOfObjects.Length];
-                        for (int i = 0; i < arrayOfObjects.Length; i++)
+                        MI_Datetime[] array = new MI_Datetime[count];
+                        for (int i = 0; i < count; i++)
                         {
                             array[i] = MI_Datetime.ConvertToDateTime(arrayOfObjects[i]);
                         }
