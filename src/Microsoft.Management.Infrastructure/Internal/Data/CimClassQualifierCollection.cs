@@ -44,24 +44,23 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("qualifierName");
                 }
 
+                UInt32 index = 0;
                 MI_QualifierSet qualifierSet;
                 MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
 
-                if (result != MI_Result.MI_RESULT_OK)
+                if (result == MI_Result.MI_RESULT_OK)
                 {
-                    return null;
+                    MI_Type qualifierType;
+                    MI_Flags qualifierFlags;
+                    MI_Value qualifierValue;
+                    
+
+                    result = qualifierSet.GetQualifier(qualifierName,
+                                        out qualifierType,
+                                        out qualifierFlags,
+                                        out qualifierValue,
+                                        out index);
                 }
-
-                MI_Type qualifierType;
-                MI_Flags qualifierFlags;
-                MI_Value qualifierValue;
-                UInt32 index;
-
-                result = qualifierSet.GetQualifier(qualifierName,
-                                    out qualifierType,
-                                    out qualifierFlags,
-                                    out qualifierValue,
-                                    out index);
 
                 switch (result)
                 {

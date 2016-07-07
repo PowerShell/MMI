@@ -52,6 +52,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 }
 
                 string name;
+                UInt32 index = 0;
                 MI_QualifierSet qualifierSet;
                 MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
@@ -59,20 +60,17 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                                 out qualifierSet,
                                 out parameterSet);
 
-                if (result != MI_Result.MI_RESULT_OK)
+                if (result == MI_Result.MI_RESULT_OK)
                 {
-                    return null;
+                    MI_Type qualifierType;
+                    MI_Flags qualifierFlags;
+                    MI_Value qualifierValue;
+                    result = qualifierSet.GetQualifier(name,
+                                       out qualifierType,
+                                       out qualifierFlags,
+                                       out qualifierValue,
+                                       out index);
                 }
-
-                MI_Type qualifierType;
-                MI_Flags qualifierFlags;
-                MI_Value qualifierValue;
-                UInt32 index;
-                result = qualifierSet.GetQualifier(name,
-                                   out qualifierType,
-                                   out qualifierFlags,
-                                   out qualifierValue,
-                                   out index);
 
                 switch (result)
                 {

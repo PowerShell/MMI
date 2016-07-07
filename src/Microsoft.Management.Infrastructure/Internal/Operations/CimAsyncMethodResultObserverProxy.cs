@@ -73,9 +73,10 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
             MI_Value result,
             MI_OperationCallbacks.MI_OperationCallback_ResultAcknowledgement resultAcknowledgement)
         {
-            object parameterValue = CimInstance.ConvertFromNativeLayer(
-                resultType,
+            object parameterValue = ValueHelpers.ConvertFromNativeLayer(
                 result,
+                resultType,
+                0,
                 null,
                 !this._shortenLifetimeOfResults);
 

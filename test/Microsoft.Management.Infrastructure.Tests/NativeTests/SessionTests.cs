@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Microsoft.Management.Infrastructure.Native;
 using MMI.Tests;
 using Xunit;
+using Microsoft.Management.Infrastructure;
+using Microsoft.Management.Infrastructure.Options;
 
 namespace MMI.Tests.Native
 {
@@ -235,6 +237,22 @@ namespace MMI.Tests.Native
 
             cimClassOperation1.Close();
             cimClassOperation2.Close();
+        }
+
+        [WindowsFact]
+        public void CredentialTest()
+        {
+            string testpassword = "mypassword";
+            System.Security.SecureString testSS = new System.Security.SecureString();
+            foreach (char ch in testpassword)
+                testSS.AppendChar(ch);
+
+            CimCredential c = new CimCredential(PasswordAuthenticationMechanism.Default, "myhost", "johnkord", testSS);
+            CimSessionOptions csOpts = new CimSessionOptions();
+            csOpts.AddDestinationCredentials(c);
+            CimSession s = CimSession.Create("localhost", csOpts);
+
+            
         }
     }
 }

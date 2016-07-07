@@ -175,29 +175,6 @@ namespace Microsoft.Management.Infrastructure.Options
             CimException.ThrowIfMiResultFailure(result);
         }
 
-        public static string ConvertToUnsecureString(SecureString securePassword)
-        {
-            if (securePassword == null)
-            {
-                throw new ArgumentNullException("securePassword");
-            }
-
-            IntPtr unmanagedString = IntPtr.Zero;
-            try
-            {
-#if (!_CORECLR)
-                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-#else
-                unmanagedString = SecureStringMarshal.SecureStringToCoTaskMemUnicode(securePassword);
-#endif
-                return Marshal.PtrToStringUni(unmanagedString);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
-            }
-        }
-
         /// <summary>
         /// Sets a Destination Credential
         /// </summary>
@@ -217,7 +194,7 @@ namespace Microsoft.Management.Infrastructure.Options
             SecureString securePassword = credential.GetCredential().GetSecureString();;
             if( securePassword != null && securePassword.Length > 0)
             {
-                credential.GetCredential().cred.usernamePassword.password = ConvertToUnsecureString(securePassword);
+                credential.GetCredential().cred.usernamePassword.password = NativeMethods.ConvertToUnsecureString(securePassword);
             }
             else
             {
