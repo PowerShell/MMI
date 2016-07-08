@@ -6,6 +6,7 @@
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Native;
+using Microsoft.Management.Infrastructure.Resources;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
