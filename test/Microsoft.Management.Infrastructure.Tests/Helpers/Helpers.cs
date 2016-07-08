@@ -378,7 +378,7 @@ namespace MMI.Tests
                 "Wes Dyer says that Subscribe should never return null (even for non-cancellable operations) - this results in better composability");
 
             Thread.Sleep(3000);
-            CimTestFixture.StartDummyProcess();
+            StartDummyProcess();
             return observer.GetSingleResult();
         }
 
@@ -432,6 +432,29 @@ namespace MMI.Tests
 
             return results;
         }
+
+        #region Fake
+        internal static int StartDummyProcess()
+        {
+            System.Diagnostics.ProcessStartInfo processInfo = new System.Diagnostics.ProcessStartInfo();
+            processInfo.FileName = "ttest.exe";
+
+            processInfo.UseShellExecute = false;
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+            processInfo.CreateNoWindow = true;
+            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(processInfo);
+
+            StreamReader outputReader = proc.StandardOutput;
+            StreamReader errorReader = proc.StandardError;
+
+            string sOutput = outputReader.ReadToEnd();
+
+            sOutput = errorReader.ReadToEnd();
+            proc.WaitForExit();
+            return proc.ExitCode;
+        }
+        #endregion Fake
     }
 
     public enum AsyncItemKind
