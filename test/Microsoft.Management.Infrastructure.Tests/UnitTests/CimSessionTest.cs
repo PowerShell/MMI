@@ -104,83 +104,12 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-
-        //==============
-  
-
-
-
-        //[Fact]
-        //public void Impersonated_CloseAsync()
-        //{
-        //    Helpers.AssertRunningAsNonTestUser("Start of test");
-        //    CimSession cimSession = CimSession.Create(null);
-        //    using (Helpers.ImpersonateTestUser())
-        //    {
-        //        Helpers.AssertRunningAsTestUser("Before CImSession.Dispose()");
-        //        ManualResetEventSlim waiter = new ManualResetEventSlim(false);
-        //        cimSession.CloseAsync().Subscribe(onErrorAction: e => { throw e; }, onCompletedAction: waiter.Set);
-        //        waiter.Wait();
-        //    }
-        //    Helpers.AssertRunningAsNonTestUser("End of test");
-        //}
-
-        //[Fact]
-        //public void Impersonated_CloseAsyncCallback_NoOperations()
-        //{
-        //    Helpers.AssertRunningAsNonTestUser("Start of test");
-        //    ManualResetEventSlim waiter = new ManualResetEventSlim(false);
-
-        //    using (Helpers.ImpersonateTestUser())
-        //    {
-        //        Helpers.AssertRunningAsTestUser("Before CimSession.Create()");
-        //        CimSession cimSession = CimSession.Create(null);
-        //        cimSession.CloseAsync().Subscribe(
-        //            onErrorAction: delegate (Exception e)
-        //            {
-        //                CimImpersonationHelpers.AssertRunningAsTestUser("In CimSession.CloseAsync.OnError");
-        //                waiter.Set();
-        //                throw e;
-        //            },
-        //            onCompletedAction: delegate
-        //            {
-        //                CimImpersonationHelpers.AssertRunningAsTestUser("In CimSession.CloseAsync.OnCompleted");
-        //                waiter.Set();
-        //            });
-        //    }
-        //    Helpers.AssertRunningAsNonTestUser("End of test");
-        //    waiter.Wait();
-        //}
-
-        [Fact]
-        public void CloseAsync()
-        {
-            using (CimSession cimSession = CimSession.Create(null))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-                CimAsyncStatus asyncResult = cimSession.CloseAsync();
-
-                List<AsyncItem<object>> serializedResults = Helpers.ObservableToList(asyncResult);
-                Assert.Equal(serializedResults.Count, 1, "Only expecting OnCompleted callback (1)");
-                Assert.Equal(serializedResults[0].Kind, AsyncItemKind.Completion, "Only expecting OnCompleted callback (2)");
-            }
-        }
-
         [Fact]
         public void AlreadyDisposed_Close_Then_Close()
         {
             CimSession cimSession = CimSession.Create(null);
             Assert.NotNull(cimSession, "cimSession should not be null");
             cimSession.Close();
-            cimSession.Close(); // expecting no exception - Close/CloseAsync/Dispose should be idempotent
-        }
-
-        [Fact]
-        public void AlreadyDisposed_CloseAsync_Then_Close()
-        {
-            CimSession cimSession = CimSession.Create(null);
-            Assert.NotNull(cimSession, "cimSession should not be null");
-            Helpers.ObservableToList(cimSession.CloseAsync());
             cimSession.Close(); // expecting no exception - Close/CloseAsync/Dispose should be idempotent
         }
 
@@ -200,8 +129,7 @@ namespace MMI.Tests.UnitTests
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
                 Helpers.AssertException<CimException>(
-                        //() => cimSession.EnumerateInstances(@"root\cimv2", "nonExistantClassHere").Count(),
-                        () => cimSession.EnumerateInstances(@"root\cimv2", "nonExistantClassHere"),
+                        () => cimSession.EnumerateInstances(@"root\cimv2", "nonExistantClassHere").Count(),                     
                         delegate (CimException exception)
                         {
                             Assert.Equal(exception.NativeErrorCode, NativeErrorCode.InvalidClass, "Got the right NativeErrorCode");
@@ -2361,43 +2289,6 @@ namespace MMI.Tests.UnitTests
                 //Check non-exist method parameter qualifier
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].Qualifiers returneded null");
                 Assert.Null(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["nonexist"], @"CimClass.CimClassMethods[Create].Parameters[CommandLine].Qualifiers[nonexist] returneded not null");
-            }
-        }
-
-        [Fact]
-        public void BaseOptions_Empty()
-        {
-            var sessionOptions = new CimSessionOptions();
-            using (CimSession cimSession = CimSession.Create(null, sessionOptions))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-            }
-        }
-
-        [Fact]
-        public void WSManOptions_SetDestinationPort()
-        {
-            // TODO/FIXME - add unit test for corner cases (0, > 65535)
-
-            var sessionOptions = new WSManSessionOptions();
-            sessionOptions.DestinationPort = (uint)8080;
-            using (CimSession cimSession = CimSession.Create(null, sessionOptions))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-            }
-        }
-
-        [Fact]
-        public void WSManOptions_SetProxyCredential()
-        {
-            var sessionOptions = new WSManSessionOptions();
-            //sessionOptions.DestinationPort = 8080;
-            CimCredential cred = new CimCredential(ImpersonatedAuthenticationMechanism.None); //wsman accepts only username/password
-            sessionOptions.AddProxyCredentials(cred);
-            //Exception is thrown after creating the session as WSMAN doesn't allow proxy without username/password.
-            using (CimSession cimSession = CimSession.Create(null, sessionOptions))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
             }
         }
     }

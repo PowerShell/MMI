@@ -3,7 +3,7 @@
 *=============================================================================
 */
 
-namespace Microsoft.Management.Infrastructure.UnitTests
+namespace MMI.Tests
 {
     using Microsoft.Management.Infrastructure;
     using Microsoft.Management.Infrastructure.Native;
@@ -11,7 +11,7 @@ namespace Microsoft.Management.Infrastructure.UnitTests
     using MMI.Tests;
     using Xunit;
 
-    public class CimClassTest
+    public class CimSessionOptionsTest
     {
         [TDDFact]
         public void TODO()
