@@ -21,7 +21,6 @@ namespace MMI.Tests.UnitTests
 {
     public class CimSessionTest
     {
-        #region Test create
         [Fact]
         public void Create_ComputerName_Null()
         {
@@ -107,38 +106,9 @@ namespace MMI.Tests.UnitTests
 
 
         //==============
-        [Fact]
-        public void Impersonated_GarbageCollection()
-        {
-            Helpers.AssertRunningAsNonTestUser("Start of test");
-            using (Helpers.ImpersonateTestUser())
-            {
-                Helpers.AssertRunningAsTestUser("Before CImSession.Create()");
-                CimSession cimSession = CimSession.Create(null, new WSManSessionOptions());
-                cimSession = null;
-            }
-            Helpers.AssertRunningAsNonTestUser("Before waiting for garbage collection");
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-        }
+  
 
-        [Fact]
-        public void Impersonated_Close()
-        {
-            Helpers.AssertRunningAsNonTestUser("Start of test");
-            CimSession cimSession = CimSession.Create(null);
-            using (Helpers.ImpersonateTestUser())
-            {
-                Helpers.AssertRunningAsTestUser("Before CImSession.Dispose()");
-                cimSession.Close();
-            }
-            Helpers.AssertRunningAsNonTestUser("End of test");
-        }
+
 
         //[Fact]
         //public void Impersonated_CloseAsync()
@@ -260,7 +230,7 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(cimSession, "cimSession should not be null");
                 IEnumerable<CimInstance> enumeratedInstances = cimSession.EnumerateInstances(@"root\cimv2", "Win32_Process");
                 Assert.NotNull(enumeratedInstances, "cimSession.EnumerateInstances returned something other than null");
-                //Assert.True(enumeratedInstances.Count() > 0, "Got some results back from CimSession.EnumerateInstances");
+                Assert.True(enumeratedInstances.Count() > 0, "Got some results back from CimSession.EnumerateInstances");
             }
         }
 
@@ -281,71 +251,6 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        //[Fact]
-        //public void EnumerateInstances_StartedFromOnError()
-        //{
-        //    CimSession cimSession = null;
-        //    using (cimSession = CimSession.Create("localhost"))
-        //    {
-        //        Assert.NotNull(cimSession, "cimSession should not be null");
-        //        CimOperationOptions operationOptions = new CimOperationOptions() { Flags = (CimOperationFlags)0xffffffff };
-        //        IObservable<CimInstance> observedInstances = cimSession.EnumerateInstancesAsync(@"!@#$%^&*(", "!@#$%^&*(", operationOptions);
-        //        Assert.NotNull(observedInstances, "cimSession.EnumerateInstancesAsync returned something other than null");
-
-        //        bool onErrorGotRun = false;
-        //        observedInstances.Subscribe(
-        //                onErrorAction:
-        //                delegate
-        //                {
-        //                    onErrorGotRun = true;
-        //                    Thread.Sleep(TimeSpan.FromSeconds(3));
-
-        //                    Assert.True(cimSession != null, "SANITY CHECK / TEST SETUP VALIDATION: Test assumes that protocol handler will call OnError on the same thread as MI_Session_Enumerat");
-
-        //                    IEnumerable<CimInstance> enumeratedInstances = cimSession.EnumerateInstances(@"root\cimv2", "Win32_Process");
-        //                    Assert.NotNull(enumeratedInstances, "cimSession.EnumerateInstances returned something other than null");
-        //                    Assert.True(enumeratedInstances.Count() > 0, "Got some results back from CimSession.EnumerateInstances");
-        //                });
-
-        //        Assert.True(onErrorGotRun, "onErrorGotRun");
-        //    }
-        //    cimSession = null;
-        //}
-
-        //[Fact]
-        //public void EnumerateInstancesAsync_StartedFromOnError()
-        //{
-        //    CimSession cimSession;
-        //    using (cimSession = CimSession.Create(null))
-        //    {
-        //        Assert.NotNull(cimSession, "cimSession should not be null");
-        //        CimOperationOptions operationOptions = new CimOperationOptions() { Flags = (CimOperationFlags)0xffffffff };
-        //        IObservable<CimInstance> observedInstances = cimSession.EnumerateInstancesAsync(@"!@#$%^&*(", "!@#$%^&*(", operationOptions);
-        //        Assert.NotNull(observedInstances, "cimSession.EnumerateInstancesAsync returned something other than null");
-
-        //        bool onErrorGotRun = false;
-        //        observedInstances.Subscribe(
-        //                onErrorAction:
-        //                delegate
-        //                {
-        //                    onErrorGotRun = true;
-        //                    Thread.Sleep(TimeSpan.FromSeconds(3));
-
-        //                    Assert.True(cimSession != null, "SANITY CHECK / TEST SETUP VALIDATION: Test assumes that protocol handler will call OnError on the same thread as MI_Session_Enumerat");
-
-        //                    IObservable<CimInstance> enumeratedInstances = cimSession.EnumerateInstancesAsync(@"root\cimv2", "Win32_Process");
-        //                    Assert.NotNull(enumeratedInstances, "cimSession.EnumerateInstancesAsync returned something other than null");
-
-        //                    List<AsyncItem<CimInstance>> listOfInstances = HelpersObservableToList(enumeratedInstances);
-        //                    Assert.True(listOfInstances.Count > 0, "Got some results back from CimSession.EnumerateInstancesAsync");
-        //                    Assert.Equal(listOfInstances.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
-        //                });
-
-        //        Assert.True(onErrorGotRun, "onErrorGotRun");
-        //    }
-        //    cimSession = null;
-        //}
-
         public CimSession EnumerateInstances_AbandonedEnumerator_Helper()
         {
             CimSession cimSession = CimSession.Create(null, new WSManSessionOptions());
@@ -357,36 +262,6 @@ namespace MMI.Tests.UnitTests
             enumerator.MoveNext();
 
             return cimSession;
-        }
-
-        [Fact]
-        public void Impersonated_AbandonedEnumerator()
-        {
-            CimSession cimSession;
-
-            using (Helpers.ImpersonateTestUser())
-            {
-                Helpers.AssertRunningAsTestUser("Before calling EnumerateInstances_AbandonedEnumerator_Helper");
-                cimSession = EnumerateInstances_AbandonedEnumerator_Helper();
-            }
-
-            Helpers.AssertRunningAsNonTestUser("Before calling GC.Collect/WaitForPendingFinalizers");
-
-            Thread.Sleep(1000);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Thread.Sleep(1000);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Thread.Sleep(1000);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            using (CimImpersonationHelpers.ImpersonateTestUser())
-            {
-                // this will hang if garbage collection has not drained the sync operation
-                cimSession.Close();
-            }
         }
 
         [Fact]
@@ -568,271 +443,6 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["ID"], @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers[ID returneded null");
                 Assert.Equal((CimType)enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["ID"].CimType, CimType.SInt32, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers[ID returneded null");
-            }
-        }
-
-        [Fact]
-        public void GetClass_Bug380707()
-        {
-            using (CimSession cimSession = CimSession.Create(null))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-                CimClass enumeratedClass = cimSession.GetClass(@"root\MyTest4", "D");
-                Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "D", "CimClass.CimSystemProperties.ClassName returneded null");
-                //D Qualifiers
-                Assert.NotNull(enumeratedClass.CimClassQualifiers, "enumeratedClass.CimClassQualifiers returneded null");
-                //Qualifier Description
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["Description"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["Description"].Value, "enumeratedClass.CimClassQualifiers[Description].Value returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Description"].Value.ToString(), @"afdsasdsaf", @"enumeratedClass.CimClassQualifiers[Description].Value.ToString() is not equal to AFSDSDD");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimClassQualifiers[Description].Flags returneded null");
-
-                //Now check if qualifier MyQual2 and Abstract are not propogated.
-                Assert.Null(enumeratedClass.CimClassQualifiers["MyQual2"], "Nonexistant MyQual2 qualifier returns null");
-                Assert.Null(enumeratedClass.CimClassQualifiers["Abstract"], "Nonexistant Abstract qualifier returns null");
-
-                //B Qualifiers.
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassQualifiers, "enumeratedClass.CimClassQualifiers returneded null");
-                //Qualifier Description
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassQualifiers["Description"], "enumeratedClass.CimSuperClass.CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassQualifiers["Description"].Value, "enumeratedClass.CimSuperClass.CimClassQualifiers[Description].Value returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassQualifiers["Description"].Value.ToString(), @"afdsasdsaf", @"enumeratedClass.CimSuperClass.CimClassQualifiers[Description].Value.ToString() is not equal to AFSDSDD");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassQualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimSuperClass.CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassQualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimSuperClass.CimClassQualifiers[Description].Flags returneded null");
-
-                //Now check if qualifier MyQual2 and Abstract are not propogated.
-                Assert.Null(enumeratedClass.CimSuperClass.CimClassQualifiers["MyQual2"], "Nonexistant MyQual2 qualifier returns null");
-                Assert.Null(enumeratedClass.CimSuperClass.CimClassQualifiers["Abstract"], "Nonexistant Abstract qualifier returns null");
-
-                //A Qualifiers.
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers, "enumeratedClass.CimClassQualifiers returneded null");
-                //Qualifier Description
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Description"], "enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Description"].Value, "enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Value returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Description"].Value.ToString(), @"afdsasdsaf", @"enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Value.ToString() is not equal to AFSDSDD");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Flags returneded null");
-                //Qualifier Abstract
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Abstract"], "enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Abstract"].Value, "enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Value returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Abstract"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers["Abstract"].Flags & CimFlags.Restricted, CimFlags.Restricted, @"enumeratedClass.CimSuperClass.CimSuperClass.CimClassQualifiers[Description].Flags returneded null");
-
-                //Check properties presence
-                Assert.NotNull(enumeratedClass.CimClassProperties["Key"], "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["Key"].Qualifiers, "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["normal"], "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["normal"].Qualifiers, "enumeratedClass.CimClassProperties returneded null");
-
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["Key"], "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers, "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["normal"], "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers, "enumeratedClass.CimClassProperties returneded null");
-
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers, "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"], "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"], "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers, "enumeratedClass.CimClassProperties returneded null");
-
-                //Check properties qualifiers
-                //D "key" properties qualifiers
-                Assert.NotNull(enumeratedClass.CimClassProperties["Key"].Qualifiers["key"], "enumeratedClass.CimClassProperties[key].CimClassQualifiers[key] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["key"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[key].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["key"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[key].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["Key"].Qualifiers["MyQual"], "enumeratedClass.CimClassProperties[key].CimClassQualifiers[MyQual] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["MyQual"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["MyQual"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["Key"].Qualifiers["Description"], "enumeratedClass.CimClassProperties[key].CimClassQualifiers[Description] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimClassProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                //D "normal" properties qualifiers
-                Assert.NotNull(enumeratedClass.CimClassProperties["normal"].Qualifiers["Description"], "enumeratedClass.CimClassProperties[normal].CimClassQualifiers[Description] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["normal"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["normal"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["normal"].Qualifiers["MyQual"], "enumeratedClass.CimClassProperties[normal].CimClassQualifiers[key] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["normal"].Qualifiers["MyQual"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["normal"].Qualifiers["MyQual"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-
-                //B "key" properties qualifiers
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["key"], "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[key] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["key"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[key].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["key"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[key].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["MyQual"], "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["MyQual"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["MyQual"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"], "enumeratedClass.CimClassProperties[key].CimClassQualifiers[Description] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Override"], "enumeratedClass.CimClassProperties[key].CimClassQualifiers[Override] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Override"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Override].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Override"].Flags & CimFlags.Restricted, CimFlags.Restricted, "enumeratedClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Override].Flags returneded null");
-                //B "normal" properties qualifiers
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["Description"], "enumeratedClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[Description] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["MyQual"], "enumeratedClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[MyQual] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["MyQual"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["MyQual"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[MyQual].Flags returneded null");
-
-
-                //A "key" properties qualifiers
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["key"], "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[key] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["key"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[key].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["key"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[key].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["MyQual"], "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["MyQual"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["MyQual"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"], "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Description] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["Key"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[Description].Flags returneded null");
-                //A "normal" properties qualifiers
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["Description"], "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[Description] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[Description].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["MyQual"], "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[key].CimClassQualifiers[MyQual] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["MyQual"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[MyQual].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassProperties["normal"].Qualifiers["MyQual"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimSuperClass.CimSuperClass.CimInstanceProperties[normal].CimClassQualifiers[MyQual].Flags returneded null");
-
-                //METHODS
-                //D Methods
-                Assert.NotNull(enumeratedClass.CimClassMethods, "enumeratedClass.CimClassMethods returneded null");
-                Assert.NotNull(enumeratedClass.CimClassMethods["MyMethod"], "enumeratedClass.CimClassMethods[MyMethod] returneded null");
-                Assert.NotNull(enumeratedClass.CimClassMethods["MyMethod2"], "enumeratedClass.CimClassMethods[MyMethod2] returneded null");
-                //D Method MyMethod
-                Assert.NotNull(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.NotNull(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Description"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod"].Qualifiers["Description"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                //D Method MyMethod2
-                Assert.NotNull(enumeratedClass.CimClassMethods["MyMethod2"].Qualifiers["Description"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod2"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod2"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod2"].Qualifiers["Description"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["MyMethod"].Parameters.Count, 1, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-
-                //B Methods
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods, "enumeratedClass.CimSuperClass.CimClassMethods returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"], "enumeratedClass.CimSuperClass.CimClassMethods[MyMethod] returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod2"], "enumeratedClass.CimSuperClass.CimClassMethods[MyMethod2] returneded null");
-                //B Method MyMethod
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Description"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Description"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-
-                //B Method MyMethod2
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod2"].Qualifiers["Description"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod2"].Qualifiers["Description"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod2"].Qualifiers["Description"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod2"].Qualifiers["Description"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimClassMethods["MyMethod"].Parameters.Count, 1, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-
-                //A Methods
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods, "enumeratedClass.CimClassMethods returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods["MyMethod"], "enumeratedClass.CimClassMethods[MyMethod] returneded null");
-                Assert.Null(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods["MyMethod2"], "enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods[MyMethod2] returneded non null");
-                //A Method MyMethod
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"], "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-                Assert.Equal(enumeratedClass.CimSuperClass.CimSuperClass.CimClassMethods["MyMethod"].Qualifiers["Maxlen"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassMethods[MyMethod].CimClassQualifiers[Maxlen] returneded null");
-
-                //Now Check the default qualifier flavor behavior
-
-
-            }
-            using (CimSession cimSession = CimSession.Create(null))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-                CimClass enumeratedClass = cimSession.GetClass(@"root\MyTest4", "E");
-                Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "E", "CimClass.CimSystemProperties.ClassName returneded null");
-                //D Qualifiers
-                Assert.NotNull(enumeratedClass.CimClassQualifiers, "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["association"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["association"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[association].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["association"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimClassQualifiers[association].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["indication"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["indication"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[indication].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["indication"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimClassQualifiers[indication].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["ClassConstraint"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["ClassConstraint"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimClassQualifiers[ClassConstraint].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["ClassConstraint"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimClassQualifiers[ClassConstraint].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["Deprecated"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Deprecated"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimClassQualifiers[Deprecated].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Deprecated"].Flags & CimFlags.Restricted, CimFlags.Restricted, @"enumeratedClass.CimClassQualifiers[Deprecated].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["DisplayName"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["DisplayName"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimClassQualifiers[DisplayName].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["DisplayName"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimClassQualifiers[DisplayName].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["Exception"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Exception"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[Exception].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Exception"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, @"enumeratedClass.CimClassQualifiers[Exception].Flags returneded null");
-                Assert.NotNull(enumeratedClass.CimClassQualifiers["Experimental"], "enumeratedClass.CimClassQualifiers returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Experimental"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, @"enumeratedClass.CimClassQualifiers[Experimental].Flags returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Experimental"].Flags & CimFlags.Restricted, CimFlags.Restricted, @"enumeratedClass.CimClassQualifiers[Experimental].Flags returneded null");
-
-                //Properties qualifiers
-                //p1 property qualifier
-                Assert.NotNull(enumeratedClass.CimClassProperties, "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"], "enumeratedClass.CimClassProperties[p1] returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["ArrayType"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[ArrayType] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["ArrayType"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[ArrayType] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["ArrayType"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[ArrayType] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitMap"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitMap] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitMap"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitMap] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitMap"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitMap] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitValues"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitValues] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitValues"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitValues] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitValues"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitValues] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["BitValues"].Flags & CimFlags.Translatable, CimFlags.Translatable, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[BitValues] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["Correlatable"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Correlatable] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["Correlatable"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Correlatable] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["Correlatable"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Correlatable] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["DN"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[DN] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["DN"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[DN] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["DN"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[DN] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["Counter"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Counter] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["Counter"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Counter] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["Counter"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Counter] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["EmbeddedInstance"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[EmbeddedInstance] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["EmbeddedInstance"].Flags & CimFlags.EnableOverride, CimFlags.EnableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[EmbeddedInstance] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["EmbeddedInstance"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[EmbeddedInstance] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p1"].Qualifiers["EmbeddedObject"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[EmbeddedObject] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["EmbeddedObject"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[EmbeddedObject] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p1"].Qualifiers["EmbeddedObject"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[EmbeddedObject] returneded null");
-
-                //p2 property qualifier
-                Assert.NotNull(enumeratedClass.CimClassProperties, "enumeratedClass.CimClassProperties returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["p2"], "enumeratedClass.CimClassProperties[p2] returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["p2"].Qualifiers, "enumeratedClass.CimClassProperties[p2].CimClassQualifiers returneded null");
-                Assert.NotNull(enumeratedClass.CimClassProperties["p2"].Qualifiers["aggregation"], "enumeratedClass.CimClassProperties[p2].CimClassQualifiers[aggregation] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p2"].Qualifiers["aggregation"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimClassProperties[p2].CimClassQualifiers[aggregation] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p2"].Qualifiers["aggregation"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p2].CimClassQualifiers[aggregation] returneded null");
-
-                Assert.NotNull(enumeratedClass.CimClassProperties["p2"].Qualifiers["Composition"], "enumeratedClass.CimClassProperties[p1].CimClassQualifiers[Composition] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p2"].Qualifiers["Composition"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, "enumeratedClass.CimClassProperties[p2].CimClassQualifiers[Composition] returneded null");
-                Assert.Equal(enumeratedClass.CimClassProperties["p2"].Qualifiers["Composition"].Flags & CimFlags.ToSubclass, CimFlags.ToSubclass, "enumeratedClass.CimClassProperties[p2].CimClassQualifiers[Composition] returneded null");
-
             }
         }
 
@@ -1558,35 +1168,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
-        public void Impersonated_QueryInstances_EnumeratorDisposedWithDifferentIdentityToken()
-        {
-            using (CimSession cimSession = CimSession.Create(null))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
 
-                string queryExpression = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "SELECT * FROM Win32_Process");
-
-                Helpers.AssertRunningAsNonTestUser("Before calling CimSession.QueryInstances");
-                IEnumerable<CimInstance> enumeratedInstances = cimSession.QueryInstances(@"root\cimv2", "WQL", queryExpression);
-                IEnumerator<CimInstance> enumerator = enumeratedInstances.GetEnumerator();
-                enumerator.MoveNext();
-                using (Helpers.ImpersonateTestUser())
-                {
-                    Helpers.AssertRunningAsTestUser("Right before calling IEnumerator.Dispose");
-                    enumerator.Dispose(); // per .NET guidelines, Dispose should not throw
-                    /*
-                		You should not throw exceptions from within Dispose except under critical
-                		situations. If executing a Dispose(bool disposing) method, never throw an
-                		exception if disposing is false; doing so will terminate the process if
-                		executing inside a finalizer context.
-                     */
-                }
-                Helpers.AssertRunningAsNonTestUser("After the test");
-            }
-        }
 
         [Fact]
         public void QueryInstances_QueryDialect_Null()
@@ -1709,51 +1291,6 @@ namespace MMI.Tests.UnitTests
             {
                 this.testCompleted.Wait();
             }
-        }
-
-        public void Impersonated_QueryInstancesAsync_Impersonatation_Core(bool threadPool, CimSessionOptions sessionOptions)
-        {
-            string queryExpression = string.Format(
-                CultureInfo.InvariantCulture,
-                "SELECT * FROM Win32_Process WHERE ProcessId = {0}",
-                Process.GetCurrentProcess().Id);
-
-            CimSession cimSession = null;
-            ImpersonationObserver observer = null;
-            try
-            {
-                Helpers.AssertRunningAsNonTestUser("Before impersonation / main test thread");
-                using (Helpers.ImpersonateTestUser())
-                {
-                    Helpers.AssertRunningAsTestUser("After successful impersonation / main test thread");
-                    cimSession = CimSession.Create(null, sessionOptions);
-                    {
-                        observer = new ImpersonationObserver(cimSession, queryExpression, threadPool);
-                        cimSession.QueryInstancesAsync("root/cimv2", "WQL", queryExpression).Subscribe(observer);
-                    }
-                }
-                Helpers.AssertRunningAsNonTestUser("After reverting impersonation / main test thread");
-                observer.WaitForEndOfTest();
-            }
-            finally
-            {
-                if (cimSession != null)
-                {
-                    cimSession.Dispose();
-                }
-            }
-        }
-
-        [Fact]
-        public void Impersonated_QueryInstancesAsync_Impersonatation_NewOperationFromCallback_WSMan()
-        {
-            Impersonated_QueryInstancesAsync_Impersonatation_Core(threadPool: false, sessionOptions: new WSManSessionOptions());
-        }
-
-        [Fact]
-        public void Impersonated_QueryInstancesAsync_Impersonatation_NewOperationFromThreadPool_WSMan()
-        {
-            Impersonated_QueryInstancesAsync_Impersonatation_Core(threadPool: true, sessionOptions: new WSManSessionOptions());
         }
 
         [Fact]
@@ -2826,25 +2363,6 @@ namespace MMI.Tests.UnitTests
                 Assert.Null(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["nonexist"], @"CimClass.CimClassMethods[Create].Parameters[CommandLine].Qualifiers[nonexist] returneded not null");
             }
         }
-
-        //=================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Todo: will add more test cases
-        #endregion Test create
 
         [Fact]
         public void BaseOptions_Empty()

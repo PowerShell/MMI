@@ -13,19 +13,11 @@ using Microsoft.Management.Infrastructure.Generic;
 namespace MMI.Tests
 {
     using System.Reflection;
-    using System.Runtime.InteropServices;
 
     public static class Helpers
     {
         private const string testUser_userName = "miDotNetTstUsr";
         private const string testUser_password = "test123.#";
-        private static extern int LogonUserA(String lpszUserName,
-            String lpszDomain,
-            String lpszPassword,
-            int dwLogonType,
-            int dwLogonProvider,
-            ref IntPtr phToken);
-
 
         private class ObservableToListObserver<T> : IObserver<T>
         {
@@ -284,37 +276,6 @@ namespace MMI.Tests
             group.Invoke("Add", new object[] { user.Path.ToString() });
         }
 
-        private static IntPtr LogUser(string strUsername, string strDomain, string strPassword)
-        {
-            IntPtr tokenHandle = new IntPtr(0);
-
-            const int LOGON32_PROVIDER_DEFAULT = 0;
-            //This parameter causes LogonUser to create a primary token.
-            const int LOGON32_LOGON_INTERACTIVE = 2;
-
-            tokenHandle = IntPtr.Zero;
-
-            // Call LogonUser to obtain a handle to an access token.
-            int returnValue = LogonUserA(
-                strUsername,
-                strDomain,
-                strPassword,
-                LOGON32_LOGON_INTERACTIVE,
-                LOGON32_PROVIDER_DEFAULT,
-                ref tokenHandle);
-
-            if (0 == returnValue)
-            {
-                int ret = Marshal.GetLastWin32Error();
-                return IntPtr.Zero;
-            }
-
-            WindowsIdentity mWI1 = WindowsIdentity.GetCurrent();
-            IntPtr token2 = new IntPtr(tokenHandle.ToInt32());
-
-            return token2;
-        }
-
         private class MyImpersonationRestorationDisposable : IDisposable
         {
             public MyImpersonationRestorationDisposable(WindowsImpersonationContext impersonationContext)
@@ -329,21 +290,6 @@ namespace MMI.Tests
                 this._impersonationContext.Undo();
                 CallContext.FreeNamedDataSlot("ImpersonationTest");
             }
-        }
-
-        public static IDisposable ImpersonateTestUser()
-        {
-            AddTestUser();
-
-            IntPtr token = LogUser(testUser_userName, Environment.MachineName, testUser_password);
-            WindowsIdentity mWI2 = new WindowsIdentity(token);
-            WindowsPrincipal winPrin = new WindowsPrincipal(mWI2);
-            Thread.CurrentPrincipal = winPrin;
-            WindowsImpersonationContext impersonationContext = mWI2.Impersonate();
-            CallContext.LogicalSetData("ImpersonationTest", Process.GetCurrentProcess().Id);
-
-            IDisposable restorationToken = new MyImpersonationRestorationDisposable(impersonationContext);
-            return restorationToken;
         }
 
         public static List<AsyncItem<T>> ObservableToList<T>(IObservable<T> observable)
@@ -491,119 +437,4 @@ namespace MMI.Tests
         public Exception Exception { get; private set; }
         public DateTime Timestamp { get; private set; }
     }
-
-    public class CimImpersonationHelpers
-    {
-        [DllImport("advapi32.dll")]
-        private static extern int LogonUserA(String lpszUserName,
-            String lpszDomain,
-            String lpszPassword,
-            int dwLogonType,
-            int dwLogonProvider,
-            ref IntPtr phToken);
-
-        private static IntPtr LogUser(string strUsername, string strDomain, string strPassword)
-        {
-            IntPtr tokenHandle = new IntPtr(0);
-
-            const int LOGON32_PROVIDER_DEFAULT = 0;
-            //This parameter causes LogonUser to create a primary token.
-            const int LOGON32_LOGON_INTERACTIVE = 2;
-
-            tokenHandle = IntPtr.Zero;
-
-            // Call LogonUser to obtain a handle to an access token.
-            int returnValue = LogonUserA(
-                strUsername,
-                strDomain,
-                strPassword,
-                LOGON32_LOGON_INTERACTIVE,
-                LOGON32_PROVIDER_DEFAULT,
-                ref tokenHandle);
-
-            if (0 == returnValue)
-            {
-                int ret = Marshal.GetLastWin32Error();
-                return IntPtr.Zero;
-            }
-
-            WindowsIdentity mWI1 = WindowsIdentity.GetCurrent();
-            IntPtr token2 = new IntPtr(tokenHandle.ToInt32());
-
-            return token2;
-        }
-
-        private class MyImpersonationRestorationDisposable : IDisposable
-        {
-            public MyImpersonationRestorationDisposable(WindowsImpersonationContext impersonationContext)
-            {
-                this._impersonationContext = impersonationContext;
-            }
-
-            private WindowsImpersonationContext _impersonationContext;
-
-            public void Dispose()
-            {
-                this._impersonationContext.Undo();
-                CallContext.FreeNamedDataSlot("ImpersonationTest");
-            }
-        }
-
-        private const string testUser_userName = "miDotNetTstUsr";
-        private const string testUser_password = "test123.#";
-
-        private static void AddTestUser()
-        {
-            DirectoryEntry computer = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-            if (computer.Children.Cast<DirectoryEntry>().Any(entry => entry.Name.Equals(testUser_userName, StringComparison.OrdinalIgnoreCase)))
-            {
-                return;
-            }
-            DirectoryEntry user = computer.Children.Add(testUser_userName, "user");
-            user.Invoke("SetPassword", new object[] { testUser_password });
-            user.Invoke("Put", new object[] { "Description", "Test user for MI Client .NET API DRTs" });
-            user.CommitChanges();
-
-            SecurityIdentifier sid = new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null);
-            string name = sid.Translate(typeof(NTAccount)).ToString();
-            string administratorsGroupName = name.Split('\\')[1];
-
-            DirectoryEntry group = computer.Children.Find(administratorsGroupName, "group");
-            group.Invoke("Add", new object[] { user.Path.ToString() });
-        }
-
-        public static IDisposable ImpersonateTestUser()
-        {
-            AddTestUser();
-
-            IntPtr token = LogUser(testUser_userName, Environment.MachineName, testUser_password);
-            WindowsIdentity mWI2 = new WindowsIdentity(token);
-            WindowsPrincipal winPrin = new WindowsPrincipal(mWI2);
-            Thread.CurrentPrincipal = winPrin;
-            WindowsImpersonationContext impersonationContext = mWI2.Impersonate();
-            CallContext.LogicalSetData("ImpersonationTest", Process.GetCurrentProcess().Id);
-
-            IDisposable restorationToken = new MyImpersonationRestorationDisposable(impersonationContext);
-            return restorationToken;
-        }
-
-        public static void AssertRunningAsTestUser(string message)
-        {
-            Assert.Equal(WindowsIdentity.GetCurrent().Name, Environment.MachineName + "\\" + testUser_userName, "Asserting that we are running as impersonated user (windowsidentity): " + message);
-
-            object logicalContextData = CallContext.LogicalGetData("ImpersonationTest");
-            Assert.NotNull(logicalContextData, "Asserting that we are running as impersonated user (logicalcallcontext-notnull): " + message);
-            Assert.Equal(logicalContextData.ToString(), Process.GetCurrentProcess().Id.ToString(), "Asserting that we are running as impersonated user (logicalcallcontext-datacontent): " + message);
-        }
-
-        public static void AssertRunningAsNonTestUser(string message)
-        {
-            Assert.NotEqual(WindowsIdentity.GetCurrent().Name, Environment.MachineName + "\\" + testUser_userName, "Asserting that we are not running as impersonated user (windows identity): " + message);
-
-            object logicalContextData = CallContext.LogicalGetData("ImpersonationTest");
-            Assert.Null(logicalContextData, "Asserting that we are not running as impersonated user (logicalcallcontext-null): " + message);
-        }
-    }
-
-
 }
