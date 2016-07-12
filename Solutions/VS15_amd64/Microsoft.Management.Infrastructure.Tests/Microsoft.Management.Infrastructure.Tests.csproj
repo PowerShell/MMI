@@ -160,7 +160,7 @@
       <Link>UnitTests\CimSessionTest.cs</Link>
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionOptionsTest.cs">
-      <Link>UnitTests\CimSessionTest.cs</Link>
+      <Link>UnitTests\CimSessionOptionsTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
