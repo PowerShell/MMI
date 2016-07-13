@@ -27,7 +27,7 @@ namespace MMI.Tests.UnitTests
             using (CimSession cimSession = CimSession.Create(null))
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
-                Assert.Null(cimSession.ComputerName, "cimSession.ComputerName should not be the same as the value passed to Create method");
+                Assert.Null(cimSession.ComputerName, "cimSession.ComputerName should null");
             }
         }
 
@@ -132,9 +132,9 @@ namespace MMI.Tests.UnitTests
                         () => cimSession.EnumerateInstances(@"root\cimv2", "nonExistantClassHere").Count(),                     
                         delegate (CimException exception)
                         {
-                            Assert.Equal(exception.NativeErrorCode, NativeErrorCode.InvalidClass, "Got the right NativeErrorCode");
-                            Assert.Equal(exception.Message, "Invalid_Class", "Got the right message (1)");
-                            Assert.Equal(exception.Message, "InvalidClass", "Got the right message (2)");
+                            Assert.Equal(NativeErrorCode.InvalidClass, exception.NativeErrorCode, "Got the right NativeErrorCode");
+                            Assert.Equal("Invalid_Class", exception.Message, "Got the right message (1)");
+                            Assert.Equal("InvalidClass", exception.Message, "Got the right message (2)");
                             Assert.True(exception.Message.IndexOf(' ') != (-1), "Got the right message (3)");
                         });
             }
@@ -170,12 +170,12 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(cimSession, "cimSession should not be null");
                 CimInstance topInstance = cimSession.EnumerateInstances(@"root\cimv2", "CIM_ProcessExecutable").FirstOrDefault();
                 Assert.NotNull(topInstance, "topInstance should not be null");
-                Assert.Equal(topInstance.GetCimSessionComputerName(), Environment.MachineName, "Verifying topInstance.GetCimSessionComputerName");
+                Assert.Equal(Environment.MachineName, topInstance.GetCimSessionComputerName(), "Verifying topInstance.GetCimSessionComputerName");
 
                 CimInstance embeddedInstance = (CimInstance)topInstance.CimInstanceProperties["Antecedent"].Value;
-                Assert.Equal(embeddedInstance.GetCimSessionComputerName(), Environment.MachineName, "Verifying embeddedInstance.GetCimSessionComputerName");
+                Assert.Equal(Environment.MachineName, embeddedInstance.GetCimSessionComputerName(), "Verifying embeddedInstance.GetCimSessionComputerName");
 
-                Assert.Equal(embeddedInstance.GetCimSessionInstanceId(), topInstance.GetCimSessionInstanceId(), "Verifying GetCimSessionInstanceId");
+                Assert.Equal(topInstance.GetCimSessionInstanceId(), embeddedInstance.GetCimSessionInstanceId(), "Verifying GetCimSessionInstanceId");
             }
         }
 
@@ -288,7 +288,7 @@ namespace MMI.Tests.UnitTests
             {
                 CimClass enumeratedClass = cimSession.GetClass(@"root\cimv2", "Win32_Process");
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");            
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");            
                 Assert.Throws<ArgumentNullException>(() => {
                     CimMethodDeclaration method = enumeratedClass.CimClassMethods[null];
                     return method;
@@ -303,7 +303,7 @@ namespace MMI.Tests.UnitTests
             {
                 CimClass enumeratedClass = cimSession.GetClass(@"root\cimv2", "Win32_Process");
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
                 CimMethodDeclaration method = enumeratedClass.CimClassMethods["Create"];
                 Assert.Throws<ArgumentNullException>(() =>
                 {
@@ -320,7 +320,7 @@ namespace MMI.Tests.UnitTests
             {
                 CimClass enumeratedClass = cimSession.GetClass(@"root\cimv2", "Win32_Process");
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
                 Assert.Throws<ArgumentNullException>(() =>
                 {
                     CimMethodDeclaration method = enumeratedClass.CimClassMethods["Create"];
@@ -338,7 +338,7 @@ namespace MMI.Tests.UnitTests
             {
                 CimClass enumeratedClass = cimSession.GetClass(@"root\cimv2", "Win32_Process");
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
                 Assert.Throws<ArgumentNullException>(() =>
                 {
                     CimPropertyDeclaration prop = enumeratedClass.CimClassProperties["CommandLine"];
@@ -356,21 +356,21 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(cimSession, "cimSession should not be null");
                 CimClass enumeratedClass = cimSession.GetClass(@"root\cimv2", "Win32_Process");
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
                 Assert.NotNull(enumeratedClass.CimClassMethods, "CimClass.CimClassMethods returneded null");
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"], @"CimClass.CimClassMethods[Create] returneded null");
                 //method qualifier
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Qualifiers, @"CimClass.CimClassMethods[Create].CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Qualifiers["static"], @"CimClass.CimClassMethods[Create].CimClassQualifiers[static] returneded null");
-                Assert.Equal((Boolean)enumeratedClass.CimClassMethods["Create"].Qualifiers["static"].Value, true, @"CimClass.CimClassMethods[Create].CimClassQualifiers[static].Value is not true");
+                Assert.Equal(true, (Boolean)enumeratedClass.CimClassMethods["Create"].Qualifiers["static"].Value, @"CimClass.CimClassMethods[Create].CimClassQualifiers[static].Value is not true");
                 //method parameter
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters, @"CimClass.CimClassMethods[Create].Parameters returneded null");
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"], @"CimClass.CimClassMethods[Create].Parameters[CommandLine] returneded null");
-                Assert.Equal(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Name, "CommandLine", @"CimClass.CimClassMethods[Create].Parameters[CommandLine].Name returneded null");
+                Assert.Equal("CommandLine", enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Name, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].Name returneded null");
                 //Method parameter qualifier
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["ID"], @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers[ID returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["ID"].CimType, CimType.SInt32, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers[ID returneded null");
+                Assert.Equal(CimType.SInt32, (CimType)enumeratedClass.CimClassMethods["Create"].Parameters["CommandLine"].Qualifiers["ID"].CimType, @"CimClass.CimClassMethods[Create].Parameters[CommandLine].CimClassQualifiers[ID returneded null");
             }
         }
 
@@ -382,35 +382,35 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(cimSession, "cimSession should not be null");
                 CimClass enumeratedClass = cimSession.GetClass(@"root\cimv2", "CIM_Process");
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "CIM_Process", "CimClass.CimSystemProperties.ClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSuperClassName, "CIM_LogicalElement", "CimClass.CimSuperClassName returneded null");
+                Assert.Equal("CIM_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("CIM_LogicalElement", (string)enumeratedClass.CimSuperClassName, "CimClass.CimSuperClassName returneded null");
                 //Assert.NotNull(enumeratedClass.CimSuperClass, "CimClass.CimSuperClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.Namespace, @"root/cimv2", "CimClass.CimSystemProperties.Namespace returneded null");
+                Assert.Equal(@"root/cimv2", (string)enumeratedClass.CimSystemProperties.Namespace, "CimClass.CimSystemProperties.Namespace returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties, "CimClass.CimClassProperties returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["Handle"], @"CimClass.CimClassProperties[Handle] returneded null");
 
-                Assert.Equal((string)enumeratedClass.CimClassProperties["Handle"].Name, "Handle", @"CimClass.CimClassProperties[Handle].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["Handle"].CimType, CimType.String, @"CimClass.CimClassProperties[Handle].type returneded null");
+                Assert.Equal("Handle", (string)enumeratedClass.CimClassProperties["Handle"].Name, @"CimClass.CimClassProperties[Handle].Name returneded null");
+                Assert.Equal(CimType.String, (CimType)enumeratedClass.CimClassProperties["Handle"].CimType, @"CimClass.CimClassProperties[Handle].type returneded null");
                 // Assert.Equal(enumeratedClass.CimClassProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, @"CimClass.CimClassProperties[Handle].Flags returneded null");
 
                 Assert.NotNull(enumeratedClass.CimClassProperties["Handle"].Qualifiers, @"CimClass.CimClassProperties[Handle].Qualifiers returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].Name, "read", @"CimClass.CimClassProperties[Handle].Qualifiers[Cim_Key].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].CimType, CimType.Boolean, @"CimClass.CimClassProperties[Handle].Qualifiers[read].Type returneded null");
+                Assert.Equal("read", (string)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].Name, @"CimClass.CimClassProperties[Handle].Qualifiers[Cim_Key].Name returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].CimType, @"CimClass.CimClassProperties[Handle].Qualifiers[read].Type returneded null");
                 //Assert.Equal(enumeratedClass.CimClassProperties["Handle"].CimClassQualifiers["read"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"CimClass.CimClassProperties[Handle].CimClassQualifiers[read].Flags returneded null");
                 //Assert.Equal((bool)enumeratedClass.CimClassProperties["Handle"].CimClassQualifiers["read"].Value, true, @"CimClass.CimClassProperties[Handle].CimClassQualifiers[Cim_Key].Value returneded null");
 
                 //Check class qualifiers
                 Assert.NotNull(enumeratedClass.CimClassQualifiers, "CimClass.CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassQualifiers["Abstract"], "CimClass.CimClassQualifiers[Abstract] returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Name, "Abstract", "CimClass.CimClassQualifiers[Abstract] returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassQualifiers["Abstract"].CimType, CimType.Boolean, @"enumeratedClass.CimClassQualifiers[Abstract].Type returneded null");
+                Assert.Equal("Abstract", enumeratedClass.CimClassQualifiers["Abstract"].Name, "CimClass.CimClassQualifiers[Abstract] returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassQualifiers["Abstract"].CimType, @"enumeratedClass.CimClassQualifiers[Abstract].Type returneded null");
                 //Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[Abstract].Flags returneded null");
 
                 //Check System properties
                 //System properties Environment.MachineName
-                Assert.Equal(enumeratedClass.CimSystemProperties.Namespace, "root/cimv2", "cimInstance.CimSystemProperties.Namespace is not correct");
-                Assert.Equal(enumeratedClass.CimSystemProperties.ClassName, "CIM_Process", "cimInstance.CimSystemProperties.ClassName is not correct");
-                Assert.Equal(enumeratedClass.CimSystemProperties.ServerName, Environment.MachineName, "cimInstance.CimSystemProperties.ServerName is not correct");
+                Assert.Equal("root/cimv2", enumeratedClass.CimSystemProperties.Namespace, "cimInstance.CimSystemProperties.Namespace is not correct");
+                Assert.Equal("CIM_Process", enumeratedClass.CimSystemProperties.ClassName, "cimInstance.CimSystemProperties.ClassName is not correct");
+                Assert.Equal(Environment.MachineName, enumeratedClass.CimSystemProperties.ServerName, "cimInstance.CimSystemProperties.ServerName is not correct");
                 Assert.Null(enumeratedClass.CimSystemProperties.Path);
                 /*Assert.Equal(enumeratedClass.CimSystemProperties.Path,
                         "//" + Environment.MachineName + "/root/cimv2:CIM_Process",
@@ -428,35 +428,35 @@ namespace MMI.Tests.UnitTests
                 IObservable<CimClass> asyncInstance = cimSession.GetClassAsync(@"root\cimv2", "CIM_Process");
                 List<AsyncItem<CimClass>> asyncList = Helpers.ObservableToList(asyncInstance);
 
-                Assert.Equal(asyncList.Count, 2, "Got 2 async callbacks");
-                Assert.Equal(asyncList[0].Kind, AsyncItemKind.Item, "First callback for item");
-                Assert.Equal(asyncList[1].Kind, AsyncItemKind.Completion, "Second callback for completion");
+                Assert.Equal(2, asyncList.Count, "Got 2 async callbacks");
+                Assert.Equal(AsyncItemKind.Item, asyncList[0].Kind, "First callback for item");
+                Assert.Equal(AsyncItemKind.Completion, asyncList[1].Kind, "Second callback for completion");
                 CimClass enumeratedClass = asyncList[0].Item;
 
 
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
                 Assert.NotNull(enumeratedClass.CimSuperClass, "cimSession.CimSuperClass is null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "CIM_Process", "CimClass.CimSystemProperties.ClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSuperClassName, "CIM_LogicalElement", "CimClass.CimSuperClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSuperClassName, "CIM_LogicalElement", "CimClass.CimSuperClassName returneded null");
+                Assert.Equal("CIM_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("CIM_LogicalElement", (string)enumeratedClass.CimSuperClassName, "CimClass.CimSuperClassName returneded null");
+                Assert.Equal("CIM_LogicalElement", (string)enumeratedClass.CimSuperClassName, "CimClass.CimSuperClassName returneded null");
                 //Assert.NotNull(enumeratedClass.CimSuperClass, "CimClass.CimSuperClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.Namespace, @"root/cimv2", "CimClass.CimSystemProperties.Namespace returneded null");
+                Assert.Equal(@"root/cimv2", (string)enumeratedClass.CimSystemProperties.Namespace, "CimClass.CimSystemProperties.Namespace returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties, "CimClass.CimClassProperties returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["Handle"], @"CimClass.CimClassProperties[Handle] returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["Handle"].Name, "Handle", @"CimClass.CimClassProperties[Handle].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["Handle"].CimType, CimType.String, @"CimClass.CimClassProperties[Handle].type returneded null");
+                Assert.Equal("Handle", (string)enumeratedClass.CimClassProperties["Handle"].Name, @"CimClass.CimClassProperties[Handle].Name returneded null");
+                Assert.Equal(CimType.String, (CimType)enumeratedClass.CimClassProperties["Handle"].CimType, @"CimClass.CimClassProperties[Handle].type returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["Handle"].Qualifiers, @"CimClass.CimClassProperties[Handle].Qualifiers returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].Name, "read", @"CimClass.CimClassProperties[Handle].Qualifiers[Cim_Key].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].CimType, CimType.Boolean, @"CimClass.CimClassProperties[Handle].Qualifiers[read].Type returneded null");
+                Assert.Equal("read", (string)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].Name, @"CimClass.CimClassProperties[Handle].Qualifiers[Cim_Key].Name returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].CimType, @"CimClass.CimClassProperties[Handle].Qualifiers[read].Type returneded null");
 
 
                 Assert.NotNull(enumeratedClass.CimClassProperties, "CimClass.CimClassProperties returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["Handle"], @"CimClass.CimClassProperties[Handle] returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["Handle"].Name, "Handle", @"CimClass.CimClassProperties[Handle].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["Handle"].CimType, CimType.String, @"CimClass.CimClassProperties[Handle].type returneded null");
+                Assert.Equal("Handle", (string)enumeratedClass.CimClassProperties["Handle"].Name, @"CimClass.CimClassProperties[Handle].Name returneded null");
+                Assert.Equal(CimType.String, (CimType)enumeratedClass.CimClassProperties["Handle"].CimType, @"CimClass.CimClassProperties[Handle].type returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["Handle"].Qualifiers, @"CimClass.CimClassProperties[Handle].Qualifiers returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].Name, "read", @"CimClass.CimClassProperties[Handle].Qualifiers[Cim_Key].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].CimType, CimType.Boolean, @"CimClass.CimClassProperties[Handle].Qualifiers[read].Type returneded null");
+                Assert.Equal("read", (string)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].Name, @"CimClass.CimClassProperties[Handle].Qualifiers[Cim_Key].Name returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassProperties["Handle"].Qualifiers["read"].CimType, @"CimClass.CimClassProperties[Handle].Qualifiers[read].Type returneded null");
 
 
 
@@ -468,14 +468,14 @@ namespace MMI.Tests.UnitTests
                 //Check class qualifiers
                 Assert.NotNull(enumeratedClass.CimClassQualifiers, "CimClass.CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassQualifiers["Abstract"], "CimClass.CimClassQualifiers[Abstract] returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Name, "Abstract", "CimClass.CimClassQualifiers[Abstract] returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassQualifiers["Abstract"].CimType, CimType.Boolean, @"enumeratedClass.CimClassQualifiers[Abstract].Type returneded null");
+                Assert.Equal("Abstract", enumeratedClass.CimClassQualifiers["Abstract"].Name, "CimClass.CimClassQualifiers[Abstract] returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassQualifiers["Abstract"].CimType, @"enumeratedClass.CimClassQualifiers[Abstract].Type returneded null");
 
                 //Check class qualifiers
                 Assert.NotNull(enumeratedClass.CimClassQualifiers, "CimClass.CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassQualifiers["Abstract"], "CimClass.CimClassQualifiers[Abstract] returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Name, "Abstract", "CimClass.CimClassQualifiers[Abstract] returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassQualifiers["Abstract"].CimType, CimType.Boolean, @"enumeratedClass.CimClassQualifiers[Abstract].Type returneded null");
+                Assert.Equal("Abstract", enumeratedClass.CimClassQualifiers["Abstract"].Name, "CimClass.CimClassQualifiers[Abstract] returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassQualifiers["Abstract"].CimType, @"enumeratedClass.CimClassQualifiers[Abstract].Type returneded null");
 
                 //Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[Abstract].Flags returneded null");
 
@@ -504,27 +504,27 @@ namespace MMI.Tests.UnitTests
                     }
                 }
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
                 //Assert.Equal((string)enumeratedClass.CimSuperClassName, "Win32_Process", "CimClass.CimSuperClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.Namespace, @"root/cimv2", "CimClass.CimSystemProperties.Namespace returneded null");
+                Assert.Equal(@"root/cimv2", (string)enumeratedClass.CimSystemProperties.Namespace, "CimClass.CimSystemProperties.Namespace returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties, "CimClass.CimClassProperties returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["HandleCount"], @"CimClass.CimClassProperties[Handle] returneded null");
 
-                Assert.Equal((string)enumeratedClass.CimClassProperties["HandleCount"].Name, "HandleCount", @"CimClass.CimClassProperties[Handle].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["HandleCount"].CimType, CimType.UInt32, @"CimClass.CimClassProperties[HandleCount].type returneded null");
+                Assert.Equal("HandleCount", (string)enumeratedClass.CimClassProperties["HandleCount"].Name, @"CimClass.CimClassProperties[Handle].Name returneded null");
+                Assert.Equal(CimType.UInt32, (CimType)enumeratedClass.CimClassProperties["HandleCount"].CimType, @"CimClass.CimClassProperties[HandleCount].type returneded null");
                 // Assert.Equal(enumeratedClass.CimClassProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, @"CimClass.CimClassProperties[Handle].Flags returneded null");
 
                 Assert.NotNull(enumeratedClass.CimClassProperties["HandleCount"].Qualifiers, @"CimClass.CimClassProperties[HandleCount].Qualifiers returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].Name, "read", @"CimClass.CimClassProperties[HandleCount].Qualifiers[Cim_Key].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].CimType, CimType.Boolean, @"CimClass.CimClassProperties[HandleCount].Qualifiers[read].Type returneded null");
+                Assert.Equal("read", (string)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].Name, @"CimClass.CimClassProperties[HandleCount].Qualifiers[Cim_Key].Name returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].CimType, @"CimClass.CimClassProperties[HandleCount].Qualifiers[read].Type returneded null");
                 // Assert.Equal(enumeratedClass.CimClassProperties["Handle"].CimClassQualifiers["read"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"CimClass.CimClassProperties[Handle].CimClassQualifiers[read].Flags returneded null");
                 //Assert.Equal((bool)enumeratedClass.CimClassProperties["Handle"].CimClassQualifiers["read"].Value, true, @"CimClass.CimClassProperties[Handle].CimClassQualifiers[Cim_Key].Value returneded null");
 
                 //Check class qualifiers
                 Assert.NotNull(enumeratedClass.CimClassQualifiers, "CimClass.CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassQualifiers["dynamic"], "CimClass.CimClassQualifiers[dynamic] returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["dynamic"].Name, "dynamic", "CimClass.CimClassQualifiers[dynamic] returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassQualifiers["dynamic"].CimType, CimType.Boolean, @"enumeratedClass.CimClassQualifiers[dynamic].Type returneded null");
+                Assert.Equal("dynamic", enumeratedClass.CimClassQualifiers["dynamic"].Name, "CimClass.CimClassQualifiers[dynamic] returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassQualifiers["dynamic"].CimType, @"enumeratedClass.CimClassQualifiers[dynamic].Type returneded null");
                 //Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[Abstract].Flags returneded null");
 
             }
@@ -540,7 +540,7 @@ namespace MMI.Tests.UnitTests
                 List<AsyncItem<CimClass>> asyncList = Helpers.ObservableToList(asyncInstance);
 
                 Assert.True(asyncList.Count > 50, "Got less than 50 async callbacks");
-                Assert.Equal(asyncList[0].Kind, AsyncItemKind.Item, "First callback for item");
+                Assert.Equal(AsyncItemKind.Item, asyncList[0].Kind, "First callback for item");
                 CimClass enumeratedClass = null;
                 foreach (AsyncItem<CimClass> item in asyncList)
                 {
@@ -555,29 +555,29 @@ namespace MMI.Tests.UnitTests
                 }
 
                 Assert.NotNull(enumeratedClass, "cimSession.GetClass returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.ClassName, "Win32_Process", "CimClass.CimSystemProperties.ClassName returneded null");
+                Assert.Equal("Win32_Process", (string)enumeratedClass.CimSystemProperties.ClassName, "CimClass.CimSystemProperties.ClassName returneded null");
                 //Assert.Equal((string)enumeratedClass.CimSuperClassName, "Win32_Process", "CimClass.CimSuperClassName returneded null");
-                Assert.Equal((string)enumeratedClass.CimSystemProperties.Namespace, @"root/cimv2", "CimClass.CimSystemProperties.Namespace returneded null");
+                Assert.Equal(@"root/cimv2", (string)enumeratedClass.CimSystemProperties.Namespace, "CimClass.CimSystemProperties.Namespace returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties, "CimClass.CimClassProperties returneded null");
                 Assert.NotNull(enumeratedClass.CimClassProperties["HandleCount"], @"CimClass.CimClassProperties[Handle] returneded null");
 
-                Assert.Equal((string)enumeratedClass.CimClassProperties["HandleCount"].Name, "HandleCount", @"CimClass.CimClassProperties[Handle].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["HandleCount"].CimType, CimType.UInt32, @"CimClass.CimClassProperties[HandleCount].type returneded null");
+                Assert.Equal("HandleCount", (string)enumeratedClass.CimClassProperties["HandleCount"].Name, @"CimClass.CimClassProperties[Handle].Name returneded null");
+                Assert.Equal(CimType.UInt32, (CimType)enumeratedClass.CimClassProperties["HandleCount"].CimType, @"CimClass.CimClassProperties[HandleCount].type returneded null");
                 // Assert.Equal(enumeratedClass.CimClassProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, @"CimClass.CimClassProperties[Handle].Flags returneded null");
 
                 Assert.NotNull(enumeratedClass.CimClassProperties["HandleCount"].Qualifiers, @"CimClass.CimClassProperties[HandleCount].Qualifiers returneded null");
-                Assert.Equal((string)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].Name, "read", @"CimClass.CimClassProperties[HandleCount].Qualifiers[Cim_Key].Name returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].CimType, CimType.Boolean, @"CimClass.CimClassProperties[HandleCount].Qualifiers[read].Type returneded null");
+                Assert.Equal("read", (string)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].Name, @"CimClass.CimClassProperties[HandleCount].Qualifiers[Cim_Key].Name returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassProperties["HandleCount"].Qualifiers["read"].CimType, @"CimClass.CimClassProperties[HandleCount].Qualifiers[read].Type returneded null");
                 // Assert.Equal(enumeratedClass.CimClassProperties["Handle"].CimClassQualifiers["read"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"CimClass.CimClassProperties[Handle].CimClassQualifiers[read].Flags returneded null");
                 //Assert.Equal((bool)enumeratedClass.CimClassProperties["Handle"].CimClassQualifiers["read"].Value, true, @"CimClass.CimClassProperties[Handle].CimClassQualifiers[Cim_Key].Value returneded null");
 
                 //Check class qualifiers
                 Assert.NotNull(enumeratedClass.CimClassQualifiers, "CimClass.CimClassQualifiers returneded null");
                 Assert.NotNull(enumeratedClass.CimClassQualifiers["dynamic"], "CimClass.CimClassQualifiers[dynamic] returneded null");
-                Assert.Equal(enumeratedClass.CimClassQualifiers["dynamic"].Name, "dynamic", "CimClass.CimClassQualifiers[dynamic] returneded null");
-                Assert.Equal((CimType)enumeratedClass.CimClassQualifiers["dynamic"].CimType, CimType.Boolean, @"enumeratedClass.CimClassQualifiers[dynamic].Type returneded null");
+                Assert.Equal("dynamic", enumeratedClass.CimClassQualifiers["dynamic"].Name, "CimClass.CimClassQualifiers[dynamic] returneded null");
+                Assert.Equal(CimType.Boolean, (CimType)enumeratedClass.CimClassQualifiers["dynamic"].CimType, @"enumeratedClass.CimClassQualifiers[dynamic].Type returneded null");
                 //Assert.Equal(enumeratedClass.CimClassQualifiers["Abstract"].Flags & CimFlags.DisableOverride, CimFlags.DisableOverride, @"enumeratedClass.CimClassQualifiers[Abstract].Flags returneded null");
-                Assert.Equal(asyncList.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
+                Assert.Equal(AsyncItemKind.Completion, asyncList.Last().Kind, "Got OnCompleted callback");
 
             }
         }
@@ -606,8 +606,8 @@ namespace MMI.Tests.UnitTests
                 List<AsyncItem<CimInstance>> asyncList = Helpers.ObservableToList(asyncInstance);
 
                 //COM doesn't return an instance
-                Assert.Equal(asyncList.Count, 1, "Got 2 async callbacks");
-                Assert.Equal(asyncList[0].Kind, AsyncItemKind.Completion, "First callback for completion");
+                Assert.Equal(1, asyncList.Count, "Got 2 async callbacks");
+                Assert.Equal(AsyncItemKind.Completion, asyncList[0].Kind, "First callback for completion");
             }
         }
 
@@ -620,7 +620,7 @@ namespace MMI.Tests.UnitTests
                 CimInstance instance;
                 CimException exception;
                 bool bResult = cimSession.TestConnection(out instance, out exception);
-                Assert.Equal(bResult, false, "TestConnection Failed");
+                Assert.Equal(false, bResult, "TestConnection Failed");
                 Assert.NotNull(exception, "Unexpectidly for CIMException");
             }
         }
@@ -635,8 +635,8 @@ namespace MMI.Tests.UnitTests
                 List<AsyncItem<CimInstance>> asyncList = Helpers.ObservableToList(asyncInstance);
 
                 //COM doesn't return an instance
-                Assert.Equal(asyncList.Count, 1, "Got 2 async callbacks");
-                Assert.Equal(asyncList[0].Kind, AsyncItemKind.Exception, "Got OnError callback");
+                Assert.Equal(1, asyncList.Count, "Got 2 async callbacks");
+                Assert.Equal(AsyncItemKind.Exception, asyncList[0].Kind, "Got OnError callback");
                 Assert.True(asyncList[0].Exception.GetType().Equals(typeof(CimException)), "Got right type of exception back");
             }
         }
@@ -652,16 +652,16 @@ namespace MMI.Tests.UnitTests
 
                 CimInstance currentProcess = enumeratedInstances.Single(x => (UInt32)(x.CimInstanceProperties["ProcessId"].Value) == Process.GetCurrentProcess().Id);
                 Assert.NotNull(currentProcess, "cimSession.EnumerateInstances(..., Win32_Process) found the current process");
-                Assert.Equal(currentProcess.CimSystemProperties.ServerName, Environment.MachineName, "Got correct CimInstance.CimSystemProperties.ServerName");
-                Assert.Equal(currentProcess.CimSystemProperties.ClassName, "Win32_Process", "Got correct CimInstance.CimSystemProperties.ClassName");
+                Assert.Equal(Environment.MachineName, currentProcess.CimSystemProperties.ServerName, "Got correct CimInstance.CimSystemProperties.ServerName");
+                Assert.Equal("Win32_Process", currentProcess.CimSystemProperties.ClassName, "Got correct CimInstance.CimSystemProperties.ClassName");
                 Assert.True(Regex.IsMatch(currentProcess.CimSystemProperties.Namespace, "root.cimv2"), "Got correct CimInstance.CimSystemProperties.Namespace");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                Assert.Equal(CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
+                Assert.Equal(CimFlags.Key, currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
 
                 Assert.True(
                     Regex.IsMatch(currentProcess.ToString(), "Win32_Process: ttest\\.exe \\(Handle = \"[0-9]*\"\\)", RegexOptions.IgnoreCase),
@@ -682,14 +682,14 @@ namespace MMI.Tests.UnitTests
 
                 CimInstance currentProcess = enumeratedInstances.Single(x => (UInt32)(x.CimInstanceProperties["ProcessId"].Value) == Process.GetCurrentProcess().Id);
                 Assert.NotNull(currentProcess, "cimSession.EnumerateInstances(..., Win32_Process) found the current process");
-                Assert.Equal(currentProcess.CimSystemProperties.ClassName, "Win32_Process", "Got correct CimInstance.CimSystemProperties.ClassName");
+                Assert.Equal("Win32_Process", currentProcess.CimSystemProperties.ClassName, "Got correct CimInstance.CimSystemProperties.ClassName");
 
                 using (CimClass cimClass = currentProcess.CimClass)
                 {
                     Assert.NotNull(cimClass, "Got non-null cimClass");
-                    Assert.Equal(cimClass.CimSystemProperties.ClassName, "Win32_Process", "Got correct CimClass.CimSystemProperties.ClassName");
+                    Assert.Equal("Win32_Process", cimClass.CimSystemProperties.ClassName, "Got correct CimClass.CimSystemProperties.ClassName");
                     Assert.NotNull(cimClass.CimSuperClass, "Got non-null parentClass");
-                    Assert.Equal(cimClass.CimSuperClass.CimSystemProperties.ClassName, "CIM_Process", "Got correct CimClass.CimSuperClass.CimSystemProperties.ClassName");
+                    Assert.Equal("CIM_Process", cimClass.CimSuperClass.CimSystemProperties.ClassName, "Got correct CimClass.CimSuperClass.CimSystemProperties.ClassName");
                     Assert.Null(cimClass.CimClassQualifiers["nonExistantQualifier"], "Nonexistant qualifier returns null");
                     Assert.Null(cimClass.CimClassProperties["nonExistantProperty"], "Nonexistant property returns null");
                     Assert.Null(cimClass.CimClassMethods["nonExistantMethod"], "Nonexistant method returns null");
@@ -710,7 +710,7 @@ namespace MMI.Tests.UnitTests
 
                 CimInstance diskQuota = enumeratedInstances.FirstOrDefault();
                 Assert.NotNull(diskQuota, "cimSession.EnumerateInstances(..., Win32_DiskQuota) found a disk quota");
-                Assert.Equal(diskQuota.CimSystemProperties.ClassName, "Win32_DiskQuota", "Got correct CimInstance.CimSystemProperties.ClassName");
+                Assert.Equal("Win32_DiskQuota", diskQuota.CimSystemProperties.ClassName, "Got correct CimInstance.CimSystemProperties.ClassName");
 
                 // this used to fail because of bug #308968
                 diskQuota.CimInstanceProperties["Limit"].Value = 123;
@@ -831,7 +831,7 @@ namespace MMI.Tests.UnitTests
 
                 List<AsyncItem<CimInstance>> listOfInstances = Helpers.ObservableToList(enumeratedInstances);
                 Assert.True(listOfInstances.Count > 0, "Got some results back from CimSession.EnumerateInstancesAsync");
-                Assert.Equal(listOfInstances.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
+                Assert.Equal(AsyncItemKind.Completion, listOfInstances.Last().Kind, "Got OnCompleted callback");
             }
         }
 
@@ -887,7 +887,7 @@ namespace MMI.Tests.UnitTests
                 IObservable<CimInstance> enumeratedInstances = cimSession.EnumerateInstancesAsync(@"root\cimv2", "NotExistantClass");
                 var serializedResult = Helpers.ObservableToList(enumeratedInstances);
                 Assert.True(serializedResult.Count == 1, "Got some results back from CimSession.EnumerateInstancesAsync");
-                Assert.Equal(serializedResult[0].Kind, AsyncItemKind.Exception, "Got OnError callback");
+                Assert.Equal(AsyncItemKind.Exception, serializedResult[0].Kind, "Got OnError callback");
                 Assert.True(serializedResult[0].Exception.GetType().Equals(typeof(CimException)), "Got right type of exception back");
                 Assert.True(!string.IsNullOrWhiteSpace(serializedResult[0].Exception.StackTrace), "Exception has the stack trace filled in");
             }
@@ -915,7 +915,7 @@ namespace MMI.Tests.UnitTests
 
                 var serializedResult = Helpers.ObservableToList(enumeratedInstances);
                 Assert.True(serializedResult.Count > 0, "Got some results back from CimSession.EnumerateInstancesAsync");
-                Assert.Equal(serializedResult.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
+                Assert.Equal(AsyncItemKind.Completion, serializedResult.Last().Kind, "Got OnCompleted callback");
 
                 cancellationTokenSource.Cancel();
             }
@@ -932,7 +932,7 @@ namespace MMI.Tests.UnitTests
 
                 List<AsyncItem<CimInstance>> listOfInstances = Helpers.ObservableToList(enumeratedInstances);
                 Assert.True(listOfInstances.Count > 0, "Got some results back from CimSession.EnumerateInstancesAsync");
-                Assert.Equal(listOfInstances.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
+                Assert.Equal(AsyncItemKind.Completion, listOfInstances.Last().Kind, "Got OnCompleted callback");
 
                 bool atLeastOneInstance = false;
                 foreach (CimInstance cimInstance in listOfInstances.Where(i => i.Kind == AsyncItemKind.Item).Select(i => i.Item))
@@ -955,7 +955,7 @@ namespace MMI.Tests.UnitTests
 
                 List<AsyncItem<CimInstance>> listOfInstances = Helpers.ObservableToList(enumeratedInstances);
                 Assert.True(listOfInstances.Count > 0, "Got some results back from CimSession.EnumerateInstancesAsync");
-                Assert.Equal(listOfInstances.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
+                Assert.Equal(AsyncItemKind.Completion, listOfInstances.Last().Kind, "Got OnCompleted callback");
 
                 CimInstance currentProcess = listOfInstances
                     .Where(i => i.Kind == AsyncItemKind.Item)
@@ -964,12 +964,12 @@ namespace MMI.Tests.UnitTests
 
                 Assert.NotNull(currentProcess, "cimSession.EnumerateInstances(..., Win32_Process) found the current process");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.ReadOnly | CimFlags.Property | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                Assert.Equal(CimFlags.ReadOnly | CimFlags.Property | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
+                Assert.Equal(CimFlags.Key, currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
             }
         }
 
@@ -1011,10 +1011,10 @@ namespace MMI.Tests.UnitTests
 
                 Assert.True(currentProcess.CimInstanceProperties.Count > 1, "Got more than 1 property back from CimSession.GetInstance");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                Assert.Equal(CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
 
                 Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
 
@@ -1028,9 +1028,9 @@ namespace MMI.Tests.UnitTests
                 Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
 
                 //System properties Environment.MachineName
-                Assert.Equal(currentProcess.CimSystemProperties.Namespace, "root/cimv2", "cimInstance.CimSystemProperties.Namespace is not correct");
-                Assert.Equal(currentProcess.CimSystemProperties.ClassName, "Win32_Process", "cimInstance.CimSystemProperties.ClassName is not correct");
-                Assert.Equal(currentProcess.CimSystemProperties.ServerName, Environment.MachineName, "cimInstance.CimSystemProperties.ServerName is not correct");
+                Assert.Equal("root/cimv2", currentProcess.CimSystemProperties.Namespace, "cimInstance.CimSystemProperties.Namespace is not correct");
+                Assert.Equal("Win32_Process", currentProcess.CimSystemProperties.ClassName, "cimInstance.CimSystemProperties.ClassName is not correct");
+                Assert.Equal(Environment.MachineName, currentProcess.CimSystemProperties.ServerName, "cimInstance.CimSystemProperties.ServerName is not correct");
                 Assert.Null(currentProcess.CimSystemProperties.Path);
                 /*
                 Assert.Equal(currentProcess.CimSystemProperties.Path, 
@@ -1052,21 +1052,21 @@ namespace MMI.Tests.UnitTests
 
                 IObservable<CimInstance> asyncInstance = cimSession.GetInstanceAsync(@"root\cimv2", instanceId);
                 List<AsyncItem<CimInstance>> asyncList = Helpers.ObservableToList(asyncInstance);
-                Assert.Equal(asyncList.Count, 2, "Got 2 async callbacks");
-                Assert.Equal(asyncList[0].Kind, AsyncItemKind.Item, "First callback for item");
-                Assert.Equal(asyncList[1].Kind, AsyncItemKind.Completion, "Second callback for completion");
+                Assert.Equal(2, asyncList.Count, "Got 2 async callbacks");
+                Assert.Equal(AsyncItemKind.Item, asyncList[0].Kind, "First callback for item");
+                Assert.Equal(AsyncItemKind.Completion, asyncList[1].Kind, "Second callback for completion");
 
                 CimInstance currentProcess = asyncList[0].Item;
                 Assert.NotNull(currentProcess, "cimSession.GetInstance returned something other than null");
 
                 Assert.True(currentProcess.CimInstanceProperties.Count > 1, "Got more than 1 property back from CimSession.GetInstance");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                Assert.Equal(CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
+                Assert.Equal(CimFlags.Key, currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
             }
         }
 
@@ -1087,12 +1087,12 @@ namespace MMI.Tests.UnitTests
 
                 CimInstance currentProcess = enumeratedInstances.Single();
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                Assert.Equal(CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
+                Assert.Equal(CimFlags.Key, currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
             }
         }
 
@@ -1151,14 +1151,14 @@ namespace MMI.Tests.UnitTests
                         using (CimClass superClass = cimClass.CimSuperClass)
                         {
                             Assert.NotNull(superClass, "Got non-null parentClass");
-                            Assert.Equal(superClass.CimSystemProperties.ClassName, "CIM_Process", "Got correct CimClass.CimSuperClass.CimSystemProperties.ClassName");
+                            Assert.Equal("CIM_Process", superClass.CimSystemProperties.ClassName, "Got correct CimClass.CimSuperClass.CimSystemProperties.ClassName");
                         }
                     }
 
-                    Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                    Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                    Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                    Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                    Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                    Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                    Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                    Assert.Equal(CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
                 }
             }
         }
@@ -1237,21 +1237,21 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(enumeratedInstances, "cimSession.QueryInstancesAsync returned something other than null");
 
                 List<AsyncItem<CimInstance>> asyncList = Helpers.ObservableToList(enumeratedInstances);
-                Assert.Equal(asyncList.Count, 2, "Got 2 async callbacks");
-                Assert.Equal(asyncList[0].Kind, AsyncItemKind.Item, "First callback for item");
-                Assert.Equal(asyncList[1].Kind, AsyncItemKind.Completion, "Second callback for completion");
+                Assert.Equal(2, asyncList.Count, "Got 2 async callbacks");
+                Assert.Equal(AsyncItemKind.Item, asyncList[0].Kind, "First callback for item");
+                Assert.Equal(AsyncItemKind.Completion, asyncList[1].Kind, "Second callback for completion");
 
                 CimInstance currentProcess = asyncList[0].Item;
                 Assert.NotNull(currentProcess, "cimSession.GetInstance returned something other than null");
 
                 Assert.True(currentProcess.CimInstanceProperties.Count > 1, "Got more than 1 property back from CimSession.GetInstance");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Name, "Name", "currentProcess.CimInstanceProperties['Name'].Name is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].CimType, CimType.String, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
-                Assert.Equal((string)(currentProcess.CimInstanceProperties["Name"].Value), "ttest.exe", "currentProcess.CimInstanceProperties['Name'].Value is correct");
-                Assert.Equal(currentProcess.CimInstanceProperties["Name"].Flags, CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
+                Assert.Equal("Name", currentProcess.CimInstanceProperties["Name"].Name, "currentProcess.CimInstanceProperties['Name'].Name is correct");
+                Assert.Equal(CimType.String, currentProcess.CimInstanceProperties["Name"].CimType, "currentProcess.CimInstanceProperties['Name'].CimType is correct");
+                Assert.Equal("ttest.exe", (string)(currentProcess.CimInstanceProperties["Name"].Value), "currentProcess.CimInstanceProperties['Name'].Value is correct");
+                Assert.Equal(CimFlags.Property | CimFlags.ReadOnly | CimFlags.NotModified, currentProcess.CimInstanceProperties["Name"].Flags, "currentProcess.CimInstanceProperties['Name'].Flags is correct");
 
-                Assert.Equal(currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
+                Assert.Equal(CimFlags.Key, currentProcess.CimInstanceProperties["Handle"].Flags & CimFlags.Key, "currentProcess.CimInstanceProperties['Handle'].Flags includes CimFlags.Key");
             }
         }
 
@@ -1334,7 +1334,7 @@ namespace MMI.Tests.UnitTests
 
                 List<AsyncItem<CimInstance>> unraveledObservable = Helpers.ObservableToList(observableFiles);
                 Assert.True(unraveledObservable.Count > 0, "Got some results back from CimSession.EnumerateInstancesAsync");
-                Assert.Equal(unraveledObservable.Last().Kind, AsyncItemKind.Completion, "Got OnCompleted callback");
+                Assert.Equal(AsyncItemKind.Completion, unraveledObservable.Last().Kind, "Got OnCompleted callback");
 
                 List<CimInstance> associatedFiles = unraveledObservable.Where(a => a.Kind == AsyncItemKind.Item).Select(a => a.Item).ToList();
 
@@ -1681,7 +1681,7 @@ namespace MMI.Tests.UnitTests
 
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.ModifyInstanceAsync(instanceId),
-                    e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
+                    e => Assert.Equal("instance", e.ParamName, "Got correct ArgumentNullException.ParamName"));
             }
         }
 
@@ -1707,7 +1707,7 @@ namespace MMI.Tests.UnitTests
 
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.ModifyInstanceAsync(null),
-                    e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
+                    e => Assert.Equal("instance", e.ParamName, "Got correct ArgumentNullException.ParamName"));
             }
         }
 
@@ -1725,7 +1725,7 @@ namespace MMI.Tests.UnitTests
                 CimMethodParametersCollection methodParameters = new CimMethodParametersCollection();
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.InvokeMethod(instanceId, "MethodName", methodParameters),
-                    e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
+                    e => Assert.Equal("instance", e.ParamName, "Got correct ArgumentNullException.ParamName"));
             }
         }
 
@@ -1744,17 +1744,17 @@ namespace MMI.Tests.UnitTests
                 CimMethodResult result;
                 using (var methodParameters = new CimMethodParametersCollection())
                 {
-                    Assert.Equal(methodParameters.Count, 0, "methodParameters.Count is correct");
-                    Assert.Equal(methodParameters.Count(), 0, "methodParameters.Count is correct");
+                    Assert.Equal(0, methodParameters.Count, "methodParameters.Count is correct");
+                    Assert.Equal(0, methodParameters.Count(), "methodParameters.Count is correct");
                     methodParameters.Add(CimMethodParameter.Create("Sint32Val", 789, CimType.SInt32, CimFlags.None));
-                    Assert.Equal(methodParameters.Count, 1, "methodParameters.Count is correct");
-                    Assert.Equal(methodParameters.Count(), 1, "methodParameters.Count is correct");
+                    Assert.Equal(1, methodParameters.Count, "methodParameters.Count is correct");
+                    Assert.Equal(1, methodParameters.Count(), "methodParameters.Count is correct");
                     result = cimSession.InvokeMethod("this.TestNamespace", cimInstance, "SetSint32Value", methodParameters);
                 }
                 Assert.NotNull(result, "CimSession.InvokeMethod returned non-null");
-                Assert.Equal(result.ReturnValue.CimType, CimType.UInt32, "Got the right type of return value");
+                Assert.Equal(CimType.UInt32, result.ReturnValue.CimType, "Got the right type of return value");
                 object returnValue = result.ReturnValue.Value;
-                Assert.Equal((UInt32)returnValue, (uint)0, "Got the right return value");
+                Assert.Equal((uint)0, (UInt32)returnValue, "Got the right return value");
                 //this.AssertPresenceOfTestInstance(123, 789);
             }
         }
@@ -1770,14 +1770,14 @@ namespace MMI.Tests.UnitTests
                 CimMethodResult result = cimSession.InvokeMethod("this.TestNamespace", "TestClass_MethodProvider_Calc", "Add", methodParameters);
 
                 Assert.NotNull(result, "CimSession.InvokeMethod returned non-null");
-                Assert.Equal(result.ReturnValue.CimType, CimType.UInt64, "Got the right type of return value");
+                Assert.Equal(CimType.UInt64, result.ReturnValue.CimType, "Got the right type of return value");
                 object returnValue = result.ReturnValue.Value;
-                Assert.Equal((UInt64)returnValue, (uint)0, "Got the right return value");
+                Assert.Equal((uint)0, (UInt64)returnValue, "Got the right return value");
 
                 Assert.NotNull(result.OutParameters["sum"], "CimSession.InvokeMethod returned out parameter");
-                Assert.Equal(result.OutParameters["sum"].CimType, CimType.SInt64, "CimSession.InvokeMethod returned right type of out parameter");
+                Assert.Equal(CimType.SInt64, result.OutParameters["sum"].CimType, "CimSession.InvokeMethod returned right type of out parameter");
                 object outParameterValue = result.OutParameters["sum"].Value;
-                Assert.Equal((Int64)outParameterValue, 123 + 456, "Got the right out parameter value");
+                Assert.Equal(123 + 456, (Int64)outParameterValue, "Got the right out parameter value");
             }
         }
 
@@ -1815,20 +1815,20 @@ namespace MMI.Tests.UnitTests
                 CimMethodResult result = cimSession.InvokeMethod("this.TestNamespace", "TestClass_Streaming", "StreamNumbers", methodParameters);
 
                 Assert.NotNull(result, "CimSession.InvokeMethod returned non-null");
-                Assert.Equal(result.ReturnValue.CimType, CimType.UInt32, "Got the right type of return value");
+                Assert.Equal(CimType.UInt32, result.ReturnValue.CimType, "Got the right type of return value");
                 object returnValue = result.ReturnValue.Value;
-                Assert.Equal((UInt32)returnValue, (uint)0, "Got the right return value");
+                Assert.Equal((uint)0, (UInt32)returnValue, "Got the right return value");
 
                 Assert.NotNull(result.OutParameters["firstTen"], "CimSession.InvokeMethod returned out parameter");
-                Assert.Equal(result.OutParameters["firstTen"].CimType, CimType.InstanceArray, "CimSession.InvokeMethod returned right type of out parameter");
+                Assert.Equal(CimType.InstanceArray, result.OutParameters["firstTen"].CimType, "CimSession.InvokeMethod returned right type of out parameter");
                 CimInstance[] outParameterValue = result.OutParameters["firstTen"].Value as CimInstance[];
                 Assert.True(outParameterValue.All(v => v.CimSystemProperties.ClassName.Equals("Numbers", StringComparison.OrdinalIgnoreCase)), "Results have the right class name");
                 Assert.True(outParameterValue.All(v => v.CimInstanceProperties["Numbers"] != null), "Results have 'Numbers' property");
                 Assert.True(outParameterValue.All(v => v.CimInstanceProperties["Numbers"].CimType == CimType.SInt64Array), "Results have 'Numbers' property with correct type");
 
-                Assert.Equal(((long[])(outParameterValue[0].CimInstanceProperties["Numbers"].Value))[9], 10, "1st result is correct");
-                Assert.Equal(((long[])(outParameterValue[1].CimInstanceProperties["Numbers"].Value))[9], 20, "2nd result is correct");
-                Assert.Equal(((long[])(outParameterValue[2].CimInstanceProperties["Numbers"].Value))[9], 30, "3rd result is correct");
+                Assert.Equal(10, ((long[])(outParameterValue[0].CimInstanceProperties["Numbers"].Value))[9], "1st result is correct");
+                Assert.Equal(20, ((long[])(outParameterValue[1].CimInstanceProperties["Numbers"].Value))[9], "2nd result is correct");
+                Assert.Equal(30, ((long[])(outParameterValue[2].CimInstanceProperties["Numbers"].Value))[9], "3rd result is correct");
             }
         }
 
@@ -1846,25 +1846,25 @@ namespace MMI.Tests.UnitTests
 
                 List<AsyncItem<CimMethodResultBase>> result = Helpers.ObservableToList(observable);
                 Assert.True(result.Count > 0, "Got some callbacks");
-                Assert.Equal(result[result.Count - 1].Kind, AsyncItemKind.Completion, "Got completion callback");
+                Assert.Equal(AsyncItemKind.Completion, result[result.Count - 1].Kind, "Got completion callback");
 
                 Assert.True(result.Count > 1, "Got more than 1 callback");
-                Assert.Equal(result[result.Count - 2].Kind, AsyncItemKind.Item, "Got non-streamed result (presence)");
+                Assert.Equal(AsyncItemKind.Item, result[result.Count - 2].Kind, "Got non-streamed result (presence)");
                 Assert.True(result[result.Count - 2].Item.GetType().Equals(typeof(CimMethodResult)), "Got non-streamed result (type)");
 
                 Assert.True(result[0].Item.GetType().Equals(typeof(CimMethodStreamedResult)), "Got streamed result");
-                Assert.Equal(((CimMethodStreamedResult)(result[0].Item)).ParameterName, "firstTen", "Streamed result has correct parameter name");
-                Assert.Equal(((CimMethodStreamedResult)(result[0].Item)).ItemType, CimType.Instance, "Streamed result has correct type of item");
+                Assert.Equal("firstTen", ((CimMethodStreamedResult)(result[0].Item)).ParameterName, "Streamed result has correct parameter name");
+                Assert.Equal(CimType.Instance, ((CimMethodStreamedResult)(result[0].Item)).ItemType, "Streamed result has correct type of item");
 
                 CimInstance item = (CimInstance)((CimMethodStreamedResult)(result[0].Item)).ItemValue;
                 Assert.NotNull(item.CimInstanceProperties["Numbers"], "Streamed result has 'Numbers' property (1)");
-                Assert.Equal(item.CimInstanceProperties["Numbers"].CimType, CimType.SInt64Array, "Streamed result has 'Numbers' property of the correct type (1)");
-                Assert.Equal(((long[])(item.CimInstanceProperties["Numbers"].Value))[9], 10, "Streamed result has 'Numbers' property with right value (1)");
+                Assert.Equal(CimType.SInt64Array, item.CimInstanceProperties["Numbers"].CimType, "Streamed result has 'Numbers' property of the correct type (1)");
+                Assert.Equal(10, ((long[])(item.CimInstanceProperties["Numbers"].Value))[9], "Streamed result has 'Numbers' property with right value (1)");
 
                 item = (CimInstance)((CimMethodStreamedResult)(result[1].Item)).ItemValue;
                 Assert.NotNull(item.CimInstanceProperties["Numbers"], "Streamed result has 'Numbers' property (2)");
-                Assert.Equal(item.CimInstanceProperties["Numbers"].CimType, CimType.SInt64Array, "Streamed result has 'Numbers' property of the correct type (2)");
-                Assert.Equal(((long[])(item.CimInstanceProperties["Numbers"].Value))[9], 20, "Streamed result has 'Numbers' property with right value (2)");
+                Assert.Equal(CimType.SInt64Array, item.CimInstanceProperties["Numbers"].CimType, "Streamed result has 'Numbers' property of the correct type (2)");
+                Assert.Equal(20, ((long[])(item.CimInstanceProperties["Numbers"].Value))[9], "Streamed result has 'Numbers' property with right value (2)");
             }
         }
 
@@ -1880,29 +1880,29 @@ namespace MMI.Tests.UnitTests
 
                 List<AsyncItem<CimMethodResult>> asyncResult = Helpers.ObservableToList(observable);
                 Assert.True(asyncResult.Count > 0, "Got some callbacks");
-                Assert.Equal(asyncResult[asyncResult.Count - 1].Kind, AsyncItemKind.Completion, "Got completion callback");
+                Assert.Equal(AsyncItemKind.Completion, asyncResult[asyncResult.Count - 1].Kind, "Got completion callback");
 
                 Assert.True(asyncResult.Count == 2, "Got exactly one asyncResult");
-                Assert.Equal(asyncResult[asyncResult.Count - 2].Kind, AsyncItemKind.Item, "Got non-streamed asyncResult (presence)");
+                Assert.Equal(AsyncItemKind.Item, asyncResult[asyncResult.Count - 2].Kind, "Got non-streamed asyncResult (presence)");
                 Assert.True(asyncResult[asyncResult.Count - 2].Item.GetType().Equals(typeof(CimMethodResult)), "Got non-streamed asyncResult (type)");
 
                 CimMethodResult result = asyncResult[asyncResult.Count - 2].Item;
 
                 Assert.NotNull(result, "CimSession.InvokeMethod returned non-null");
-                Assert.Equal(result.ReturnValue.CimType, CimType.UInt32, "Got the right type of return value");
+                Assert.Equal(CimType.UInt32, result.ReturnValue.CimType, "Got the right type of return value");
                 object returnValue = result.ReturnValue.Value;
-                Assert.Equal((UInt32)returnValue, (uint)0, "Got the right return value");
+                Assert.Equal((uint)0, (UInt32)returnValue, "Got the right return value");
 
                 Assert.NotNull(result.OutParameters["firstTen"], "CimSession.InvokeMethod returned out parameter");
-                Assert.Equal(result.OutParameters["firstTen"].CimType, CimType.InstanceArray, "CimSession.InvokeMethod returned right type of out parameter");
+                Assert.Equal(CimType.InstanceArray, result.OutParameters["firstTen"].CimType, "CimSession.InvokeMethod returned right type of out parameter");
                 CimInstance[] outParameterValue = result.OutParameters["firstTen"].Value as CimInstance[];
                 Assert.True(outParameterValue.All(v => v.CimSystemProperties.ClassName.Equals("Numbers", StringComparison.OrdinalIgnoreCase)), "Results have the right class name");
                 Assert.True(outParameterValue.All(v => v.CimInstanceProperties["Numbers"] != null), "Results have 'Numbers' property");
                 Assert.True(outParameterValue.All(v => v.CimInstanceProperties["Numbers"].CimType == CimType.SInt64Array), "Results have 'Numbers' property with correct type");
 
-                Assert.Equal(((long[])(outParameterValue[0].CimInstanceProperties["Numbers"].Value))[9], 10, "1st result is correct");
-                Assert.Equal(((long[])(outParameterValue[1].CimInstanceProperties["Numbers"].Value))[9], 20, "2nd result is correct");
-                Assert.Equal(((long[])(outParameterValue[2].CimInstanceProperties["Numbers"].Value))[9], 30, "3rd result is correct");
+                Assert.Equal(10, ((long[])(outParameterValue[0].CimInstanceProperties["Numbers"].Value))[9], "1st result is correct");
+                Assert.Equal(20, ((long[])(outParameterValue[1].CimInstanceProperties["Numbers"].Value))[9], "2nd result is correct");
+                Assert.Equal(30, ((long[])(outParameterValue[2].CimInstanceProperties["Numbers"].Value))[9], "3rd result is correct");
             }
         }
 
@@ -1930,7 +1930,7 @@ namespace MMI.Tests.UnitTests
                 CimMethodParametersCollection methodParameters = new CimMethodParametersCollection();
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.InvokeMethod((CimInstance)null, "MethodName", methodParameters),
-                    e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
+                    e => Assert.Equal("instance", e.ParamName, "Got correct ArgumentNullException.ParamName"));
             }
         }
 
@@ -1966,7 +1966,7 @@ namespace MMI.Tests.UnitTests
                 CimMethodParametersCollection methodParameters = new CimMethodParametersCollection();
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.InvokeMethodAsync(instanceId, "MethodAsyncName", methodParameters),
-                    e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
+                    e => Assert.Equal("instance", e.ParamName, "Got correct ArgumentNullException.ParamName"));
             }
         }
 
@@ -1992,7 +1992,7 @@ namespace MMI.Tests.UnitTests
                 CimMethodParametersCollection methodParameters = new CimMethodParametersCollection();
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.InvokeMethodAsync((CimInstance)null, "MethodAsyncName", methodParameters),
-                    e => Assert.Equal(e.ParamName, "instance", "Got correct A4rgumentNullException.ParamName"));
+                    e => Assert.Equal("instance", e.ParamName, "Got correct A4rgumentNullException.ParamName"));
             }
         }
 
