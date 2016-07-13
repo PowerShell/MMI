@@ -162,6 +162,9 @@
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionOptionsTest.cs">
       <Link>UnitTests\CimSessionOptionsTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimOperationOptionsTest.cs">
+      <Link>UnitTests\CimOperationOptionsTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
