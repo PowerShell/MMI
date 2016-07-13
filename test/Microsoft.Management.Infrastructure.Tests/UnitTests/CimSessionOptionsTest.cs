@@ -73,7 +73,7 @@ namespace MMI.Tests.UnitTests
         public void BaseOptions_AddDestinationCredential3()
         {
             string thumbprint = null;
-            X509Store store = new X509Store("My");
+            X509Store store = new X509Store("My", StoreLocation.LocalMachine);
             store.Open(OpenFlags.ReadOnly);
             foreach (var cert in store.Certificates)
             {
@@ -104,7 +104,7 @@ namespace MMI.Tests.UnitTests
             str.AppendChar('d');
             CimCredential cred = new CimCredential(PasswordAuthenticationMechanism.Default, "ddddddd", null, str);
             sessionOptions.AddDestinationCredentials(cred);
-            Assert.Throws<ArgumentNullException>(()=> { return CimSession.Create(null, sessionOptions); });
+            Assert.Throws<ArgumentNullException>(() => { return CimSession.Create(null, sessionOptions); });
         }
 
         [Fact]
@@ -133,36 +133,36 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(cimSession, "cimSession should not be null");
             }
         }
-
-        [Fact]
-        public void BaseOptions_Culture()
-        {
-            var sessionOptions = new CimSessionOptions();
-            sessionOptions.Culture = CultureInfo.GetCultures(CultureTypes.AllCultures).First();
-            using (CimSession cimSession = CimSession.Create(null, sessionOptions))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-            }
-        }
-
+        /*
+                [Fact]
+                public void BaseOptions_Culture()
+                {
+                    var sessionOptions = new CimSessionOptions();
+                    sessionOptions.Culture = CultureInfo.GetCultures(CultureTypes.AllCultures).First();
+                    using (CimSession cimSession = CimSession.Create(null, sessionOptions))
+                    {
+                        Assert.NotNull(cimSession, "cimSession should not be null");
+                    }
+                }
+        */
         [Fact]
         public void BaseOptions_Culture_Null()
         {
             var sessionOptions = new CimSessionOptions();
             Assert.Throws<ArgumentNullException>(() => { return sessionOptions.Culture = null; });
         }
-
-        [Fact]
-        public void BaseOptions_UICulture()
-        {
-            var sessionOptions = new CimSessionOptions();
-            sessionOptions.UICulture = CultureInfo.GetCultures(CultureTypes.AllCultures).First();
-            using (CimSession cimSession = CimSession.Create(null, sessionOptions))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-            }
-        }
-
+        /*
+                [Fact]
+                public void BaseOptions_UICulture()
+                {
+                    var sessionOptions = new CimSessionOptions();
+                    sessionOptions.UICulture = CultureInfo.GetCultures(CultureTypes.AllCultures).First();
+                    using (CimSession cimSession = CimSession.Create(null, sessionOptions))
+                    {
+                        Assert.NotNull(cimSession, "cimSession should not be null");
+                    }
+                }
+        */
         [Fact]
         public void BaseOptions_UICulture_Null()
         {
@@ -311,7 +311,7 @@ namespace MMI.Tests.UnitTests
             sessionOptions.AddProxyCredentials(cred);
             //Exception is thrown after creating the session as WSMAN doesn't allow proxy without username/password.
             Assert.Throws<CimException>(() => { return CimSession.Create(null, sessionOptions); });
-       
+
         }
 
         [Fact]
@@ -561,7 +561,7 @@ namespace MMI.Tests.UnitTests
         {
             var sessionOptions = new TestCustomOptions("unrecognizedProtocolName");
             Assert.Throws<CimException>(() => { return CimSession.Create(null, sessionOptions); });
-           
+
         }
     }
 }

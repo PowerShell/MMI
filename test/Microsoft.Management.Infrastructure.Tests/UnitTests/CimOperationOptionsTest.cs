@@ -130,7 +130,7 @@ namespace MMI.Tests.UnitTests
             {
                 return operationOptions.ResourceUriPrefix = null;
             });
-            
+
         }
 
         [Fact]
@@ -173,7 +173,7 @@ namespace MMI.Tests.UnitTests
             {
                 operationOptions.SetCustomOption(null, "MyOptionValue", false);
                 return null;
-            });          
+            });
         }
 
         [Fact]
@@ -230,7 +230,7 @@ namespace MMI.Tests.UnitTests
         [Fact]
         public void BaseOptions_CustomOption_OptionName_Null()
         {
-            var operationOptions = new CimOperationOptions(mustUnderstand: false);        
+            var operationOptions = new CimOperationOptions(mustUnderstand: false);
             Assert.Throws<ArgumentNullException>(() =>
             {
                 operationOptions.SetCustomOption(null, 123, CimType.UInt8, false);
@@ -255,7 +255,7 @@ namespace MMI.Tests.UnitTests
         [Fact]
         public void BaseOptions_RawOptionString_OptionName_Null()
         {
-            var operationOptions = new CimOperationOptions(mustUnderstand: false);     
+            var operationOptions = new CimOperationOptions(mustUnderstand: false);
             Assert.Throws<ArgumentNullException>(() =>
             {
                 operationOptions.SetOption(null, "MyOptionValue");
@@ -267,7 +267,7 @@ namespace MMI.Tests.UnitTests
         public void BaseOptions_RawOptionUInt32_OptionName_Null()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: false);
-            Assert.Throws<ArgumentNullException>(() => 
+            Assert.Throws<ArgumentNullException>(() =>
             {
                 operationOptions.SetOption(null, 123);
                 return null;
@@ -330,103 +330,104 @@ namespace MMI.Tests.UnitTests
                 CimInstance cimInstance = enumeratedInstances.ToList().First();
                 Assert.NotNull(cimInstance, "cimSession.EnumerateInstances returned results other than null");
 
-                Assert.Throws<ObjectDisposedException>(()=> { return cimInstance.CimSystemProperties.ClassName; });
+                Assert.Throws<ObjectDisposedException>(() => { return cimInstance.CimSystemProperties.ClassName; });
             }
         }
-
-        [Fact]
-        public void BaseOptions_ShortenLifetimeOfResults_Async_EnumInstances()
-        {
-            var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true };
-
-            using (CimSession cimSession = CimSession.Create(null))
-            {
-                Assert.NotNull(cimSession, "cimSession should not be null");
-                IObservable<CimInstance> enumeratedInstances = cimSession.EnumerateInstancesAsync(@"root\cimv2", "Win32_Process", operationOptions);
-                Assert.NotNull(enumeratedInstances, "cimSession.EnumerateInstances returned something other than null");
-
-                List<AsyncItem<CimInstance>> serializedResults = Helpers.ObservableToList(enumeratedInstances);
-                Assert.NotNull(serializedResults, "cimSession.EnumerateInstances returned results other than null");
-                Assert.True(serializedResults.Count >= 2, "cimSession.EnumerateInstances returned some results");
-                Assert.Equal(serializedResults[0].Kind, AsyncItemKind.Item, "cimSession.EnumerateInstances returned an actual CimInstance");
-                Assert.Throws<ObjectDisposedException>(() => 
+        /*
+                [Fact]
+                public void BaseOptions_ShortenLifetimeOfResults_Async_EnumInstances()
                 {
-                    for (int i = 0; i < 10; i++)
+                    var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true };
+
+                    using (CimSession cimSession = CimSession.Create(null))
                     {
-                        var className = serializedResults[0].Item.CimSystemProperties.ClassName;
-                        Thread.Sleep(200);
+                        Assert.NotNull(cimSession, "cimSession should not be null");
+                        IObservable<CimInstance> enumeratedInstances = cimSession.EnumerateInstancesAsync(@"root\cimv2", "Win32_Process", operationOptions);
+                        Assert.NotNull(enumeratedInstances, "cimSession.EnumerateInstances returned something other than null");
+
+                        List<AsyncItem<CimInstance>> serializedResults = Helpers.ObservableToList(enumeratedInstances);
+                        Assert.NotNull(serializedResults, "cimSession.EnumerateInstances returned results other than null");
+                        Assert.True(serializedResults.Count >= 2, "cimSession.EnumerateInstances returned some results");
+                        Assert.Equal(serializedResults[0].Kind, AsyncItemKind.Item, "cimSession.EnumerateInstances returned an actual CimInstance");
+                        Assert.Throws<ObjectDisposedException>(() => 
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                var className = serializedResults[0].Item.CimSystemProperties.ClassName;
+                                Thread.Sleep(200);
+                            }
+                            return null;
+                        });
                     }
-                    return null;
-                });
-            }
-        }
+                }
 
-        [Fact]
-        public void BaseOptions_ShortenLifetimeOfResults_Async_MethodRegular()
-        {
-            using (var cimSession = CimSession.Create(null))
-            {
-                var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true, EnableMethodResultStreaming = false };
-
-                var methodParameters = new CimMethodParametersCollection();
-                methodParameters.Add(CimMethodParameter.Create("count", 3, CimType.UInt32, CimFlags.None));
-                IObservable<CimMethodResultBase> observable = cimSession.InvokeMethodAsync("this.TestNamespace", "TestClass_Streaming", "StreamNumbers", methodParameters, operationOptions);
-                Assert.NotNull(observable, "CimSession.InvokeMethod returned non-null");
-
-                List<AsyncItem<CimMethodResultBase>> result = Helpers.ObservableToList(observable);
-                Assert.True(result.Count > 0, "Got some callbacks");
-                Assert.Equal(result[result.Count - 1].Kind, AsyncItemKind.Completion, "Got completion callback");
-
-                Assert.True(result.Count > 1, "Got more than 1 callback");
-                Assert.Equal(result[result.Count - 2].Kind, AsyncItemKind.Item, "Got non-streamed result (presence)");
-                Assert.True(result[result.Count - 2].Item.GetType().Equals(typeof(CimMethodResult)), "Got non-streamed result (type)");
-
-                CimMethodResult methodResult = (CimMethodResult)result[result.Count - 2].Item;
-                Assert.Throws<ObjectDisposedException>(() =>
+                [Fact]
+                public void BaseOptions_ShortenLifetimeOfResults_Async_MethodRegular()
                 {
-                    for (int i = 0; i < 10; i++)
+                    using (var cimSession = CimSession.Create(null))
                     {
-                        var tmp = methodResult.OutParameters.Count; // expecting ObjectDisposedException here
-                        Thread.Sleep(200);
+                        var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true, EnableMethodResultStreaming = false };
+
+                        var methodParameters = new CimMethodParametersCollection();
+                        methodParameters.Add(CimMethodParameter.Create("count", 3, CimType.UInt32, CimFlags.None));
+                        IObservable<CimMethodResultBase> observable = cimSession.InvokeMethodAsync("this.TestNamespace", "TestClass_Streaming", "StreamNumbers", methodParameters, operationOptions);
+                        Assert.NotNull(observable, "CimSession.InvokeMethod returned non-null");
+
+                        List<AsyncItem<CimMethodResultBase>> result = Helpers.ObservableToList(observable);
+                        Assert.True(result.Count > 0, "Got some callbacks");
+                        Assert.Equal(result[result.Count - 1].Kind, AsyncItemKind.Completion, "Got completion callback");
+
+                        Assert.True(result.Count > 1, "Got more than 1 callback");
+                        Assert.Equal(result[result.Count - 2].Kind, AsyncItemKind.Item, "Got non-streamed result (presence)");
+                        Assert.True(result[result.Count - 2].Item.GetType().Equals(typeof(CimMethodResult)), "Got non-streamed result (type)");
+
+                        CimMethodResult methodResult = (CimMethodResult)result[result.Count - 2].Item;
+                        Assert.Throws<ObjectDisposedException>(() =>
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                var tmp = methodResult.OutParameters.Count; // expecting ObjectDisposedException here
+                                Thread.Sleep(200);
+                            }
+                            return null;
+                        });
                     }
-                    return null;
-                });
-            }
-        }
+                }
 
-        [Fact]
-        public void BaseOptions_ShortenLifetimeOfResults_Async_MethodStreaming()
-        {
-            using (var cimSession = CimSession.Create(null))
-            {
-                var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true, EnableMethodResultStreaming = true };
-
-                var methodParameters = new CimMethodParametersCollection();
-                methodParameters.Add(CimMethodParameter.Create("count", 3, CimType.UInt32, CimFlags.None));
-                IObservable<CimMethodResultBase> observable = cimSession.InvokeMethodAsync("this.TestNamespace", "TestClass_Streaming", "StreamNumbers", methodParameters, operationOptions);
-                Assert.NotNull(observable, "CimSession.InvokeMethod returned non-null");
-
-                List<AsyncItem<CimMethodResultBase>> result = Helpers.ObservableToList(observable);
-                Assert.True(result.Count > 0, "Got some callbacks");
-                Assert.Equal(result[result.Count - 1].Kind, AsyncItemKind.Completion, "Got completion callback");
-
-                Assert.True(result.Count > 1, "Got more than 1 callback");
-
-                Assert.True(result[0].Item.GetType().Equals(typeof(CimMethodStreamedResult)), "Got streamed result");
-                CimMethodStreamedResult streamedResult = ((CimMethodStreamedResult)(result[0].Item));
-
-                Assert.True(streamedResult.ItemValue is CimInstance, "Got streamed instance back");
-                CimInstance cimInstance = (CimInstance)streamedResult.ItemValue;
-                Assert.Throws<ObjectDisposedException>(() =>
+                [Fact]
+                public void BaseOptions_ShortenLifetimeOfResults_Async_MethodStreaming()
                 {
-                    for (int i = 0; i < 10; i++)
+                    using (var cimSession = CimSession.Create(null))
                     {
-                        var tmp = cimInstance.CimSystemProperties.ClassName; // expecting ObjectDisposedException here
-                        Thread.Sleep(200);
+                        var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true, EnableMethodResultStreaming = true };
+
+                        var methodParameters = new CimMethodParametersCollection();
+                        methodParameters.Add(CimMethodParameter.Create("count", 3, CimType.UInt32, CimFlags.None));
+                        IObservable<CimMethodResultBase> observable = cimSession.InvokeMethodAsync("this.TestNamespace", "TestClass_Streaming", "StreamNumbers", methodParameters, operationOptions);
+                        Assert.NotNull(observable, "CimSession.InvokeMethod returned non-null");
+
+                        List<AsyncItem<CimMethodResultBase>> result = Helpers.ObservableToList(observable);
+                        Assert.True(result.Count > 0, "Got some callbacks");
+                        Assert.Equal(result[result.Count - 1].Kind, AsyncItemKind.Completion, "Got completion callback");
+
+                        Assert.True(result.Count > 1, "Got more than 1 callback");
+
+                        Assert.True(result[0].Item.GetType().Equals(typeof(CimMethodStreamedResult)), "Got streamed result");
+                        CimMethodStreamedResult streamedResult = ((CimMethodStreamedResult)(result[0].Item));
+
+                        Assert.True(streamedResult.ItemValue is CimInstance, "Got streamed instance back");
+                        CimInstance cimInstance = (CimInstance)streamedResult.ItemValue;
+                        Assert.Throws<ObjectDisposedException>(() =>
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                var tmp = cimInstance.CimSystemProperties.ClassName; // expecting ObjectDisposedException here
+                                Thread.Sleep(200);
+                            }
+                            return null;
+                        });
                     }
-                    return null;
-                });
-            }
-        }
+                }
+        */
     }
 }

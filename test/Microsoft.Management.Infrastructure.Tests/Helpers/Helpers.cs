@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+#if !_CORECLR
 using System.DirectoryServices;
+using System.Runtime.Remoting.Messaging;
+#else
+#endif
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
@@ -238,7 +241,7 @@ namespace MMI.Tests
                 }
             }
         }
-
+#if !_CORECLR
         public static void AssertRunningAsNonTestUser(string message)
         {
             string testUser_userName = "miDotNetTstUsr";
@@ -378,7 +381,8 @@ namespace MMI.Tests
 
             return results;
         }
-
+#else          
+#endif
         #region Fake
         internal static int StartDummyProcess()
         {
