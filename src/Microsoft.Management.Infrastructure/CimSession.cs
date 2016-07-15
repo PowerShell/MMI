@@ -24,6 +24,7 @@ using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using Microsoft.Management.Infrastructure.Native;
+using Microsoft.Management.Infrastructure.Resources;
 
 namespace Microsoft.Management.Infrastructure
 {

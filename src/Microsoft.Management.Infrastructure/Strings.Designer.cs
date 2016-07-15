@@ -1,4 +1,4 @@
-//
+﻿//
 //    Copyright (C) Microsoft.  All rights reserved.
 //
 //------------------------------------------------------------------------------
@@ -11,9 +11,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.Management.Infrastructure {
-    using System;
-    using System.Reflection;    
+namespace Microsoft.Management.Infrastructure.Resources { 
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -43,7 +41,7 @@ namespace Microsoft.Management.Infrastructure {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
 #if(!_CORECLR)
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Resources.Strings", typeof(Strings).Assembly);
 #else
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Strings", typeof(Strings).GetTypeInfo().Assembly);
 #endif

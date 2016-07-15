@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -14,7 +13,7 @@ using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Serialization;
-using System.IO;
+using Microsoft.Management.Infrastructure.Resources;
 
 #if(!_CORECLR)
 

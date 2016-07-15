@@ -3,12 +3,12 @@
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Resources;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 
 namespace Microsoft.Management.Infrastructure
 {
