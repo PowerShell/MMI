@@ -49,7 +49,7 @@ namespace MMI.Tests.UnitTests
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
                 Helpers.AssertException<CimException>(
-                    () => cimSession.EnumerateInstances(@"root\cimv2", "Win32_Process"),
+                    () => cimSession.EnumerateInstances(@"root\cimv2", "Win32_Process").Count(),
                     delegate (CimException exception)
                     {
                         Assert.Equal(NativeErrorCode.Failed, exception.NativeErrorCode, "Got the right NativeErrorCode");
