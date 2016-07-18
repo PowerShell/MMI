@@ -27,7 +27,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_Timeout()
         {
             var sessionOptions = new CimSessionOptions();
@@ -38,7 +38,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_AddDestinationCredential1()
         {
             var sessionOptions = new CimSessionOptions();
@@ -50,7 +50,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_AddDestinationCredential2()
         {
             var sessionOptions = new CimSessionOptions();
@@ -69,7 +69,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_AddDestinationCredential3()
         {
             string thumbprint = null;
@@ -91,7 +91,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_AddDestinationCredential4_NullUserName()
         {
             var sessionOptions = new CimSessionOptions();
@@ -107,7 +107,7 @@ namespace MMI.Tests.UnitTests
             Assert.Throws<ArgumentNullException>(() => { return CimSession.Create(null, sessionOptions); });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_AddDestinationCredential5_WrongMechamism()
         {
             var sessionOptions = new CimSessionOptions();
@@ -123,7 +123,7 @@ namespace MMI.Tests.UnitTests
             Assert.Throws<ArgumentOutOfRangeException>(() => { return CimSession.Create(null, sessionOptions); });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_Timeout_Infinity()
         {
             var sessionOptions = new CimSessionOptions();
@@ -180,7 +180,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_PacketIntegrity_True()
         {
             var sessionOptions = new DComSessionOptions();
@@ -191,7 +191,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_PacketIntegrity_False()
         {
             var sessionOptions = new DComSessionOptions();
@@ -202,7 +202,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_PacketPrivacy_True()
         {
             var sessionOptions = new DComSessionOptions();
@@ -213,7 +213,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_PacketPrivacy_False()
         {
             var sessionOptions = new DComSessionOptions();
@@ -224,7 +224,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_Impersonation_None()
         {
             var sessionOptions = new DComSessionOptions();
@@ -235,7 +235,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_Impersonation_Default()
         {
             var sessionOptions = new DComSessionOptions();
@@ -246,7 +246,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_Impersonation_Delegate()
         {
             var sessionOptions = new DComSessionOptions();
@@ -257,7 +257,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_Impersonation_Identify()
         {
             var sessionOptions = new DComSessionOptions();
@@ -268,7 +268,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_Impersonation_Impersonate()
         {
             var sessionOptions = new DComSessionOptions();
@@ -289,7 +289,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetDestinationPort()
         {
             // TODO/FIXME - add unit test for corner cases (0, > 65535)
@@ -302,7 +302,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetProxyCredential()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -314,7 +314,7 @@ namespace MMI.Tests.UnitTests
 
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetMaxEnvelopeSize()
         {
             // TODO/FIXME - add unit test for corner cases (0, maxvalue)
@@ -327,7 +327,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetCertCACheck_True()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -338,7 +338,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetCertCACheck_False()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -349,7 +349,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetCertCNCheck_True()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -360,7 +360,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetCertCNCheck_False()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -371,7 +371,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetCertRevocationCheck_True()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -382,7 +382,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetCertRevocationCheck_False()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -393,7 +393,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetUseSsl_True()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -404,7 +404,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetUseSsl_False()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -415,7 +415,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_ProxyType_None()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -433,7 +433,7 @@ namespace MMI.Tests.UnitTests
             Assert.Throws<ArgumentOutOfRangeException>(() => { return sessionOptions.ProxyType = (ProxyType)123; });
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_PacketEncoding_Default()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -444,7 +444,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_PacketEncoding_UTF8()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -455,7 +455,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_PacketEncoding_UTF16()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -473,7 +473,7 @@ namespace MMI.Tests.UnitTests
             Assert.Throws<ArgumentOutOfRangeException>(() => { return sessionOptions.PacketEncoding = (PacketEncoding)123; });
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetEncodePortInSPN_True()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -484,7 +484,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetEncodePortInSPN_False()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -507,13 +507,13 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(roundTrip.ToString(), orig.ToString(), "HttpUrlPrefix should stay the same on round-trip");
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetHttpUrlPrefix_Relative()
         {
             WSManOptions_SetHttpUrlPrefix_Core(new Uri("myPrefix", UriKind.Relative));
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_SetHttpUrlPrefix_Absolute()
         {
             WSManOptions_SetHttpUrlPrefix_Core(new Uri("http://www.microsoft.com", UriKind.Absolute));
@@ -534,7 +534,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_NoEncryption_True()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -545,7 +545,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_NoEncryption_False()
         {
             var sessionOptions = new WSManSessionOptions();
@@ -556,7 +556,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void CustomOptions_UnrecognizedProtocol()
         {
             var sessionOptions = new TestCustomOptions("unrecognizedProtocolName");

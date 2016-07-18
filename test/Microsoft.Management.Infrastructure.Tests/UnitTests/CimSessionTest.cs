@@ -42,7 +42,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void Create_ComputerName_Nonexistant_DCOM()
         {
             using (CimSession cimSession = CimSession.Create("nonexistantcomputer", new DComSessionOptions()))
@@ -122,7 +122,7 @@ namespace MMI.Tests.UnitTests
             cimSession.Close(); // expecting no exception - Close/CloseAsync/Dispose should be idempotent
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_ClassName_NotFound()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -150,7 +150,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -162,7 +162,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_SessionComputerName()
         {
             using (CimSession cimSession = CimSession.Create(Environment.MachineName, new WSManSessionOptions()))
@@ -192,7 +192,7 @@ namespace MMI.Tests.UnitTests
             return cimSession;
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_AbandonedEnumerator()
         {
             CimSession cimSession = EnumerateInstances_AbandonedEnumerator_Helper();
@@ -211,7 +211,7 @@ namespace MMI.Tests.UnitTests
             cimSession.Close();
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_IsValueModified()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -237,7 +237,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_IsValueModified_ValueEquality()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -267,7 +267,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClass_Property_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -282,7 +282,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClass_Method_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -297,7 +297,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClass_MethodParameter_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -314,7 +314,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClass_MethodParameterQualifier_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -332,7 +332,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClass_PropertyQualifier_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -349,7 +349,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClassMethod()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -375,7 +375,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetClassSync()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -485,7 +485,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void EnumerateClassesSync()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -612,7 +612,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void TestConnectionSyncRemote()
         {
             using (CimSession cimSession = CimSession.Create(@"ABCD"))
@@ -642,7 +642,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_ReturnedProperties()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -698,7 +698,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_SettingReceivedProperty()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -720,7 +720,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_ResultsAreNotNull()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -784,7 +784,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_Cancellation_FromTwoThreads()
         {
             Console.WriteLine();
@@ -801,7 +801,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateInstances_SecondEnumeration()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -1071,7 +1071,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void QueryInstances()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -1129,7 +1129,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void QueryInstances_CimClass()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -1287,7 +1287,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateAssociatedInstances()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -1387,7 +1387,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void EnumerateReferencingInstances()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -1731,7 +1731,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void InvokeInstanceMethod_SetSint32Value()
         {
             using (var cimSession = CimSession.Create(null))
@@ -1761,7 +1761,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void InvokeStaticMethod_Add()
         {
             using (var cimSession = CimSession.Create(null))
@@ -1807,7 +1807,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void InvokeStreamingMethod_Sync()
         {
             using (var cimSession = CimSession.Create(null))
@@ -1972,7 +1972,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void InvokeInstanceMethodAsync_Instance_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -2046,7 +2046,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void Subscribe()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -2079,7 +2079,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void Subscribe_DeliveryOptionsInterval()
         {
             using (CimSession cimSession = CimSession.Create(Environment.MachineName, new WSManSessionOptions()))
@@ -2117,7 +2117,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         private void Subscribe_DeliveryOptionsDateTime_Core(CimSubscriptionDeliveryOptions options)
         {
             DateTime startTime = DateTime.UtcNow;
@@ -2167,7 +2167,7 @@ namespace MMI.Tests.UnitTests
             Assert.True(testDuration < TimeSpan.FromSeconds(60), "Test should last less than 60 seconds");
         }
 
-        [Fact]
+        [TDDFact]
         public void Subscribe_DeliveryOptionsDateTime_TimeSpan()
         {
             CimSubscriptionDeliveryOptions options = new CimSubscriptionDeliveryOptions(CimSubscriptionDeliveryType.Pull);
@@ -2267,7 +2267,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void GetNonexistQualifer()
         {
             using (CimSession cimSession = CimSession.Create(null))

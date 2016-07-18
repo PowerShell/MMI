@@ -19,7 +19,7 @@ namespace MMI.Tests.UnitTests
 
     public class CimOperationOptionsTest
     {
-        [Fact]
+        [TDDFact]
         public void BaseOptions_Empty()
         {
             using (var operationOptions = new CimOperationOptions(mustUnderstand: true))
@@ -32,7 +32,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_Timeout_Medium()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -46,7 +46,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_Timeout_Small()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -64,7 +64,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_Timeout_Infinity()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -78,7 +78,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_UseMachineId_True()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -92,7 +92,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_UseMachineId_False()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -106,7 +106,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_ResourceUriPrefix()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -133,7 +133,7 @@ namespace MMI.Tests.UnitTests
 
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_CustomOptionString_MustUnderstandFalse()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: false);
@@ -149,7 +149,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_CustomOptionString_MustUnderstandTrue()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: true);
@@ -176,7 +176,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_CustomOption_MismatchedValueAndType()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: false);
@@ -187,7 +187,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_CustomOption_UnsupportedType()
         {
             var operationOptions = new CimOperationOptions(mustUnderstand: false);
@@ -199,7 +199,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_CustomOption_RoundtripString()
         {
             using (var cimSession = CimSession.Create(null))
@@ -274,7 +274,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_KeysOnly_True()
         {
             var operationOptions = new CimOperationOptions { KeysOnly = true };
@@ -295,7 +295,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_KeysOnly_False()
         {
             var operationOptions = new CimOperationOptions { KeysOnly = false };
@@ -316,7 +316,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void BaseOptions_ShortenLifetimeOfResults_Sync()
         {
             var operationOptions = new CimOperationOptions { ShortenLifetimeOfResults = true };
