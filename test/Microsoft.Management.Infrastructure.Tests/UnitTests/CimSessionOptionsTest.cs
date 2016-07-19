@@ -170,7 +170,7 @@ namespace MMI.Tests.UnitTests
             Assert.Throws<ArgumentNullException>(() => { return sessionOptions.UICulture = null; });
         }
 
-        [Fact]
+        [TDDFact]
         public void DComOptions_Empty()
         {
             using (var sessionOptions = new DComSessionOptions())
@@ -279,7 +279,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void WSManOptions_Empty()
         {
             using (var sessionOptions = new WSManSessionOptions())

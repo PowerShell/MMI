@@ -45,7 +45,7 @@ namespace Microsoft.Management.Infrastructure.Resources {
 #if(!_CORECLR)
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Resources.Strings", typeof(Strings).Assembly);
 #else
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Strings", typeof(Strings).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Resources.Strings", typeof(Strings).GetTypeInfo().Assembly);
 #endif
                     resourceMan = temp;
                 }

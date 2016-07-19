@@ -31,7 +31,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [Fact]
+        [TDDFact]
         public void Create_ComputerName_Localhost()
         {
             using (CimSession cimSession = CimSession.Create("localhost"))
@@ -83,7 +83,7 @@ namespace MMI.Tests.UnitTests
                     }
                 }
         */
-        [Fact]
+        [TDDFact]
         public void Create_ComputerName_EnvironmentMachineName()
         {
             string machineName = Environment.MachineName;
