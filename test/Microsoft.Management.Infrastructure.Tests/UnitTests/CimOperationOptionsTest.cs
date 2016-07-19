@@ -16,7 +16,6 @@ using Xunit;
 
 namespace MMI.Tests.UnitTests
 {
-
     public class CimOperationOptionsTest
     {
         [TDDFact]

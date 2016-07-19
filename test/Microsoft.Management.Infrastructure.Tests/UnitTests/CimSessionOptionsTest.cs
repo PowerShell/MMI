@@ -311,14 +311,12 @@ namespace MMI.Tests.UnitTests
             sessionOptions.AddProxyCredentials(cred);
             //Exception is thrown after creating the session as WSMAN doesn't allow proxy without username/password.
             Assert.Throws<CimException>(() => { return CimSession.Create(null, sessionOptions); });
-
         }
 
         [TDDFact]
         public void WSManOptions_SetMaxEnvelopeSize()
         {
             // TODO/FIXME - add unit test for corner cases (0, maxvalue)
-
             var sessionOptions = new WSManSessionOptions();
             sessionOptions.MaxEnvelopeSize = 8080;
             using (CimSession cimSession = CimSession.Create(null, sessionOptions))
@@ -561,7 +559,6 @@ namespace MMI.Tests.UnitTests
         {
             var sessionOptions = new TestCustomOptions("unrecognizedProtocolName");
             Assert.Throws<CimException>(() => { return CimSession.Create(null, sessionOptions); });
-
         }
     }
 }

@@ -28,7 +28,6 @@ namespace MMI.Tests
             private readonly List<AsyncItem<T>> results = new List<AsyncItem<T>>();
             private readonly ManualResetEventSlim completeEvent = new ManualResetEventSlim(false);
             private readonly int maxNumberOfResults;
-
             private int numberOfSimultatenousCallbacks;
             private bool completed;
 
@@ -39,7 +38,6 @@ namespace MMI.Tests
 
             public bool IsSubscription = false;
             private readonly ManualResetEventSlim singleInstanceEvent = new ManualResetEventSlim(false);
-
 
             public void OnCompleted()
             {

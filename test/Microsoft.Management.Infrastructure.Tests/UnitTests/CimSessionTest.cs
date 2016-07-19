@@ -185,10 +185,8 @@ namespace MMI.Tests.UnitTests
             Assert.NotNull(cimSession, "cimSession should not be null");
             IEnumerable<CimInstance> enumeratedInstances = cimSession.EnumerateInstances(@"root\cimv2", "Win32_Process");
             Assert.NotNull(enumeratedInstances, "cimSession.EnumerateInstances returned something other than null");
-
             IEnumerator<CimInstance> enumerator = enumeratedInstances.GetEnumerator();
             enumerator.MoveNext();
-
             return cimSession;
         }
 
@@ -1112,7 +1110,6 @@ namespace MMI.Tests.UnitTests
                 Assert.Throws<ArgumentNullException>(() => {
                     return cimSession.QueryInstances(@"root\cimv2", null, queryExpression);
                 });
-
             }
         }
 
@@ -1640,7 +1637,6 @@ namespace MMI.Tests.UnitTests
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.ModifyInstance(instanceId),
                     e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
-
             }
         }
 
@@ -1663,7 +1659,6 @@ namespace MMI.Tests.UnitTests
             using (CimSession cimSession = CimSession.Create(null))
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
-
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.ModifyInstance(null),
                     e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
@@ -1676,11 +1671,9 @@ namespace MMI.Tests.UnitTests
             using (CimSession cimSession = CimSession.Create(null))
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
-
                 CimInstance instanceId = new CimInstance("Win32_Process");
                 instanceId.CimInstanceProperties.Add(CimProperty.Create("Handle", Process.GetCurrentProcess().Id.ToString(), CimType.String, CimFlags.Key));
                 Assert.Null(instanceId.CimSystemProperties.Namespace, "Sanity check: instanceId.CimSystemProperties.Namespace == null");
-
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.ModifyInstanceAsync(instanceId),
                     e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
@@ -1706,7 +1699,6 @@ namespace MMI.Tests.UnitTests
             using (CimSession cimSession = CimSession.Create(null))
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
-
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.ModifyInstanceAsync(null),
                     e => Assert.Equal(e.ParamName, "instance", "Got correct ArgumentNullException.ParamName"));
@@ -1719,11 +1711,9 @@ namespace MMI.Tests.UnitTests
             using (CimSession cimSession = CimSession.Create(null))
             {
                 Assert.NotNull(cimSession, "cimSession should not be null");
-
                 CimInstance instanceId = new CimInstance("Win32_Process");
                 instanceId.CimInstanceProperties.Add(CimProperty.Create("Handle", Process.GetCurrentProcess().Id.ToString(), CimType.String, CimFlags.Key));
                 Assert.Null(instanceId.CimSystemProperties.Namespace, "Sanity check: instanceId.CimSystemProperties.Namespace == null");
-
                 CimMethodParametersCollection methodParameters = new CimMethodParametersCollection();
                 Helpers.AssertException<ArgumentNullException>(
                     () => cimSession.InvokeMethod(instanceId, "MethodName", methodParameters),
