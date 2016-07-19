@@ -5,6 +5,31 @@ namespace Microsoft.Management.Infrastructure.Native
 {
     internal class MI_Class : MI_NativeObjectWithFT<MI_Class.MI_ClassFT>
     {
+        internal void AssertValidInternalState()
+        {
+            System.Diagnostics.Debug.Assert(this.Ptr != IntPtr.Zero);
+        }
+
+
+        internal int GetClassHashCode()
+        {
+            IntPtr classDeclPtr = IntPtr.Zero;
+            unsafe
+            {
+                // Just as easily could be implemented with Marshal
+                // but that would copy more than the one pointer we need
+                IntPtr structurePtr = this.Ptr;
+                if (structurePtr == IntPtr.Zero)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                classDeclPtr = *((IntPtr*)((byte*)structurePtr + MI_ClassMembersClassDeclOffset));
+            }
+
+            return classDeclPtr.GetHashCode();
+        }
+
         internal MI_Result GetElement(
             string name,
             out MI_Value value,
@@ -138,6 +163,7 @@ namespace Microsoft.Management.Infrastructure.Native
 
         // Marshal implements these with Reflection - pay this hit only once
         private static int MI_ClassMembersFTOffset = (int)Marshal.OffsetOf<MI_ClassMembers>("ft");
+        private static int MI_ClassMembersClassDeclOffset = (int)Marshal.OffsetOf<MI_ClassMembers>("classDecl");
         private static int MI_ClassMembersSize = Marshal.SizeOf<MI_ClassMembers>();
         
         private MI_Class(bool isDirect) : base(isDirect)

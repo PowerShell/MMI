@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -157,6 +158,12 @@
     </Compile>
     <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionTest.cs">
       <Link>UnitTests\CimSessionTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimSessionOptionsTest.cs">
+      <Link>UnitTests\CimSessionOptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\CimOperationOptionsTest.cs">
+      <Link>UnitTests\CimOperationOptionsTest.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

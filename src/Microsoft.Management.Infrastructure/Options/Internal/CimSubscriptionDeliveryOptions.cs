@@ -171,10 +171,8 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            // TODO: convert optionValue to MI_Interval
-            MI_Interval interval;
-            interval.days = interval.hours = interval.minutes = interval.seconds = interval.microseconds = interval.__padding1 = interval.__padding2 = interval.__padding3 = 0;
-            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetInterval(optionName, interval, flags);
+            MI_Datetime dt = new MI_Datetime(optionValue);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.SetInterval(optionName, dt.interval, flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -197,9 +195,8 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            // TODO: Implement this
-            //MI_Result result = this._subscriptionDeliveryOptionsHandle.SubscriptionDeliveryOptionsMethods.AddCredentials(optionName, optionValue.GetCredential(), flags);
-            //CimException.ThrowIfMiResultFailure(result);
+            MI_Result result = this._subscriptionDeliveryOptionsHandle.AddCredentials(optionName, optionValue.GetCredential().cred, flags);
+            CimException.ThrowIfMiResultFailure(result);
         }
 
         #endregion Options

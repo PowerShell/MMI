@@ -311,25 +311,25 @@ namespace Microsoft.Management.Infrastructure.Options
         #region PSSEMANTICS
 
         internal void WriteMessageCallbackInternal(
-            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
-            UInt32 channel,
+            object callbackProcessingContext,
+            MI_WriteMessageChannel channel,
             string message)
         {
             if (_writeMessageCallback != null)
             {
-                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
+                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)((CimOperationCallbackProcessingContext)callbackProcessingContext).ManagedOperationContext;
                 callbacksReceiverBase.CallIntoUserCallback(
-                    callbackProcessingContext,
-                    () => _writeMessageCallback(channel, message));
+                    (CimOperationCallbackProcessingContext)callbackProcessingContext,
+                    () => _writeMessageCallback((uint)channel, message));
             }
         }
 
         private WriteMessageCallback _writeMessageCallback;
 
         private void WriteProgressCallbackInternal(
-            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
+            object callbackProcessingContext,
             string activity,
             string currentOperation,
             string statusDescription,
@@ -338,9 +338,9 @@ namespace Microsoft.Management.Infrastructure.Options
         {
             if (_writeProgressCallback != null)
             {
-                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
+                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)((CimOperationCallbackProcessingContext)callbackProcessingContext).ManagedOperationContext;
                 callbacksReceiverBase.CallIntoUserCallback(
-                    callbackProcessingContext,
+                    (CimOperationCallbackProcessingContext)callbackProcessingContext,
                     () => _writeProgressCallback(activity, currentOperation, statusDescription, percentageCompleted, secondsRemaining));
             }
         }
@@ -348,12 +348,11 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteProgressCallback _writeProgressCallback;
 
         internal void WriteErrorCallbackInternal(
-            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
+            object callbackProcessingContext,
             MI_Instance instanceHandle,
-            out MI_OperationCallback_ResponseType response)
+            MI_OperationCallbacks.MI_OperationCallback_PromptUserResult promptUserResult)
         {
-            response = MI_OperationCallback_ResponseType.Yes;
             if (_writeErrorCallback != null)
             {
                 Debug.Assert(instanceHandle != null, "Caller should verify instance != null");
@@ -363,16 +362,18 @@ namespace Microsoft.Management.Infrastructure.Options
                     if (!instanceHandle.IsNull)
                     {
                         cimInstance = new CimInstance(instanceHandle.Clone());
-                        var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
+                        var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)((CimOperationCallbackProcessingContext)callbackProcessingContext).ManagedOperationContext;
                         CimResponseType userResponse = CimResponseType.None;
                         callbacksReceiverBase.CallIntoUserCallback(
-                            callbackProcessingContext,
+                            (CimOperationCallbackProcessingContext)callbackProcessingContext,
                             delegate { userResponse = _writeErrorCallback(cimInstance); });
-                        response = (MI_OperationCallback_ResponseType)userResponse;
+                        promptUserResult(operationHandle, (MI_OperationCallback_ResponseType)userResponse);
+                        return;
                     }
                 }
                 finally
                 {
+                    promptUserResult(operationHandle, MI_OperationCallback_ResponseType.Yes);
                     if (cimInstance != null)
                     {
                         cimInstance.Dispose();
@@ -384,22 +385,24 @@ namespace Microsoft.Management.Infrastructure.Options
         private WriteErrorCallback _writeErrorCallback;
 
         internal void PromptUserCallbackInternal(
-            CimOperationCallbackProcessingContext callbackProcessingContext,
             MI_Operation operationHandle,
+            object callbackProcessingContext,
             string message,
             MI_PromptType promptType,
-            out MI_OperationCallback_ResponseType response)
+            MI_OperationCallbacks.MI_OperationCallback_PromptUserResult promptUserResult)
         {
-            response = MI_OperationCallback_ResponseType.Yes;
             if (_promptUserCallback != null)
             {
-                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)callbackProcessingContext.ManagedOperationContext;
+                var callbacksReceiverBase = (CimAsyncCallbacksReceiverBase)((CimOperationCallbackProcessingContext)callbackProcessingContext).ManagedOperationContext;
                 CimResponseType userResponse = CimResponseType.None;
                 callbacksReceiverBase.CallIntoUserCallback(
-                    callbackProcessingContext,
+                    (CimOperationCallbackProcessingContext)callbackProcessingContext,
                     delegate { userResponse = _promptUserCallback(message, (CimPromptType)promptType); });
-                response = (MI_OperationCallback_ResponseType)userResponse;
+                promptUserResult(operationHandle, (MI_OperationCallback_ResponseType)userResponse);
+                return;
             }
+
+            promptUserResult(operationHandle, MI_OperationCallback_ResponseType.Yes);
         }
 
         private PromptUserCallback _promptUserCallback;
@@ -479,8 +482,8 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeMessageCallback = value;
-                // TODO: Get callbacks working
-                //OperationCallback.writeMessage = this.WriteMessageCallbackInternal;
+                
+                OperationCallback.writeMessage = this.WriteMessageCallbackInternal;
             }
         }
 
@@ -499,8 +502,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeProgressCallback = value;
-                // TODO: Get callbacks working
-                //OperationCallback.WriteProgressCallback = this.WriteProgressCallbackInternal;
+                OperationCallback.writeProgress = this.WriteProgressCallbackInternal;
             }
         }
 
@@ -519,8 +521,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _writeErrorCallback = value;
-                // TODO: Get callbacks working
-                //OperationCallback.WriteErrorCallback = this.WriteErrorCallbackInternal;
+                OperationCallback.writeError = this.WriteErrorCallbackInternal;
             }
         }
 
@@ -539,8 +540,7 @@ namespace Microsoft.Management.Infrastructure.Options
                 }
                 this.AssertNotDisposed();
                 _promptUserCallback = value;
-                // TODO: Get callbacks working
-                //OperationCallback.PromptUserCallback = this.PromptUserCallbackInternal;
+                OperationCallback.promptUser = this.PromptUserCallbackInternal;
             }
         }
 
@@ -730,9 +730,9 @@ namespace Microsoft.Management.Infrastructure.Options
             MI_Result result = this.OperationOptionsHandleOnDemand.SetCustomOption(
                 optionName,
                 cimType.FromCimType(),
-        nativeLayerValue,
+                nativeLayerValue,
                 mustComply,
-        flags);
+                flags);
             CimException.ThrowIfMiResultFailure(result);
         }
 
@@ -860,11 +860,10 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
             var operationCallbacks = new MI_OperationCallbacks();
             if (operationOptions != null)
             {
-                // TODO: Uncomment these
-                //operationCallbacks.writeError = operationOptions.OperationCallback.WriteErrorCallback;
-                //operationCallbacks.writeMessage = operationOptions.OperationCallback.WriteMessageCallback;
-                //operationCallbacks.writeProgress = operationOptions.OperationCallback.WriteProgressCallback;
-                //operationCallbacks.promptUser = operationOptions.OperationCallback.PromptUserCallback;
+                operationCallbacks.writeError = operationOptions.OperationCallback.writeError;
+                operationCallbacks.writeMessage = operationOptions.OperationCallback.writeMessage;
+                operationCallbacks.writeProgress = operationOptions.OperationCallback.writeProgress;
+                operationCallbacks.promptUser = operationOptions.OperationCallback.promptUser;
             }
             return operationCallbacks;
         }
