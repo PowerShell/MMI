@@ -1962,7 +1962,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [TDDFact]
+        [Fact]
         public void InvokeInstanceMethodAsync_Instance_Null()
         {
             using (CimSession cimSession = CimSession.Create(null))
@@ -1970,7 +1970,11 @@ namespace MMI.Tests.UnitTests
                 Assert.NotNull(cimSession, "cimSession should not be null");
 
                 CimMethodParametersCollection methodParameters = new CimMethodParametersCollection();
-                cimSession.InvokeMethodAsync(@"root\cimv2", (CimInstance)null, "MethodAsyncName", methodParameters);
+                Assert.Throws<ArgumentNullException>(
+                    () => {
+                        cimSession.InvokeMethodAsync(@"root\cimv2", (CimInstance)null, "MethodAsyncName", methodParameters);
+                        return null;
+                    });
             }
         }
 
@@ -2107,7 +2111,6 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [TDDFact]
         private void Subscribe_DeliveryOptionsDateTime_Core(CimSubscriptionDeliveryOptions options)
         {
             DateTime startTime = DateTime.UtcNow;
