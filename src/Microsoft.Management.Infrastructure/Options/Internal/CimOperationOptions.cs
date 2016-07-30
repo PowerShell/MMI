@@ -708,7 +708,7 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            MI_Value nativeLayerValue = ValueHelpers.ConvertToNativeLayer(optionValue);
+            MI_Value nativeLayerValue = ValueHelpers.ConvertToNativeLayer(optionValue, cimType);
             try
             {
                 ValueHelpers.ThrowIfMismatchedType(cimType.FromCimType(), nativeLayerValue);

@@ -132,7 +132,7 @@ namespace Microsoft.Management.Infrastructure.Native
             out MI_DestinationOptions options
             )
         {
-            MI_DestinationOptions optionsLocal = MI_DestinationOptions.NewIndirectPtr();
+            MI_DestinationOptions optionsLocal = MI_DestinationOptions.NewDirectPtr();
             MI_Result resultLocal = this.ft.NewDestinationOptions(this,
                 optionsLocal);
 
