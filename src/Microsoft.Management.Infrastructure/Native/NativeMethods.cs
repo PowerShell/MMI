@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.InteropServices;
+    using System.Security;
 
     internal static class NativeMethods
     {
@@ -43,6 +44,29 @@
 
         [UnmanagedFunctionPointer(MI_PlatformSpecific.MiMainCallConvention)]
         internal delegate IntPtr MI_MainFunction(IntPtr callbackContext);
+
+        public static string ConvertToUnsecureString(SecureString securePassword)
+        {
+            if (securePassword == null)
+            {
+                throw new ArgumentNullException("securePassword");
+            }
+
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+#if (!_CORECLR)
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
+#else
+                unmanagedString = SecureStringMarshal.SecureStringToCoTaskMemUnicode(securePassword);
+#endif
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
+        }
 
         internal static unsafe void memcpy(byte* dst, byte* src, int size, uint count)
         {

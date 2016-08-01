@@ -3,6 +3,7 @@
  *============================================================================
  */
 
+using Microsoft.Management.Infrastructure.Resources;
 using System;
 using System.Collections;
 using System.Globalization;

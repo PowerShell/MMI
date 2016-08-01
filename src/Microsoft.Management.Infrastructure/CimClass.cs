@@ -6,6 +6,7 @@
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Native;
+using Microsoft.Management.Infrastructure.Resources;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -208,9 +209,7 @@ namespace Microsoft.Management.Infrastructure
 
         public override int GetHashCode()
         {
-            // TODO: implement this function?
-            //return this.ClassHandle.GetClassHashCode();
-            return 0;
+            return this.ClassHandle.GetClassHashCode();
         }
 
         public override bool Equals(object obj)

@@ -65,33 +65,38 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 }
 
                 string name;
+                UInt32 index = 0;
                 MI_QualifierSet qualifierSet;
                 MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
                                         out name,
                                         out qualifierSet,
                                         out parameterSet);
-                CimException.ThrowIfMiResultFailure(result);
 
-                MI_Type parameterType;
-                string referenceClass;
-                MI_QualifierSet methodQualifierSet;
-                result = parameterSet.GetParameterAt((uint)parameterName,
-                                     out name,
-                                     out parameterType,
-                                     out referenceClass,
-                                     out methodQualifierSet);
-                CimException.ThrowIfMiResultFailure(result);
+                if (result == MI_Result.MI_RESULT_OK)
+                {
 
-                MI_Type qualifierType;
-                MI_Flags qualifierFlags;
-                MI_Value qualifierValue;
-                UInt32 index;
-                result = methodQualifierSet.GetQualifier(qualifierName,
-                                     out qualifierType,
-                                     out qualifierFlags,
-                                     out qualifierValue,
-                                     out index);
+                    MI_Type parameterType;
+                    string referenceClass;
+                    MI_QualifierSet methodQualifierSet;
+                    result = parameterSet.GetParameterAt((uint)parameterName,
+                                         out name,
+                                         out parameterType,
+                                         out referenceClass,
+                                         out methodQualifierSet);
+
+                    if (result == MI_Result.MI_RESULT_OK)
+                    {
+                        MI_Type qualifierType;
+                        MI_Flags qualifierFlags;
+                        MI_Value qualifierValue;
+                        result = methodQualifierSet.GetQualifier(qualifierName,
+                                             out qualifierType,
+                                             out qualifierFlags,
+                                             out qualifierValue,
+                                             out index);
+                    }
+                }
 
                 switch (result)
                 {

@@ -7,6 +7,7 @@ using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using System;
 using System.Globalization;
+using System.Security;
 
 namespace Microsoft.Management.Infrastructure.Options
 {
@@ -445,9 +446,21 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            // TODO: Not trivial to port AddProxyCredentials
-            //MI_Result result = this.DestinationOptionsHandleOnDemand.AddProxyCredentials(credential.GetCredential());
-            //CimException.ThrowIfMiResultFailure(result);
+            MI_Result result = MI_Result.MI_RESULT_OK;
+
+            //Additional processing for securePasswords
+            SecureString securePassword = credential.GetCredential().GetSecureString(); ;
+            if (securePassword != null && securePassword.Length > 0)
+            {
+                credential.GetCredential().cred.usernamePassword.password = NativeMethods.ConvertToUnsecureString(securePassword);
+            }
+            else
+            {
+                credential.GetCredential().cred.usernamePassword.password = null;
+            }
+
+            result = this.DestinationOptionsHandle.AddCredentials("__MI_DESTINATIONOPTIONS_PROXY_CREDENTIALS", credential.GetCredential().cred, 0);
+            CimException.ThrowIfMiResultFailure(result);
         }
     }
 }

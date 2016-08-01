@@ -115,8 +115,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
 
             if (disposing)
             {
-                // TODO: do we need to call Delete/Dispose here? Looks like it is freed on destruction in MI_Operation
-                //this._handle.Delete();
+                this._handle.Dispose();
 
                 if (this._cancellationTokenRegistration != null)
                 {

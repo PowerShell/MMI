@@ -18,7 +18,7 @@ namespace Microsoft.Management.Infrastructure.Native
         [FieldOffset(0)]
         internal IntPtr authenticationType;
 
-        [FieldOffset(4)]
+        [FieldOffset(16)]
         internal MI_UsernamePasswordCreds usernamePassword;
 
         [FieldOffset(4)]
