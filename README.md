@@ -6,6 +6,39 @@ Microsoft.Management.Infrastructure
 This repo contains the `Microsoft.Management.Infrastructure` source code (and
 soon tests). This is a dependency of PowerShell, but is kept separate.
 
-Build with `./build.sh` (it runs two commands which can be run by hand).
+Environment
+===========
 
-Test with `./test.sh` (it runs one command which can also be run by hand).
+Toolchain Setup
+---------------
+
+MMI requires the following packages:
+
+```sh
+sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
+```
+
+Also install [PowerShell][] from the latest release per their instructions.
+
+[powershell]: https://github.com/PowerShell/PowerShell
+
+Git Setup
+---------
+
+MMI has a submodule, so clone recursively.
+
+```sh
+git clone --recursive git@github.com:PowerShell/MMI.git
+```
+
+Build
+-----
+```sh
+./build.sh
+```
+
+Test
+----
+```sh
+./test.sh
+```
