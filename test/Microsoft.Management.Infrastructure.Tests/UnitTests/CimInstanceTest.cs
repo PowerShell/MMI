@@ -125,15 +125,6 @@ namespace MMI.Tests.UnitTests
         #endregion Test constructor
 
         #region Test properties
-        [TDDFact]
-        public void Properties_CimClass()
-        {
-            CimInstance cimInstance = new CimInstance("MyClassName");
-            MI_Class classHandle;
-            MI_Result result = cimInstance.InstanceHandle.GetClass(out classHandle);
-            Assert.Equal(cimInstance.CimClass, new CimClass(classHandle), "property CimClass is not correct");
-        }
-
         [Fact]
         public void Properties_IsValueModified()
         {
@@ -288,7 +279,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.UInt16, addedProperty.CimType, "addedProperty.CimType should be UInt16");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_SInt32()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -296,7 +287,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal("MyPropertyName", cimProperty.Name, "CimProperty.Create correctly round-trips CimProperty.Name");
             Assert.True(cimProperty.Value is Int32, "CimProperty.Create preserves the type of the value");
             Assert.Equal(CimType.SInt32, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
-            Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            Assert.Equal(CimFlags.NotModified, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
 
             cimInstance.CimInstanceProperties.Add(cimProperty);
             CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
@@ -558,7 +549,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal("MyPropertyName", cimProperty.Name, "CimProperty.Create correctly round-trips CimProperty.Name");
             Assert.True(cimProperty.Value is CimInstance, "CimProperty.Create preserves the type of the value");
             Assert.Equal(CimType.Instance, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
-            Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            Assert.Equal(CimFlags.NotModified, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
             cimInstance.CimInstanceProperties.Add(cimProperty);
 
             CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
@@ -579,7 +570,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(cimProperty.Name, "MyPropertyName", "CimProperty.Create correctly round-trips CimProperty.Name");
             Assert.True(cimProperty.Value is CimInstance, "CimProperty.Create preserves the type of the value");
             Assert.Equal(CimType.Instance, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
-            Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            Assert.Equal(CimFlags.NotModified, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
             cimInstance.CimInstanceProperties.Add(cimProperty);
 
             CimProperty addedProperty = cimInstance.CimInstanceProperties.Single();
@@ -707,7 +698,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal("MyPropertyName", cimProperty.Name, "CimProperty.Create correctly round-trips CimProperty.Name");
             Assert.True(cimProperty.Value is CimInstance, "CimProperty.Create preserves the type of the value");
             Assert.Equal(CimType.Reference, cimProperty.CimType, "CimProperty.Create correctly round-trips CimProperty.CimType");
-            Assert.Equal(CimFlags.None, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
+            Assert.Equal(CimFlags.NotModified, cimProperty.Flags, "CimProperty.Create correctly round-trips CimProperty.Flags");
             cimReference.CimInstanceProperties.Add(cimProperty);
 
             CimProperty addedProperty = cimReference.CimInstanceProperties.Single();
