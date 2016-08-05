@@ -443,8 +443,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             if (disposing)
             {
-                // TODO: When MI API supports Delete/Dispose, uncomment
-                //this._myHandle.Dispose();
+                this._myHandle.Dispose();
             }
 
             _disposed = true;

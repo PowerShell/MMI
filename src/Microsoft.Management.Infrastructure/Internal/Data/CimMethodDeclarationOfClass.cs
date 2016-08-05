@@ -29,8 +29,8 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Result result = this.classHandle.GetMethodAt(
                     (uint)this.index,
                     out name,
-            out qualifierSet,
-            out parameterSet);
+                    out qualifierSet,
+                    out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
                 return name;
             }
@@ -48,8 +48,8 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 MI_Result result = this.classHandle.GetMethodAt(
                     (uint)this.index,
                     out name,
-            out qualifierSet,
-            out parameterSet);
+                    out qualifierSet,
+                    out parameterSet);
                 CimException.ThrowIfMiResultFailure(result);
                 result = parameterSet.GetMethodReturnType(out type, qualifierSet);
                 CimException.ThrowIfMiResultFailure(result);

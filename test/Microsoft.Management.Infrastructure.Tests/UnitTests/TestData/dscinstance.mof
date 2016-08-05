@@ -111,6 +111,8 @@ Class MSFT_ConfigurationDocument
             "Configuration document Help URI." )]
 	String HelpInfoUri;
 };
+
+
 instance of MSFT_WindowsCredential as $x
 {
     UserName="AAA";

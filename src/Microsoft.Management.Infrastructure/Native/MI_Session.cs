@@ -419,7 +419,8 @@ namespace Microsoft.Management.Infrastructure.Native
 
         internal void AssertValidInternalState()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.Assert(this.Ptr != IntPtr.Zero);
+            //throw new NotImplementedException();
         }
 
         internal static MI_Session Null { get { return null; } }

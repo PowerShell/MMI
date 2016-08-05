@@ -342,8 +342,7 @@ namespace Microsoft.Management.Infrastructure.Serialization
 
             if (disposing)
             {
-                // TODO: Uncomment once this function is implemented
-                //this._myHandle.Delete();
+                this._myHandle.Dispose();
             }
 
             _disposed = true;

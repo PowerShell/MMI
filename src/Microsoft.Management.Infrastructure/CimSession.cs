@@ -24,6 +24,7 @@ using Microsoft.Management.Infrastructure.Internal.Operations;
 using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure.Options.Internal;
 using Microsoft.Management.Infrastructure.Native;
+using Microsoft.Management.Infrastructure.Resources;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -369,8 +370,7 @@ namespace Microsoft.Management.Infrastructure
 
             if (disposing)
             {
-                // TODO: Implement and Call ReleaseHandleAsynchronously
-                //this._handle.Dispose();
+                this._handle.Dispose();
             }
         }
 

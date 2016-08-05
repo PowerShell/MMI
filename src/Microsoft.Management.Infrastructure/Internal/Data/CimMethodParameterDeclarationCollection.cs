@@ -51,7 +51,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                     throw new ArgumentNullException("parameterName");
                 }
 
-                UInt32 index;
+                UInt32 index = 0;
                 string name;
                 MI_QualifierSet qualifierSet;
                 MI_ParameterSet parameterSet;
@@ -60,15 +60,16 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                                         out qualifierSet,
                                         out parameterSet);
 
-                CimException.ThrowIfMiResultFailure(result);
-
-                MI_Type parameterType;
-                string referenceClass;
-                result = parameterSet.GetParameter(parameterName,
-                                   out parameterType,
-                                   out referenceClass,
-                                   out qualifierSet,
-                                   out index);
+                if (result == MI_Result.MI_RESULT_OK)
+                {
+                    MI_Type parameterType;
+                    string referenceClass;
+                    result = parameterSet.GetParameter(parameterName,
+                                       out parameterType,
+                                       out referenceClass,
+                                       out qualifierSet,
+                                       out index);
+                }
 
                 switch (result)
                 {

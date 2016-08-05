@@ -52,23 +52,25 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                 }
 
                 string name;
+                UInt32 index = 0;
                 MI_QualifierSet qualifierSet;
                 MI_ParameterSet parameterSet;
                 MI_Result result = this.classHandle.GetMethodAt((uint)methodIndex,
                                 out name,
                                 out qualifierSet,
                                 out parameterSet);
-                CimException.ThrowIfMiResultFailure(result);
 
-                MI_Type qualifierType;
-                MI_Flags qualifierFlags;
-                MI_Value qualifierValue;
-                UInt32 index;
-                result = qualifierSet.GetQualifier(name,
-                                   out qualifierType,
-                                   out qualifierFlags,
-                                   out qualifierValue,
-                                   out index);
+                if (result == MI_Result.MI_RESULT_OK)
+                {
+                    MI_Type qualifierType;
+                    MI_Flags qualifierFlags;
+                    MI_Value qualifierValue;
+                    result = qualifierSet.GetQualifier(name,
+                                       out qualifierType,
+                                       out qualifierFlags,
+                                       out qualifierValue,
+                                       out index);
+                }
 
                 switch (result)
                 {
