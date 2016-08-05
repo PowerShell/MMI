@@ -49,17 +49,9 @@ namespace MMI.Tests
         /// <returns></returns>
         public static byte[] GetBytesFromFile(string filePath)
         {
-            using (FileStream fs = File.OpenRead(filePath))
-            {
-                byte[] bytes = new byte[fs.Length];
-                fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
-                // FileStream.close method is not supported in .net core currently.
-#if !_LINUX
-                fs.Close();
-#else
-#endif
-                return bytes;
-            }
+            string s = File.ReadAllText(filePath);
+            System.Text.UTF8Encoding encoding = new UTF8Encoding();
+            return encoding.GetBytes(s);
         }
     }
 }

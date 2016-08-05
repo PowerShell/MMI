@@ -528,7 +528,7 @@ namespace MMI.Tests.UnitTests
             Assert.True(!ce.MoveNext());
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_CimClass_MintMof()
         {
             uint offset = 0;
@@ -549,7 +549,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_CimInstance_MintMof()
         {
             uint offset = 0;

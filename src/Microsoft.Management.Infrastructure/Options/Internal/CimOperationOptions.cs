@@ -708,9 +708,10 @@ namespace Microsoft.Management.Infrastructure.Options
             }
             this.AssertNotDisposed();
 
-            MI_Value nativeLayerValue = ValueHelpers.ConvertToNativeLayer(optionValue, cimType);
+            MI_Value nativeLayerValue;
             try
             {
+                nativeLayerValue = ValueHelpers.ConvertToNativeLayer(optionValue, cimType);
                 ValueHelpers.ThrowIfMismatchedType(cimType.FromCimType(), nativeLayerValue);
             }
             catch (InvalidCastException e)
