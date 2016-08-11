@@ -194,11 +194,11 @@ namespace Microsoft.Management.Infrastructure.Options
             SecureString securePassword = credential.GetCredential().GetSecureString();;
             if( securePassword != null && securePassword.Length > 0)
             {
-                credential.GetCredential().cred.usernamePassword.password = NativeMethods.ConvertToUnsecureString(securePassword);
+                credential.GetCredential().cred.passwordString = NativeMethods.ConvertToUnsecureString(securePassword);
             }
             else
             {
-                credential.GetCredential().cred.usernamePassword.password = null;
+                credential.GetCredential().cred.passwordString = null;
             }
 
             result = this.DestinationOptionsHandle.AddCredentials("__MI_DESTINATIONOPTIONS_DESTINATION_CREDENTIALS", credential.GetCredential().cred, 0);
