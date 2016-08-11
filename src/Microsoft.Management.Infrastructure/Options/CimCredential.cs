@@ -1,3 +1,11 @@
+/*
+**==============================================================================
+**
+** Copyright (c) Microsoft Corporation. All rights reserved. See file LICENSE
+** for license information.
+**
+**==============================================================================
+*/
 
 using Microsoft.Management.Infrastructure.Native;
 using System;
