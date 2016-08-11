@@ -1,7 +1,4 @@
-﻿/*============================================================================
- * Copyright (C) Microsoft Corporation, All rights reserved.
- *============================================================================
- */
+﻿
 
 using Microsoft.Management.Infrastructure.Native;
 using Microsoft.Management.Infrastructure.Options;
