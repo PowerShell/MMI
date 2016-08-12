@@ -73,7 +73,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
                                            out qualifierSet,
                                            out flags,
                                            out index);
-                CimException.ThrowIfMiResultFailure(result);
+
+                if (result != MI_Result.MI_RESULT_OK)
+                {
+                    return null;
+                }
 
                 MI_Type qualifierType;
                 MI_Flags qualifierFlags;

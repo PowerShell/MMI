@@ -72,18 +72,7 @@ namespace Microsoft.Management.Infrastructure.Internal
                 return retval;
             }
 
-            // TODO: What to do with Unknown types? Ignore? Uncomment and remove return line immediately below.
-            return CimProperty.ConvertToNativeLayer(value, cimType);
-            /*
-            if (cimType != CimType.Unknown)
-            {
-            return CimProperty.ConvertToNativeLayer(value, cimType);
-            }
-            else
-            {
-            return value;
-            }
-            */
+            return (cimType != CimType.Unknown) ? CimProperty.ConvertToNativeLayer(value, cimType) : null;
         }
 
         internal static MI_Value ConvertToNativeLayer(object value)

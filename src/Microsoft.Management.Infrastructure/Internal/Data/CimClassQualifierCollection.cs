@@ -46,8 +46,11 @@ namespace Microsoft.Management.Infrastructure.Internal.Data
 
                 MI_QualifierSet qualifierSet;
                 MI_Result result = this.classHandle.GetClassQualifierSet(out qualifierSet);
-                CimException.ThrowIfMiResultFailure(result);
-                // TODO: there aren't many comments for the above pattern throughout the MMI sources, but if the above fails we shouldn't throw exception, just return MI_RESULT_NOT_FOUND like below. Make sure all of these cases are accounted for in MMI
+
+                if (result != MI_Result.MI_RESULT_OK)
+                {
+                    return null;
+                }
 
                 MI_Type qualifierType;
                 MI_Flags qualifierFlags;

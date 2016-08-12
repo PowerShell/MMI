@@ -369,8 +369,7 @@ namespace Microsoft.Management.Infrastructure
 
             if (disposing)
             {
-                // TODO: Implement and Call ReleaseHandleAsynchronously
-                //this._handle.Dispose();
+                this._handle.Dispose();
             }
         }
 
