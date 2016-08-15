@@ -1,3 +1,11 @@
+/*
+**==============================================================================
+**
+** Copyright (c) Microsoft Corporation. All rights reserved. See file LICENSE
+** for license information.
+**
+**==============================================================================
+*/
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Concurrent;

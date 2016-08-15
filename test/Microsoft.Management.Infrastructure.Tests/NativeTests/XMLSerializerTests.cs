@@ -1,4 +1,12 @@
-﻿using System;
+/*
+**==============================================================================
+**
+** Copyright (c) Microsoft Corporation. All rights reserved. See file LICENSE
+** for license information.
+**
+**==============================================================================
+*/
+using System;
 using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
