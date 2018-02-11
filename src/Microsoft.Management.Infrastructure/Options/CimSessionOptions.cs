@@ -19,13 +19,7 @@ namespace Microsoft.Management.Infrastructure.Options
     /// <summary>
     /// Represents options of <see cref="CimSession"/>
     /// </summary>
-    public class CimSessionOptions : IDisposable
-#if (!_CORECLR)
-        //
-        // Only implement these interfaces on FULL CLR and not Core CLR
-        //
-        , ICloneable
-#endif
+    public class CimSessionOptions : IDisposable, ICloneable
     {
         private readonly Lazy<MI_DestinationOptions> _destinationOptionsHandle;
 
@@ -382,14 +376,10 @@ namespace Microsoft.Management.Infrastructure.Options
 
         #region ICloneable Members
 
-#if(!_CORECLR)
-
         object ICloneable.Clone()
         {
             return new CimSessionOptions(this);
         }
-
-#endif // !_CORECLR
 
         #endregion ICloneable Members
     }

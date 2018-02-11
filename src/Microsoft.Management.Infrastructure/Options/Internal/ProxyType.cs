@@ -50,35 +50,19 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 
         public static ProxyType FromNativeType(string proxyType)
         {
-#if(!_CORECLR)
             if (String.Compare(proxyType, MI_ProxyType.None, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            if ( String.Compare( proxyType, MI_ProxyType.None, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return ProxyType.None;
             }
-#if(!_CORECLR)
             else if (String.Compare(proxyType, MI_ProxyType.WinHTTP, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            else if ( String.Compare( proxyType, MI_ProxyType.WinHTTP, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return ProxyType.WinHttp;
             }
-#if(!_CORECLR)
             else if (String.Compare(proxyType, MI_ProxyType.Auto, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            else if ( String.Compare( proxyType, MI_ProxyType.Auto, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return ProxyType.Auto;
             }
-#if(!_CORECLR)
             else if (String.Compare(proxyType, MI_ProxyType.IE, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            else if ( String.Compare( proxyType, MI_ProxyType.IE, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return ProxyType.InternetExplorer;
             }

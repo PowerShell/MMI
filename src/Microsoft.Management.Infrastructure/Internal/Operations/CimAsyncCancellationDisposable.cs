@@ -19,7 +19,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private readonly CimOperation _operation;
         private bool _disposed;
         private readonly object _disposeThreadSafetyLock = new object();
-#if(!_CORECLR)
+#if FEATURE_SECURITY
         private readonly SecurityContext _securityContext = SecurityContext.Capture();
 #else
         //
@@ -48,7 +48,7 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
                 _disposed = true;
             }
 
-#if(!_CORECLR)
+#if FEATURE_SECURITY
             SecurityContext.Run(
                 this._securityContext,
                 callback: _ => this._operation.Cancel(CancellationMode.SilentlyStopProducingResults),

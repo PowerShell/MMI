@@ -17,13 +17,7 @@ namespace Microsoft.Management.Infrastructure.Options
     /// <summary>
     /// Represents options of <see cref="CimSubscriptionDelivery"/>
     /// </summary>
-    public class CimSubscriptionDeliveryOptions : IDisposable
-#if (!_CORECLR)
-        //
-        // Only implement these interfaces on FULL CLR and not Core CLR
-        //
-        , ICloneable
-#endif
+    public class CimSubscriptionDeliveryOptions : IDisposable, ICloneable
     {
         #region Constructors
 
@@ -253,14 +247,10 @@ namespace Microsoft.Management.Infrastructure.Options
 
         #region ICloneable Members
 
-#if(!_CORECLR)
-
         object ICloneable.Clone()
         {
             return new CimSubscriptionDeliveryOptions(this);
         }
-
-#endif // !_CORECLR
 
         #endregion ICloneable Members
     }

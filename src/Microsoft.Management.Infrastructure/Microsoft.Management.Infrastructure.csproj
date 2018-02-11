@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <DefineConstants Condition="'$(OS)' != 'Windows_NT'">$(DefineConstants)_LINUX</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants)FEATURE_SECURITY</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>../../visualstudiopublic.snk</AssemblyOriginatorKeyFile>
+    <Authors>cbnilrem, garretts, andschwa</Authors>
+    <Copyright>Copyright (c) Microsoft Corporation. All rights reserved.</Copyright>
+    <Company>Microsoft Corporation</Company>
+    <Product>Microsoft (R) Windows (R) Operating System</Product>
+    <AssemblyVersion>10.0.10011.16384</AssemblyVersion>
+    <FileVersion>10.0.10011.16384</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageLicenseUrl>https://github.com/PowerShell/MMI/blob/master/LICENSE</PackageLicenseUrl>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Security.Permissions">
+      <Version>4.4.1</Version>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

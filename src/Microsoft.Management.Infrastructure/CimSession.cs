@@ -14,14 +14,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-
-#if(!_CORECLR)
-
 using System.Net;
 using System.Net.Sockets;
-
-#endif
-
 using System.Threading;
 using Microsoft.Management.Infrastructure.Generic;
 using Microsoft.Management.Infrastructure.Internal;
@@ -112,11 +106,6 @@ namespace Microsoft.Management.Infrastructure
 
             if (!string.IsNullOrEmpty(normalizedComputerName))
             {
-#if(!_CORECLR)
-                //
-                // System.Network is support in FULL CLR and not in CORE CLR.
-                //
-
                 IPAddress ipAddress;
                 if (IPAddress.TryParse(normalizedComputerName, out ipAddress) &&
                     (ipAddress.AddressFamily == AddressFamily.InterNetworkV6) &&
@@ -124,19 +113,6 @@ namespace Microsoft.Management.Infrastructure
                 {
                     normalizedComputerName = @"[" + normalizedComputerName + @"]";
                 }
-#else
-                //
-                // CoreCLR: Check if its IPV6 address.
-                //
-                // Note: IPAddress.TryParse() basically looks for ':' to check if its a IPv6
-                // address, we are following the same pattern here.
-                //
-                if ( ( normalizedComputerName.IndexOf( ':' ) != -1 ) &&
-                     ( normalizedComputerName[ 0 ] != '[' ) )
-                {
-                    normalizedComputerName = @"[" + normalizedComputerName + @"]";
-                }
-#endif
             }
 
             MI_Instance extendedErrorHandle;
@@ -293,9 +269,7 @@ namespace Microsoft.Management.Infrastructure
         // helper class for capturing and restoring the ExecutionContext, before calling IObserver.OnCompleted
         private class CloseAsyncImpersonationWorker : IDisposable
         {
-#if(!_CORECLR)
             private ExecutionContext _executionContext = ExecutionContext.Capture();
-#endif
             private IObserver<object> _wrappedObserver;
 
             internal CloseAsyncImpersonationWorker(IObserver<object> wrappedObserver)
@@ -306,27 +280,14 @@ namespace Microsoft.Management.Infrastructure
 
             internal void OnCompleted()
             {
-#if(!_CORECLR)
-
                 ExecutionContext.Run(this._executionContext, this.OnCompletedCore, state: null);
-#else
-                //
-                // TODO: SHOULD IDEALLY USE OnCompletedCore() call instead
-                // TODO: Maybe we should call OnCompletedCore with NULL state
-                //
-                this._wrappedObserver.OnCompleted();
-#endif
                 this.Dispose();
             }
-
-#if(!_CORECLR)
 
             private void OnCompletedCore(object state)
             {
                 this._wrappedObserver.OnCompleted();
             }
-
-#endif
 
             public void Dispose()
             {
@@ -338,9 +299,7 @@ namespace Microsoft.Management.Infrastructure
             {
                 if (disposing)
                 {
-#if(!_CORECLR)
                     this._executionContext.Dispose();
-#endif
                 }
             }
         }

@@ -22,13 +22,7 @@ namespace Microsoft.Management.Infrastructure.Options
     /// <summary>
     /// Represents options of a CIM operation.
     /// </summary>
-    public class CimOperationOptions : IDisposable
-#if (!_CORECLR)
-        //
-        // Only implement these interfaces on FULL CLR and not Core CLR
-        //
-        , ICloneable
-#endif
+    public class CimOperationOptions : IDisposable, ICloneable
     {
         private readonly Lazy<MI_OperationOptions> _operationOptionsHandle;
 
@@ -844,14 +838,10 @@ namespace Microsoft.Management.Infrastructure.Options
 
         #region ICloneable Members
 
-#if (!_CORECLR)
-
         object ICloneable.Clone()
         {
             return new CimOperationOptions(this);
         }
-
-#endif
 
         #endregion ICloneable Members
     }

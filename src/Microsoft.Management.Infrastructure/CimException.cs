@@ -16,10 +16,7 @@ using System.Runtime.Serialization;
 
 namespace Microsoft.Management.Infrastructure
 {
-#if(!_CORECLR)
-
     [Serializable]
-#endif
     public class CimException : Exception, IDisposable
     {
         private CimInstance _errorData;
@@ -146,7 +143,6 @@ namespace Microsoft.Management.Infrastructure
         #region Deserializing constructor + other plumbing for .NET serialization
 
         private const string serializationId_ErrorData = "ErrorData";
-#if(!_CORECLR)
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -169,8 +165,6 @@ namespace Microsoft.Management.Infrastructure
 
             this._errorData = (CimInstance)info.GetValue(serializationId_ErrorData, typeof(CimInstance));
         }
-
-#endif
 
         #endregion Deserializing constructor + other plumbing for .NET serialization
 

@@ -1,6 +1,0 @@
-# Ignore nuget package directories
-Packages/
-
-# Ignore native debug files
-*.VC.db
-*.VC.opendb

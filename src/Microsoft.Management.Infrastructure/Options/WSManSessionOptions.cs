@@ -230,11 +230,7 @@ namespace Microsoft.Management.Infrastructure.Options
                                                    out index,
                                                    out flags);
                 CimException.ThrowIfMiResultFailure(result);
-#if(!_CORECLR)
                 if (string.Compare(transport, MI_Transport.HTTPS, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-                if ( string.Compare( transport, MI_Transport.HTTPS, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
                 {
                     return true;
                 }
@@ -413,20 +409,12 @@ namespace Microsoft.Management.Infrastructure.Options
                     {
                         return new Uri(httpUrlPrefix, UriKind.Relative);
                     }
-#if(!_CORECLR)
                     catch (UriFormatException)
-#else
-                    catch (FormatException)
-#endif
                     {
                         return new Uri(httpUrlPrefix, UriKind.Absolute);
                     }
                 }
-#if(!_CORECLR)
                 catch (UriFormatException)
-#else
-                catch (FormatException)
-#endif
                 {
                     return null;
                 }

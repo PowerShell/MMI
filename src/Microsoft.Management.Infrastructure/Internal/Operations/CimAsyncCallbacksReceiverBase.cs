@@ -127,18 +127,12 @@ namespace Microsoft.Management.Infrastructure.Internal.Operations
         private readonly object _suppressFurtherUserCallbacksLock = new object();
         private bool _suppressFurtherUserCallbacks;
 
-#if(!_CORECLR)
         private readonly ExecutionContext _threadExecutionContext = ExecutionContext.Capture();
-#endif
 
         internal void CallUnderOriginalExecutionContext(Action action)
         {
             Debug.Assert(action != null, "Caller should make sure that action != null");
-#if(!_CORECLR)
             ExecutionContext.Run(this._threadExecutionContext.CreateCopy(), _ => action(), null);
-#else
-            action();
-#endif
         }
 
         internal void CallIntoUserCallback(

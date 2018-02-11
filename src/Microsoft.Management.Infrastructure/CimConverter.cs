@@ -13,7 +13,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 
 namespace Microsoft.Management.Infrastructure
 {
@@ -196,26 +195,11 @@ namespace Microsoft.Management.Infrastructure
             CimType result;
 
             Type ilistInterface = dotNetType
-#if(!_CORECLR)
                 .GetInterfaces()
-#else
-                .GetTypeInfo().ImplementedInterfaces
-#endif
-                .SingleOrDefault(
-                    i =>
-#if(!_CORECLR)
-                        i.IsGenericType &&
-#else
-                        i.GetTypeInfo().IsGenericType &&
-#endif
-                        i.GetGenericTypeDefinition().Equals(typeof(IList<>)));
+                .SingleOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition().Equals(typeof(IList<>)));
             if (ilistInterface != null)
             {
-#if(!_CORECLR)
                 Type elementType = ilistInterface.GetGenericArguments()[0];
-#else
-                Type elementType = ilistInterface.GetTypeInfo().GenericTypeArguments[0];
-#endif
                 if (_dotNetTypeToArrayCimType.TryGetValue(elementType, out result))
                 {
                     return result;
@@ -243,8 +227,7 @@ namespace Microsoft.Management.Infrastructure
                 }
             }
 
-            IList valueAsList = dotNetValue as IList;
-            if (valueAsList != null)
+            if (dotNetValue is IList valueAsList)
             {
                 List<CimType> possibleCimTypes = valueAsList
                     .Cast<object>()

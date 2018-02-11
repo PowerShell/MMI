@@ -47,27 +47,15 @@ namespace Microsoft.Management.Infrastructure.Options.Internal
 
         public static PacketEncoding FromNativeType(string packetEncoding)
         {
-#if (!_CORECLR)
             if (String.Compare(packetEncoding, MI_PacketEncoding.Default, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            if ( String.Compare( packetEncoding, MI_PacketEncoding.Default, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return PacketEncoding.Default;
             }
-#if(!_CORECLR)
             else if (String.Compare(packetEncoding, MI_PacketEncoding.UTF8, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            else if ( String.Compare( packetEncoding, MI_PacketEncoding.UTF8, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return PacketEncoding.Utf8;
             }
-#if(!_CORECLR)
             else if (String.Compare(packetEncoding, MI_PacketEncoding.UTF16, CultureInfo.CurrentCulture, CompareOptions.IgnoreCase) == 0)
-#else
-            else if ( String.Compare( packetEncoding, MI_PacketEncoding.UTF16, StringComparison.CurrentCultureIgnoreCase ) == 0 )
-#endif
             {
                 return PacketEncoding.Utf16;
             }

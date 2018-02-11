@@ -48,11 +48,7 @@ namespace Microsoft.Management.Infrastructure {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-#if(!_CORECLR)
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Strings", typeof(Strings).Assembly);
-#else
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Management.Infrastructure.Strings", typeof(Strings).GetTypeInfo().Assembly);
-#endif
                     resourceMan = temp;
                 }
                 return resourceMan;

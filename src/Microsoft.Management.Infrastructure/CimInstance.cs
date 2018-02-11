@@ -20,13 +20,6 @@ using Microsoft.Management.Infrastructure.Internal;
 using Microsoft.Management.Infrastructure.Internal.Data;
 using Microsoft.Management.Infrastructure.Serialization;
 using System.IO;
-
-#if(!_CORECLR)
-
-using Microsoft.Win32;
-
-#endif
-
 using Microsoft.Management.Infrastructure.Native;
 
 namespace Microsoft.Management.Infrastructure
@@ -34,17 +27,8 @@ namespace Microsoft.Management.Infrastructure
     /// <summary>
     /// Represents an CIM instance.
     /// </summary>
-#if (!_CORECLR)
-
     [Serializable]
-#endif
-    public sealed class CimInstance : IDisposable
-#if (!_CORECLR)
-        //
-        // Only implement these interfaces on FULL CLR and not Core CLR
-        //
-        , ICloneable, ISerializable
-#endif
+    public sealed class CimInstance : IDisposable, ICloneable, ISerializable
     {
         private readonly MI_Instance nativeInstance;
         private CimSystemProperties _systemProperties = null;
@@ -414,8 +398,6 @@ namespace Microsoft.Management.Infrastructure
         private const string serializationId_MiXml = "MI_XML";
         private const string serializationId_CimSessionComputerName = "CSCN";
 
-#if(!_CORECLR)
-
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
@@ -451,20 +433,14 @@ namespace Microsoft.Management.Infrastructure
             this.SetCimSessionComputerName(info.GetString(serializationId_CimSessionComputerName));
         }
 
-#endif // !_CORECLR
-
         #endregion .NET serialization
 
         #region ICloneable Members
-
-#if(!_CORECLR)
 
         object ICloneable.Clone()
         {
             return new CimInstance(this);
         }
-
-#endif // !_CORECLR
 
         #endregion ICloneable Members
 

@@ -155,11 +155,7 @@ namespace Microsoft.Management.Infrastructure
                 case CimType.String:
                     if (value is Boolean)
                     {
-#if(!_CORECLR)
                         miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture);
-#else
-                        miv.String = Convert.ToString(value, CultureInfo.InvariantCulture).ToLower();
-#endif
                         return miv;
                     }
                     miv.String = Convert.ToString(value, CultureInfo.InvariantCulture);
@@ -293,11 +289,7 @@ namespace Microsoft.Management.Infrastructure
                         {
                             if (arrayOfObjects[i] is Boolean)
                             {
-#if(!_CORECLR)
                                 array[i] = Convert.ToString(arrayOfObjects[i], CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture);
-#else
-                                array[i] = Convert.ToString(arrayOfObjects[i], CultureInfo.InvariantCulture).ToLower();
-#endif
                             }
                             else
                             {

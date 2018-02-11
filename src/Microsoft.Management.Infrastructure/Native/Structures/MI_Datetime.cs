@@ -83,7 +83,6 @@ namespace Microsoft.Management.Infrastructure.Native
                 }
                 else
                 {
-#if !_CORECLR
                     DateTime managedUtcDateTime = new DateTime(
                                              (int)this.timestamp.year,
                                              (int)this.timestamp.month,
@@ -94,32 +93,12 @@ namespace Microsoft.Management.Infrastructure.Native
                                              (int)this.timestamp.microseconds / 1000,
                                              CultureInfo.InvariantCulture.Calendar,
                                              DateTimeKind.Utc);
-#else
-                    Calendar myCalendar = CultureInfo.InvariantCulture.Calendar;
-                    DateTime managedDateTime = myCalendar.ToDateTime(
-                                             (int)this.timestamp.year,
-                                             (int)this.timestamp.month,
-                                             (int)this.timestamp.day,
-                                             (int)this.timestamp.hour,
-                                             (int)this.timestamp.minute,
-                                             (int)this.timestamp.second,
-                                             (int)this.timestamp.microseconds / 1000);
-                    DateTime managedUtcDateTime = DateTime.SpecifyKind(managedDateTime, DateTimeKind.Utc);
 
-#endif
                     long microsecondsUnaccounted = this.timestamp.microseconds % 1000;
                     managedUtcDateTime = managedUtcDateTime.AddTicks(microsecondsUnaccounted * 10); // since 1 microsecond == 10 ticks
                     managedUtcDateTime = managedUtcDateTime.AddMinutes(-(this.timestamp.utc));
 
-
-#if !_CORECLR
                     DateTime managedLocalDateTime = TimeZoneInfo.ConvertTimeFromUtc(managedUtcDateTime, TimeZoneInfo.Local);
-#else
-                    //
-                    // TODO: USE THIS FOR BOTH CORECLR AND FULLOS
-                    //
-                    DateTime managedLocalDateTime = TimeZoneInfo.ConvertTime(managedUtcDateTime, TimeZoneInfo.Local);
-#endif
 
                     return managedLocalDateTime;
                 }
