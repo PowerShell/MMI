@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net451</TargetFrameworks>
     <DefineConstants Condition="'$(OS)' != 'Windows_NT'">$(DefineConstants)_LINUX</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants)FEATURE_SECURITY</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
