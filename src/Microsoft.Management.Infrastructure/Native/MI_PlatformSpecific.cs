@@ -37,8 +37,8 @@ namespace Microsoft.Management.Infrastructure.Native
         internal const CharSet AppropriateCharSet = CharSet.Ansi;
         internal const CallingConvention MiMainCallConvention = CallingConvention.Cdecl;
         internal const CallingConvention MiCallConvention = CallingConvention.Cdecl;
-        internal const string MI = "libmi.so";
-        internal const string MOFCodecHost = "libmi.so";
+        internal const string MI = "libmi";
+        internal const string MOFCodecHost = "libmi";
 
         internal static string PtrToString(IntPtr ptr)
         {
