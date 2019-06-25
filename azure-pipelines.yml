@@ -10,6 +10,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- checkout: self
+  submodules: recursive
 - script: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
   displayName: 'apt-get dependencies'
 
