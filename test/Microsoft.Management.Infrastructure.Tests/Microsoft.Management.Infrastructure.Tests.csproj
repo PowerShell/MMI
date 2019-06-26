@@ -7,6 +7,7 @@
     <AssemblyOriginatorKeyFile>../../signing/visualstudiopublic.snk"</AssemblyOriginatorKeyFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>0649</NoWarn>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Linux' ">
@@ -15,6 +16,15 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Microsoft.Management.Infrastructure/Microsoft.Management.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>    
+    <Compile Include="*.cs" />
+    <Compile Include="Helpers/**/*.cs" />
+    <Compile Include="InternalTests/**/*.cs" />
+    <Compile Include="NativeTests/**/*.cs" />
+    <Compile Include="SerializationTests/**/*.cs" />
+    <Compile Include="UnitTests/**/*.cs" />  
   </ItemGroup>
 
   <ItemGroup>
