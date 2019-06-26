@@ -48,11 +48,11 @@ namespace MMI.Tests.Native
         private const string TestGetClassUUID = "{8502C4B0-5FBB-11D2-AAC1-006008C78BC7}";
         private const string TestGetClassPropertyName = "First";
         private const MI_Flags TestGetClassPropertyFlags = MI_Flags.MI_FLAG_PROPERTY | MI_Flags.MI_FLAG_BORROW;
-        private string TestGetClassMethodName = "TestAllTypes";
-        private uint TestGetClassParameterCount = 3u;
-        private string TestGetClassParameterName = "Z";
-        private MI_Type TestGetClassParameterType = MI_Type.MI_REAL32;
-        private uint TestGetClassParameterIndex = 2;
+//        private string TestGetClassMethodName = "TestAllTypes";
+//        private uint TestGetClassParameterCount = 3u;
+//        private string TestGetClassParameterName = "Z";
+//        private MI_Type TestGetClassParameterType = MI_Type.MI_REAL32;
+//        private uint TestGetClassParameterIndex = 2;
 #endif
 
         [Fact]
@@ -131,7 +131,7 @@ namespace MMI.Tests.Native
             Assert.Equal(TestEnumerateInstanceStringPropertyValue, elementValue.String, "Expect the machine name to have survived the whole journey");
         }
 
-        [WindowsFact]
+/*        [WindowsFact]
         public void SimpleGetClass()
         {
             MI_Operation operation = null;
@@ -208,5 +208,6 @@ namespace MMI.Tests.Native
             Assert.Equal(TestGetClassParameterType, parameterType, "Expect parameter type to be the documented type");
             Assert.Equal(TestGetClassParameterIndex, parameterIndex, "Expect the power state to be the first parameter");
         }
+*/
     }
 }

@@ -189,7 +189,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_CimClass_InvalidMofBuffer()
         {
             Assert.Throws<CimException>(() =>
@@ -289,7 +289,7 @@ namespace MMI.Tests.UnitTests
             });
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_Instance_InvalidMofBuffer()
         {
             Assert.Throws<CimException>(() =>
@@ -383,7 +383,7 @@ namespace MMI.Tests.UnitTests
             Assert.True(!ce.MoveNext());
         }
 
-        [TDDFact]
+        [Fact]
         public void Deserialization_CimInstance_DSCMof()
         {
             uint offset = 0;

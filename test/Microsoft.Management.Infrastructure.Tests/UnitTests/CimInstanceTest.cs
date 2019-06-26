@@ -102,7 +102,7 @@ namespace MMI.Tests.UnitTests
             Assert.Throws<ArgumentNullException>(() => { return new CimInstance((CimInstance)null); });
         }
 
-        [TDDFact]
+        [Fact]
         public void Constructor_ClassDecl()
         {
             CimInstance x;
@@ -122,7 +122,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(x.CimInstanceProperties.Count, y.CimInstanceProperties.Count, "clonedInstance.CimInstanceProperties.Count is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Constructor_ClassDecl_Null()
         {
             Assert.Throws<ArgumentNullException>(() => { return new CimInstance((CimClass)null); });
@@ -544,7 +544,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.String, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Instance()
         {
             CimInstance innerInstance = new CimInstance("MyInnerClass");
@@ -565,7 +565,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.Instance, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Instance_InferredType()
         {
             CimInstance innerInstance = new CimInstance("MyInnerClass");
@@ -586,7 +586,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.Instance, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Instance_RoundTrip()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -615,7 +615,7 @@ namespace MMI.Tests.UnitTests
             }
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Instance_DeepNesting()
         {
             CimInstance topLevel = new CimInstance("MyTopClass", "MyTopNamespace");
@@ -693,7 +693,7 @@ namespace MMI.Tests.UnitTests
             GC.KeepAlive(deepLevel2);
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_Reference()
         {
             CimInstance innerReference = new CimInstance("MyInnerClass");
@@ -816,7 +816,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.SInt32Array, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_SInt32Array_InferredType()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -1040,7 +1040,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.StringArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_InstanceArray()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");
@@ -1065,7 +1065,7 @@ namespace MMI.Tests.UnitTests
             Assert.Equal(CimType.InstanceArray, addedProperty.CimType, "addedProperty.CimType is not correct");
         }
 
-        [TDDFact]
+        [Fact]
         public void Properties_Add_ValueAndType_ReferenceArray()
         {
             CimInstance cimInstance = new CimInstance("MyClassName");

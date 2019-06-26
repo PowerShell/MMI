@@ -29,7 +29,7 @@ namespace MMI.Tests.Native
             this.VerifyRoundTripInstance();
         }
 
-        [WindowsFact]
+/*        [WindowsFact]
         public void CanDeserializeClass()
         {
             this.VerifyRoundTripClass();
@@ -115,5 +115,6 @@ namespace MMI.Tests.Native
             expectedInstance.Delete();
             deserializedArray.Delete();
         }
+*/
     }
 }

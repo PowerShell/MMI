@@ -30,7 +30,7 @@ namespace MMI.Tests.Native
                 SerializationTestData.BasicSerializableTestInstanceMOFRepresentation);
         }
 
-        [WindowsFact]
+        /*[WindowsFact]
         public void CanSerializeClass()
         {
             string serialized = this.GetStringRepresentationFromClassThunk(SerializationTestData.GetSerializableTestClass);
@@ -38,6 +38,6 @@ namespace MMI.Tests.Native
             // Storing entire serialization of a class is too finicky here. Just check that there's something
             // expected inside the serialized string
             Xunit.Assert.Contains(SerializationTestData.SingletonClassSerializableClassHeuristicString, serialized);
-        }
+        }*/
     }
 }
