@@ -342,7 +342,7 @@ namespace MMI.Tests.UnitTests
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\dscschema.mof");
 #else
-            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dscschema.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"../UnitTests/TestData/dscschema.mof");
 #endif
             IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
             Assert.NotNull(classes, "class is null and is not deserialized.");
@@ -390,7 +390,7 @@ namespace MMI.Tests.UnitTests
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\dscinstance.mof");
 #else
-            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dscinstance.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"../UnitTests/TestData/dscinstance.mof");
 #endif
             deserializer.SchemaValidationOption = MofDeserializerSchemaValidationOption.Strict;
             IEnumerable<CimInstance> instances = deserializer.DeserializeInstances(buffer, ref offset);
@@ -449,7 +449,7 @@ namespace MMI.Tests.UnitTests
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\dmtftypes.mof");
 #else
-            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/dmtftypes.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"../UnitTests/TestData/dmtftypes.mof");
 #endif
             IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
             Assert.NotNull(classes, "class got deserialized");
@@ -540,7 +540,7 @@ namespace MMI.Tests.UnitTests
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\mintschema.mof");
 #else
-            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/mintschema.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"../UnitTests/TestData/mintschema.mof");
 #endif
             IEnumerable<CimClass> classes = deserializer.DeserializeClasses(buffer, ref offset);
             Assert.NotNull(classes, "class is null and is not deserialized");
@@ -561,7 +561,7 @@ namespace MMI.Tests.UnitTests
 #if !_LINUX
             byte[] buffer = Helpers.GetBytesFromFile(@"..\..\..\..\..\test\Microsoft.Management.Infrastructure.Tests\UnitTests\TestData\mintinstance.mof");
 #else
-            byte[] buffer = Helpers.GetBytesFromFile(@"test/Microsoft.Management.Infrastructure.Tests/UnitTests/TestData/mintinstance.mof");
+            byte[] buffer = Helpers.GetBytesFromFile(@"../UnitTests/TestData/mintinstance.mof");
 #endif
             deserializer.SchemaValidationOption = MofDeserializerSchemaValidationOption.Ignore;
 
