@@ -12,5 +12,4 @@ mkdir -p bin
 cp src/omi/Unix/output/lib/libmi.so bin
 
 # Build MMI
-PATH=$PATH:~/.dotnet dotnet restore -v Warning
-PATH=$PATH:~/.dotnet dotnet build -f netstandard1.5 src/Microsoft.Management.Infrastructure/ -c Linux -o bin
+PATH=$PATH:~/.dotnet dotnet build -f netstandard2.0 src/Microsoft.Management.Infrastructure/ -c Linux -o bin
