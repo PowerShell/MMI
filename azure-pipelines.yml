@@ -25,6 +25,11 @@ steps:
     artifactName: 'release'
     targetPath: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.dll
 
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'release'
+    targetPath: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
+
 - task: ShellScript@2
   inputs:
     scriptPath: test.sh
