@@ -1,0 +1,38 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+  submodules: recursive
+
+- bash: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
+  displayName: 'apt-get dependencies'
+
+- bash: ./build.sh
+  displayName: 'Build MMI'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'release'
+    pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.dll
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'release'
+    pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
+
+- bash: ./test.sh
+  displayName: 'Execute Tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*TestResults.trx'
