@@ -12,31 +12,27 @@ pool:
 steps:
 - checkout: self
   submodules: recursive
-- script: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
+
+- bash: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
   displayName: 'apt-get dependencies'
 
-- task: ShellScript@2
-  inputs:
-    scriptPath: build.sh
+- bash: build.sh
   displayName: 'Build MMI'
 
-- task: PublishPipelineArtifact@0
+- task: PublishBuildArtifacts@1
   inputs:
     artifactName: 'release'
-    targetPath: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.dll
+    pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.dll
 
-- task: PublishPipelineArtifact@0
+- task: PublishBuildArtifacts@1
   inputs:
     artifactName: 'release'
-    targetPath: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
+    pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
 
-- task: ShellScript@2
-  inputs:
-    scriptPath: test.sh
+- bash: test.sh
   displayName: 'Execute Tests'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '**/*TestResults.trx'
-
