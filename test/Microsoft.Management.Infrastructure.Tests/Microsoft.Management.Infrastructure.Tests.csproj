@@ -22,9 +22,7 @@
     <Compile Include="*.cs" />
     <Compile Include="Helpers/**/*.cs" />
     <Compile Include="InternalTests/**/*.cs" />
-    <Compile Include="NativeTests/Fixtures/*.cs" />
-    <Compile Include="NativeTests/TestData/*.cs" />
-    <Compile Include="NativeTests/*.cs" />
+    <Compile Include="NativeTests/**/*.cs" />
     <Compile Include="SerializationTests/**/*.cs" />
     <Compile Include="UnitTests/**/*.cs" />  
   </ItemGroup>
