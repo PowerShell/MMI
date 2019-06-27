@@ -16,7 +16,7 @@ steps:
 - bash: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
   displayName: 'apt-get dependencies'
 
-- bash: build.sh
+- bash: ./build.sh
   displayName: 'Build MMI'
 
 - task: PublishBuildArtifacts@1
@@ -29,7 +29,7 @@ steps:
     artifactName: 'release'
     pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
 
-- bash: test.sh
+- bash: ./test.sh
   displayName: 'Execute Tests'
 
 - task: PublishTestResults@2
