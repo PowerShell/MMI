@@ -1,16 +1,5 @@
 #!/usr/bin/env sh
 
-# Build OMI
-#(
-#    cd src/omi/Unix
-#    ./configure --dev
-#    make -j
-#)
-
-# Copy libmi
-#mkdir -p bin
-#cp src/omi/Unix/output/lib/libmi.so bin
-
 # Install OMI
 wget https://github.com/microsoft/omi/releases/download/v1.6.0/omi-1.6.0-0.ssl_110.ulinux.x64.deb -O omi-1.6.0-0.ssl_110.ulinux.x64.deb
 sudo apt-get install cron -y
