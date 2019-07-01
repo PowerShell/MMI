@@ -1,24 +1,18 @@
-jobs:
-  - job: build_MMI
-    displayName: Build MMI
-    pool:
-      vmImage: 'ubuntu-latest'
+steps:
+  - checkout: self
 
-    steps:
-      - checkout: self
+  - bash: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
+    displayName: 'apt-get dependencies'
 
-      - bash: sudo apt-get install libpam0g-dev libssl-dev libcurl4-openssl-dev
-        displayName: 'apt-get dependencies'
+  - bash: ./build.sh
+    displayName: 'Build MMI'
 
-      - bash: ./build.sh
-        displayName: 'Build MMI'
+  - task: PublishBuildArtifacts@1
+    inputs:
+        artifactName: 'release'
+        pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.dll
 
-      - task: PublishBuildArtifacts@1
-        inputs:
-          artifactName: 'release'
-          pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.dll
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          artifactName: 'release'
-          pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
+  - task: PublishBuildArtifacts@1
+    inputs:
+        artifactName: 'release'
+        pathToPublish: src/Microsoft.Management.Infrastructure/bin/Microsoft.Management.Infrastructure.pdb
