@@ -20,3 +20,5 @@ jobs:
     - template: templates/build.yml
 
 - template: templates/compliance.yml
+  parameters:
+    parentJob: build_MMI

@@ -1,8 +1,13 @@
+parameters:
+  parentJob: build
+
 jobs:
   - job: compliance
     displayName: Compliance for MMI
     pool:
       name: Package ES CodeHub Lab E
+    dependsOn:
+      ${{ parameters.parentJob }}
 
     steps:
       - task: DownloadBuildArtifacts@0
