@@ -15,3 +15,5 @@ pool:
 
 steps:
   - template: templates/build.yml
+
+  - template: templates/test.yml

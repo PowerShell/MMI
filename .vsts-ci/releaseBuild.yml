@@ -13,8 +13,18 @@ pr:
 pool:
   name: Package ES CodeHub Lab E
 
+jobs:
+
 steps:
 - template: templates/build.yml
+
+- task: DownloadBuildArtifacts@0
+  displayName: 'Download artifacts'
+  inputs:
+    buildType: current
+    downloadType: single
+    artifactName: release
+    downloadPath: '$(System.ArtifactsDirectory)'
 
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-antimalware.AntiMalware@3
   displayName: 'Run Defender Scan'
@@ -29,7 +39,7 @@ steps:
   displayName: 'Run BinSkim '
   inputs:
     InputType: Basic
-    AnalyzeTarget: 'src/Microsoft.Management.Infrastructure/bin/*.dll'
+    AnalyzeTarget: '$(System.ArtifactsDirectory)/*.dll'
     AnalyzeSymPath: 'SRV*'
     AnalyzeVerbose: true
     AnalyzeHashes: true
@@ -78,4 +88,3 @@ steps:
   inputs:
     sourceScanPath: '$(Build.SourcesDirectory)'
     snapshotForceEnabled: true
-
