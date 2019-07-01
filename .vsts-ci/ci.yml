@@ -1,0 +1,17 @@
+name: MMI-$(Build.BuildId)
+trigger:
+  branches:
+    include:
+    - master
+    - release*
+pr:
+  branches:
+    include:
+    - master
+    - release*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - template: templates/build.yml
