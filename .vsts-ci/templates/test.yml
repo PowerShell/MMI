@@ -1,0 +1,9 @@
+steps:
+- bash: ./test.sh
+  displayName: 'Execute Tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*TestResults.trx'
+    failTaskOnFailedTests: 'true'
