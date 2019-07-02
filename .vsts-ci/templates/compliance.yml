@@ -53,17 +53,18 @@ jobs:
         displayName: 'Publish Security Analysis Logs to Build Artifacts'
         continueOnError: true
 
-      #- task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
-      #  displayName: 'TSA upload to Codebase: PowerShellCore_201906'
-      #  inputs:
-      #    tsaVersion: TsaV2
-      #    codeBaseName: 'PowerShellCore_201906'
-      #    uploadFortifySCA: false
-      #    uploadFxCop: false
-      #    uploadModernCop: false
-      #    uploadPREfast: false
-      #    uploadRoslyn: false
-      #    uploadTSLint: false
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-uploadtotsa.TSAUpload@1
+        displayName: 'TSA upload to Codebase: MMI_20190701 Version: TsaV2'
+        inputs:
+          tsaVersion: TsaV2
+          codeBaseName: 'MMI_20190701'
+          uploadAPIScan: false
+          uploadFortifySCA: false
+          uploadFxCop: false
+          uploadModernCop: false
+          uploadPREfast: false
+          uploadRoslyn: false
+          uploadTSLint: false
 
       - task: securedevelopmentteam.vss-secure-development-tools.build-task-report.SdtReport@1
         displayName: 'Create Security Analysis Report'
