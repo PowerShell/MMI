@@ -1,0 +1,34 @@
+name: MMI-$(Build.BuildId)
+trigger:
+  branches:
+    include:
+    - master
+    - release*
+pr:
+  branches:
+    include:
+    - master
+    - release*
+
+jobs:
+- job: credscan
+  displayName: 'Secret Scan'
+  pool: 'Hosted VS2017'
+
+  steps:
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+    displayName: 'Scan for secrets'
+    inputs:
+      debugMode: false
+
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@2
+    displayName: 'Publish Secret Scan Logs to Build Artifacts'
+    continueOnError: true
+
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@1
+    displayName: 'Check for failures'
+    inputs:
+      CredScan: true
+      ToolLogsNotFoundAction: Error
+
+
